@@ -2384,6 +2384,23 @@ amplifier agents show explorer</code></pre>
           <strong>Issues</strong>
           <span>Issue tracking integration</span>
         </div>
+        <div class="collection-item">
+          <strong>Convergent Dev</strong>
+          <span>Ideation → sprints → TDD workflow</span>
+        </div>
+      </div>
+
+      <h3>Community Collections</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code class="language-bash"># Install convergent-dev collection
+amplifier collection add git+https://github.com/momuno/amplifier-collection-convergent-dev@main
+
+# Activate the profile
+amplifier profile use convergent-dev:convergent-dev</code></pre>
       </div>
 
       <div class="info-box">
@@ -2805,6 +2822,36 @@ async def audit_hook(event, data) -> HookResult:
               <span class="output-label">Output</span>
               <pre># Creates: logs/session_20250115_143052.jsonl
 {"timestamp": "2025-01-15T14:30:52", "event": "tool:pre", ...}</pre>
+            </div>
+          </div>
+
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>Collection Migration Pattern</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Use Amplifier to analyze existing tools/agents and migrate them to a collection structure.</p>
+            <pre><code class="language-bash"># Point Amplifier at your project and the official docs
+amplifier run "Analyze my project structure in ./my-tools
+and compare it to the collection format in
+github.com/microsoft/amplifier/docs/MODULES.md
+
+Help me understand:
+1. Which of my tools map to Amplifier modules?
+2. How should my agents be structured?
+3. What goes in profiles vs context?
+4. Create a migration plan to collection format."</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">Result</span>
+              <pre>my-collection/
+├── agents/           # Agent definitions
+│   ├── my-agent.md
+│   └── helper-agent.md
+├── context/          # Workflow docs
+│   └── commands/
+├── profiles/         # Configuration
+│   └── my-profile.md
+└── collection.toml   # Manifest</pre>
             </div>
           </div>
         </div>
