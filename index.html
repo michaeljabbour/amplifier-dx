@@ -1560,6 +1560,23 @@ tools:
   - module: tool-filesystem
   - module: tool-bash</code></pre>
         </div>
+
+        <h3>Troubleshooting</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Reset profile to defaults
+amplifier profile reset
+
+# Clear module cache (fixes stale module issues)
+rm -rf ~/.amplifier/module-cache
+
+# Reinstall from scratch
+uv tool install --force git+https://github.com/microsoft/amplifier@next
+amplifier update</code></pre>
+        </div>
       </div>
 
       <!-- Extender Tab -->
