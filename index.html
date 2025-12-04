@@ -1271,6 +1271,18 @@
       color: var(--text-2);
     }
 
+    a.collection-link {
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+    a.collection-link:hover {
+      border-color: var(--blue);
+      text-decoration: none;
+    }
+    a.collection-link strong {
+      color: var(--blue);
+    }
+
     .personas {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -2384,10 +2396,10 @@ amplifier agents show explorer</code></pre>
           <strong>Issues</strong>
           <span>Issue tracking integration</span>
         </div>
-        <div class="collection-item">
+        <a href="https://github.com/momuno/amplifier-collection-convergent-dev" target="_blank" class="collection-item collection-link">
           <strong>Convergent Dev</strong>
           <span>Ideation → sprints → TDD workflow</span>
-        </div>
+        </a>
       </div>
 
       <h3>Community Collections</h3>
