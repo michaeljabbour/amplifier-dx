@@ -1104,6 +1104,173 @@
     .contrib-table .needed { color: var(--orange); }
     .contrib-table code { background: var(--bg-2); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 12px; }
 
+    /* Reference tables */
+    .ref-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .ref-table th, .ref-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .ref-table th {
+      background: var(--bg-2);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .ref-table code { background: var(--bg-2); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 12px; }
+
+    /* Inheritance chain */
+    .inheritance-chain {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 12px 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+    .inheritance-chain code {
+      background: var(--bg-2);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    /* Session lifecycle */
+    .lifecycle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 12px 0;
+      flex-wrap: wrap;
+    }
+    .lifecycle-step {
+      background: var(--bg-2);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    /* Context info */
+    .context-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .context-preserved, .context-reloaded, .context-not {
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .context-preserved { background: rgba(16, 185, 129, 0.1); border-left: 3px solid var(--green); }
+    .context-reloaded { background: rgba(59, 130, 246, 0.1); border-left: 3px solid var(--blue); }
+    .context-not { background: rgba(249, 115, 22, 0.1); border-left: 3px solid var(--orange); }
+
+    /* Agent flow */
+    .agent-flow {
+      padding-left: 20px;
+      margin: 12px 0;
+    }
+    .agent-flow li {
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--text-1);
+    }
+
+    /* Ecosystem */
+    .ecosystem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .ecosystem-category {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .ecosystem-category h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ecosystem-category h3 .count {
+      background: var(--bg-2);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+
+    .ecosystem-category > p {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: var(--text-2);
+    }
+
+    .ecosystem-category ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .ecosystem-category li {
+      padding: 4px 0;
+      font-size: 13px;
+      color: var(--text-1);
+    }
+
+    .ecosystem-category code {
+      background: var(--bg-2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .collections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .collection-item {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .collection-item strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .collection-item span {
+      font-size: 12px;
+      color: var(--text-2);
+    }
+
     .personas {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1195,6 +1362,7 @@
           <button class="nav-link" data-section="architecture">Architecture</button>
           <button class="nav-link" data-section="reference">Reference</button>
           <button class="nav-link" data-section="cli">CLI</button>
+          <button class="nav-link" data-section="ecosystem">Ecosystem</button>
           <button class="nav-link" data-section="examples">Examples</button>
           <button class="nav-link" data-section="contribute">Contribute</button>
         </div>
@@ -1704,6 +1872,9 @@ response = await session.execute(prompt)</code></pre>
         <button class="tab active" data-tab="contracts">Contracts</button>
         <button class="tab" data-tab="hooks-api">Hooks API</button>
         <button class="tab" data-tab="events">Events</button>
+        <button class="tab" data-tab="profiles">Profiles</button>
+        <button class="tab" data-tab="sessions">Sessions</button>
+        <button class="tab" data-tab="agents">Agents</button>
       </div>
 
       <!-- Contracts Tab -->
@@ -1826,6 +1997,203 @@ response = await session.execute(prompt)</code></pre>
           </div>
         </div>
       </div>
+
+      <!-- Profiles Tab -->
+      <div id="ref-profiles" class="tab-content">
+        <p>Profiles are pre-configured capability sets defining which modules are accessible during a session.</p>
+
+        <h3>Built-in Profiles</h3>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Profile</th><th>Purpose</th><th>Best For</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>foundation</code></td><td>Minimal LLM access only</td><td>Basic chat interactions</td></tr>
+            <tr><td><code>base</code></td><td>Filesystem and bash capabilities</td><td>Light development tasks</td></tr>
+            <tr><td><code>dev</code></td><td>Complete development tools</td><td>Daily development work</td></tr>
+            <tr><td><code>test</code></td><td>Testing-focused configuration</td><td>Running tests, debugging</td></tr>
+            <tr><td><code>full</code></td><td>All available features enabled</td><td>Exploring system capabilities</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Profile Commands</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash">amplifier profile list          # View all profiles
+amplifier profile use dev       # Set as default
+amplifier profile show dev      # Display configuration
+amplifier profile current       # Check active profile
+amplifier run --profile dev "..." # Single command usage</code></pre>
+        </div>
+
+        <h3>Custom Profile Structure</h3>
+        <p>Profiles use markdown with YAML frontmatter. Store in <code>.amplifier/profiles/</code> (project) or <code>~/.amplifier/profiles/</code> (user).</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml">---
+name: my-profile
+extends: base
+description: Custom development profile
+session:
+  orchestrator: loop-streaming
+  context: context-persistent
+providers:
+  - module: provider-anthropic
+    config:
+      default_model: claude-opus-4-1
+tools:
+  - module: tool-filesystem
+  - module: tool-bash
+    config:
+      timeout: 60
+hooks:
+  - module: hooks-logging
+agents:
+  code-reviewer:
+    description: Expert code reviewer
+    tools:
+      - tool-filesystem
+---
+
+# System Instructions
+
+You are an expert assistant...</code></pre>
+        </div>
+
+        <h3>Profile Inheritance</h3>
+        <p>Profiles inherit in a linear chain. Each level accumulates capabilities:</p>
+        <div class="inheritance-chain">
+          <code>foundation</code> → <code>base</code> → <code>dev</code> → <code>custom</code>
+        </div>
+      </div>
+
+      <!-- Sessions Tab -->
+      <div id="ref-sessions" class="tab-content">
+        <p>Sessions track conversations, preserving history, tool results, and metadata for resumption.</p>
+
+        <h3>Session Commands</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Starting & Listing
+amplifier run "prompt"           # Create new session
+amplifier session list           # Display all sessions
+amplifier session show [id]      # View session details
+
+# Resuming
+amplifier continue "follow-up"   # Resume most recent
+amplifier session resume [id]    # Resume specific session
+amplifier run --resume [id] "prompt"
+
+# Management
+amplifier session delete [id]    # Remove a session
+amplifier session cleanup --days 7  # Delete old sessions</code></pre>
+        </div>
+
+        <h3>Storage Structure</h3>
+        <p>Sessions persist at <code>~/.amplifier/projects/&lt;project-slug&gt;/sessions/&lt;session-id&gt;/</code></p>
+        <table class="ref-table">
+          <thead>
+            <tr><th>File</th><th>Contents</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>transcript.jsonl</code></td><td>Conversation history</td></tr>
+            <tr><td><code>events.jsonl</code></td><td>Complete event log</td></tr>
+            <tr><td><code>metadata.json</code></td><td>Session metadata</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Session Lifecycle</h3>
+        <div class="lifecycle">
+          <span class="lifecycle-step">Creation</span> →
+          <span class="lifecycle-step">Active</span> →
+          <span class="lifecycle-step">Ended</span> →
+          <span class="lifecycle-step">Resumption</span>
+        </div>
+
+        <h3>Context Preservation</h3>
+        <div class="context-info">
+          <div class="context-preserved">
+            <strong>Preserved:</strong> Conversation history, session ID, project context
+          </div>
+          <div class="context-reloaded">
+            <strong>Reloaded:</strong> Current profile and provider configurations
+          </div>
+          <div class="context-not">
+            <strong>Not preserved:</strong> Tool execution state, in-memory context beyond token limits
+          </div>
+        </div>
+      </div>
+
+      <!-- Agents Tab -->
+      <div id="ref-agents" class="tab-content">
+        <p>Agents are specialized configurations functioning as sub-sessions for focused tasks.</p>
+
+        <h3>Built-in Agents</h3>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Agent</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>explorer</code></td><td>Breadth-first codebase exploration</td></tr>
+            <tr><td><code>bug-hunter</code></td><td>Systematic debugging and issue identification</td></tr>
+            <tr><td><code>zen-architect</code></td><td>System design emphasizing simplicity</td></tr>
+            <tr><td><code>researcher</code></td><td>Research and information synthesis</td></tr>
+            <tr><td><code>modular-builder</code></td><td>Code implementation and creation</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Using Agents</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Interactive mode - use @ prefix
+amplifier> @explorer What is the architecture of this project?
+amplifier> @bug-hunter Find issues in the authentication module
+
+# List and show agents
+amplifier agents list
+amplifier agents show explorer</code></pre>
+        </div>
+
+        <h3>How Agents Work</h3>
+        <ol class="agent-flow">
+          <li>Create sub-session inheriting base settings</li>
+          <li>Apply agent-specific tools and instructions</li>
+          <li>Execute the request</li>
+          <li>Return results to main session</li>
+        </ol>
+
+        <h3>Custom Agents</h3>
+        <p>Define in profile's <code>agents</code> section or create standalone files in <code>.amplifier/agents/</code></p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml">agents:
+  my-agent:
+    description: Custom agent for specific task
+    tools:
+      - tool-filesystem
+      - tool-bash
+    system: |
+      You are an expert at...</code></pre>
+        </div>
+
+        <h3>Agent Search Path</h3>
+        <p>Agents load from: current profile → <code>.amplifier/agents/</code> (project) → <code>~/.amplifier/agents/</code> (user) → installed collections → bundled agents</p>
+      </div>
     </section>
 
     <!-- CLI SECTION -->
@@ -1836,26 +2204,68 @@ response = await session.execute(prompt)</code></pre>
       <div class="cli-groups">
         <div class="cli-group">
           <h3>Running</h3>
-          <div class="cli-item"><code>amplifier</code><span>Interactive chat</span></div>
-          <div class="cli-item"><code>amplifier run "prompt"</code><span>Single command</span></div>
-          <div class="cli-item"><code>amplifier run --profile name</code><span>With profile</span></div>
+          <div class="cli-item"><code>amplifier</code><span>Interactive chat mode</span></div>
+          <div class="cli-item"><code>amplifier run "prompt"</code><span>Single command execution</span></div>
+          <div class="cli-item"><code>amplifier run --profile name</code><span>Run with specific profile</span></div>
           <div class="cli-item"><code>amplifier run -m model</code><span>Override model</span></div>
+          <div class="cli-item"><code>amplifier continue</code><span>Resume last session</span></div>
+          <div class="cli-item"><code>amplifier continue "follow-up"</code><span>Resume with new prompt</span></div>
+        </div>
+        <div class="cli-group">
+          <h3>Sessions</h3>
+          <div class="cli-item"><code>amplifier session list</code><span>Display all sessions</span></div>
+          <div class="cli-item"><code>amplifier session show [id]</code><span>View session details</span></div>
+          <div class="cli-item"><code>amplifier session resume [id]</code><span>Resume specific session</span></div>
+          <div class="cli-item"><code>amplifier session delete [id]</code><span>Remove a session</span></div>
+          <div class="cli-item"><code>amplifier session cleanup --days 7</code><span>Delete old sessions</span></div>
         </div>
         <div class="cli-group">
           <h3>Profiles</h3>
-          <div class="cli-item"><code>amplifier profile list</code><span>List profiles</span></div>
-          <div class="cli-item"><code>amplifier profile show name</code><span>Show details</span></div>
-          <div class="cli-item"><code>amplifier profile set name</code><span>Set default</span></div>
+          <div class="cli-item"><code>amplifier profile list</code><span>View all profiles</span></div>
+          <div class="cli-item"><code>amplifier profile use dev</code><span>Set as default</span></div>
+          <div class="cli-item"><code>amplifier profile show name</code><span>Display configuration</span></div>
+          <div class="cli-item"><code>amplifier profile current</code><span>Check active profile</span></div>
+        </div>
+        <div class="cli-group">
+          <h3>Providers</h3>
+          <div class="cli-item"><code>amplifier provider list</code><span>List available providers</span></div>
+          <div class="cli-item"><code>amplifier provider use anthropic</code><span>Set default provider</span></div>
         </div>
         <div class="cli-group">
           <h3>Modules</h3>
-          <div class="cli-item"><code>amplifier module list</code><span>List installed</span></div>
-          <div class="cli-item"><code>amplifier module show name</code><span>Show details</span></div>
+          <div class="cli-item"><code>amplifier module list</code><span>Display installed modules</span></div>
+          <div class="cli-item"><code>amplifier module show [name]</code><span>View module details</span></div>
+          <div class="cli-item"><code>amplifier module add tool-web</code><span>Add a module</span></div>
+        </div>
+        <div class="cli-group">
+          <h3>Agents</h3>
+          <div class="cli-item"><code>amplifier agents list</code><span>List available agents</span></div>
+          <div class="cli-item"><code>amplifier agents show [name]</code><span>View agent details</span></div>
         </div>
         <div class="cli-group">
           <h3>Collections</h3>
-          <div class="cli-item"><code>amplifier collection add url</code><span>Add from Git</span></div>
-          <div class="cli-item"><code>amplifier collection list</code><span>List installed</span></div>
+          <div class="cli-item"><code>amplifier collection list</code><span>List installed collections</span></div>
+          <div class="cli-item"><code>amplifier collection add [url]</code><span>Add from Git</span></div>
+        </div>
+        <div class="cli-group">
+          <h3>System</h3>
+          <div class="cli-item"><code>amplifier update</code><span>Update Amplifier</span></div>
+          <div class="cli-item"><code>amplifier init</code><span>Initialize configuration</span></div>
+          <div class="cli-item"><code>amplifier --help</code><span>General help</span></div>
+          <div class="cli-item"><code>amplifier run --help</code><span>Command-specific help</span></div>
+        </div>
+      </div>
+
+      <h3>Interactive Commands</h3>
+      <p>While in interactive mode, use these slash commands:</p>
+      <div class="cli-groups">
+        <div class="cli-group">
+          <div class="cli-item"><code>/help</code><span>Display available commands</span></div>
+          <div class="cli-item"><code>/tools</code><span>List accessible tools</span></div>
+          <div class="cli-item"><code>/agents</code><span>List available agents</span></div>
+          <div class="cli-item"><code>/status</code><span>Show session information</span></div>
+          <div class="cli-item"><code>/clear</code><span>Clear conversation history</span></div>
+          <div class="cli-item"><code>/quit</code><span>Exit the application</span></div>
         </div>
       </div>
 
@@ -1865,6 +2275,124 @@ response = await session.execute(prompt)</code></pre>
           <li>Pipe input: <code>cat file.py | amplifier run "Explain"</code></li>
           <li>Set default profile: <code>AMPLIFIER_PROFILE=dev</code></li>
           <li>Verbose output: <code>-v</code> or <code>--verbose</code></li>
+          <li>Use agents with @ prefix: <code>@explorer What is the architecture?</code></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ECOSYSTEM SECTION -->
+    <section id="section-ecosystem" class="section">
+      <h1>Ecosystem</h1>
+      <p class="section-desc">Available modules, libraries, and collections for extending Amplifier.</p>
+
+      <h2>Runtime Modules</h2>
+      <p>Swappable components that implement Amplifier's core contracts.</p>
+
+      <div class="ecosystem-grid">
+        <div class="ecosystem-category">
+          <h3>🤖 Providers <span class="count">6</span></h3>
+          <p>Connect to AI model providers</p>
+          <ul>
+            <li><code>provider-anthropic</code> - Claude models</li>
+            <li><code>provider-openai</code> - GPT models</li>
+            <li><code>provider-azure</code> - Azure OpenAI</li>
+            <li><code>provider-ollama</code> - Local models</li>
+            <li><code>provider-vllm</code> - vLLM server</li>
+            <li><code>provider-mock</code> - Testing</li>
+          </ul>
+        </div>
+
+        <div class="ecosystem-category">
+          <h3>🔧 Tools <span class="count">6</span></h3>
+          <p>Extend agent capabilities</p>
+          <ul>
+            <li><code>tool-filesystem</code> - Read/write files</li>
+            <li><code>tool-bash</code> - Shell commands</li>
+            <li><code>tool-web</code> - Web browsing</li>
+            <li><code>tool-search</code> - Code search</li>
+            <li><code>tool-task</code> - Task delegation</li>
+            <li><code>tool-todo</code> - Todo management</li>
+          </ul>
+        </div>
+
+        <div class="ecosystem-category">
+          <h3>🔄 Orchestrators <span class="count">3</span></h3>
+          <p>Control execution loops</p>
+          <ul>
+            <li><code>loop-basic</code> - Simple request/response</li>
+            <li><code>loop-streaming</code> - Streaming responses</li>
+            <li><code>loop-event</code> - Event-driven execution</li>
+          </ul>
+        </div>
+
+        <div class="ecosystem-category">
+          <h3>💾 Contexts <span class="count">2</span></h3>
+          <p>Manage conversation state</p>
+          <ul>
+            <li><code>context-simple</code> - In-memory storage</li>
+            <li><code>context-persistent</code> - Disk persistence</li>
+          </ul>
+        </div>
+
+        <div class="ecosystem-category">
+          <h3>⚡ Hooks <span class="count">9</span></h3>
+          <p>Observe and control behavior</p>
+          <ul>
+            <li><code>hooks-logging</code> - Event logging</li>
+            <li><code>hooks-approval</code> - User approval gates</li>
+            <li><code>hooks-redaction</code> - Sensitive data filtering</li>
+            <li><code>hooks-backup</code> - Session backup</li>
+            <li><code>hooks-streaming-ui</code> - Streaming display</li>
+            <li><code>hooks-scheduler</code> - Rate limiting</li>
+            <li>+ 3 more...</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2>Libraries</h2>
+      <p>Consumed by applications (not runtime modules).</p>
+
+      <table class="ref-table">
+        <thead>
+          <tr><th>Library</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>amplifier-profiles</code></td><td>Profile and agent loading with inheritance</td></tr>
+          <tr><td><code>amplifier-collections</code></td><td>Collection discovery and management</td></tr>
+          <tr><td><code>amplifier-config</code></td><td>Three-scope configuration management</td></tr>
+          <tr><td><code>amplifier-module-resolution</code></td><td>Module source resolution</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Collections</h2>
+      <p>Shareable bundles of profiles, agents, and modules.</p>
+
+      <div class="collections-grid">
+        <div class="collection-item">
+          <strong>Toolkit</strong>
+          <span>Essential development tools</span>
+        </div>
+        <div class="collection-item">
+          <strong>Design Intelligence</strong>
+          <span>Architecture and design agents</span>
+        </div>
+        <div class="collection-item">
+          <strong>Recipes</strong>
+          <span>Common patterns and workflows</span>
+        </div>
+        <div class="collection-item">
+          <strong>Issues</strong>
+          <span>Issue tracking integration</span>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Module Architecture</strong>
+        <ul>
+          <li>Runtime modules only depend on <code>amplifier-core</code></li>
+          <li>Libraries are consumed by applications, never by modules</li>
+          <li>Use <code>amplifier module list</code> to see installed modules</li>
+          <li>Use <code>amplifier module show [name]</code> for details</li>
         </ul>
       </div>
     </section>
@@ -2559,7 +3087,7 @@ async def my_hook(event: str, data: dict):
     // ==========================================================================
     // NAVIGATION
     // ==========================================================================
-    const VALID_SECTIONS = ['home', 'quickstart', 'architecture', 'reference', 'cli', 'examples', 'contribute'];
+    const VALID_SECTIONS = ['home', 'quickstart', 'architecture', 'reference', 'cli', 'ecosystem', 'examples', 'contribute'];
 
     function showSection(sectionId, updateHash = true) {
       if (!VALID_SECTIONS.includes(sectionId)) sectionId = 'home';
@@ -2752,23 +3280,80 @@ amplifier run "Your prompt here"
 
 # With profile
 amplifier run --profile dev "Your prompt"
+
+# Resume last session
+amplifier continue "follow-up prompt"
 \`\`\`
 
-## Programmatic Usage
+## CLI Commands
 
-\`\`\`python
-from amplifier_core import AmplifierSession
+### Running
+- \`amplifier\` - Interactive chat mode
+- \`amplifier run "prompt"\` - Single command
+- \`amplifier run --profile name\` - With specific profile
+- \`amplifier continue\` - Resume last session
 
-config = {
-    "session": {"orchestrator": "loop-basic", "context": "context-simple"},
-    "providers": [{"module": "provider-anthropic"}],
-    "tools": [{"module": "tool-filesystem"}, {"module": "tool-bash"}],
-    "hooks": [{"module": "hooks-logging"}]
-}
+### Sessions
+- \`amplifier session list\` - Display all sessions
+- \`amplifier session show [id]\` - View details
+- \`amplifier session resume [id]\` - Resume specific
+- \`amplifier session delete [id]\` - Remove session
 
-async with AmplifierSession(config) as session:
-    response = await session.execute("Your prompt")
-\`\`\`
+### Profiles
+- \`amplifier profile list\` - View all profiles
+- \`amplifier profile use dev\` - Set default
+- \`amplifier profile show name\` - Display config
+- \`amplifier profile current\` - Check active
+
+### Agents
+- \`amplifier agents list\` - List available
+- \`amplifier agents show [name]\` - View details
+- Use \`@agent-name\` in interactive mode
+
+### Interactive Commands
+- \`/help\` - Display commands
+- \`/tools\` - List tools
+- \`/agents\` - List agents
+- \`/status\` - Session info
+- \`/clear\` - Clear history
+- \`/quit\` - Exit
+
+## Profiles
+
+Built-in profiles:
+- \`foundation\` - Minimal LLM access only
+- \`base\` - Filesystem and bash capabilities
+- \`dev\` - Complete development tools
+- \`test\` - Testing-focused configuration
+- \`full\` - All features enabled
+
+Inheritance: \`foundation\` → \`base\` → \`dev\` → \`custom\`
+
+## Agents
+
+Built-in agents:
+- \`explorer\` - Breadth-first codebase exploration
+- \`bug-hunter\` - Systematic debugging
+- \`zen-architect\` - System design
+- \`researcher\` - Research and synthesis
+- \`modular-builder\` - Code implementation
+
+## Ecosystem
+
+### Providers (6)
+\`provider-anthropic\`, \`provider-openai\`, \`provider-azure\`, \`provider-ollama\`, \`provider-vllm\`, \`provider-mock\`
+
+### Tools (6)
+\`tool-filesystem\`, \`tool-bash\`, \`tool-web\`, \`tool-search\`, \`tool-task\`, \`tool-todo\`
+
+### Orchestrators (3)
+\`loop-basic\`, \`loop-streaming\`, \`loop-event\`
+
+### Contexts (2)
+\`context-simple\`, \`context-persistent\`
+
+### Hooks (9)
+\`hooks-logging\`, \`hooks-approval\`, \`hooks-redaction\`, \`hooks-backup\`, \`hooks-streaming-ui\`, \`hooks-scheduler\`, and more
 
 ## Core Protocols
 
@@ -2792,6 +3377,22 @@ Session: \`session:start\`, \`session:end\`, \`session:error\`
 Provider: \`provider:request\`, \`provider:response\`, \`provider:error\`
 Tool: \`tool:pre\`, \`tool:post\`, \`tool:error\`
 Streaming: \`content_block:start\`, \`content_block:delta\`, \`content_block:stop\`
+
+## Programmatic Usage
+
+\`\`\`python
+from amplifier_core import AmplifierSession
+
+config = {
+    "session": {"orchestrator": "loop-basic", "context": "context-simple"},
+    "providers": [{"module": "provider-anthropic"}],
+    "tools": [{"module": "tool-filesystem"}, {"module": "tool-bash"}],
+    "hooks": [{"module": "hooks-logging"}]
+}
+
+async with AmplifierSession(config) as session:
+    response = await session.execute("Your prompt")
+\`\`\`
 
 ---
 *Generated from Amplifier DX Documentation*
