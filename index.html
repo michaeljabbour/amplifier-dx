@@ -4,6 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Amplifier DX</title>
+  <link rel="icon" type="image/png" href="amplifierlogo.png">
+  <!-- Prism.js for syntax highlighting -->
+  <link rel="stylesheet" href="https://unpkg.com/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* Override Prism background to match our dark theme */
+    code[class*="language-"], pre[class*="language-"] {
+      background: #0d0d0d !important;
+      font-size: 13px !important;
+      line-height: 1.6 !important;
+    }
+    pre[class*="language-"] {
+      margin: 0 !important;
+      padding: 16px !important;
+      border-radius: 0 !important;
+    }
+    /* Python-specific token colors */
+    .token.keyword { color: #c678dd !important; }
+    .token.string { color: #98c379 !important; }
+    .token.function { color: #61afef !important; }
+    .token.class-name { color: #e5c07b !important; }
+    .token.comment { color: #5c6370 !important; font-style: italic; }
+    .token.number { color: #d19a66 !important; }
+    .token.operator { color: #56b6c2 !important; }
+    .token.builtin { color: #e5c07b !important; }
+    .token.decorator { color: #c678dd !important; }
+    .token.boolean { color: #d19a66 !important; }
+  </style>
 </head>
 <body>
   <div id="root"></div>
@@ -11,6 +38,10 @@
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Prism.js core + Python language -->
+  <script src="https://unpkg.com/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://unpkg.com/prismjs@1.29.0/components/prism-bash.min.js"></script>
 
   <script type="text/babel" src="amplifier-dx.jsx"></script>
   <script type="text/babel">
