@@ -1393,6 +1393,10 @@
               Download amplifier.md
               <span>Agent reference file</span>
             </button>
+            <button class="export-item" onclick="downloadFullGuide()">
+              Download amplifier-completeguide.md
+              <span>Full documentation export</span>
+            </button>
           </div>
         </div>
         <a href="https://github.com/microsoft/amplifier-core" class="nav-github" target="_blank">GitHub</a>
@@ -3487,6 +3491,453 @@ async with AmplifierSession(config) as session:
       const a = document.createElement('a');
       a.href = url;
       a.download = 'amplifier.md';
+      a.click();
+      URL.revokeObjectURL(url);
+      toggleExportMenu();
+    }
+
+    const FULL_GUIDE_CONTENT = `# Amplifier Complete Guide
+
+> The ultra-thin kernel for modular AI agents
+
+Amplifier is an open-source AI agent orchestration system from Microsoft built on Linux-kernel philosophy: a tiny, stable center (~2,600 lines) that provides mechanisms, while policies live as swappable modules at the edges.
+
+## Quick Reference
+
+- **Repository**: https://github.com/microsoft/amplifier-core
+- **License**: MIT
+- **Core Size**: ~2,600 lines
+- **Design Philosophy**: Mechanism over policy
+
+---
+
+# Installation
+
+\`\`\`bash
+uv tool install --force git+https://github.com/microsoft/amplifier@next
+amplifier update
+amplifier init
+\`\`\`
+
+## Troubleshooting
+
+\`\`\`bash
+# Reset profile to defaults
+amplifier profile reset
+
+# Clear module cache (fixes stale module issues)
+rm -rf ~/.amplifier/module-cache
+
+# Reinstall from scratch
+uv tool install --force git+https://github.com/microsoft/amplifier@next
+amplifier update
+\`\`\`
+
+---
+
+# CLI Commands
+
+## Running
+- \`amplifier\` - Interactive chat mode
+- \`amplifier run "prompt"\` - Single command
+- \`amplifier run --profile name\` - With specific profile
+- \`amplifier continue\` - Resume last session
+- \`amplifier continue "follow-up"\` - Resume with new prompt
+
+## Sessions
+- \`amplifier session list\` - Display all sessions
+- \`amplifier session show [id]\` - View details
+- \`amplifier session resume [id]\` - Resume specific
+- \`amplifier session delete [id]\` - Remove session
+- \`amplifier session cleanup --days 7\` - Delete old sessions
+
+## Profiles
+- \`amplifier profile list\` - View all profiles
+- \`amplifier profile use dev\` - Set default
+- \`amplifier profile show name\` - Display config
+- \`amplifier profile current\` - Check active
+- \`amplifier profile reset\` - Reset to defaults
+
+## Providers
+- \`amplifier provider list\` - List available
+- \`amplifier provider use anthropic\` - Set default
+
+## Modules
+- \`amplifier module list\` - Display installed
+- \`amplifier module show [name]\` - View details
+- \`amplifier module add tool-web\` - Add module
+
+## Agents
+- \`amplifier agents list\` - List available
+- \`amplifier agents show [name]\` - View details
+- Use \`@agent-name\` in interactive mode
+
+## Collections
+- \`amplifier collection list\` - List installed
+- \`amplifier collection add [url]\` - Add from Git
+
+## System
+- \`amplifier update\` - Update Amplifier
+- \`amplifier init\` - Initialize configuration
+- \`amplifier --help\` - General help
+
+## Interactive Commands
+- \`/help\` - Display commands
+- \`/tools\` - List tools
+- \`/agents\` - List agents
+- \`/status\` - Session info
+- \`/clear\` - Clear history
+- \`/quit\` - Exit
+
+---
+
+# Profiles
+
+Profiles are pre-configured capability sets defining which modules are accessible during a session.
+
+## Built-in Profiles
+
+| Profile | Purpose | Best For |
+|---------|---------|----------|
+| \`foundation\` | Minimal LLM access only | Basic chat |
+| \`base\` | Filesystem and bash | Light dev tasks |
+| \`dev\` | Complete development tools | Daily dev work |
+| \`test\` | Testing-focused | Running tests |
+| \`full\` | All features enabled | Exploration |
+
+## Profile Inheritance
+
+\`foundation\` → \`base\` → \`dev\` → \`custom\`
+
+## Custom Profile Structure
+
+\`\`\`yaml
+---
+name: my-profile
+extends: base
+description: Custom development profile
+session:
+  orchestrator: loop-streaming
+  context: context-persistent
+providers:
+  - module: provider-anthropic
+    config:
+      default_model: claude-sonnet-4-20250514
+tools:
+  - module: tool-filesystem
+  - module: tool-bash
+    config:
+      timeout: 60
+hooks:
+  - module: hooks-logging
+agents:
+  code-reviewer:
+    description: Expert code reviewer
+    tools:
+      - tool-filesystem
+---
+
+# System Instructions
+
+You are an expert assistant...
+\`\`\`
+
+---
+
+# Sessions
+
+Sessions track conversations, preserving history, tool results, and metadata.
+
+## Storage Structure
+
+Sessions persist at \`~/.amplifier/projects/<project-slug>/sessions/<session-id>/\`
+
+| File | Contents |
+|------|----------|
+| \`transcript.jsonl\` | Conversation history |
+| \`events.jsonl\` | Complete event log |
+| \`metadata.json\` | Session metadata |
+
+## Session Lifecycle
+
+Creation → Active → Ended → Resumption
+
+## Context Preservation
+
+- **Preserved**: Conversation history, session ID, project context
+- **Reloaded**: Current profile and provider configurations
+- **Not preserved**: Tool execution state, in-memory context beyond token limits
+
+---
+
+# Agents
+
+Agents are specialized configurations functioning as sub-sessions for focused tasks.
+
+## Built-in Agents
+
+| Agent | Purpose |
+|-------|---------|
+| \`explorer\` | Breadth-first codebase exploration |
+| \`bug-hunter\` | Systematic debugging |
+| \`zen-architect\` | System design emphasizing simplicity |
+| \`researcher\` | Research and information synthesis |
+| \`modular-builder\` | Code implementation |
+
+## Using Agents
+
+\`\`\`bash
+# Interactive mode - use @ prefix
+amplifier> @explorer What is the architecture of this project?
+amplifier> @bug-hunter Find issues in the authentication module
+\`\`\`
+
+## Custom Agents
+
+\`\`\`yaml
+agents:
+  my-agent:
+    description: Custom agent for specific task
+    tools:
+      - tool-filesystem
+      - tool-bash
+    system: |
+      You are an expert at...
+\`\`\`
+
+## Agent Search Path
+
+current profile → \`.amplifier/agents/\` (project) → \`~/.amplifier/agents/\` (user) → installed collections → bundled agents
+
+---
+
+# Ecosystem
+
+## Providers (6)
+
+| Module | Purpose |
+|--------|---------|
+| \`provider-anthropic\` | Claude models |
+| \`provider-openai\` | GPT models |
+| \`provider-azure\` | Azure OpenAI |
+| \`provider-ollama\` | Local models |
+| \`provider-vllm\` | vLLM server |
+| \`provider-mock\` | Testing |
+
+## Tools (6)
+
+| Module | Purpose |
+|--------|---------|
+| \`tool-filesystem\` | Read/write files |
+| \`tool-bash\` | Shell commands |
+| \`tool-web\` | Web browsing |
+| \`tool-search\` | Code search |
+| \`tool-task\` | Task delegation |
+| \`tool-todo\` | Todo management |
+
+## Orchestrators (3)
+
+| Module | Purpose |
+|--------|---------|
+| \`loop-basic\` | Simple request/response |
+| \`loop-streaming\` | Streaming responses |
+| \`loop-event\` | Event-driven execution |
+
+## Contexts (2)
+
+| Module | Purpose |
+|--------|---------|
+| \`context-simple\` | In-memory storage |
+| \`context-persistent\` | Disk persistence |
+
+## Hooks (9)
+
+\`hooks-logging\`, \`hooks-approval\`, \`hooks-redaction\`, \`hooks-backup\`, \`hooks-streaming-ui\`, \`hooks-scheduler\`, and more
+
+## Libraries
+
+| Library | Purpose |
+|---------|---------|
+| \`amplifier-profiles\` | Profile and agent loading with inheritance |
+| \`amplifier-collections\` | Collection discovery and management |
+| \`amplifier-config\` | Three-scope configuration management |
+| \`amplifier-module-resolution\` | Module source resolution |
+
+## Collections
+
+- **Toolkit** - Essential development tools
+- **Design Intelligence** - Architecture and design agents
+- **Recipes** - Common patterns and workflows
+- **Issues** - Issue tracking integration
+- **Convergent Dev** - Ideation → sprints → TDD workflow
+
+### Installing Collections
+
+\`\`\`bash
+amplifier collection add git+https://github.com/momuno/amplifier-collection-convergent-dev@main
+amplifier profile use convergent-dev:convergent-dev
+\`\`\`
+
+---
+
+# Core Protocols
+
+All modules use Python Protocols (structural typing). No inheritance required.
+
+## Provider
+\`\`\`
+name: str
+get_info() → ProviderInfo
+list_models() → list[ModelInfo]
+complete(ChatRequest) → ChatResponse
+parse_tool_calls(ChatResponse) → list
+\`\`\`
+
+## Tool
+\`\`\`
+name: str
+description: str
+execute(input: dict) → ToolResult
+\`\`\`
+
+## Orchestrator
+\`\`\`
+execute(prompt, context, providers, tools, hooks) → str
+\`\`\`
+
+## ContextManager
+\`\`\`
+add_message(message)
+get_messages() → list
+should_compact() → bool
+compact()
+clear()
+\`\`\`
+
+## Hook
+\`\`\`
+async handler(event: str, data: dict) → HookResult
+\`\`\`
+
+---
+
+# HookResult Actions
+
+| Action | Description |
+|--------|-------------|
+| \`continue\` | Proceed normally (default) |
+| \`deny\` | Block operation with reason |
+| \`modify\` | Alter event data |
+| \`inject_context\` | Add message to context |
+| \`ask_user\` | Pause for approval |
+
+---
+
+# Hookable Events
+
+## Session
+\`session:start\`, \`session:end\`, \`session:error\`, \`session:fork\`
+
+## Provider
+\`provider:request\`, \`provider:response\`, \`provider:error\`
+
+## Tool
+\`tool:pre\`, \`tool:post\`, \`tool:error\`
+
+## Streaming
+\`content_block:start\`, \`content_block:delta\`, \`content_block:stop\`
+
+## Context
+\`context:pre_compact\`, \`context:post_compact\`
+
+## Governance
+\`approval:required\`, \`approval:granted\`, \`policy:violation\`
+
+---
+
+# Examples
+
+## Approval Gate Hook
+
+\`\`\`python
+async def approval_gate(event, data) -> HookResult:
+    """Pause for user approval on bash commands."""
+    if event == "tool:pre" and data["tool_name"] == "bash":
+        return HookResult(
+            action="ask_user",
+            approval_prompt=f"Allow bash: {data['tool_input']}?",
+            approval_options=["Allow", "Deny"]
+        )
+    return HookResult(action="continue")
+\`\`\`
+
+## Security Guard Hook
+
+\`\`\`python
+async def security_hook(event: str, data: dict) -> HookResult:
+    """Block dangerous bash commands."""
+    if event == "tool:pre" and data.get("tool_name") == "bash":
+        cmd = str(data.get("tool_input", {}))
+        dangerous = ["rm -rf", "mkfs", "dd if=", "> /dev/"]
+        for pattern in dangerous:
+            if pattern in cmd:
+                return HookResult(
+                    action="deny",
+                    reason=f"Blocked dangerous pattern: {pattern}"
+                )
+    return HookResult(action="continue")
+\`\`\`
+
+## Custom Tool
+
+\`\`\`python
+from amplifier_core.models import ToolResult
+
+class WeatherTool:
+    @property
+    def name(self) -> str:
+        return "weather"
+
+    @property
+    def description(self) -> str:
+        return "Get weather for a location"
+
+    async def execute(self, input: dict) -> ToolResult:
+        location = input.get("location", "Unknown")
+        # Your implementation here
+        return ToolResult(
+            success=True,
+            output=f"Weather for {location}: Sunny, 72°F"
+        )
+\`\`\`
+
+## Programmatic Usage
+
+\`\`\`python
+from amplifier_core import AmplifierSession
+
+config = {
+    "session": {"orchestrator": "loop-basic", "context": "context-simple"},
+    "providers": [{"module": "provider-anthropic"}],
+    "tools": [{"module": "tool-filesystem"}, {"module": "tool-bash"}],
+    "hooks": [{"module": "hooks-logging"}]
+}
+
+async with AmplifierSession(config) as session:
+    response = await session.execute("Your prompt")
+\`\`\`
+
+---
+
+*Generated from Amplifier DX Documentation*
+`;
+
+    function downloadFullGuide() {
+      const blob = new Blob([FULL_GUIDE_CONTENT], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'amplifier-completeguide.md';
       a.click();
       URL.revokeObjectURL(url);
       toggleExportMenu();
