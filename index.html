@@ -5,47 +5,2815 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Amplifier DX</title>
   <link rel="icon" type="image/png" href="amplifierlogo.png">
-  <!-- Prism.js for syntax highlighting -->
-  <link rel="stylesheet" href="https://unpkg.com/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
   <style>
-    /* Override Prism background to match our dark theme */
-    code[class*="language-"], pre[class*="language-"] {
-      background: #0d0d0d !important;
-      font-size: 13px !important;
-      line-height: 1.6 !important;
+    /* =================================================================
+       DESIGN TOKENS
+       ================================================================= */
+    :root {
+      --bg-0: #0d0d0d;
+      --bg-1: #171717;
+      --bg-2: #212121;
+      --bg-3: #2a2a2a;
+      --text-0: #fafafa;
+      --text-1: #a1a1a1;
+      --text-2: #6b6b6b;
+      --border: #2e2e2e;
+      --blue: #3b82f6;
+      --green: #10b981;
+      --purple: #a855f7;
+      --orange: #f97316;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      --radius: 8px;
+      --transition: 150ms ease;
     }
-    pre[class*="language-"] {
-      margin: 0 !important;
-      padding: 16px !important;
-      border-radius: 0 !important;
+
+    /* =================================================================
+       RESET
+       ================================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-0);
+      color: var(--text-0);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
     }
-    /* Python-specific token colors */
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* =================================================================
+       NAV
+       ================================================================= */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 13, 13, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 32px; }
+
+    .nav-logo {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text-0);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-logo img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .nav-links { display: flex; gap: 4px; }
+
+    .nav-link {
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: var(--text-1);
+      font-size: 14px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .nav-link:hover { color: var(--text-0); background: var(--bg-2); }
+    .nav-link.active { color: var(--text-0); background: var(--bg-2); }
+
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+
+    .export-wrap { position: relative; }
+
+    .export-btn {
+      padding: 8px 14px;
+      border-radius: 6px;
+      background: var(--bg-2);
+      color: var(--text-0);
+      font-size: 14px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .export-btn:hover { background: var(--bg-3); }
+
+    .export-caret {
+      font-size: 10px;
+      transition: transform var(--transition);
+    }
+
+    .export-caret.open { transform: rotate(180deg); }
+
+    .export-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      min-width: 220px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      display: none;
+    }
+
+    .export-menu.show { display: block; }
+
+    .export-item {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      text-align: left;
+      background: none;
+      border: none;
+      color: var(--text-0);
+      font-size: 14px;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+
+    .export-item:hover { background: var(--bg-3); }
+    .export-item span { color: var(--text-2); font-size: 12px; display: block; }
+
+    .nav-github {
+      padding: 8px 14px;
+      border-radius: 6px;
+      background: var(--bg-2);
+      color: var(--text-0);
+      font-size: 14px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+    }
+
+    .nav-github:hover { background: var(--bg-3); text-decoration: none; }
+
+    /* =================================================================
+       SECTIONS
+       ================================================================= */
+    .section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      display: none;
+    }
+
+    .section.active { display: block; }
+
+    .section h1 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .section h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 40px 0 16px;
+    }
+
+    .section h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 24px 0 12px;
+      color: var(--text-0);
+    }
+
+    .section-desc {
+      color: var(--text-1);
+      font-size: 16px;
+      margin-bottom: 32px;
+    }
+
+    .section-desc code {
+      background: var(--bg-2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+    /* =================================================================
+       HERO
+       ================================================================= */
+    .hero { text-align: center; padding: 48px 0; }
+
+    .hero-eyebrow { font-size: 13px; color: var(--text-2); margin-bottom: 16px; }
+
+    .hero-title {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--text-0) 0%, var(--text-1) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle { font-size: 20px; color: var(--text-1); margin: 8px 0 24px; }
+
+    .hero-description {
+      color: var(--text-1);
+      max-width: 540px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+
+    .hero-actions { display: flex; justify-content: center; gap: 12px; }
+
+    .btn-primary {
+      padding: 12px 24px;
+      border-radius: 8px;
+      background: var(--text-0);
+      color: var(--bg-0);
+      font-size: 15px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .btn-primary:hover { opacity: 0.9; }
+
+    .btn-secondary {
+      padding: 12px 24px;
+      border-radius: 8px;
+      background: var(--bg-2);
+      color: var(--text-0);
+      font-size: 15px;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      text-decoration: none;
+    }
+
+    .btn-secondary:hover { background: var(--bg-3); text-decoration: none; }
+
+    /* =================================================================
+       FEATURE CARDS
+       ================================================================= */
+    .feature-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 48px 0;
+    }
+
+    .feature-card {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      padding: 24px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+    }
+
+    .feature-gradient {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      opacity: 0.15;
+    }
+
+    .feature-gradient.blue { background: linear-gradient(180deg, var(--blue) 0%, transparent 100%); }
+    .feature-gradient.purple { background: linear-gradient(180deg, var(--purple) 0%, transparent 100%); }
+    .feature-gradient.green { background: linear-gradient(180deg, var(--green) 0%, transparent 100%); }
+
+    .feature-label {
+      position: relative;
+      font-size: 18px;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      position: relative;
+      color: var(--text-1);
+      font-size: 14px;
+      margin: 0;
+    }
+
+    @media (max-width: 700px) {
+      .feature-cards { grid-template-columns: 1fr; }
+    }
+
+    /* =================================================================
+       QUICKSTART PREVIEW
+       ================================================================= */
+    .quickstart-preview {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin: 48px 0;
+    }
+
+    .quickstart-preview h2 { margin: 0 0 8px; font-size: 18px; }
+    .quickstart-preview .section-desc { margin-bottom: 20px; }
+
+    /* =================================================================
+       START BUILDING
+       ================================================================= */
+    .start-building h2 { margin: 0 0 20px; font-size: 18px; }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .start-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-align: left;
+      cursor: pointer;
+      transition: all var(--transition);
+      color: var(--text-0);
+      font-family: inherit;
+    }
+
+    .start-item:hover { background: var(--bg-2); border-color: var(--text-2); }
+
+    .start-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-2);
+      border-radius: 8px;
+      font-size: 16px;
+      flex-shrink: 0;
+      color: var(--text-0);
+    }
+
+    .start-item strong { display: block; font-size: 14px; margin-bottom: 2px; color: var(--text-0); }
+    .start-item span { display: block; font-size: 13px; color: var(--text-1); }
+
+    @media (max-width: 600px) {
+      .start-grid { grid-template-columns: 1fr; }
+    }
+
+    /* =================================================================
+       TABS
+       ================================================================= */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: none;
+      border: none;
+      color: var(--text-1);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .tab:hover { color: var(--text-0); }
+    .tab.active { background: var(--bg-2); color: var(--text-0); }
+
+    .tab-content { display: none; animation: fadeIn 0.2s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* =================================================================
+       CODE BLOCKS
+       ================================================================= */
+    .code-block {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .code-lang {
+      font-size: 11px;
+      color: var(--text-2);
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    .copy-btn {
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: var(--bg-3);
+      border: none;
+      color: var(--text-1);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover { color: var(--text-0); }
+    .copy-btn.copied { background: var(--green); color: white; }
+
+    .code-block pre {
+      padding: 16px;
+      overflow-x: auto;
+      margin: 0;
+      background: var(--bg-0) !important;
+    }
+
+    .code-block code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      background: transparent !important;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Prism token colors */
+    .token.comment { color: #6a737d !important; font-style: italic; }
     .token.keyword { color: #c678dd !important; }
     .token.string { color: #98c379 !important; }
     .token.function { color: #61afef !important; }
     .token.class-name { color: #e5c07b !important; }
-    .token.comment { color: #5c6370 !important; font-style: italic; }
     .token.number { color: #d19a66 !important; }
     .token.operator { color: #56b6c2 !important; }
+    .token.punctuation { color: #abb2bf !important; }
     .token.builtin { color: #e5c07b !important; }
-    .token.decorator { color: #c678dd !important; }
     .token.boolean { color: #d19a66 !important; }
+    .token.decorator { color: #c678dd !important; }
+
+    /* =================================================================
+       INFO BOX
+       ================================================================= */
+    .info-box {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 24px 0;
+    }
+
+    .info-box strong { display: block; margin-bottom: 8px; }
+    .info-box ul { margin: 0; padding-left: 20px; color: var(--text-1); }
+    .info-box li { margin: 4px 0; }
+    .info-box code { background: var(--bg-2); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 13px; }
+    .info-box a { color: var(--blue); }
+
+    .mini-table { width: 100%; margin-top: 8px; }
+    .mini-table td { padding: 4px 0; font-size: 13px; }
+    .mini-table td:first-child { color: var(--text-0); }
+    .mini-table td:last-child { color: var(--text-2); }
+    .mini-table code { background: var(--bg-2); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); }
+
+    /* =================================================================
+       ARCHITECTURE VISUALIZER
+       ================================================================= */
+    .arch-viz {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 24px 0;
+    }
+
+    .arch-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-2);
+    }
+
+    .arch-tab {
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-1);
+      border: none;
+      border-bottom: 2px solid transparent;
+      background: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .arch-tab:hover { color: var(--text-0); }
+    .arch-tab.active {
+      color: var(--text-0);
+      border-bottom-color: var(--blue);
+      background: var(--bg-1);
+    }
+
+    .arch-content {
+      padding: 40px;
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .arch-view { display: none; width: 100%; }
+    .arch-view.active { display: flex; flex-direction: column; align-items: center; }
+
+    /* Stack View */
+    .stack-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .stack-layer {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .stack-layer:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .stack-layer::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      border-radius: var(--radius) 0 0 var(--radius);
+      opacity: 0.5;
+    }
+
+    .stack-layer.blue::before { background: var(--blue); }
+    .stack-layer.purple::before { background: var(--purple); }
+    .stack-layer.green::before { background: var(--green); }
+
+    .stack-layer:hover::before { opacity: 1; }
+
+    .stack-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .stack-title { font-weight: 600; color: var(--text-0); }
+    .stack-pkg { font-family: var(--font-mono); font-size: 12px; color: var(--text-2); }
+    .stack-desc { font-size: 14px; color: var(--text-1); }
+
+    .stack-arrow {
+      text-align: center;
+      color: var(--text-2);
+      font-size: 20px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(4px); }
+    }
+
+    /* Events View */
+    .events-container {
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .events-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .event-step {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .event-step-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .event-step-icon.start { background: rgba(59, 130, 246, 0.2); color: var(--blue); }
+    .event-step-icon.provider { background: rgba(168, 85, 247, 0.2); color: var(--purple); }
+    .event-step-icon.tool { background: rgba(249, 115, 22, 0.2); color: var(--orange); }
+    .event-step-icon.end { background: rgba(16, 185, 129, 0.2); color: var(--green); }
+
+    .event-step-content { flex: 1; }
+    .event-step-content strong { color: var(--text-0); font-size: 14px; }
+    .event-step-content span { display: block; color: var(--text-2); font-size: 13px; }
+
+    .event-step-hook {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--green);
+      background: rgba(16, 185, 129, 0.1);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .event-connector {
+      text-align: center;
+      color: var(--text-2);
+      font-size: 16px;
+    }
+
+    /* Litmus View */
+    .litmus-container {
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .litmus-question {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      background: linear-gradient(to right, var(--blue), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .litmus-choices {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+    }
+
+    .litmus-choice {
+      padding: 20px 40px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-0);
+    }
+
+    .litmus-choice:hover {
+      transform: scale(1.05);
+    }
+
+    .litmus-choice.no:hover { border-color: var(--green); }
+    .litmus-choice.yes:hover { border-color: var(--purple); }
+
+    .litmus-choice strong { font-size: 24px; display: block; margin-bottom: 8px; }
+    .litmus-choice span { color: var(--text-2); }
+
+    .litmus-result {
+      margin-top: 40px;
+      padding: 20px;
+      background: var(--bg-3);
+      border-radius: var(--radius);
+      animation: fadeUp 0.5s ease;
+      display: none;
+    }
+
+    .litmus-result.show { display: block; }
+    .litmus-result h3 { margin-bottom: 8px; }
+    .litmus-result p { margin: 0; color: var(--text-1); }
+    .litmus-result.kernel { border-left: 4px solid var(--green); }
+    .litmus-result.kernel h3 { color: var(--green); }
+    .litmus-result.module { border-left: 4px solid var(--purple); }
+    .litmus-result.module h3 { color: var(--purple); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Concepts Grid */
+    .concepts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .concept {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      transition: border-color 0.2s ease;
+    }
+
+    .concept:hover { border-color: var(--blue); }
+
+    .concept h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .concept h3::before {
+      content: '◆';
+      font-size: 10px;
+      color: var(--blue);
+    }
+
+    .concept p { color: var(--text-1); font-size: 14px; margin-bottom: 12px; }
+    .concept ul, .concept ol { padding-left: 18px; color: var(--text-1); font-size: 14px; }
+    .concept li { margin: 4px 0; }
+    .concept code { background: var(--bg-2); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 12px; color: var(--blue); }
+
+    .event-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .event-tags span { background: var(--bg-2); padding: 4px 10px; border-radius: 4px; font-size: 12px; font-family: var(--font-mono); color: var(--green); }
+
+    @media (max-width: 600px) {
+      .concepts { grid-template-columns: 1fr; }
+    }
+
+    /* =================================================================
+       REFERENCE
+       ================================================================= */
+    .contracts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .contract {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .contract h4 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .contract h4 span { font-weight: 400; font-size: 12px; color: var(--text-2); }
+
+    .contract code {
+      display: block;
+      background: var(--bg-2);
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-1);
+      margin: 4px 0;
+    }
+
+    @media (max-width: 600px) {
+      .contracts { grid-template-columns: 1fr; }
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .action {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .action code { font-family: var(--font-mono); font-size: 14px; color: var(--blue); }
+    .action span { display: block; font-size: 13px; color: var(--text-2); margin-top: 4px; }
+
+    .event-groups {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .event-group {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .event-group h4 { font-size: 13px; margin-bottom: 10px; color: var(--text-0); }
+
+    .event-group code {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--green);
+      margin: 4px 0;
+    }
+
+    @media (max-width: 700px) {
+      .event-groups { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 500px) {
+      .event-groups { grid-template-columns: 1fr; }
+    }
+
+    /* =================================================================
+       CLI
+       ================================================================= */
+    .cli-groups {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .cli-group {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .cli-group h3 { font-size: 14px; margin-bottom: 14px; }
+
+    .cli-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cli-item:last-child { border-bottom: none; }
+
+    .cli-item code { font-family: var(--font-mono); font-size: 13px; color: var(--green); }
+    .cli-item span { font-size: 13px; color: var(--text-2); }
+
+    @media (max-width: 600px) {
+      .cli-groups { grid-template-columns: 1fr; }
+    }
+
+    /* =================================================================
+       EXAMPLES
+       ================================================================= */
+    .examples-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .examples-tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-1);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .examples-tab:hover {
+      background: var(--bg-2);
+      border-color: var(--text-2);
+      color: var(--text-0);
+    }
+
+    .examples-tab.active {
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      border-color: transparent;
+      color: white;
+    }
+
+    .examples-content { display: none; }
+    .examples-content.active { display: block; }
+
+    .examples-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .example-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+
+    .example-card:hover {
+      border-color: var(--text-2);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .example-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .example-card-header h3 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-0);
+    }
+
+    .example-card-desc {
+      padding: 14px 18px;
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-1);
+      line-height: 1.5;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .example-card pre {
+      margin: 0;
+      padding: 16px 18px;
+      background: var(--bg-0);
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-x: auto;
+    }
+
+    .example-card code {
+      font-family: var(--font-mono);
+    }
+
+    .example-card-output {
+      padding: 14px 18px;
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+    }
+
+    .output-label {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--green);
+      background: rgba(16, 185, 129, 0.1);
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .example-card-output pre {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-1);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .examples-footer {
+      margin-top: 24px;
+      padding: 16px 20px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .install-hint {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .install-hint strong {
+      font-size: 13px;
+      color: var(--text-0);
+    }
+
+    .install-hint code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--green);
+      background: var(--bg-0);
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    /* =================================================================
+       CONTRIBUTE
+       ================================================================= */
+    .callout {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.05));
+      border: 1px solid var(--blue);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .callout p { margin: 0; color: var(--text-1); }
+    .callout strong { color: var(--text-0); }
+    .callout em { color: var(--blue); font-style: normal; }
+
+    .contrib-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+
+    .contrib-table th, .contrib-table td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .contrib-table th {
+      background: var(--bg-2);
+      color: var(--text-2);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .contrib-table .done { color: var(--green); }
+    .contrib-table .needed { color: var(--orange); }
+    .contrib-table code { background: var(--bg-2); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 12px; }
+
+    .personas {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .persona {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .persona strong { display: block; margin-bottom: 6px; }
+    .persona p { margin: 0; font-size: 13px; color: var(--text-2); }
+
+    @media (max-width: 700px) {
+      .personas { grid-template-columns: 1fr; }
+    }
+
+    .task {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .task-title { font-weight: 600; }
+
+    .task-layer {
+      font-size: 12px;
+      padding: 4px 10px;
+      background: var(--bg-2);
+      border-radius: 4px;
+      color: var(--text-2);
+      font-family: var(--font-mono);
+    }
+
+    .task > p { color: var(--text-1); font-size: 14px; margin-bottom: 12px; }
+
+    /* =================================================================
+       FOOTER
+       ================================================================= */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 12px;
+    }
+
+    .footer-links a { color: var(--text-2); font-size: 14px; }
+    .footer-links a:hover { color: var(--text-0); }
+
+    .footer-copy { color: var(--text-2); font-size: 13px; }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+    }
   </style>
 </head>
 <body>
-  <div id="root"></div>
 
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- Prism.js core + Python language -->
-  <script src="https://unpkg.com/prismjs@1.29.0/prism.min.js"></script>
-  <script src="https://unpkg.com/prismjs@1.29.0/components/prism-python.min.js"></script>
-  <script src="https://unpkg.com/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <a class="nav-logo" onclick="showSection('home')">
+          <img src="amplifierlogo.png" alt="Amplifier">
+          Amplifier
+        </a>
+        <div class="nav-links" id="main-nav">
+          <button class="nav-link active" data-section="home">Overview</button>
+          <button class="nav-link" data-section="quickstart">Quickstart</button>
+          <button class="nav-link" data-section="architecture">Architecture</button>
+          <button class="nav-link" data-section="reference">Reference</button>
+          <button class="nav-link" data-section="cli">CLI</button>
+          <button class="nav-link" data-section="examples">Examples</button>
+          <button class="nav-link" data-section="contribute">Contribute</button>
+        </div>
+      </div>
+      <div class="nav-right">
+        <div class="export-wrap">
+          <button class="export-btn" onclick="toggleExportMenu()">
+            Export <span class="export-caret" id="export-caret">▼</span>
+          </button>
+          <div class="export-menu" id="export-menu">
+            <button class="export-item" onclick="copyMarkdown()">
+              Copy as Markdown
+              <span>For agents.md / claude.md</span>
+            </button>
+            <button class="export-item" onclick="downloadMarkdown()">
+              Download amplifier.md
+              <span>Agent reference file</span>
+            </button>
+          </div>
+        </div>
+        <a href="https://github.com/microsoft/amplifier-core" class="nav-github" target="_blank">GitHub</a>
+      </div>
+    </div>
+  </nav>
 
-  <script type="text/babel" src="amplifier-dx.jsx"></script>
-  <script type="text/babel">
-    ReactDOM.createRoot(document.getElementById('root')).render(<AmplifierDXSite />);
+  <!-- Main Content -->
+  <main>
+    <!-- HOME SECTION -->
+    <section id="section-home" class="section active">
+      <div class="hero">
+        <div class="hero-eyebrow">Open Source · Microsoft · MIT License</div>
+        <h1 class="hero-title">Amplifier</h1>
+        <p class="hero-subtitle">The ultra-thin kernel for modular AI agents</p>
+        <p class="hero-description">
+          Build AI agent systems with Linux-kernel philosophy: a tiny, stable center (~2,600 lines)
+          that provides mechanisms, while policies live as swappable modules at the edges.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="showSection('quickstart')">Get started</button>
+          <a href="https://github.com/microsoft/amplifier-core" class="btn-secondary" target="_blank">View on GitHub</a>
+        </div>
+      </div>
+
+      <div class="feature-cards">
+        <div class="feature-card">
+          <div class="feature-gradient blue"></div>
+          <span class="feature-label">Use it</span>
+          <p>Run AI agents with pre-built providers and tools. Configure via profiles.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-gradient purple"></div>
+          <span class="feature-label">Extend it</span>
+          <p>Write custom tools in 2 minutes. Duck typing, no inheritance.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-gradient green"></div>
+          <span class="feature-label">Embed it</span>
+          <p>Drop the kernel into your app. Full programmatic control.</p>
+        </div>
+      </div>
+
+      <div class="quickstart-preview">
+        <h2>Developer quickstart</h2>
+        <p class="section-desc">Make your first agent request in minutes.</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Install
+uv tool install --force git+https://github.com/microsoft/amplifier@next
+
+# Update and initialize
+amplifier update
+amplifier init
+
+# Run
+amplifier run "List all Python files in this directory"</code></pre>
+        </div>
+      </div>
+
+      <div class="start-building">
+        <h2>Start building</h2>
+        <div class="start-grid">
+          <button class="start-item" onclick="showSection('quickstart'); setQuickstartTab('consumer');">
+            <div class="start-icon">▶</div>
+            <div>
+              <strong>Use existing modules</strong>
+              <span>Configure profiles and run agents</span>
+            </div>
+          </button>
+          <button class="start-item" onclick="showSection('quickstart'); setQuickstartTab('extender');">
+            <div class="start-icon">+</div>
+            <div>
+              <strong>Write a custom tool</strong>
+              <span>Extend agent capabilities</span>
+            </div>
+          </button>
+          <button class="start-item" onclick="showSection('quickstart'); setQuickstartTab('architect');">
+            <div class="start-icon">{ }</div>
+            <div>
+              <strong>Embed in your app</strong>
+              <span>Programmatic session control</span>
+            </div>
+          </button>
+          <button class="start-item" onclick="showSection('reference')">
+            <div class="start-icon">◈</div>
+            <div>
+              <strong>Hooks &amp; events</strong>
+              <span>Observe and control execution</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUICKSTART SECTION -->
+    <section id="section-quickstart" class="section">
+      <h1>Quickstart</h1>
+      <p class="section-desc">Choose your path. Each guide gets you productive in minutes.</p>
+
+      <div class="tabs" id="quickstart-tabs">
+        <button class="tab active" data-tab="consumer">Use a profile</button>
+        <button class="tab" data-tab="extender">Write a tool</button>
+        <button class="tab" data-tab="architect">Embed in app</button>
+      </div>
+
+      <!-- Consumer Tab -->
+      <div id="qs-consumer" class="tab-content active">
+        <p>Run AI agents using pre-built modules and profiles.</p>
+
+        <h3>1. Install</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash">uv tool install --force git+https://github.com/microsoft/amplifier@next</code></pre>
+        </div>
+
+        <h3>2. Update and Initialize</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash">amplifier update
+amplifier init</code></pre>
+        </div>
+
+        <h3>3. Run</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Interactive
+amplifier
+
+# Single command
+amplifier run "Explain this codebase"
+
+# With profile
+amplifier run --profile dev "Review for security issues"</code></pre>
+        </div>
+
+        <h3>4. Customize your profile</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml"># ~/.amplifier/profiles/my-profile.yaml
+name: my-profile
+session:
+  orchestrator: loop-streaming
+  context: context-persistent
+providers:
+  - module: provider-anthropic
+    config:
+      model: claude-sonnet-4-20250514
+tools:
+  - module: tool-filesystem
+  - module: tool-bash</code></pre>
+        </div>
+      </div>
+
+      <!-- Extender Tab -->
+      <div id="qs-extender" class="tab-content">
+        <p>Write a custom tool in under 2 minutes using duck typing.</p>
+
+        <h3>1. Implement the Tool protocol</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from amplifier_core.models import ToolResult
+
+class WeatherTool:
+    @property
+    def name(self) -> str:
+        return "weather"
+
+    @property
+    def description(self) -> str:
+        return "Get current weather for a city"
+
+    async def execute(self, input: dict) -> ToolResult:
+        city = input.get("city", "Unknown")
+        # Your logic here
+        return ToolResult(output=f"Weather in {city}: 72°F, Sunny", error=None)</code></pre>
+        </div>
+
+        <h3>2. Add mount function</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">async def mount(coordinator, config):
+    await coordinator.mount("tools", WeatherTool(), name="weather")
+    return lambda: None  # cleanup</code></pre>
+        </div>
+
+        <h3>3. Register entry point</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">toml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-toml"># pyproject.toml
+[project.entry-points."amplifier.modules"]
+weather-tool = "my_package.weather:mount"</code></pre>
+        </div>
+
+        <h3>4. Install and use</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash">pip install -e .
+amplifier run "What's the weather in Seattle?"</code></pre>
+        </div>
+
+        <div class="info-box">
+          <strong>Tool Protocol</strong>
+          <table class="mini-table">
+            <tbody>
+              <tr><td><code>name</code></td><td>property → str</td></tr>
+              <tr><td><code>description</code></td><td>property → str</td></tr>
+              <tr><td><code>execute(input)</code></td><td>async → ToolResult</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Architect Tab -->
+      <div id="qs-architect" class="tab-content">
+        <p>Embed Amplifier in your application with full programmatic control.</p>
+
+        <h3>1. Define mount plan</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from amplifier_core import AmplifierSession
+
+async def run_agent(prompt: str) -> str:
+    config = {
+        "session": {
+            "orchestrator": "loop-basic",
+            "context": "context-simple"
+        },
+        "providers": [{"module": "provider-anthropic"}],
+        "tools": [{"module": "tool-filesystem"}, {"module": "tool-bash"}],
+        "hooks": [{"module": "hooks-logging"}]
+    }
+
+    async with AmplifierSession(config) as session:
+        return await session.execute(prompt)</code></pre>
+        </div>
+
+        <h3>2. Add custom hooks</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from amplifier_core.models import HookResult
+
+async def audit_hook(event: str, data: dict) -> HookResult:
+    if event == "tool:pre":
+        print(f"Executing: {data['tool_name']}")
+    return HookResult(action="continue")
+
+config["hooks"].append({"handler": audit_hook, "events": ["tool:*"]})</code></pre>
+        </div>
+
+        <h3>3. Session persistence with ID</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Create session with explicit ID for persistence
+session = AmplifierSession(config, session_id="user-123-session")
+await session.initialize()
+
+# Load conversation history
+context = session.coordinator.get("context")
+for msg in historical_messages:
+    await context.add_message(msg)
+
+# Continue conversation
+response = await session.execute(prompt)</code></pre>
+        </div>
+
+        <h3>4. Fork sessions for parallel work</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">async with AmplifierSession(config) as parent:
+    child1 = await parent.fork()
+    child2 = await parent.fork()
+
+    results = await asyncio.gather(
+        child1.execute("Analyze backend"),
+        child2.execute("Review frontend")
+    )</code></pre>
+        </div>
+
+        <div class="info-box">
+          <strong>Reference Implementation</strong>
+          <p>See <a href="https://github.com/payneio/amplifierd" target="_blank">amplifierd</a> for a complete HTTP/SSE API built on amplifier-core.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE SECTION -->
+    <section id="section-architecture" class="section">
+      <h1>Architecture</h1>
+      <p class="section-desc">Design philosophy: kernel, not framework. Mechanism over policy.</p>
+
+      <div class="arch-viz">
+        <div class="arch-tabs" id="arch-tabs">
+          <button class="arch-tab active" data-view="stack">System Stack</button>
+          <button class="arch-tab" data-view="events">Event Flow</button>
+          <button class="arch-tab" data-view="litmus">The Litmus Test</button>
+        </div>
+
+        <div class="arch-content">
+          <!-- Stack View -->
+          <div id="arch-stack" class="arch-view active">
+            <div class="stack-container">
+              <div class="stack-layer blue">
+                <div class="stack-header">
+                  <span class="stack-title">DX Layer</span>
+                  <span class="stack-pkg">amplifier-app-cli</span>
+                </div>
+                <div class="stack-desc">CLI, scaffolding, dev mode, inspector</div>
+              </div>
+              <div class="stack-arrow">↓</div>
+              <div class="stack-layer purple">
+                <div class="stack-header">
+                  <span class="stack-title">Helpers</span>
+                  <span class="stack-pkg">amplifier-helpers</span>
+                </div>
+                <div class="stack-desc">@tool decorator, testing utilities</div>
+              </div>
+              <div class="stack-arrow">↓</div>
+              <div class="stack-layer green">
+                <div class="stack-header">
+                  <span class="stack-title">Kernel</span>
+                  <span class="stack-pkg">amplifier-core</span>
+                </div>
+                <div class="stack-desc">Session, Coordinator, Protocols, Events</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Events View -->
+          <div id="arch-events" class="arch-view">
+            <div class="events-container">
+              <div class="events-flow">
+                <div class="event-step">
+                  <div class="event-step-icon start">📥</div>
+                  <div class="event-step-content">
+                    <strong>Prompt Submitted</strong>
+                    <span>User sends a prompt to the session</span>
+                  </div>
+                  <span class="event-step-hook">session:start</span>
+                </div>
+                <div class="event-connector">↓</div>
+                <div class="event-step">
+                  <div class="event-step-icon provider">🤖</div>
+                  <div class="event-step-content">
+                    <strong>Provider Request</strong>
+                    <span>LLM generates response with tool calls</span>
+                  </div>
+                  <span class="event-step-hook">provider:request</span>
+                </div>
+                <div class="event-connector">↓</div>
+                <div class="event-step">
+                  <div class="event-step-icon tool">🔧</div>
+                  <div class="event-step-content">
+                    <strong>Tool Execution</strong>
+                    <span>Tools run with hook observation</span>
+                  </div>
+                  <span class="event-step-hook">tool:pre → tool:post</span>
+                </div>
+                <div class="event-connector">↓</div>
+                <div class="event-step">
+                  <div class="event-step-icon end">✅</div>
+                  <div class="event-step-content">
+                    <strong>Response Complete</strong>
+                    <span>Final answer returned to user</span>
+                  </div>
+                  <span class="event-step-hook">session:end</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Litmus View -->
+          <div id="arch-litmus" class="arch-view">
+            <div class="litmus-container">
+              <div class="litmus-question">"Could two teams want different behavior?"</div>
+              <div class="litmus-choices">
+                <button class="litmus-choice no" onclick="showLitmusResult('no')">
+                  <strong>No</strong>
+                  <span>Universal requirement</span>
+                </button>
+                <button class="litmus-choice yes" onclick="showLitmusResult('yes')">
+                  <strong>Yes</strong>
+                  <span>Team preference</span>
+                </button>
+              </div>
+              <div id="litmus-result-no" class="litmus-result kernel">
+                <h3>It belongs in the Kernel</h3>
+                <p>Mechanisms that everyone needs (e.g., Session management, Event emission).</p>
+              </div>
+              <div id="litmus-result-yes" class="litmus-result module">
+                <h3>It belongs in a Module</h3>
+                <p>Policies that vary by team (e.g., "Allow sudo?", "Which LLM to use?").</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Core concepts</h2>
+      <div class="concepts">
+        <div class="concept">
+          <h3>Coordinator</h3>
+          <p>Infrastructure context injected into all modules.</p>
+          <ul>
+            <li><code>session_id</code> — Unique identifier</li>
+            <li><code>config</code> — Session configuration</li>
+            <li><code>mount()</code> — Register module</li>
+            <li><code>emit()</code> — Fire events</li>
+          </ul>
+        </div>
+        <div class="concept">
+          <h3>Mount Plan</h3>
+          <p>Configuration specifying which modules to load.</p>
+          <div class="code-block" style="margin-top: 8px;">
+            <pre style="padding: 12px;"><code class="language-json">{
+  "session": {"orchestrator": "loop-basic"},
+  "providers": [{"module": "provider-anthropic"}],
+  "tools": [{"module": "tool-filesystem"}]
+}</code></pre>
+          </div>
+        </div>
+        <div class="concept">
+          <h3>Session Lifecycle</h3>
+          <ol>
+            <li>Load modules from mount plan</li>
+            <li>Call <code>mount()</code> on each</li>
+            <li>Execute prompts via orchestrator</li>
+            <li>Cleanup on session end</li>
+          </ol>
+        </div>
+        <div class="concept">
+          <h3>Event System</h3>
+          <p>30+ hookable events covering the agent lifecycle.</p>
+          <div class="event-tags">
+            <span>session:*</span>
+            <span>provider:*</span>
+            <span>tool:*</span>
+            <span>context:*</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REFERENCE SECTION -->
+    <section id="section-reference" class="section">
+      <h1>API Reference</h1>
+      <p class="section-desc">Complete documentation for module developers.</p>
+
+      <div class="tabs" id="reference-tabs">
+        <button class="tab active" data-tab="contracts">Contracts</button>
+        <button class="tab" data-tab="hooks-api">Hooks API</button>
+        <button class="tab" data-tab="events">Events</button>
+      </div>
+
+      <!-- Contracts Tab -->
+      <div id="ref-contracts" class="tab-content active">
+        <p>All modules use Python Protocols (structural typing). No inheritance required.</p>
+
+        <div class="contracts">
+          <div class="contract">
+            <h4>Provider <span>LLM Backend</span></h4>
+            <code>name: str</code>
+            <code>get_info() → ProviderInfo</code>
+            <code>list_models() → list[ModelInfo]</code>
+            <code>complete(ChatRequest) → ChatResponse</code>
+            <code>parse_tool_calls(ChatResponse) → list</code>
+          </div>
+          <div class="contract">
+            <h4>Tool <span>Agent Capability</span></h4>
+            <code>name: str</code>
+            <code>description: str</code>
+            <code>execute(input: dict) → ToolResult</code>
+          </div>
+          <div class="contract">
+            <h4>Orchestrator <span>Execution Loop</span></h4>
+            <code>execute(prompt, context, providers, tools, hooks) → str</code>
+          </div>
+          <div class="contract">
+            <h4>ContextManager <span>Memory</span></h4>
+            <code>add_message(message)</code>
+            <code>get_messages() → list</code>
+            <code>should_compact() → bool</code>
+            <code>compact()</code>
+            <code>clear()</code>
+          </div>
+          <div class="contract">
+            <h4>Hook <span>Observability</span></h4>
+            <code>async handler(event: str, data: dict) → HookResult</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hooks API Tab -->
+      <div id="ref-hooks-api" class="tab-content">
+        <p>Hooks observe events and optionally modify behavior via HookResult.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">async def my_hook(event: str, data: dict) -> HookResult:
+    if event == "tool:pre" and "rm -rf" in str(data.get("tool_input")):
+        return HookResult(action="deny", reason="Blocked")
+    return HookResult(action="continue")</code></pre>
+        </div>
+
+        <h3>HookResult Actions</h3>
+        <div class="actions">
+          <div class="action">
+            <code>continue</code>
+            <span>Proceed normally (default)</span>
+          </div>
+          <div class="action">
+            <code>deny</code>
+            <span>Block with reason</span>
+          </div>
+          <div class="action">
+            <code>modify</code>
+            <span>Alter event data</span>
+          </div>
+          <div class="action">
+            <code>inject_context</code>
+            <span>Add message to context</span>
+          </div>
+          <div class="action">
+            <code>ask_user</code>
+            <span>Pause for approval</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events Tab -->
+      <div id="ref-events" class="tab-content">
+        <p>30+ hookable events covering the entire agent lifecycle.</p>
+
+        <div class="event-groups">
+          <div class="event-group">
+            <h4>Session</h4>
+            <code>session:start</code>
+            <code>session:end</code>
+            <code>session:fork</code>
+          </div>
+          <div class="event-group">
+            <h4>Provider</h4>
+            <code>provider:request</code>
+            <code>provider:response</code>
+            <code>provider:error</code>
+          </div>
+          <div class="event-group">
+            <h4>Tool</h4>
+            <code>tool:pre</code>
+            <code>tool:post</code>
+            <code>tool:error</code>
+          </div>
+          <div class="event-group">
+            <h4>Streaming</h4>
+            <code>content_block:start</code>
+            <code>content_block:delta</code>
+            <code>content_block:end</code>
+          </div>
+          <div class="event-group">
+            <h4>Context</h4>
+            <code>context:pre_compact</code>
+            <code>context:post_compact</code>
+          </div>
+          <div class="event-group">
+            <h4>Governance</h4>
+            <code>approval:required</code>
+            <code>approval:granted</code>
+            <code>policy:violation</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLI SECTION -->
+    <section id="section-cli" class="section">
+      <h1>CLI Reference</h1>
+      <p class="section-desc">Command-line interface for running and managing Amplifier.</p>
+
+      <div class="cli-groups">
+        <div class="cli-group">
+          <h3>Running</h3>
+          <div class="cli-item"><code>amplifier</code><span>Interactive chat</span></div>
+          <div class="cli-item"><code>amplifier run "prompt"</code><span>Single command</span></div>
+          <div class="cli-item"><code>amplifier run --profile name</code><span>With profile</span></div>
+          <div class="cli-item"><code>amplifier run -m model</code><span>Override model</span></div>
+        </div>
+        <div class="cli-group">
+          <h3>Profiles</h3>
+          <div class="cli-item"><code>amplifier profile list</code><span>List profiles</span></div>
+          <div class="cli-item"><code>amplifier profile show name</code><span>Show details</span></div>
+          <div class="cli-item"><code>amplifier profile set name</code><span>Set default</span></div>
+        </div>
+        <div class="cli-group">
+          <h3>Modules</h3>
+          <div class="cli-item"><code>amplifier module list</code><span>List installed</span></div>
+          <div class="cli-item"><code>amplifier module show name</code><span>Show details</span></div>
+        </div>
+        <div class="cli-group">
+          <h3>Collections</h3>
+          <div class="cli-item"><code>amplifier collection add url</code><span>Add from Git</span></div>
+          <div class="cli-item"><code>amplifier collection list</code><span>List installed</span></div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Tips</strong>
+        <ul>
+          <li>Pipe input: <code>cat file.py | amplifier run "Explain"</code></li>
+          <li>Set default profile: <code>AMPLIFIER_PROFILE=dev</code></li>
+          <li>Verbose output: <code>-v</code> or <code>--verbose</code></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- EXAMPLES SECTION -->
+    <section id="section-examples" class="section">
+      <h1>Examples</h1>
+      <p class="section-desc">Copy-paste patterns for common Amplifier use cases.</p>
+
+      <div class="examples-tabs" id="examples-tabs">
+        <button class="examples-tab active" data-tab="hooks">⚡ Hooks</button>
+        <button class="examples-tab" data-tab="tools">🔧 Tools</button>
+        <button class="examples-tab" data-tab="config">⚙️ Configuration</button>
+        <button class="examples-tab" data-tab="recipes">📖 Recipes</button>
+      </div>
+
+      <!-- Hooks Examples -->
+      <div id="ex-hooks" class="examples-content active">
+        <div class="examples-grid">
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>Approval Gate</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Require user approval before executing sensitive operations like shell commands.</p>
+            <pre><code class="language-python">async def approval_gate(event, data) -> HookResult:
+    """Pause for user approval on bash commands."""
+    if event == "tool:pre" and data["tool_name"] == "bash":
+        return HookResult(
+            action="ask_user",
+            approval_prompt=f"Allow bash: {data['tool_input']}?",
+            approval_options=["Allow", "Deny"]
+        )
+    return HookResult(action="continue")</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">Usage</span>
+              <pre>hooks:
+  - handler: approval_gate
+    events: ["tool:pre"]</pre>
+            </div>
+          </div>
+
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>Security Guard</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Block dangerous shell commands before they execute. Returns deny action with reason.</p>
+            <pre><code class="language-python">from amplifier_core.models import HookResult
+
+async def security_hook(event: str, data: dict) -> HookResult:
+    """Block dangerous bash commands."""
+    if event == "tool:pre" and data.get("tool_name") == "bash":
+        cmd = str(data.get("tool_input", {}))
+        dangerous = ["rm -rf", "mkfs", "dd if=", "> /dev/"]
+
+        for pattern in dangerous:
+            if pattern in cmd:
+                return HookResult(
+                    action="deny",
+                    reason=f"Blocked dangerous pattern: {pattern}"
+                )
+
+    return HookResult(action="continue")</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">Output</span>
+              <pre>Action: deny
+Reason: Blocked dangerous pattern: rm -rf</pre>
+            </div>
+          </div>
+
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>Token Tracker</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Monitor and log token usage across all provider calls for cost tracking.</p>
+            <pre><code class="language-python">async def track_tokens(event, data) -> HookResult:
+    """Log token usage from provider responses."""
+    if event == "provider:response":
+        usage = data.get("usage", {})
+        tokens = usage.get("total_tokens", 0)
+        cost = tokens * 0.00001  # Example pricing
+        print(f"Used {tokens} tokens (~\${cost:.4f})")
+    return HookResult(action="continue")</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">Output</span>
+              <pre>Used 1523 tokens (~$0.0152)</pre>
+            </div>
+          </div>
+
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>PII Redaction</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Automatically detect and redact sensitive information from streamed responses.</p>
+            <pre><code class="language-python">import re
+from amplifier_core.models import HookResult
+
+PATTERNS = {
+    "email": r'[\w.-]+@[\w.-]+\.[a-z]{2,}',
+    "ssn": r'\d{3}-\d{2}-\d{4}',
+    "phone": r'\d{3}[-.\s]?\d{3}[-.\s]?\d{4}'
+}
+
+async def redact_pii(event, data) -> HookResult:
+    """Redact PII from streaming content."""
+    if event == "content_block:delta":
+        content = data.get("delta", "")
+        for name, pattern in PATTERNS.items():
+            content = re.sub(pattern, f"[{name.upper()}_REDACTED]", content)
+        return HookResult(action="modify", data={"delta": content})
+    return HookResult(action="continue")</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">Output</span>
+              <pre>Input:  "Contact john@email.com or 555-123-4567"
+Output: "Contact [EMAIL_REDACTED] or [PHONE_REDACTED]"</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tools Examples -->
+      <div id="ex-tools" class="examples-content">
+        <div class="examples-grid">
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>Custom Tool</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Implement a tool using the Protocol pattern - duck typing, no inheritance required.</p>
+            <pre><code class="language-python">from amplifier_core.models import ToolResult
+
+class WeatherTool:
+    """A simple weather lookup tool."""
+
+    @property
+    def name(self) -> str:
+        return "weather"
+
+    @property
+    def description(self) -> str:
+        return "Get current weather for a city"
+
+    async def execute(self, input: dict) -> ToolResult:
+        city = input.get("city", "Unknown")
+        # Your API call here
+        return ToolResult(
+            output=f"Weather in {city}: 72°F, Sunny"
+        )
+
+# Mount function for module discovery
+async def mount(coordinator, config):
+    await coordinator.mount("tools", WeatherTool(), name="weather")
+    return lambda: None  # cleanup function</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">pyproject.toml</span>
+              <pre>[project.entry-points."amplifier.modules"]
+weather-tool = "my_package.weather:mount"</pre>
+            </div>
+          </div>
+
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>ToolResult: Success</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Return successful execution results. The LLM sees this output and can act on it.</p>
+            <pre><code class="language-python">from amplifier_core.models import ToolResult
+
+# Simple success
+result = ToolResult(output="File created: /tmp/example.txt")
+
+# Structured success with details
+result = ToolResult(
+    output="""Created: /tmp/report.csv
+Rows: 1,523
+Size: 45.2 KB
+Columns: id, name, email, created_at"""
+)</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">Output</span>
+              <pre>Created: /tmp/report.csv
+Rows: 1,523
+Size: 45.2 KB</pre>
+            </div>
+          </div>
+
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>ToolResult: Error</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Communicate failures so the LLM can try a different approach or ask for help.</p>
+            <pre><code class="language-python">from amplifier_core.models import ToolResult
+
+# Error with clear message
+result = ToolResult(
+    output="",
+    error="Permission denied: /etc/passwd is read-only"
+)
+
+# Error with partial output
+result = ToolResult(
+    output="Processed 50 of 100 files",
+    error="Disk full - operation incomplete"
+)</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">Output</span>
+              <pre>Error: Permission denied: /etc/passwd is read-only</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Config Examples -->
+      <div id="ex-config" class="examples-content">
+        <div class="examples-grid">
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>Session Configuration</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">The mount plan structure that configures an Amplifier session with all components.</p>
+            <pre><code class="language-python">from amplifier_core import AmplifierSession
+
+config = {
+    "session": {
+        "orchestrator": "loop-basic",
+        "context": "context-simple"
+    },
+    "providers": [
+        {"module": "provider-anthropic"}
+    ],
+    "tools": [
+        {"module": "tool-filesystem"},
+        {"module": "tool-bash"}
+    ],
+    "hooks": [
+        {"module": "hooks-logging"},
+        {"handler": "my_security_hook"}
+    ]
+}
+
+async with AmplifierSession(config) as session:
+    response = await session.execute("Your prompt here")</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">CLI Usage</span>
+              <pre>amplifier run --profile my_config "Hello!"</pre>
+            </div>
+          </div>
+
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>Multi-Provider Fallback</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Configure provider priority for automatic failover between LLM backends.</p>
+            <pre><code class="language-yaml"># profile.yaml - Provider failover chain
+providers:
+  - module: provider-anthropic
+    priority: 1      # Primary - Claude
+    config:
+      model: claude-sonnet-4-20250514
+
+  - module: provider-openai
+    priority: 2      # First fallback - GPT-4
+    config:
+      model: gpt-4o
+
+  - module: provider-ollama
+    priority: 3      # Local fallback
+    config:
+      model: llama3.1</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">Behavior</span>
+              <pre>1. Try Anthropic (primary)
+2. On error → Try OpenAI
+3. On error → Try Ollama (local)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recipes Examples -->
+      <div id="ex-recipes" class="examples-content">
+        <div class="examples-grid">
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>Chat Agent with Memory</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Build a conversational agent that maintains context across multiple turns.</p>
+            <pre><code class="language-python">from amplifier_core import AmplifierSession
+
+async def chat_loop():
+    config = {
+        "session": {
+            "orchestrator": "loop-basic",
+            "context": "context-simple"
+        },
+        "providers": [{"module": "provider-anthropic"}],
+        "tools": [{"module": "tool-bash"}, {"module": "tool-filesystem"}]
+    }
+
+    async with AmplifierSession(config) as session:
+        print("Chat started. Type 'quit' to exit.")
+        while True:
+            user_input = input("You: ")
+            if user_input.lower() == 'quit':
+                break
+
+            # Context is automatically maintained
+            response = await session.execute(user_input)
+            print(f"Agent: {response}")</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">Output</span>
+              <pre>You: What files are in the current directory?
+Agent: I'll check that for you...
+[Lists files]
+You: Create a summary of the largest one
+Agent: Looking at the largest file...</pre>
+            </div>
+          </div>
+
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>Real-time Cost Tracking</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Monitor API costs in real-time with budget alerts and automatic cutoffs.</p>
+            <pre><code class="language-python">from amplifier_core.models import HookResult
+
+class CostTracker:
+    PRICING = {
+        "claude-sonnet-4-20250514": {"input": 0.003, "output": 0.015},
+        "gpt-4o": {"input": 0.005, "output": 0.015},
+    }
+
+    def __init__(self, budget: float = 10.0):
+        self.budget = budget
+        self.spent = 0.0
+
+    def track(self, model: str, input_tokens: int, output_tokens: int):
+        rates = self.PRICING.get(model, {"input": 0.01, "output": 0.03})
+        cost = (input_tokens * rates["input"] +
+                output_tokens * rates["output"]) / 1000
+        self.spent += cost
+        return cost
+
+tracker = CostTracker(budget=5.0)
+
+async def cost_hook(event, data) -> HookResult:
+    if event == "provider:response":
+        usage = data.get("usage", {})
+        cost = tracker.track(
+            data.get("model", "unknown"),
+            usage.get("input_tokens", 0),
+            usage.get("output_tokens", 0)
+        )
+        print(f"Cost: \${cost:.4f} | Total: \${tracker.spent:.2f}")
+
+        if tracker.spent >= tracker.budget:
+            return HookResult(action="deny", reason="Budget exhausted")
+
+    return HookResult(action="continue")</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">Output</span>
+              <pre>Cost: $0.0234 | Total: $4.89/$5.00
+Cost: $0.0156 | Total: $5.05/$5.00
+Action: deny - Budget exhausted</pre>
+            </div>
+          </div>
+
+          <div class="example-card">
+            <div class="example-card-header">
+              <h3>Complete Audit Trail</h3>
+              <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
+            </div>
+            <p class="example-card-desc">Log every agent action to file for compliance and debugging.</p>
+            <pre><code class="language-python">import json
+from datetime import datetime
+from pathlib import Path
+from amplifier_core.models import HookResult
+
+class AuditLogger:
+    def __init__(self, log_dir: str = "./logs"):
+        self.log_dir = Path(log_dir)
+        self.log_dir.mkdir(exist_ok=True)
+        self.session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.log_file = self.log_dir / f"session_{self.session_id}.jsonl"
+
+    def log(self, event: str, data: dict):
+        entry = {
+            "timestamp": datetime.now().isoformat(),
+            "event": event,
+            "data": {k: str(v)[:500] for k, v in data.items()}
+        }
+        with open(self.log_file, "a") as f:
+            f.write(json.dumps(entry) + "\n")
+
+audit = AuditLogger()
+
+async def audit_hook(event, data) -> HookResult:
+    if not event.startswith("content_block:"):
+        audit.log(event, data)
+    return HookResult(action="continue")</code></pre>
+            <div class="example-card-output">
+              <span class="output-label">Output</span>
+              <pre># Creates: logs/session_20250115_143052.jsonl
+{"timestamp": "2025-01-15T14:30:52", "event": "tool:pre", ...}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- CONTRIBUTE SECTION -->
+    <section id="section-contribute" class="section">
+      <h1>Contributors Guide</h1>
+      <p class="section-desc">Help us build a world-class developer experience for Amplifier.</p>
+
+      <div class="tabs" id="contribute-tabs">
+        <button class="tab active" data-tab="overview">Overview</button>
+        <button class="tab" data-tab="tasks">Priority Tasks</button>
+        <button class="tab" data-tab="specs">Specifications</button>
+      </div>
+
+      <!-- Overview Tab -->
+      <div id="contrib-overview" class="tab-content active">
+        <div class="callout">
+          <p><strong>North Star:</strong> Amplifier makes advanced AI agent systems <em>feel like scripting</em>. Developers should go from an idea to a working extension in under 2 minutes.</p>
+        </div>
+
+        <h3>The Gap</h3>
+        <p>The kernel is already built. It's stable, minimal, and powerful. What's missing is the <strong>developer experience layer</strong>—the tooling that makes the kernel approachable.</p>
+
+        <h3>What Belongs Where</h3>
+        <table class="contrib-table">
+          <thead>
+            <tr><th>Feature</th><th>Layer</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Protocol contracts</td><td>Kernel (core)</td><td class="done">✓ Done</td></tr>
+            <tr><td>AmplifierSession</td><td>Kernel (core)</td><td class="done">✓ Done</td></tr>
+            <tr><td>Event system (30+ events)</td><td>Kernel (core)</td><td class="done">✓ Done</td></tr>
+            <tr><td>Testing utilities (TestCoordinator, etc.)</td><td>Kernel (core)</td><td class="done">✓ Done</td></tr>
+            <tr><td>Protocol validation utility</td><td>Kernel (core)</td><td class="needed">Needed</td></tr>
+            <tr><td>@tool / @hook decorators</td><td>Helpers</td><td class="needed">Needed</td></tr>
+            <tr><td>Test harness utilities</td><td>Helpers</td><td class="needed">Needed</td></tr>
+            <tr><td><code>amplifier dev</code> (hot reload)</td><td>CLI</td><td class="needed">Needed</td></tr>
+            <tr><td><code>amplifier inspect --events</code></td><td>CLI</td><td class="needed">Needed</td></tr>
+            <tr><td><code>amplifier scaffold</code></td><td>CLI</td><td class="needed">Needed</td></tr>
+            <tr><td><code>amplifier check</code> (validation)</td><td>CLI</td><td class="needed">Needed</td></tr>
+            <tr><td><code>amplifier plan show</code></td><td>CLI</td><td class="needed">Needed</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Developer Personas</h3>
+        <div class="personas">
+          <div class="persona">
+            <strong>Consumer</strong>
+            <p>Uses existing modules. Cares about profiles, CLI, and configuration.</p>
+          </div>
+          <div class="persona">
+            <strong>Extender</strong>
+            <p>Adds custom tools/hooks. Needs minimal boilerplate and fast feedback.</p>
+          </div>
+          <div class="persona">
+            <strong>Architect</strong>
+            <p>Embeds Amplifier in products. Needs integration patterns and observability.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasks Tab -->
+      <div id="contrib-tasks" class="tab-content">
+        <h3>🔴 High Priority</h3>
+
+        <div class="task">
+          <div class="task-header">
+            <span class="task-title">Testing Utilities ✓</span>
+            <span class="task-layer">amplifier-core</span>
+          </div>
+          <p>Built-in utilities for unit testing modules (AVAILABLE):</p>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code class="language-python">from amplifier_core.testing import (
+    TestCoordinator, MockTool, MockContextManager,
+    EventRecorder, create_test_coordinator
+)
+
+# Usage in tests
+async def test_my_tool():
+    coord = create_test_coordinator()
+    await mount(coord, {})
+
+    tool = coord.mounted["tools"]["my_tool"]
+    result = await tool.execute({"input": "test"})
+    assert result.error is None</code></pre>
+          </div>
+        </div>
+
+        <div class="task">
+          <div class="task-header">
+            <span class="task-title">@tool Decorator</span>
+            <span class="task-layer">amplifier-helpers</span>
+          </div>
+          <p>2-minute time-to-first-tool. Reduces boilerplate dramatically.</p>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code class="language-python"># amplifier_helpers/decorators.py
+def tool(name: str, description: str):
+    def decorator(func):
+        class GeneratedTool:
+            @property
+            def name(self): return name
+            @property
+            def description(self): return description
+            async def execute(self, input: dict):
+                return await func(**input)
+        return GeneratedTool()
+    return decorator
+
+# Usage
+from amplifier_helpers import tool
+
+@tool(name="greet", description="Says hello")
+async def greet(name: str) -> str:
+    return f"Hello, {name}!"</code></pre>
+          </div>
+        </div>
+
+        <h3>🟡 Medium Priority</h3>
+
+        <div class="task">
+          <div class="task-header">
+            <span class="task-title">Event Inspector</span>
+            <span class="task-layer">amplifier-app-cli</span>
+          </div>
+          <p>Real-time visualization of the event stream.</p>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">bash</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code class="language-bash">$ amplifier inspect --events
+
+# Output:
+# 14:32:01.234 session:start     {session_id: "abc123"}
+# 14:32:01.567 prompt:submit     {content: "Hello"}
+# 14:32:02.123 provider:request  {provider: "anthropic", messages: 1}
+# 14:32:03.456 provider:response {tokens: 42}</code></pre>
+          </div>
+        </div>
+
+        <div class="task">
+          <div class="task-header">
+            <span class="task-title">Scaffold Templates</span>
+            <span class="task-layer">amplifier-app-cli</span>
+          </div>
+          <p>Generate module templates with correct structure.</p>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">bash</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code class="language-bash">$ amplifier scaffold tool my_tool
+# Creates:
+# my_tool/
+#   __init__.py
+#   my_tool.py      # Tool class + mount()
+#   pyproject.toml  # Entry point configured
+#   tests/
+#     test_my_tool.py
+
+$ amplifier scaffold hook --pattern approval
+# Generates approval gate hook template</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Specs Tab -->
+      <div id="contrib-specs" class="tab-content">
+        <h3>@hook Decorator Specification</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># amplifier_helpers/decorators.py
+from functools import wraps
+from amplifier_core.models import HookResult
+
+def hook(events: list[str], priority: int = 100):
+    """
+    Decorator to create a hook handler.
+
+    Args:
+        events: List of event patterns (supports globs like "tool:*")
+        priority: Lower runs first (default 100)
+    """
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(event: str, data: dict) -> HookResult:
+            result = await func(event, data)
+            if result is None:
+                return HookResult(action="continue")
+            return result
+
+        wrapper._hook_events = events
+        wrapper._hook_priority = priority
+        return wrapper
+    return decorator
+
+# Usage
+@hook(events=["tool:pre", "tool:post"], priority=10)
+async def my_hook(event: str, data: dict):
+    print(f"{event}: {data}")
+    # Returning None = continue</code></pre>
+        </div>
+
+        <h3>Directory Structure</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">text</span>
+          </div>
+          <pre><code>amplifier-ecosystem/
+├── amplifier-core/           # Kernel (this repo)
+│   ├── amplifier_core/
+│   │   ├── session.py        # AmplifierSession
+│   │   ├── coordinator.py    # Coordinator
+│   │   ├── hooks.py          # HookRegistry
+│   │   ├── protocols.py      # Protocol definitions
+│   │   ├── models.py         # ToolResult, HookResult, etc.
+│   │   ├── testing.py        # TestCoordinator, MockTool, etc.
+│   │   └── validation.py     # check_protocol() (NEW)
+│   └── pyproject.toml
+│
+├── amplifier-helpers/        # Convenience utilities (NEW)
+│   ├── amplifier_helpers/
+│   │   ├── decorators.py     # @tool, @hook
+│   │   └── testing.py        # ToolTestHarness
+│   └── pyproject.toml
+│
+├── amplifier-app-cli/        # CLI application
+│   ├── amplifier_cli/
+│   │   ├── commands/
+│   │   │   ├── run.py
+│   │   │   ├── dev.py        # Hot reload (NEW)
+│   │   │   ├── inspect.py    # Event inspector (NEW)
+│   │   │   ├── scaffold.py   # Templates (NEW)
+│   │   │   ├── check.py      # Validation (NEW)
+│   │   │   └── plan.py       # Visualizer (NEW)
+│   │   └── main.py
+│   └── pyproject.toml
+│
+└── amplifier-profiles/       # Profile management
+    └── ...</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/microsoft/amplifier-core" target="_blank">GitHub</a>
+      <a href="https://github.com/microsoft/amplifier-core/issues" target="_blank">Issues</a>
+      <a href="https://github.com/microsoft/amplifier" target="_blank">Full Amplifier</a>
+    </div>
+    <p class="footer-copy">© Microsoft Corporation · MIT License</p>
+  </footer>
+
+  <!-- Prism.js -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-toml.min.js"></script>
+
+  <script>
+    // ==========================================================================
+    // NAVIGATION
+    // ==========================================================================
+    const VALID_SECTIONS = ['home', 'quickstart', 'architecture', 'reference', 'cli', 'examples', 'contribute'];
+
+    function showSection(sectionId, updateHash = true) {
+      if (!VALID_SECTIONS.includes(sectionId)) sectionId = 'home';
+
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+
+      // Show target section
+      const target = document.getElementById('section-' + sectionId);
+      if (target) target.classList.add('active');
+
+      // Update nav links
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.toggle('active', link.dataset.section === sectionId);
+      });
+
+      // Update URL hash
+      if (updateHash && sectionId !== 'home') {
+        history.pushState(null, '', '#' + sectionId);
+      } else if (updateHash && sectionId === 'home') {
+        history.pushState(null, '', window.location.pathname);
+      }
+
+      // Re-highlight code
+      if (typeof Prism !== 'undefined') Prism.highlightAll();
+
+      // Scroll to top
+      window.scrollTo(0, 0);
+    }
+
+    // Handle hash changes
+    function handleHashChange() {
+      const hash = window.location.hash.slice(1) || 'home';
+      showSection(hash, false);
+    }
+
+    // Nav link clicks
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => showSection(link.dataset.section));
+    });
+
+    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('DOMContentLoaded', () => {
+      handleHashChange();
+      if (typeof Prism !== 'undefined') Prism.highlightAll();
+    });
+
+    // ==========================================================================
+    // GENERIC TABS
+    // ==========================================================================
+    function setupTabs(tabsSelector, contentPrefix) {
+      const container = document.querySelector(tabsSelector);
+      if (!container) return;
+
+      container.querySelectorAll('.tab, .examples-tab, .arch-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Update tab buttons
+          container.querySelectorAll('.tab, .examples-tab, .arch-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          // Update content
+          const tabId = tab.dataset.tab || tab.dataset.view;
+
+          // Hide all content with this prefix in the parent section
+          const section = container.closest('.section') || container.closest('.arch-viz');
+          section.querySelectorAll('.tab-content, .examples-content, .arch-view').forEach(content => {
+            if (content.id.startsWith(contentPrefix)) {
+              content.classList.remove('active');
+              content.style.display = 'none';
+            }
+          });
+
+          // Show target content
+          const target = document.getElementById(contentPrefix + tabId);
+          if (target) {
+            target.classList.add('active');
+            target.style.display = target.classList.contains('arch-view') ? 'flex' : 'block';
+            if (typeof Prism !== 'undefined') Prism.highlightAll();
+          }
+        });
+      });
+    }
+
+    // Initialize all tab groups
+    setupTabs('#quickstart-tabs', 'qs-');
+    setupTabs('#reference-tabs', 'ref-');
+    setupTabs('#contribute-tabs', 'contrib-');
+    setupTabs('#examples-tabs', 'ex-');
+    setupTabs('#arch-tabs', 'arch-');
+
+    // Helper to set quickstart tab from home page
+    function setQuickstartTab(tabId) {
+      const tab = document.querySelector(`#quickstart-tabs .tab[data-tab="${tabId}"]`);
+      if (tab) tab.click();
+    }
+
+    // ==========================================================================
+    // LITMUS TEST
+    // ==========================================================================
+    function showLitmusResult(choice) {
+      document.getElementById('litmus-result-no').classList.remove('show');
+      document.getElementById('litmus-result-yes').classList.remove('show');
+      document.getElementById('litmus-result-' + choice).classList.add('show');
+    }
+
+    // ==========================================================================
+    // COPY CODE
+    // ==========================================================================
+    function copyCode(button) {
+      const codeBlock = button.closest('.code-block');
+      const code = codeBlock.querySelector('code').textContent;
+
+      navigator.clipboard.writeText(code).then(() => {
+        button.textContent = '✓ Copied';
+        button.classList.add('copied');
+        setTimeout(() => {
+          button.textContent = 'Copy';
+          button.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function copyExampleCode(button) {
+      const card = button.closest('.example-card');
+      const code = card.querySelector('pre code').textContent;
+
+      navigator.clipboard.writeText(code).then(() => {
+        button.textContent = '✓ Copied';
+        button.classList.add('copied');
+        setTimeout(() => {
+          button.textContent = 'Copy';
+          button.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // ==========================================================================
+    // EXPORT MENU
+    // ==========================================================================
+    function toggleExportMenu() {
+      const menu = document.getElementById('export-menu');
+      const caret = document.getElementById('export-caret');
+      menu.classList.toggle('show');
+      caret.classList.toggle('open');
+    }
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.export-wrap')) {
+        document.getElementById('export-menu').classList.remove('show');
+        document.getElementById('export-caret').classList.remove('open');
+      }
+    });
+
+    // ==========================================================================
+    // MARKDOWN EXPORT
+    // ==========================================================================
+    const MARKDOWN_CONTENT = `# Amplifier
+
+> The ultra-thin kernel for modular AI agents
+
+Amplifier is an open-source AI agent orchestration system from Microsoft built on Linux-kernel philosophy: a tiny, stable center (~2,600 lines) that provides mechanisms, while policies live as swappable modules at the edges.
+
+## Quick Reference
+
+- **Repository**: https://github.com/microsoft/amplifier-core
+- **License**: MIT
+- **Core Size**: ~2,600 lines
+- **Design Philosophy**: Mechanism over policy
+
+## Installation
+
+\`\`\`bash
+uv tool install --force git+https://github.com/microsoft/amplifier@next
+amplifier update
+amplifier init
+\`\`\`
+
+## Basic Usage
+
+\`\`\`bash
+# Set API key
+export ANTHROPIC_API_KEY="your-key-here"
+
+# Interactive mode
+amplifier
+
+# Single command
+amplifier run "Your prompt here"
+
+# With profile
+amplifier run --profile dev "Your prompt"
+\`\`\`
+
+## Programmatic Usage
+
+\`\`\`python
+from amplifier_core import AmplifierSession
+
+config = {
+    "session": {"orchestrator": "loop-basic", "context": "context-simple"},
+    "providers": [{"module": "provider-anthropic"}],
+    "tools": [{"module": "tool-filesystem"}, {"module": "tool-bash"}],
+    "hooks": [{"module": "hooks-logging"}]
+}
+
+async with AmplifierSession(config) as session:
+    response = await session.execute("Your prompt")
+\`\`\`
+
+## Core Protocols
+
+- **Provider**: LLM backend (\`complete\`, \`stream\`)
+- **Tool**: Agent capability (\`name\`, \`description\`, \`execute\`)
+- **Hook**: Observability (\`handler(event, data) -> HookResult\`)
+- **Orchestrator**: Execution loop (\`run\`)
+- **ContextManager**: Memory (\`add\`, \`get_messages\`)
+
+## HookResult Actions
+
+- \`continue\` - Proceed normally (default)
+- \`deny\` - Block operation with reason
+- \`modify\` - Alter event data
+- \`inject_context\` - Add message to context
+- \`ask_user\` - Pause for approval
+
+## Hookable Events
+
+Session: \`session:start\`, \`session:end\`, \`session:error\`
+Provider: \`provider:request\`, \`provider:response\`, \`provider:error\`
+Tool: \`tool:pre\`, \`tool:post\`, \`tool:error\`
+Streaming: \`content_block:start\`, \`content_block:delta\`, \`content_block:stop\`
+
+---
+*Generated from Amplifier DX Documentation*
+`;
+
+    function copyMarkdown() {
+      navigator.clipboard.writeText(MARKDOWN_CONTENT).then(() => {
+        alert('Markdown copied to clipboard!');
+      });
+      toggleExportMenu();
+    }
+
+    function downloadMarkdown() {
+      const blob = new Blob([MARKDOWN_CONTENT], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'amplifier.md';
+      a.click();
+      URL.revokeObjectURL(url);
+      toggleExportMenu();
+    }
   </script>
 </body>
 </html>
