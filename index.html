@@ -46,6 +46,20 @@
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
+    /* List styles */
+    ul, ol {
+      margin: 12px 0;
+      padding-left: 28px;
+    }
+
+    li {
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+
+    ul li { list-style-type: disc; }
+    ol li { list-style-type: decimal; }
+
     /* =================================================================
        NAV
        ================================================================= */
@@ -2623,8 +2637,8 @@ amplifier profile use convergent-dev:convergent-dev</code></pre>
       <h1>Showcase</h1>
       <p class="section-desc">Applications and modules built with Amplifier by the community.</p>
 
-      <div class="callout" style="background: #fee2e2; border-color: #ef4444; margin-bottom: 24px;">
-        <p><strong>⚠️ Security Notice:</strong> Community applications and modules execute arbitrary code with full system access. <strong>Only use from sources you trust.</strong> Review code before installation.</p>
+      <div class="callout" style="background: #fee2e2; border-color: #ef4444; border-left: 4px solid #ef4444; margin-bottom: 24px; color: #991b1b;">
+        <p style="color: #991b1b; margin: 0;"><strong>⚠️ Security Notice:</strong> Community applications and modules execute arbitrary code with full system access. <strong>Only use from sources you trust.</strong> Review code before installation.</p>
       </div>
 
       <h2>Community Applications</h2>
@@ -3507,8 +3521,8 @@ async def my_hook(event: str, data: dict):
 
       <!-- Roadmap Tab -->
       <div id="contrib-roadmap" class="tab-content">
-        <div class="callout" style="background: #fef3c7; border-color: #f59e0b;">
-          <p><strong>⚠️ Guidelines, Not Commitments:</strong> This roadmap is subject to change based on new information, priorities, and discoveries.</p>
+        <div class="callout" style="background: #fef3c7; border-color: #f59e0b; border-left: 4px solid #f59e0b; color: #92400e;">
+          <p style="color: #92400e; margin: 0;"><strong>⚠️ Guidelines, Not Commitments:</strong> This roadmap is subject to change based on new information, priorities, and discoveries.</p>
         </div>
 
         <h3>Project Status</h3>
@@ -3564,8 +3578,8 @@ async def my_hook(event: str, data: dict):
         </ul>
 
         <h3>Security Warning</h3>
-        <div class="callout" style="background: #fee2e2; border-color: #ef4444;">
-          <p><strong>⚠️ Critical:</strong> Modules and applications execute arbitrary code with full system access. Users must review code before installation. Build with security in mind.</p>
+        <div class="callout" style="background: #fee2e2; border-color: #ef4444; border-left: 4px solid #ef4444; color: #991b1b;">
+          <p style="color: #991b1b; margin: 0;"><strong>⚠️ Critical:</strong> Modules and applications execute arbitrary code with full system access. Users must review code before installation. Build with security in mind.</p>
         </div>
       </div>
     </section>
