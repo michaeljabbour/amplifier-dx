@@ -5,46 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Amplifier Documentation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
   <style>
     :root {
-      --bg-0: #0a0a0a;
-      --bg-1: #111111;
-      --bg-2: #1a1a1a;
-      --bg-3: #252525;
-      --bg-hover: #2a2a2a;
-      --text-0: #ffffff;
-      --text-1: #e5e5e5;
-      --text-2: #a3a3a3;
-      --text-3: #737373;
-      --blue: #3b82f6;
-      --blue-hover: #2563eb;
+      --bg-0: #09090b;
+      --bg-1: #0f0f11;
+      --bg-2: #18181b;
+      --bg-3: #27272a;
+      --bg-hover: #1f1f23;
+      --text-0: #fafafa;
+      --text-1: #d4d4d8;
+      --text-2: #a1a1aa;
+      --text-3: #71717a;
+      --accent: #6366f1;
+      --accent-dim: rgba(99, 102, 241, 0.15);
       --green: #10b981;
-      --purple: #8b5cf6;
       --orange: #f97316;
       --red: #ef4444;
-      --border: #2a2a2a;
-      --sidebar-width: 280px;
-      --toc-width: 220px;
-      --header-height: 56px;
+      --border: #27272a;
+      --sidebar-width: 220px;
+      --header-height: 44px;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 13px;
       background: var(--bg-0);
       color: var(--text-1);
       line-height: 1.6;
-      min-height: 100vh;
     }
 
-    /* Header */
+    /* Header - compact */
     .header {
       position: fixed;
       top: 0;
@@ -55,39 +49,62 @@
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      padding: 0 24px;
+      padding: 0 16px;
       z-index: 100;
     }
 
-    .header-logo {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-0);
-      text-decoration: none;
+    .header-brand {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-0);
     }
 
-    .header-logo span {
-      background: linear-gradient(135deg, var(--blue), var(--purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .header-icon {
+      width: 22px;
+      height: 22px;
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 12px;
+      color: white;
     }
 
-    .header-nav {
+    .header-title {
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.01em;
+    }
+
+    .header-divider {
+      width: 1px;
+      height: 18px;
+      background: var(--border);
+      margin: 0 12px;
+    }
+
+    .header-subtitle {
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    .header-actions {
       margin-left: auto;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 4px;
     }
 
     .header-link {
       color: var(--text-2);
       text-decoration: none;
-      font-size: 14px;
-      padding: 6px 12px;
-      border-radius: 6px;
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 5px;
       transition: all 0.15s;
     }
 
@@ -96,11 +113,17 @@
       background: var(--bg-3);
     }
 
+    .header-link svg {
+      width: 14px;
+      height: 14px;
+      vertical-align: -2px;
+      margin-right: 4px;
+    }
+
     /* Layout */
     .layout {
       display: flex;
       padding-top: var(--header-height);
-      min-height: 100vh;
     }
 
     /* Sidebar */
@@ -113,99 +136,146 @@
       background: var(--bg-1);
       border-right: 1px solid var(--border);
       overflow-y: auto;
-      padding: 16px 0;
+      padding: 12px 0;
     }
 
-    .sidebar::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .sidebar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .sidebar::-webkit-scrollbar-thumb {
-      background: var(--bg-3);
-      border-radius: 3px;
-    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 2px; }
 
     /* Search */
-    .search-container {
-      padding: 0 16px 16px;
+    .search-box {
+      padding: 0 12px 12px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 16px;
+      margin-bottom: 8px;
     }
 
     .search-input {
       width: 100%;
-      padding: 10px 12px 10px 36px;
+      padding: 7px 10px 7px 30px;
       background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 6px;
       color: var(--text-1);
-      font-size: 14px;
+      font-size: 12px;
       outline: none;
-      transition: all 0.15s;
+      transition: border-color 0.15s;
     }
 
-    .search-input::placeholder {
-      color: var(--text-3);
-    }
+    .search-input::placeholder { color: var(--text-3); }
+    .search-input:focus { border-color: var(--accent); }
 
-    .search-input:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    .search-wrapper {
+    .search-wrap {
       position: relative;
     }
 
     .search-icon {
       position: absolute;
-      left: 12px;
+      left: 10px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-3);
-      pointer-events: none;
+      width: 13px;
+      height: 13px;
     }
 
-    .search-shortcut {
+    .search-key {
       position: absolute;
-      right: 12px;
+      right: 8px;
       top: 50%;
       transform: translateY(-50%);
       background: var(--bg-3);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 11px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 10px;
       color: var(--text-3);
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* Nav sections */
-    .nav-section {
-      margin-bottom: 8px;
+    .search-results {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      max-height: 280px;
+      overflow-y: auto;
+      display: none;
+      z-index: 50;
     }
 
-    .nav-section-title {
-      padding: 8px 16px;
+    .search-results.show { display: block; }
+
+    .search-result {
+      padding: 8px 10px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .search-result:last-child { border-bottom: none; }
+    .search-result:hover { background: var(--bg-hover); }
+
+    .search-result-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-0);
+    }
+
+    .search-result-path {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 1px;
+    }
+
+    /* Nav */
+    .nav-group {
+      margin-bottom: 4px;
+    }
+
+    .nav-header {
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
       font-size: 11px;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      color: var(--text-2);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.15s;
+    }
+
+    .nav-header:hover { color: var(--text-0); }
+
+    .nav-header.open { color: var(--text-0); }
+
+    .nav-arrow {
+      width: 12px;
+      height: 12px;
+      margin-right: 6px;
+      transition: transform 0.15s;
       color: var(--text-3);
     }
 
+    .nav-header.open .nav-arrow { transform: rotate(90deg); }
+
+    .nav-items {
+      display: none;
+      padding-left: 18px;
+    }
+
+    .nav-items.show { display: block; }
+
     .nav-item {
       display: block;
-      padding: 8px 16px 8px 24px;
-      font-size: 14px;
+      padding: 5px 12px;
+      font-size: 12px;
       color: var(--text-2);
       text-decoration: none;
       cursor: pointer;
-      transition: all 0.15s;
       border-left: 2px solid transparent;
+      transition: all 0.1s;
     }
 
     .nav-item:hover {
@@ -214,180 +284,86 @@
     }
 
     .nav-item.active {
-      color: var(--text-0);
-      background: var(--bg-2);
-      border-left-color: var(--blue);
-    }
-
-    .nav-item-sub {
-      padding-left: 36px;
-      font-size: 13px;
-    }
-
-    .nav-item-group {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 16px 8px 24px;
-      font-size: 14px;
-      color: var(--text-2);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .nav-item-group:hover {
-      color: var(--text-1);
-      background: var(--bg-hover);
-    }
-
-    .nav-item-group.expanded {
-      color: var(--text-1);
-    }
-
-    .nav-chevron {
-      font-size: 10px;
-      transition: transform 0.15s;
-    }
-
-    .nav-item-group.expanded .nav-chevron {
-      transform: rotate(90deg);
-    }
-
-    .nav-children {
-      display: none;
-    }
-
-    .nav-children.show {
-      display: block;
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: var(--accent-dim);
     }
 
     /* Main content */
     .main {
       flex: 1;
       margin-left: var(--sidebar-width);
-      padding: 40px 60px;
-      max-width: calc(100% - var(--sidebar-width));
-    }
-
-    .main.with-toc {
-      margin-right: var(--toc-width);
-      max-width: calc(100% - var(--sidebar-width) - var(--toc-width));
+      padding: 32px 48px;
+      max-width: 900px;
     }
 
     .content {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    /* Table of Contents (right side) */
-    .toc {
-      position: fixed;
-      top: var(--header-height);
-      right: 0;
-      width: var(--toc-width);
-      height: calc(100vh - var(--header-height));
-      padding: 24px 16px;
-      overflow-y: auto;
-      border-left: 1px solid var(--border);
-      background: var(--bg-0);
-    }
-
-    .toc-title {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-3);
-      margin-bottom: 12px;
-    }
-
-    .toc-link {
-      display: block;
-      padding: 4px 0;
-      font-size: 13px;
-      color: var(--text-3);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .toc-link:hover,
-    .toc-link.active {
-      color: var(--text-1);
-    }
-
-    .toc-link-sub {
-      padding-left: 12px;
-      font-size: 12px;
+      max-width: 720px;
     }
 
     /* Typography */
     h1 {
-      font-size: 32px;
-      font-weight: 700;
-      color: var(--text-0);
-      margin-bottom: 16px;
-      line-height: 1.2;
-    }
-
-    h2 {
       font-size: 24px;
       font-weight: 600;
       color: var(--text-0);
-      margin: 48px 0 16px;
-      padding-top: 24px;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-0);
+      margin: 32px 0 10px;
+      padding-top: 20px;
       border-top: 1px solid var(--border);
+      letter-spacing: -0.01em;
+    }
+
+    h2:first-of-type {
+      margin-top: 24px;
+      padding-top: 0;
+      border-top: none;
     }
 
     h3 {
-      font-size: 18px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-0);
-      margin: 32px 0 12px;
-    }
-
-    h4 {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text-1);
-      margin: 24px 0 8px;
+      margin: 20px 0 8px;
     }
 
     p {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       color: var(--text-1);
     }
 
-    .section-desc {
-      font-size: 18px;
+    .lead {
+      font-size: 14px;
       color: var(--text-2);
-      margin-bottom: 32px;
+      margin-bottom: 24px;
     }
 
-    a {
-      color: var(--blue);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
     code {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.9em;
       background: var(--bg-2);
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 2px 5px;
+      border-radius: 3px;
       color: var(--orange);
     }
 
     pre {
       background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      margin: 16px 0;
+      border-radius: 6px;
+      padding: 12px;
+      margin: 12px 0;
       overflow-x: auto;
+      font-size: 12px;
     }
 
     pre code {
@@ -397,15 +373,8 @@
     }
 
     /* Lists */
-    ul, ol {
-      margin: 12px 0 16px;
-      padding-left: 24px;
-    }
-
-    li {
-      margin-bottom: 8px;
-    }
-
+    ul, ol { margin: 8px 0 12px; padding-left: 20px; }
+    li { margin-bottom: 4px; }
     ul li { list-style-type: disc; }
     ol li { list-style-type: decimal; }
 
@@ -413,13 +382,13 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 16px 0;
-      font-size: 14px;
+      margin: 12px 0;
+      font-size: 12px;
     }
 
     th, td {
       text-align: left;
-      padding: 12px;
+      padding: 8px 10px;
       border-bottom: 1px solid var(--border);
     }
 
@@ -427,27 +396,26 @@
       font-weight: 600;
       color: var(--text-0);
       background: var(--bg-2);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
 
-    td {
-      color: var(--text-1);
-    }
-
-    tr:hover td {
-      background: var(--bg-2);
-    }
+    td { color: var(--text-1); }
+    tr:hover td { background: var(--bg-2); }
 
     /* Callouts */
     .callout {
-      padding: 16px;
-      border-radius: 8px;
-      margin: 16px 0;
-      border-left: 4px solid;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin: 12px 0;
+      border-left: 3px solid;
+      font-size: 12px;
     }
 
     .callout-info {
-      background: rgba(59, 130, 246, 0.1);
-      border-color: var(--blue);
+      background: rgba(99, 102, 241, 0.1);
+      border-color: var(--accent);
     }
 
     .callout-warning {
@@ -460,303 +428,254 @@
       border-color: #991b1b;
     }
 
-    .callout-danger p {
-      color: #ffffff;
-    }
+    .callout-danger, .callout-danger p { color: #fff; }
 
-    .callout p {
-      margin: 0;
-    }
+    .callout p { margin: 0; }
 
     /* Info box */
     .info-box {
       background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      margin: 16px 0;
+      border-radius: 6px;
+      padding: 12px;
+      margin: 12px 0;
     }
 
     .info-box strong {
       color: var(--text-0);
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
     }
 
     /* Cards */
-    .card-grid {
+    .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 16px;
-      margin: 24px 0;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
     }
 
     .card {
       background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
+      border-radius: 6px;
+      padding: 14px;
+      cursor: pointer;
       transition: all 0.15s;
     }
 
     .card:hover {
-      border-color: var(--blue);
-      transform: translateY(-2px);
+      border-color: var(--accent);
+      transform: translateY(-1px);
     }
 
     .card-title {
       font-weight: 600;
+      font-size: 13px;
       color: var(--text-0);
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     .card-desc {
-      font-size: 14px;
+      font-size: 12px;
       color: var(--text-2);
     }
 
-    /* Search Results */
-    .search-results {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: var(--bg-2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      margin-top: 8px;
-      max-height: 300px;
-      overflow-y: auto;
-      display: none;
-      z-index: 50;
-    }
-
-    .search-results.show {
-      display: block;
-    }
-
-    .search-result-item {
-      padding: 12px;
-      cursor: pointer;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .search-result-item:last-child {
-      border-bottom: none;
-    }
-
-    .search-result-item:hover {
-      background: var(--bg-3);
-    }
-
-    .search-result-title {
-      font-weight: 500;
-      color: var(--text-0);
-      font-size: 14px;
-    }
-
-    .search-result-section {
-      font-size: 12px;
-      color: var(--text-3);
-      margin-top: 2px;
-    }
-
-    .search-no-results {
-      padding: 16px;
-      text-align: center;
-      color: var(--text-3);
-      font-size: 14px;
-    }
-
     /* Section visibility */
-    .doc-section {
-      display: none;
-    }
-
-    .doc-section.active {
-      display: block;
-    }
+    .doc-section { display: none; }
+    .doc-section.active { display: block; }
 
     /* Responsive */
-    @media (max-width: 1200px) {
-      .toc {
-        display: none;
-      }
-      .main.with-toc {
-        margin-right: 0;
-        max-width: calc(100% - var(--sidebar-width));
-      }
-    }
-
-    @media (max-width: 900px) {
+    @media (max-width: 800px) {
       .sidebar {
         transform: translateX(-100%);
-        transition: transform 0.3s;
+        transition: transform 0.2s;
         z-index: 99;
       }
-      .sidebar.open {
-        transform: translateX(0);
-      }
-      .main {
-        margin-left: 0;
-        max-width: 100%;
-        padding: 24px;
-      }
-      .main.with-toc {
-        margin-right: 0;
-        max-width: 100%;
-      }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; padding: 24px 20px; }
+      .menu-btn { display: flex; }
     }
 
-    /* Mobile menu toggle */
-    .menu-toggle {
+    .menu-btn {
       display: none;
       background: none;
       border: none;
       color: var(--text-1);
-      font-size: 24px;
+      padding: 4px;
+      margin-right: 8px;
       cursor: pointer;
-      margin-right: 16px;
     }
 
-    @media (max-width: 900px) {
-      .menu-toggle {
-        display: block;
-      }
+    @media (max-width: 800px) {
+      .menu-btn { display: flex; }
     }
   </style>
 </head>
 <body>
   <!-- Header -->
   <header class="header">
-    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-    <a href="#" class="header-logo" onclick="showSection('introduction'); return false;">
-      <span>Amplifier</span> Docs
+    <button class="menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <a href="#" class="header-brand" onclick="showSection('introduction'); return false;">
+      <div class="header-icon">A</div>
+      <span class="header-title">Amplifier</span>
     </a>
-    <nav class="header-nav">
-      <a href="https://github.com/microsoft/amplifier" class="header-link" target="_blank">GitHub</a>
-      <a href="https://github.com/microsoft/amplifier/issues" class="header-link" target="_blank">Issues</a>
-    </nav>
+    <div class="header-divider"></div>
+    <span class="header-subtitle">Documentation</span>
+    <div class="header-actions">
+      <a href="https://github.com/microsoft/amplifier" class="header-link" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="index.html" class="header-link">Original Layout</a>
+    </div>
   </header>
 
   <div class="layout">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-      <div class="search-container">
-        <div class="search-wrapper">
-          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="search-box">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" class="search-input" id="search-input" placeholder="Search documentation..." onkeyup="handleSearch(event)">
-          <span class="search-shortcut">⌘K</span>
+          <input type="text" class="search-input" id="search-input" placeholder="Search..." onkeyup="handleSearch(event)">
+          <span class="search-key">/</span>
           <div class="search-results" id="search-results"></div>
         </div>
       </div>
 
-      <nav class="nav">
+      <nav>
         <!-- Getting Started -->
-        <div class="nav-section">
-          <div class="nav-section-title">Getting Started</div>
-          <a class="nav-item active" data-section="introduction">Introduction</a>
-          <a class="nav-item" data-section="quickstart">Quickstart</a>
-          <a class="nav-item" data-section="installation">Installation</a>
+        <div class="nav-group">
+          <div class="nav-header open" onclick="toggleGroup(this)">
+            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            Getting Started
+          </div>
+          <div class="nav-items show">
+            <a class="nav-item active" data-section="introduction">Introduction</a>
+            <a class="nav-item" data-section="quickstart">Quickstart</a>
+            <a class="nav-item" data-section="installation">Installation</a>
+          </div>
         </div>
 
         <!-- User Guide -->
-        <div class="nav-section">
-          <div class="nav-section-title">User Guide</div>
-          <a class="nav-item" data-section="cli">CLI Reference</a>
-          <a class="nav-item" data-section="profiles">Profiles</a>
-          <a class="nav-item" data-section="sessions">Sessions</a>
-          <a class="nav-item" data-section="agents">Agents</a>
-          <a class="nav-item" data-section="collections">Collections</a>
+        <div class="nav-group">
+          <div class="nav-header" onclick="toggleGroup(this)">
+            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            User Guide
+          </div>
+          <div class="nav-items">
+            <a class="nav-item" data-section="cli">CLI Reference</a>
+            <a class="nav-item" data-section="profiles">Profiles</a>
+            <a class="nav-item" data-section="sessions">Sessions</a>
+            <a class="nav-item" data-section="agents">Agents</a>
+            <a class="nav-item" data-section="collections">Collections</a>
+          </div>
         </div>
 
         <!-- Architecture -->
-        <div class="nav-section">
-          <div class="nav-section-title">Architecture</div>
-          <a class="nav-item" data-section="overview">Overview</a>
-          <a class="nav-item" data-section="kernel">Kernel Design</a>
-          <a class="nav-item" data-section="modules">Module System</a>
-          <a class="nav-item" data-section="mount-plans">Mount Plans</a>
-          <a class="nav-item" data-section="events">Events</a>
+        <div class="nav-group">
+          <div class="nav-header" onclick="toggleGroup(this)">
+            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            Architecture
+          </div>
+          <div class="nav-items">
+            <a class="nav-item" data-section="overview">Overview</a>
+            <a class="nav-item" data-section="kernel">Kernel Design</a>
+            <a class="nav-item" data-section="modules">Module System</a>
+            <a class="nav-item" data-section="mount-plans">Mount Plans</a>
+            <a class="nav-item" data-section="events">Events</a>
+          </div>
         </div>
 
         <!-- Developer Guide -->
-        <div class="nav-section">
-          <div class="nav-section-title">Developer Guide</div>
-          <div class="nav-item-group" onclick="toggleNavGroup(this)">
-            Creating Modules <span class="nav-chevron">▶</span>
+        <div class="nav-group">
+          <div class="nav-header" onclick="toggleGroup(this)">
+            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            Developer Guide
           </div>
-          <div class="nav-children">
-            <a class="nav-item nav-item-sub" data-section="dev-tools">Custom Tools</a>
-            <a class="nav-item nav-item-sub" data-section="dev-hooks">Hooks</a>
-            <a class="nav-item nav-item-sub" data-section="dev-providers">Providers</a>
+          <div class="nav-items">
+            <a class="nav-item" data-section="dev-tools">Custom Tools</a>
+            <a class="nav-item" data-section="dev-hooks">Hooks</a>
+            <a class="nav-item" data-section="dev-providers">Providers</a>
+            <a class="nav-item" data-section="contracts">Contracts</a>
+            <a class="nav-item" data-section="testing">Testing</a>
           </div>
-          <a class="nav-item" data-section="contracts">Contracts</a>
-          <a class="nav-item" data-section="testing">Testing</a>
         </div>
 
         <!-- Reference -->
-        <div class="nav-section">
-          <div class="nav-section-title">Reference</div>
-          <div class="nav-item-group" onclick="toggleNavGroup(this)">
-            Modules <span class="nav-chevron">▶</span>
+        <div class="nav-group">
+          <div class="nav-header" onclick="toggleGroup(this)">
+            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            Reference
           </div>
-          <div class="nav-children">
-            <a class="nav-item nav-item-sub" data-section="mod-providers">Providers</a>
-            <a class="nav-item nav-item-sub" data-section="mod-tools">Tools</a>
-            <a class="nav-item nav-item-sub" data-section="mod-orchestrators">Orchestrators</a>
-          </div>
-          <div class="nav-item-group" onclick="toggleNavGroup(this)">
-            Libraries <span class="nav-chevron">▶</span>
-          </div>
-          <div class="nav-children">
-            <a class="nav-item nav-item-sub" data-section="lib-core">amplifier-core</a>
-            <a class="nav-item nav-item-sub" data-section="lib-profiles">amplifier-profiles</a>
-            <a class="nav-item nav-item-sub" data-section="lib-collections">amplifier-collections</a>
+          <div class="nav-items">
+            <a class="nav-item" data-section="mod-providers">Providers</a>
+            <a class="nav-item" data-section="mod-tools">Tools</a>
+            <a class="nav-item" data-section="mod-orchestrators">Orchestrators</a>
+            <a class="nav-item" data-section="lib-core">amplifier-core</a>
+            <a class="nav-item" data-section="lib-profiles">amplifier-profiles</a>
+            <a class="nav-item" data-section="lib-collections">amplifier-collections</a>
           </div>
         </div>
 
         <!-- Ecosystem -->
-        <div class="nav-section">
-          <div class="nav-section-title">Ecosystem</div>
-          <a class="nav-item" data-section="showcase">Showcase</a>
-          <a class="nav-item" data-section="official-collections">Official Collections</a>
+        <div class="nav-group">
+          <div class="nav-header" onclick="toggleGroup(this)">
+            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            Ecosystem
+          </div>
+          <div class="nav-items">
+            <a class="nav-item" data-section="showcase">Showcase</a>
+            <a class="nav-item" data-section="official-collections">Official Collections</a>
+          </div>
         </div>
 
         <!-- Community -->
-        <div class="nav-section">
-          <div class="nav-section-title">Community</div>
-          <a class="nav-item" data-section="contributing">Contributing</a>
-          <a class="nav-item" data-section="roadmap">Roadmap</a>
+        <div class="nav-group">
+          <div class="nav-header" onclick="toggleGroup(this)">
+            <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            Community
+          </div>
+          <div class="nav-items">
+            <a class="nav-item" data-section="contributing">Contributing</a>
+            <a class="nav-item" data-section="roadmap">Roadmap</a>
+          </div>
         </div>
       </nav>
     </aside>
 
     <!-- Main Content -->
-    <main class="main with-toc">
+    <main class="main">
       <div class="content">
         <!-- Introduction -->
         <div class="doc-section active" id="section-introduction">
           <h1>Introduction</h1>
-          <p class="section-desc">Amplifier is Microsoft's open-source AI agent orchestration system built on Linux-kernel philosophy.</p>
+          <p class="lead">Amplifier is Microsoft's open-source AI agent orchestration system built on Linux-kernel philosophy.</p>
 
-          <p>A tiny, stable center (~2,600 lines) provides mechanisms, while policies live as swappable modules at the edges. No frameworks, no inheritance hierarchies—just clean protocols that let you build exactly what you need.</p>
+          <p>A tiny, stable center (~2,600 lines) provides mechanisms, while policies live as swappable modules at the edges. No frameworks, no inheritance hierarchies—just clean protocols.</p>
 
-          <div class="card-grid">
+          <div class="cards">
             <div class="card" onclick="showSection('quickstart')">
               <div class="card-title">Use It</div>
-              <div class="card-desc">Run AI agents with pre-built providers and tools. Configure via profiles.</div>
+              <div class="card-desc">Run agents with pre-built providers and tools</div>
             </div>
             <div class="card" onclick="showSection('dev-tools')">
               <div class="card-title">Extend It</div>
-              <div class="card-desc">Write custom tools in 2 minutes. Duck typing, no inheritance.</div>
+              <div class="card-desc">Write custom tools in 2 minutes</div>
             </div>
             <div class="card" onclick="showSection('overview')">
               <div class="card-title">Embed It</div>
-              <div class="card-desc">Build products on Amplifier's kernel with full observability.</div>
+              <div class="card-desc">Build products on Amplifier's kernel</div>
             </div>
           </div>
 
@@ -766,20 +685,19 @@
             <tr><td><strong>Core Kernel</strong></td><td><a href="https://github.com/microsoft/amplifier-core" target="_blank">github.com/microsoft/amplifier-core</a></td></tr>
             <tr><td><strong>License</strong></td><td>MIT</td></tr>
             <tr><td><strong>Core Size</strong></td><td>~2,600 lines</td></tr>
-            <tr><td><strong>Design</strong></td><td>Mechanism over policy</td></tr>
           </table>
 
           <h2>Design Philosophy</h2>
-          <p><strong>Mechanism over policy.</strong> The kernel provides capabilities (mounting modules, routing events) without deciding how to use them. Policies belong in modules.</p>
+          <p><strong>Mechanism over policy.</strong> The kernel provides capabilities without deciding how to use them. Policies belong in modules.</p>
 
           <div class="info-box">
             <strong>Linux Kernel Analogy</strong>
             <table>
               <tr><th>Linux</th><th>Amplifier</th><th>Function</th></tr>
-              <tr><td>Kernel</td><td>amplifier-core</td><td>Core mechanisms, never policy</td></tr>
-              <tr><td>Drivers</td><td>Modules</td><td>Interface with external systems</td></tr>
-              <tr><td>VFS</td><td>Protocols</td><td>Uniform interface to different implementations</td></tr>
-              <tr><td>init/systemd</td><td>Mount Plans</td><td>Declarative system configuration</td></tr>
+              <tr><td>Kernel</td><td>amplifier-core</td><td>Core mechanisms</td></tr>
+              <tr><td>Drivers</td><td>Modules</td><td>External interfaces</td></tr>
+              <tr><td>VFS</td><td>Protocols</td><td>Uniform interface</td></tr>
+              <tr><td>init/systemd</td><td>Mount Plans</td><td>Configuration</td></tr>
             </table>
           </div>
         </div>
@@ -787,7 +705,7 @@
         <!-- Quickstart -->
         <div class="doc-section" id="section-quickstart">
           <h1>Quickstart</h1>
-          <p class="section-desc">Get running with Amplifier in under 5 minutes.</p>
+          <p class="lead">Get running in under 5 minutes.</p>
 
           <h2>Installation</h2>
           <pre><code class="language-bash"># Install Amplifier
@@ -795,9 +713,8 @@ uv tool install --force git+https://github.com/microsoft/amplifier@next
 amplifier update
 amplifier init
 
-# Set API key (required)
-export ANTHROPIC_API_KEY="your-key"
-# Or: export OPENAI_API_KEY="your-key"</code></pre>
+# Set API key
+export ANTHROPIC_API_KEY="your-key"</code></pre>
 
           <h2>Running Amplifier</h2>
           <pre><code class="language-bash"># Interactive mode
@@ -806,48 +723,44 @@ amplifier
 # Single command
 amplifier run "Your prompt here"
 
-# With specific profile
+# With profile
 amplifier run --profile dev "Your prompt"
 
-# Resume previous session
+# Resume session
 amplifier continue</code></pre>
 
-          <h2>Working with Profiles</h2>
+          <h2>Profiles</h2>
           <pre><code class="language-bash">amplifier profile list      # View available
 amplifier profile use dev   # Set default
-amplifier profile current   # Check active
-amplifier profile reset     # Reset to defaults</code></pre>
-
-          <p>Built-in profiles: <code>foundation</code> (minimal) → <code>base</code> (fs+bash) → <code>dev</code> (full tools) → <code>test</code> → <code>full</code></p>
+amplifier profile current   # Check active</code></pre>
+          <p>Built-in: <code>foundation</code> → <code>base</code> → <code>dev</code> → <code>test</code> → <code>full</code></p>
 
           <h2>Using Agents</h2>
-          <p>In interactive mode, use <code>@</code> prefix:</p>
-          <pre><code class="language-bash">@explorer What is the architecture of this project?
-@bug-hunter Find issues in the auth module
+          <p>Use <code>@</code> prefix in interactive mode:</p>
+          <pre><code class="language-bash">@explorer What is the architecture?
+@bug-hunter Find issues in auth
 @zen-architect Design a caching layer</code></pre>
-
-          <p>Available: <code>explorer</code>, <code>bug-hunter</code>, <code>zen-architect</code>, <code>researcher</code>, <code>modular-builder</code></p>
         </div>
 
         <!-- Installation -->
         <div class="doc-section" id="section-installation">
           <h1>Installation</h1>
-          <p class="section-desc">Detailed installation instructions and troubleshooting.</p>
+          <p class="lead">Detailed setup and troubleshooting.</p>
 
           <h2>Requirements</h2>
           <ul>
             <li>Python 3.11+</li>
-            <li><a href="https://github.com/astral-sh/uv" target="_blank">uv</a> package manager (recommended)</li>
-            <li>API key for at least one LLM provider</li>
+            <li><a href="https://github.com/astral-sh/uv" target="_blank">uv</a> package manager</li>
+            <li>API key for an LLM provider</li>
           </ul>
 
-          <h2>Install with uv</h2>
+          <h2>Install</h2>
           <pre><code class="language-bash">uv tool install --force git+https://github.com/microsoft/amplifier@next
 amplifier update
 amplifier init</code></pre>
 
-          <h2>Configure API Keys</h2>
-          <pre><code class="language-bash"># Anthropic (recommended)
+          <h2>API Keys</h2>
+          <pre><code class="language-bash"># Anthropic
 export ANTHROPIC_API_KEY="sk-ant-..."
 
 # OpenAI
@@ -855,112 +768,83 @@ export OPENAI_API_KEY="sk-..."
 
 # Azure OpenAI
 export AZURE_OPENAI_API_KEY="..."
-export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com"</code></pre>
+export AZURE_OPENAI_ENDPOINT="https://..."</code></pre>
 
           <h2>Troubleshooting</h2>
-          <pre><code class="language-bash"># Reset profile to defaults
+          <pre><code class="language-bash"># Reset profile
 amplifier profile reset
 
-# Clear module cache (fixes stale module issues)
+# Clear cache
 rm -rf ~/.amplifier/module-cache
 
-# Reinstall from scratch
-uv tool install --force git+https://github.com/microsoft/amplifier@next
-amplifier update</code></pre>
+# Reinstall
+uv tool install --force git+https://github.com/microsoft/amplifier@next</code></pre>
         </div>
 
         <!-- CLI Reference -->
         <div class="doc-section" id="section-cli">
           <h1>CLI Reference</h1>
-          <p class="section-desc">Complete command-line interface documentation.</p>
+          <p class="lead">Complete command-line documentation.</p>
 
           <h2>Global Options</h2>
           <table>
-            <thead><tr><th>Option</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code>--verbose, -v</code></td><td>Enable verbose output</td></tr>
-              <tr><td><code>--quiet, -q</code></td><td>Suppress non-essential output</td></tr>
-              <tr><td><code>--config PATH</code></td><td>Path to config file</td></tr>
-              <tr><td><code>--help</code></td><td>Show help message</td></tr>
-              <tr><td><code>--version</code></td><td>Show version</td></tr>
-            </tbody>
+            <tr><td><code>--verbose, -v</code></td><td>Verbose output</td></tr>
+            <tr><td><code>--quiet, -q</code></td><td>Suppress output</td></tr>
+            <tr><td><code>--config PATH</code></td><td>Config file path</td></tr>
+            <tr><td><code>--help</code></td><td>Show help</td></tr>
           </table>
 
           <h2>Core Commands</h2>
-
           <h3>amplifier run</h3>
-          <p>Execute a single prompt and exit.</p>
           <pre><code class="language-bash">amplifier run [OPTIONS] "PROMPT"</code></pre>
           <table>
-            <thead><tr><th>Option</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code>--profile, -p NAME</code></td><td>Profile to use</td></tr>
-              <tr><td><code>--provider NAME</code></td><td>Override provider</td></tr>
-              <tr><td><code>--model NAME</code></td><td>Override model</td></tr>
-              <tr><td><code>--max-tokens N</code></td><td>Maximum response tokens</td></tr>
-              <tr><td><code>--output FORMAT</code></td><td>Output format (text, json, stream)</td></tr>
-            </tbody>
+            <tr><td><code>--profile, -p</code></td><td>Profile to use</td></tr>
+            <tr><td><code>--provider</code></td><td>Override provider</td></tr>
+            <tr><td><code>--model</code></td><td>Override model</td></tr>
+            <tr><td><code>--max-tokens</code></td><td>Max response tokens</td></tr>
           </table>
 
-          <h3>amplifier (interactive)</h3>
-          <p>Start interactive REPL session.</p>
-          <pre><code class="language-bash">amplifier [--profile NAME]</code></pre>
+          <h3>Profile Commands</h3>
+          <pre><code class="language-bash">amplifier profile list
+amplifier profile use NAME
+amplifier profile current
+amplifier profile show NAME
+amplifier profile reset</code></pre>
 
-          <h3>amplifier continue</h3>
-          <p>Resume the most recent session.</p>
-
-          <h2>Profile Commands</h2>
-          <pre><code class="language-bash">amplifier profile list              # List available profiles
-amplifier profile use NAME          # Set default profile
-amplifier profile current           # Show active profile
-amplifier profile show NAME         # Show profile details
-amplifier profile reset             # Reset to defaults</code></pre>
-
-          <h2>Module Commands</h2>
-          <pre><code class="language-bash">amplifier module list               # List installed modules
-amplifier module show NAME          # Show module details
-amplifier module install SOURCE     # Install from source</code></pre>
-
-          <h2>Session Commands</h2>
-          <pre><code class="language-bash">amplifier session list              # List sessions
-amplifier session resume ID         # Resume specific session
-amplifier session cleanup --days N  # Clean old sessions</code></pre>
+          <h3>Session Commands</h3>
+          <pre><code class="language-bash">amplifier session list
+amplifier session resume ID
+amplifier session cleanup --days N</code></pre>
 
           <h2>Interactive Commands</h2>
           <table>
-            <thead><tr><th>Command</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code>/help</code></td><td>Show available commands</td></tr>
-              <tr><td><code>/tools</code></td><td>List available tools</td></tr>
-              <tr><td><code>/agents</code></td><td>List available agents</td></tr>
-              <tr><td><code>/status</code></td><td>Session information</td></tr>
-              <tr><td><code>/clear</code></td><td>Clear conversation history</td></tr>
-              <tr><td><code>/quit</code></td><td>Exit session</td></tr>
-            </tbody>
+            <tr><td><code>/help</code></td><td>Show commands</td></tr>
+            <tr><td><code>/tools</code></td><td>List tools</td></tr>
+            <tr><td><code>/agents</code></td><td>List agents</td></tr>
+            <tr><td><code>/status</code></td><td>Session info</td></tr>
+            <tr><td><code>/clear</code></td><td>Clear history</td></tr>
+            <tr><td><code>/quit</code></td><td>Exit</td></tr>
           </table>
         </div>
 
         <!-- Profiles -->
         <div class="doc-section" id="section-profiles">
           <h1>Profiles</h1>
-          <p class="section-desc">Configure agent capabilities through composable profiles.</p>
+          <p class="lead">Configure agent capabilities through composable profiles.</p>
 
           <h2>Profile Hierarchy</h2>
-          <p>Profiles inherit from each other in a chain:</p>
           <pre><code>foundation → base → dev → test → full
    ↓          ↓       ↓      ↓       ↓
 minimal   +fs/bash  +tools +test  +all</code></pre>
 
           <h2>Built-in Profiles</h2>
           <table>
-            <thead><tr><th>Profile</th><th>Description</th><th>Use Case</th></tr></thead>
-            <tbody>
-              <tr><td><code>foundation</code></td><td>Absolute minimum</td><td>Embedding, custom builds</td></tr>
-              <tr><td><code>base</code></td><td>+ filesystem, bash</td><td>Basic automation</td></tr>
-              <tr><td><code>dev</code></td><td>+ search, task, web</td><td>Development (default)</td></tr>
-              <tr><td><code>test</code></td><td>+ test runners</td><td>Testing workflows</td></tr>
-              <tr><td><code>full</code></td><td>Everything enabled</td><td>Maximum capability</td></tr>
-            </tbody>
+            <tr><th>Profile</th><th>Description</th><th>Use Case</th></tr>
+            <tr><td><code>foundation</code></td><td>Minimum</td><td>Embedding</td></tr>
+            <tr><td><code>base</code></td><td>+ fs, bash</td><td>Automation</td></tr>
+            <tr><td><code>dev</code></td><td>+ tools</td><td>Development</td></tr>
+            <tr><td><code>test</code></td><td>+ testing</td><td>Testing</td></tr>
+            <tr><td><code>full</code></td><td>Everything</td><td>Maximum</td></tr>
           </table>
 
           <h2>Profile Structure</h2>
@@ -970,245 +854,163 @@ name: my-profile
 extends: dev
 ---
 
-# My Custom Profile
-
-System prompt content here...
+System prompt here...
 
 ## Tools
-
 - tool-filesystem
-- tool-bash
-- my-custom-tool</code></pre>
-
-          <h2>Profile Resolution</h2>
-          <p>Profiles are resolved from:</p>
-          <ol>
-            <li><code>.amplifier/profiles/</code> (project)</li>
-            <li><code>~/.amplifier/profiles/</code> (user)</li>
-            <li>Built-in profiles</li>
-          </ol>
-          <p>First match wins, enabling project-level overrides.</p>
+- tool-bash</code></pre>
         </div>
 
         <!-- Sessions -->
         <div class="doc-section" id="section-sessions">
           <h1>Sessions</h1>
-          <p class="section-desc">Manage conversation history and continuity.</p>
+          <p class="lead">Manage conversation history and continuity.</p>
 
-          <h2>Session Lifecycle</h2>
+          <h2>Lifecycle</h2>
           <ol>
             <li><strong>Creation</strong>: Auto-created on first prompt</li>
-            <li><strong>Persistence</strong>: Stored in <code>~/.amplifier/projects/&lt;slug&gt;/sessions/</code></li>
-            <li><strong>Resume</strong>: Continue any previous session</li>
-            <li><strong>Cleanup</strong>: Manual or automatic cleanup</li>
+            <li><strong>Persistence</strong>: Stored in <code>~/.amplifier/projects/</code></li>
+            <li><strong>Resume</strong>: Continue any session</li>
+            <li><strong>Cleanup</strong>: Manual or automatic</li>
           </ol>
 
           <h2>Commands</h2>
-          <pre><code class="language-bash"># List all sessions
-amplifier session list
-
-# Resume most recent
+          <pre><code class="language-bash">amplifier session list
 amplifier continue
-
-# Resume specific session
 amplifier session resume abc123
-
-# Clean sessions older than 7 days
 amplifier session cleanup --days 7</code></pre>
-
-          <h2>Session Storage</h2>
-          <pre><code>~/.amplifier/projects/
-└── my-project-abc123/
-    └── sessions/
-        ├── 2024-01-15-abc123.json
-        └── 2024-01-16-def456.json</code></pre>
         </div>
 
         <!-- Agents -->
         <div class="doc-section" id="section-agents">
           <h1>Agents</h1>
-          <p class="section-desc">Specialized agents for different tasks.</p>
+          <p class="lead">Specialized agents for different tasks.</p>
 
           <h2>Built-in Agents</h2>
           <table>
-            <thead><tr><th>Agent</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code>@explorer</code></td><td>Codebase exploration and architecture analysis</td></tr>
-              <tr><td><code>@bug-hunter</code></td><td>Find and diagnose bugs</td></tr>
-              <tr><td><code>@zen-architect</code></td><td>System design and architecture planning</td></tr>
-              <tr><td><code>@researcher</code></td><td>Deep research and documentation</td></tr>
-              <tr><td><code>@modular-builder</code></td><td>Build modular, maintainable code</td></tr>
-            </tbody>
+            <tr><th>Agent</th><th>Description</th></tr>
+            <tr><td><code>@explorer</code></td><td>Codebase exploration</td></tr>
+            <tr><td><code>@bug-hunter</code></td><td>Find and diagnose bugs</td></tr>
+            <tr><td><code>@zen-architect</code></td><td>System design</td></tr>
+            <tr><td><code>@researcher</code></td><td>Deep research</td></tr>
+            <tr><td><code>@modular-builder</code></td><td>Modular code</td></tr>
           </table>
 
           <h2>Usage</h2>
-          <pre><code class="language-bash"># In interactive mode
-@explorer What is the architecture of this project?
-@bug-hunter Find issues in the auth module
-@zen-architect Design a caching layer</code></pre>
-
-          <h2>Creating Custom Agents</h2>
-          <pre><code class="language-yaml"># agents/my-agent.md
----
-name: my-agent
-description: My custom agent
----
-
-You are a specialized agent that...
-
-## Capabilities
-- Capability 1
-- Capability 2</code></pre>
+          <pre><code class="language-bash">@explorer What is the architecture?
+@bug-hunter Find issues in auth
+@zen-architect Design caching</code></pre>
         </div>
 
         <!-- Collections -->
         <div class="doc-section" id="section-collections">
           <h1>Collections</h1>
-          <p class="section-desc">Shareable bundles of profiles, agents, and context.</p>
+          <p class="lead">Shareable bundles of profiles, agents, and context.</p>
 
-          <h2>What is a Collection?</h2>
-          <p>Collections package related resources for distribution:</p>
+          <h2>What's Included</h2>
           <ul>
-            <li>Profiles (agent configurations)</li>
-            <li>Agents (specialized behaviors)</li>
-            <li>Context (domain knowledge)</li>
-            <li>Modules (tools, hooks)</li>
+            <li>Profiles</li>
+            <li>Agents</li>
+            <li>Context</li>
+            <li>Modules</li>
           </ul>
 
-          <h2>Installing Collections</h2>
-          <pre><code class="language-bash"># Install from git
-amplifier collection install git+https://github.com/org/my-collection@main
-
-# List installed
+          <h2>Installing</h2>
+          <pre><code class="language-bash">amplifier collection install git+https://github.com/org/collection@main
 amplifier collection list
+amplifier collection remove name</code></pre>
 
-# Remove
-amplifier collection remove my-collection</code></pre>
-
-          <h2>Collection Structure</h2>
+          <h2>Structure</h2>
           <pre><code>my-collection/
-├── profiles/       # Auto-discovered as profiles
-├── agents/         # Auto-discovered as agents
-├── context/        # Auto-discovered as context
-├── modules/        # Auto-discovered as modules
-└── pyproject.toml  # Collection metadata</code></pre>
-
-          <h2>Using Collection Resources</h2>
-          <pre><code class="language-bash"># Use profile from collection
-amplifier run --profile my-collection:analyst "Query"
-
-# Extend collection profile
-# In your profile.md:
-extends: collection:my-collection/base</code></pre>
+├── profiles/
+├── agents/
+├── context/
+├── modules/
+└── pyproject.toml</code></pre>
         </div>
 
         <!-- Architecture Overview -->
         <div class="doc-section" id="section-overview">
           <h1>Architecture Overview</h1>
-          <p class="section-desc">Understanding Amplifier's design principles.</p>
+          <p class="lead">Understanding Amplifier's design.</p>
 
           <h2>Ring Architecture</h2>
-          <pre><code>┌─────────────────────────────────────────────┐
-│              Applications (Ring 3)           │
-│         CLI, HTTP servers, embeddings        │
-├─────────────────────────────────────────────┤
-│              Libraries (Ring 2)              │
-│    amplifier-profiles, amplifier-collections │
-├─────────────────────────────────────────────┤
-│              Modules (Ring 1)                │
-│    Providers, Tools, Hooks, Orchestrators    │
-├─────────────────────────────────────────────┤
-│              Kernel (Ring 0)                 │
-│            amplifier-core (~2600 lines)      │
-└─────────────────────────────────────────────┘</code></pre>
+          <pre><code>┌─────────────────────────────────────┐
+│        Applications (Ring 3)         │
+├─────────────────────────────────────┤
+│         Libraries (Ring 2)           │
+├─────────────────────────────────────┤
+│          Modules (Ring 1)            │
+├─────────────────────────────────────┤
+│      Kernel (Ring 0) ~2600 lines     │
+└─────────────────────────────────────┘</code></pre>
 
           <h2>Key Principles</h2>
           <ul>
-            <li><strong>Mechanism over Policy</strong>: Kernel provides capabilities, modules decide behavior</li>
-            <li><strong>Protocol-based</strong>: Duck typing, no inheritance required</li>
-            <li><strong>Minimal Core</strong>: ~2,600 lines, high bar for changes</li>
-            <li><strong>Composable</strong>: Mix and match modules freely</li>
+            <li><strong>Mechanism over Policy</strong></li>
+            <li><strong>Protocol-based</strong> (duck typing)</li>
+            <li><strong>Minimal Core</strong></li>
+            <li><strong>Composable</strong></li>
           </ul>
-
-          <h2>Information Flow</h2>
-          <pre><code>User Input → Session → Orchestrator → Provider → LLM
-                              ↓
-                          Tool Calls
-                              ↓
-                    Hook Pipeline → Tool Execution</code></pre>
         </div>
 
         <!-- Kernel Design -->
         <div class="doc-section" id="section-kernel">
           <h1>Kernel Design</h1>
-          <p class="section-desc">The core mechanisms that power Amplifier.</p>
+          <p class="lead">Core mechanisms that power Amplifier.</p>
 
-          <h2>Core Components</h2>
+          <h2>Components</h2>
           <table>
-            <thead><tr><th>Component</th><th>Responsibility</th></tr></thead>
-            <tbody>
-              <tr><td><code>AmplifierSession</code></td><td>Lifecycle management, state coordination</td></tr>
-              <tr><td><code>Coordinator</code></td><td>Module mounting, dependency resolution</td></tr>
-              <tr><td><code>HookRegistry</code></td><td>Event routing, hook chain execution</td></tr>
-              <tr><td><code>Protocols</code></td><td>Interface definitions (duck typing)</td></tr>
-            </tbody>
+            <tr><th>Component</th><th>Role</th></tr>
+            <tr><td><code>AmplifierSession</code></td><td>Lifecycle management</td></tr>
+            <tr><td><code>Coordinator</code></td><td>Module mounting</td></tr>
+            <tr><td><code>HookRegistry</code></td><td>Event routing</td></tr>
+            <tr><td><code>Protocols</code></td><td>Interface definitions</td></tr>
           </table>
 
-          <h2>What the Kernel Does</h2>
+          <h2>Kernel Does</h2>
           <ul>
-            <li>Mount and unmount modules</li>
-            <li>Route events through hook chains</li>
+            <li>Mount/unmount modules</li>
+            <li>Route events through hooks</li>
             <li>Manage session lifecycle</li>
-            <li>Coordinate between providers, tools, and orchestrators</li>
+            <li>Coordinate providers, tools, orchestrators</li>
           </ul>
 
-          <h2>What the Kernel Doesn't Do</h2>
+          <h2>Kernel Doesn't</h2>
           <ul>
             <li>Make policy decisions</li>
-            <li>Implement specific behaviors</li>
+            <li>Implement behaviors</li>
             <li>Handle domain logic</li>
-            <li>Manage external integrations directly</li>
           </ul>
         </div>
 
         <!-- Module System -->
         <div class="doc-section" id="section-modules">
           <h1>Module System</h1>
-          <p class="section-desc">How modules extend Amplifier's capabilities.</p>
+          <p class="lead">How modules extend capabilities.</p>
 
           <h2>Module Types</h2>
           <table>
-            <thead><tr><th>Type</th><th>Purpose</th><th>Example</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Providers</strong></td><td>LLM integrations</td><td>Anthropic, OpenAI, Azure</td></tr>
-              <tr><td><strong>Tools</strong></td><td>Agent capabilities</td><td>Filesystem, Bash, Web</td></tr>
-              <tr><td><strong>Hooks</strong></td><td>Event interception</td><td>Approval gates, logging</td></tr>
-              <tr><td><strong>Orchestrators</strong></td><td>Conversation flow</td><td>Basic loop, streaming</td></tr>
-              <tr><td><strong>Context Managers</strong></td><td>State persistence</td><td>Simple, persistent</td></tr>
-            </tbody>
+            <tr><th>Type</th><th>Purpose</th></tr>
+            <tr><td>Providers</td><td>LLM integrations</td></tr>
+            <tr><td>Tools</td><td>Agent capabilities</td></tr>
+            <tr><td>Hooks</td><td>Event interception</td></tr>
+            <tr><td>Orchestrators</td><td>Conversation flow</td></tr>
+            <tr><td>Context Managers</td><td>State persistence</td></tr>
           </table>
 
           <h2>Module Lifecycle</h2>
-          <pre><code class="language-python"># Every module implements mount()
-async def mount(coordinator, config: dict) -> None:
+          <pre><code class="language-python">async def mount(coordinator, config: dict) -> None:
     tool = MyTool(config)
     coordinator.register_tool(tool)</code></pre>
-
-          <h2>Module Discovery</h2>
-          <p>Modules are discovered via Python entry points:</p>
-          <pre><code class="language-toml">[project.entry-points."amplifier.modules"]
-my-tool = "my_package:mount"</code></pre>
         </div>
 
         <!-- Mount Plans -->
         <div class="doc-section" id="section-mount-plans">
           <h1>Mount Plans</h1>
-          <p class="section-desc">Declarative system configuration.</p>
+          <p class="lead">Declarative system configuration.</p>
 
-          <h2>What is a Mount Plan?</h2>
-          <p>A mount plan is a declarative specification of which modules to load and how to configure them. Think of it like systemd for AI agents.</p>
-
-          <h2>Plan Structure</h2>
+          <h2>Structure</h2>
           <pre><code class="language-yaml">providers:
   - module: provider-anthropic
     config:
@@ -1216,61 +1018,39 @@ my-tool = "my_package:mount"</code></pre>
 
 tools:
   - module: tool-filesystem
-    config:
-      allowed_paths: ["."]
   - module: tool-bash
-    config:
-      timeout: 30
-
-hooks:
-  - module: hook-approval
-    config:
-      require_approval: ["bash"]
 
 orchestrator:
   module: loop-streaming</code></pre>
-
-          <h2>Plan Resolution</h2>
-          <p>Plans are typically generated from profiles, but can be constructed programmatically for embedding scenarios.</p>
         </div>
 
         <!-- Events -->
         <div class="doc-section" id="section-events">
           <h1>Events</h1>
-          <p class="section-desc">The event system that enables extensibility.</p>
+          <p class="lead">The event system for extensibility.</p>
 
           <h2>Event Categories</h2>
           <table>
-            <thead><tr><th>Category</th><th>Events</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Session</strong></td><td><code>session:start</code>, <code>session:end</code>, <code>session:error</code></td></tr>
-              <tr><td><strong>Provider</strong></td><td><code>provider:request</code>, <code>provider:response</code>, <code>provider:error</code></td></tr>
-              <tr><td><strong>Tool</strong></td><td><code>tool:pre</code>, <code>tool:post</code>, <code>tool:error</code></td></tr>
-              <tr><td><strong>Context</strong></td><td><code>context:load</code>, <code>context:save</code></td></tr>
-            </tbody>
+            <tr><th>Category</th><th>Events</th></tr>
+            <tr><td>Session</td><td><code>session:start</code>, <code>session:end</code></td></tr>
+            <tr><td>Provider</td><td><code>provider:request</code>, <code>provider:response</code></td></tr>
+            <tr><td>Tool</td><td><code>tool:pre</code>, <code>tool:post</code></td></tr>
           </table>
-
-          <h2>Hook Chain</h2>
-          <p>Events flow through hooks in priority order:</p>
-          <pre><code>Event → Hook₁ (priority: 10) → Hook₂ (priority: 50) → Hook₃ (priority: 100)</code></pre>
 
           <h2>Hook Results</h2>
           <table>
-            <thead><tr><th>Action</th><th>Effect</th></tr></thead>
-            <tbody>
-              <tr><td><code>continue</code></td><td>Pass to next hook</td></tr>
-              <tr><td><code>deny</code></td><td>Block operation</td></tr>
-              <tr><td><code>modify</code></td><td>Change event data</td></tr>
-              <tr><td><code>inject_context</code></td><td>Add context to prompt</td></tr>
-              <tr><td><code>ask_user</code></td><td>Request user confirmation</td></tr>
-            </tbody>
+            <tr><th>Action</th><th>Effect</th></tr>
+            <tr><td><code>continue</code></td><td>Pass to next</td></tr>
+            <tr><td><code>deny</code></td><td>Block operation</td></tr>
+            <tr><td><code>modify</code></td><td>Change data</td></tr>
+            <tr><td><code>ask_user</code></td><td>Request confirmation</td></tr>
           </table>
         </div>
 
         <!-- Custom Tools -->
         <div class="doc-section" id="section-dev-tools">
-          <h1>Creating Custom Tools</h1>
-          <p class="section-desc">Build tools in 2 minutes with duck typing.</p>
+          <h1>Custom Tools</h1>
+          <p class="lead">Build tools in 2 minutes with duck typing.</p>
 
           <h2>Minimal Tool</h2>
           <pre><code class="language-python">from amplifier_core.models import ToolResult
@@ -1285,83 +1065,47 @@ class MyTool:
         return "Description for the LLM"
 
     async def execute(self, input: dict) -> ToolResult:
-        # Your logic here
         return ToolResult(success=True, output="Result")</code></pre>
 
-          <h2>Mount Function</h2>
+          <h2>Mount</h2>
           <pre><code class="language-python">async def mount(coordinator, config: dict) -> None:
-    tool = MyTool()
-    coordinator.register_tool(tool)</code></pre>
+    coordinator.register_tool(MyTool())</code></pre>
 
-          <h2>Input Schema</h2>
-          <pre><code class="language-python">@property
-def input_schema(self) -> dict:
-    return {
-        "type": "object",
-        "properties": {
-            "query": {
-                "type": "string",
-                "description": "Search query"
-            }
-        },
-        "required": ["query"]
-    }</code></pre>
-
-          <h2>Package Configuration</h2>
-          <pre><code class="language-toml"># pyproject.toml
-[project.entry-points."amplifier.modules"]
+          <h2>Package</h2>
+          <pre><code class="language-toml">[project.entry-points."amplifier.modules"]
 my-tool = "my_tool:mount"</code></pre>
         </div>
 
         <!-- Hooks -->
         <div class="doc-section" id="section-dev-hooks">
-          <h1>Creating Hooks</h1>
-          <p class="section-desc">Intercept and modify agent behavior.</p>
+          <h1>Hooks</h1>
+          <p class="lead">Intercept and modify behavior.</p>
 
           <h2>Basic Hook</h2>
           <pre><code class="language-python">from amplifier_core.models import HookResult
 
 async def my_hook(event: str, data: dict) -> HookResult:
-    if event == "tool:pre" and data.get("tool_name") == "bash":
-        # Block dangerous commands
-        if "rm -rf" in str(data.get("tool_input", {})):
-            return HookResult(action="deny", reason="Blocked dangerous command")
+    if event == "tool:pre" and "rm -rf" in str(data):
+        return HookResult(action="deny", reason="Blocked")
     return HookResult(action="continue")</code></pre>
 
-          <h2>Hook Actions</h2>
+          <h2>Actions</h2>
           <table>
-            <thead><tr><th>Action</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code>continue</code></td><td>Allow operation to proceed</td></tr>
-              <tr><td><code>deny</code></td><td>Block the operation with reason</td></tr>
-              <tr><td><code>modify</code></td><td>Change event data before proceeding</td></tr>
-              <tr><td><code>inject_context</code></td><td>Add context to the conversation</td></tr>
-              <tr><td><code>ask_user</code></td><td>Request user confirmation</td></tr>
-            </tbody>
+            <tr><th>Action</th><th>Description</th></tr>
+            <tr><td><code>continue</code></td><td>Allow operation</td></tr>
+            <tr><td><code>deny</code></td><td>Block with reason</td></tr>
+            <tr><td><code>modify</code></td><td>Change event data</td></tr>
+            <tr><td><code>ask_user</code></td><td>Request confirmation</td></tr>
           </table>
-
-          <h2>Approval Gate Example</h2>
-          <pre><code class="language-python">async def approval_hook(event: str, data: dict) -> HookResult:
-    if event == "tool:pre":
-        tool = data.get("tool_name")
-        if tool in ["bash", "filesystem"]:
-            return HookResult(
-                action="ask_user",
-                prompt=f"Allow {tool} execution?",
-                options=["yes", "no"]
-            )
-    return HookResult(action="continue")</code></pre>
         </div>
 
         <!-- Providers -->
         <div class="doc-section" id="section-dev-providers">
-          <h1>Creating Providers</h1>
-          <p class="section-desc">Integrate new LLM backends.</p>
+          <h1>Custom Providers</h1>
+          <p class="lead">Integrate new LLM backends.</p>
 
           <h2>Provider Protocol</h2>
-          <pre><code class="language-python">from amplifier_core.models import Message, Response
-
-class MyProvider:
+          <pre><code class="language-python">class MyProvider:
     @property
     def name(self) -> str:
         return "my-provider"
@@ -1372,257 +1116,125 @@ class MyProvider:
         tools: list[dict] | None = None,
         **kwargs
     ) -> Response:
-        # Call your LLM API
         result = await call_api(messages)
-        return Response(
-            content=result.text,
-            tool_calls=result.tool_calls
-        )</code></pre>
-
-          <h2>Configuration</h2>
-          <pre><code class="language-python">async def mount(coordinator, config: dict) -> None:
-    provider = MyProvider(
-        api_key=config.get("api_key"),
-        model=config.get("model", "default-model")
-    )
-    coordinator.register_provider(provider)</code></pre>
+        return Response(content=result.text)</code></pre>
         </div>
 
         <!-- Contracts -->
         <div class="doc-section" id="section-contracts">
           <h1>Contracts</h1>
-          <p class="section-desc">Protocol definitions for module interfaces.</p>
+          <p class="lead">Protocol definitions for interfaces.</p>
 
           <h2>Tool Contract</h2>
           <pre><code class="language-python">class ToolProtocol:
-    name: str                           # Unique identifier
-    description: str                    # LLM-facing description
-    input_schema: dict | None          # JSON Schema (optional)
-
+    name: str
+    description: str
+    input_schema: dict | None
     async def execute(self, input: dict) -> ToolResult</code></pre>
 
           <h2>Provider Contract</h2>
           <pre><code class="language-python">class ProviderProtocol:
     name: str
-
-    async def complete(
-        self,
-        messages: list[Message],
-        tools: list[dict] | None = None,
-        **kwargs
-    ) -> Response</code></pre>
+    async def complete(self, messages, tools, **kw) -> Response</code></pre>
 
           <h2>Hook Contract</h2>
           <pre><code class="language-python">class HookProtocol:
-    events: list[str]                  # Event patterns to subscribe
-    priority: int                       # Lower = runs first
-
-    async def handle(self, event: str, data: dict) -> HookResult</code></pre>
-
-          <h2>Duck Typing</h2>
-          <p>Amplifier uses duck typing—no inheritance required. If your class has the right methods, it works.</p>
+    events: list[str]
+    priority: int
+    async def handle(self, event, data) -> HookResult</code></pre>
         </div>
 
         <!-- Testing -->
         <div class="doc-section" id="section-testing">
           <h1>Testing</h1>
-          <p class="section-desc">Test your modules effectively.</p>
+          <p class="lead">Test your modules.</p>
 
           <h2>Testing Tools</h2>
           <pre><code class="language-python">import pytest
-from my_tool import MyTool
 
 @pytest.mark.asyncio
 async def test_my_tool():
     tool = MyTool()
-
     result = await tool.execute({"query": "test"})
+    assert result.success</code></pre>
 
-    assert result.success
-    assert "expected" in result.output</code></pre>
-
-          <h2>Testing Hooks</h2>
-          <pre><code class="language-python">@pytest.mark.asyncio
-async def test_approval_hook():
-    from my_hooks import approval_hook
-
-    # Test blocking dangerous command
-    result = await approval_hook("tool:pre", {
-        "tool_name": "bash",
-        "tool_input": {"command": "rm -rf /"}
-    })
-
-    assert result.action == "deny"</code></pre>
-
-          <h2>Integration Testing</h2>
+          <h2>Integration</h2>
           <pre><code class="language-python">from amplifier_core.testing import create_test_coordinator
 
 @pytest.mark.asyncio
 async def test_integration():
     coord = create_test_coordinator()
-    await mount(coord, {"config": "value"})
-
+    await mount(coord, {})
     tool = coord.mounted["tools"]["my_tool"]
     result = await tool.execute({"input": "test"})
-
     assert result.success</code></pre>
         </div>
 
         <!-- Module Providers -->
         <div class="doc-section" id="section-mod-providers">
           <h1>Provider Modules</h1>
-          <p class="section-desc">LLM integration modules.</p>
+          <p class="lead">LLM integration modules.</p>
 
-          <h2>Official Providers</h2>
+          <h2>Official</h2>
           <table>
-            <thead><tr><th>Module</th><th>Description</th><th>Repository</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><code>provider-anthropic</code></td>
-                <td>Claude models via Anthropic API</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-provider-anthropic" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><code>provider-openai</code></td>
-                <td>GPT models via OpenAI API</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-provider-openai" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><code>provider-azure</code></td>
-                <td>Azure OpenAI Service</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-provider-azure" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><code>provider-ollama</code></td>
-                <td>Local models via Ollama</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-provider-ollama" target="_blank">GitHub</a></td>
-              </tr>
-            </tbody>
+            <tr><th>Module</th><th>Description</th></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-provider-anthropic">provider-anthropic</a></td><td>Claude models</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-provider-openai">provider-openai</a></td><td>GPT models</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-provider-azure">provider-azure</a></td><td>Azure OpenAI</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-provider-ollama">provider-ollama</a></td><td>Local via Ollama</td></tr>
           </table>
 
-          <h2>Community Providers</h2>
+          <h2>Community</h2>
           <table>
-            <thead><tr><th>Module</th><th>Description</th><th>Author</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><a href="https://github.com/brycecutt-msft/amplifier-module-provider-bedrock" target="_blank">provider-bedrock</a></td>
-                <td>AWS Bedrock with cross-region inference</td>
-                <td>@brycecutt-msft</td>
-              </tr>
-              <tr>
-                <td><a href="https://github.com/robotdad/amplifier-module-provider-openai-realtime" target="_blank">provider-openai-realtime</a></td>
-                <td>OpenAI Realtime API for speech-to-speech</td>
-                <td>@robotdad</td>
-              </tr>
-            </tbody>
+            <tr><th>Module</th><th>Author</th></tr>
+            <tr><td><a href="https://github.com/brycecutt-msft/amplifier-module-provider-bedrock">provider-bedrock</a></td><td>@brycecutt-msft</td></tr>
+            <tr><td><a href="https://github.com/robotdad/amplifier-module-provider-openai-realtime">provider-openai-realtime</a></td><td>@robotdad</td></tr>
           </table>
         </div>
 
         <!-- Module Tools -->
         <div class="doc-section" id="section-mod-tools">
           <h1>Tool Modules</h1>
-          <p class="section-desc">Agent capability modules.</p>
+          <p class="lead">Agent capability modules.</p>
 
-          <h2>Official Tools</h2>
+          <h2>Official</h2>
           <table>
-            <thead><tr><th>Module</th><th>Description</th><th>Repository</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><code>tool-filesystem</code></td>
-                <td>File read/write operations</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-tool-filesystem" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><code>tool-bash</code></td>
-                <td>Shell command execution</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-tool-bash" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><code>tool-web</code></td>
-                <td>Web requests and scraping</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-tool-web" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><code>tool-search</code></td>
-                <td>Code and file search</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-tool-search" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><code>tool-task</code></td>
-                <td>Sub-agent task delegation</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-tool-task" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><code>tool-todo</code></td>
-                <td>Task tracking</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-tool-todo" target="_blank">GitHub</a></td>
-              </tr>
-            </tbody>
+            <tr><th>Module</th><th>Description</th></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-tool-filesystem">tool-filesystem</a></td><td>File operations</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-tool-bash">tool-bash</a></td><td>Shell commands</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-tool-web">tool-web</a></td><td>Web requests</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-tool-search">tool-search</a></td><td>Code search</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-tool-task">tool-task</a></td><td>Sub-agent tasks</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-tool-todo">tool-todo</a></td><td>Task tracking</td></tr>
           </table>
 
-          <h2>Community Tools</h2>
+          <h2>Community</h2>
           <table>
-            <thead><tr><th>Module</th><th>Description</th><th>Author</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><a href="https://github.com/robotdad/amplifier-module-tool-mcp" target="_blank">tool-mcp</a></td>
-                <td>Model Context Protocol integration</td>
-                <td>@robotdad</td>
-              </tr>
-              <tr>
-                <td><a href="https://github.com/robotdad/amplifier-module-tool-skills" target="_blank">tool-skills</a></td>
-                <td>Domain knowledge with progressive disclosure</td>
-                <td>@robotdad</td>
-              </tr>
-              <tr>
-                <td><a href="https://github.com/robotdad/amplifier-module-tool-youtube-dl" target="_blank">tool-youtube-dl</a></td>
-                <td>YouTube audio/video download</td>
-                <td>@robotdad</td>
-              </tr>
-              <tr>
-                <td><a href="https://github.com/robotdad/amplifier-module-tool-whisper" target="_blank">tool-whisper</a></td>
-                <td>Speech-to-text via Whisper</td>
-                <td>@robotdad</td>
-              </tr>
-            </tbody>
+            <tr><th>Module</th><th>Author</th></tr>
+            <tr><td><a href="https://github.com/robotdad/amplifier-module-tool-mcp">tool-mcp</a></td><td>@robotdad</td></tr>
+            <tr><td><a href="https://github.com/robotdad/amplifier-module-tool-skills">tool-skills</a></td><td>@robotdad</td></tr>
+            <tr><td><a href="https://github.com/robotdad/amplifier-module-tool-youtube-dl">tool-youtube-dl</a></td><td>@robotdad</td></tr>
+            <tr><td><a href="https://github.com/robotdad/amplifier-module-tool-whisper">tool-whisper</a></td><td>@robotdad</td></tr>
           </table>
         </div>
 
         <!-- Module Orchestrators -->
         <div class="doc-section" id="section-mod-orchestrators">
           <h1>Orchestrator Modules</h1>
-          <p class="section-desc">Conversation flow control modules.</p>
+          <p class="lead">Conversation flow control.</p>
 
-          <h2>Official Orchestrators</h2>
           <table>
-            <thead><tr><th>Module</th><th>Description</th><th>Repository</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><code>loop-basic</code></td>
-                <td>Simple request-response loop</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-loop-basic" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><code>loop-streaming</code></td>
-                <td>Streaming responses with tool calls</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-loop-streaming" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><code>loop-event</code></td>
-                <td>Event-driven orchestration</td>
-                <td><a href="https://github.com/microsoft/amplifier-module-loop-event" target="_blank">GitHub</a></td>
-              </tr>
-            </tbody>
+            <tr><th>Module</th><th>Description</th></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-loop-basic">loop-basic</a></td><td>Simple loop</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-loop-streaming">loop-streaming</a></td><td>Streaming</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-module-loop-event">loop-event</a></td><td>Event-driven</td></tr>
           </table>
         </div>
 
         <!-- Library Core -->
         <div class="doc-section" id="section-lib-core">
           <h1>amplifier-core</h1>
-          <p class="section-desc">The kernel library.</p>
-
-          <h2>Overview</h2>
-          <p>The core kernel providing mechanisms for AI agent orchestration. ~2,600 lines of code with a high bar for changes.</p>
+          <p class="lead">The kernel library.</p>
 
           <h2>Key Exports</h2>
           <pre><code class="language-python">from amplifier_core import (
@@ -1636,252 +1248,149 @@ from amplifier_core.models import (
     HookResult,
     Message,
     Response,
-)
-
-from amplifier_core.protocols import (
-    ToolProtocol,
-    ProviderProtocol,
-    HookProtocol,
 )</code></pre>
 
-          <h2>Repository</h2>
-          <p><a href="https://github.com/microsoft/amplifier-core" target="_blank">github.com/microsoft/amplifier-core</a></p>
+          <p><a href="https://github.com/microsoft/amplifier-core">github.com/microsoft/amplifier-core</a></p>
         </div>
 
         <!-- Library Profiles -->
         <div class="doc-section" id="section-lib-profiles">
           <h1>amplifier-profiles</h1>
-          <p class="section-desc">Profile management library.</p>
+          <p class="lead">Profile management library.</p>
 
-          <h2>Overview</h2>
-          <p>Handles profile resolution, inheritance, and mount plan generation.</p>
-
-          <h2>Key APIs</h2>
           <pre><code class="language-python">from amplifier_profiles import (
     ProfileLoader,
     resolve_profile,
     generate_mount_plan,
 )
 
-# Load and resolve a profile
 loader = ProfileLoader(search_paths=[...])
 profile = loader.load("dev")
-
-# Generate mount plan from profile
 plan = generate_mount_plan(profile)</code></pre>
 
-          <h2>Repository</h2>
-          <p><a href="https://github.com/microsoft/amplifier-profiles" target="_blank">github.com/microsoft/amplifier-profiles</a></p>
+          <p><a href="https://github.com/microsoft/amplifier-profiles">github.com/microsoft/amplifier-profiles</a></p>
         </div>
 
         <!-- Library Collections -->
         <div class="doc-section" id="section-lib-collections">
           <h1>amplifier-collections</h1>
-          <p class="section-desc">Collection discovery and management.</p>
+          <p class="lead">Collection discovery and management.</p>
 
-          <h2>Overview</h2>
-          <p>Convention-based discovery and management of shareable expertise bundles.</p>
-
-          <h2>Key APIs</h2>
           <pre><code class="language-python">from amplifier_collections import (
     CollectionResolver,
-    discover_collection_resources,
     install_collection,
-    CollectionLock,
 )
 
-# Resolve collection
 resolver = CollectionResolver(search_paths=[...])
 path = resolver.resolve("my-collection")
 
-# Discover resources
-resources = discover_collection_resources(path)
-# Returns: {"profiles": [...], "agents": [...], ...}
-
-# Install from git
 await install_collection(
     name="my-collection",
-    source="git+https://github.com/org/my-collection@main",
-    target_dir=Path("~/.amplifier/collections")
+    source="git+https://github.com/org/collection@main",
 )</code></pre>
 
-          <h2>Repository</h2>
-          <p><a href="https://github.com/microsoft/amplifier-collections" target="_blank">github.com/microsoft/amplifier-collections</a></p>
+          <p><a href="https://github.com/microsoft/amplifier-collections">github.com/microsoft/amplifier-collections</a></p>
         </div>
 
         <!-- Showcase -->
         <div class="doc-section" id="section-showcase">
           <h1>Showcase</h1>
-          <p class="section-desc">Applications and modules built with Amplifier.</p>
+          <p class="lead">Community applications and modules.</p>
 
           <div class="callout callout-danger">
-            <p><strong>Security Notice:</strong> Community applications and modules execute arbitrary code with full system access. <strong>Only use from sources you trust.</strong> Review code before installation.</p>
+            <p><strong>Security:</strong> Community code executes with full system access. Review before use.</p>
           </div>
 
-          <h2>Community Applications</h2>
+          <h2>Applications</h2>
           <table>
-            <thead><tr><th>Application</th><th>Description</th><th>Author</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><a href="https://github.com/robotdad/amplifier-app-transcribe" target="_blank">app-transcribe</a></td>
-                <td>YouTube/audio transcription with AI insights</td>
-                <td>@robotdad</td>
-              </tr>
-              <tr>
-                <td><a href="https://github.com/robotdad/amplifier-app-blog-creator" target="_blank">app-blog-creator</a></td>
-                <td>AI-powered blog creation with style awareness</td>
-                <td>@robotdad</td>
-              </tr>
-              <tr>
-                <td><a href="https://github.com/robotdad/amplifier-app-voice" target="_blank">app-voice</a></td>
-                <td>Voice assistant with OpenAI Realtime API</td>
-                <td>@robotdad</td>
-              </tr>
-              <tr>
-                <td><a href="https://github.com/samueljklee/amplifier-app-tool-generator" target="_blank">app-tool-generator</a></td>
-                <td>AI-powered tool generator</td>
-                <td>@samueljklee</td>
-              </tr>
-              <tr>
-                <td><a href="https://github.com/DavidKoleczek/amplifier-app-benchmarks" target="_blank">app-benchmarks</a></td>
-                <td>Benchmarking and evaluation suite</td>
-                <td>@DavidKoleczek</td>
-              </tr>
-            </tbody>
+            <tr><th>App</th><th>Description</th></tr>
+            <tr><td><a href="https://github.com/robotdad/amplifier-app-transcribe">app-transcribe</a></td><td>YouTube transcription</td></tr>
+            <tr><td><a href="https://github.com/robotdad/amplifier-app-blog-creator">app-blog-creator</a></td><td>AI blog creation</td></tr>
+            <tr><td><a href="https://github.com/robotdad/amplifier-app-voice">app-voice</a></td><td>Voice assistant</td></tr>
+            <tr><td><a href="https://github.com/samueljklee/amplifier-app-tool-generator">app-tool-generator</a></td><td>Tool generator</td></tr>
+            <tr><td><a href="https://github.com/DavidKoleczek/amplifier-app-benchmarks">app-benchmarks</a></td><td>Benchmarking</td></tr>
           </table>
 
-          <h2>Community Collections</h2>
+          <h2>Collections</h2>
           <table>
-            <thead><tr><th>Collection</th><th>Description</th><th>Author</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><a href="https://github.com/robotdad/amplifier-collection-ddd" target="_blank">collection-ddd</a></td>
-                <td>Document-Driven Development with 5 workflow agents</td>
-                <td>@robotdad</td>
-              </tr>
-              <tr>
-                <td><a href="https://github.com/robotdad/amplifier-collection-spec-kit" target="_blank">collection-spec-kit</a></td>
-                <td>Specification-Driven Development with 8 agents</td>
-                <td>@robotdad</td>
-              </tr>
-            </tbody>
+            <tr><th>Collection</th><th>Description</th></tr>
+            <tr><td><a href="https://github.com/robotdad/amplifier-collection-ddd">collection-ddd</a></td><td>Document-Driven Dev</td></tr>
+            <tr><td><a href="https://github.com/robotdad/amplifier-collection-spec-kit">collection-spec-kit</a></td><td>Spec-Driven Dev</td></tr>
           </table>
         </div>
 
         <!-- Official Collections -->
         <div class="doc-section" id="section-official-collections">
           <h1>Official Collections</h1>
-          <p class="section-desc">Curated collections maintained by the Amplifier team.</p>
+          <p class="lead">Curated by the Amplifier team.</p>
 
           <table>
-            <thead><tr><th>Collection</th><th>Description</th><th>Repository</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><strong>toolkit</strong></td>
-                <td>Building sophisticated CLI tools using metacognitive recipes</td>
-                <td><a href="https://github.com/microsoft/amplifier-collection-toolkit" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><strong>design-intelligence</strong></td>
-                <td>Comprehensive design intelligence with specialized agents</td>
-                <td><a href="https://github.com/microsoft/amplifier-collection-design-intelligence" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><strong>recipes</strong></td>
-                <td>Multi-step AI agent orchestration for repeatable workflows</td>
-                <td><a href="https://github.com/microsoft/amplifier-collection-recipes" target="_blank">GitHub</a></td>
-              </tr>
-              <tr>
-                <td><strong>issues</strong></td>
-                <td>Issue management workflows</td>
-                <td><a href="https://github.com/microsoft/amplifier-collection-issues" target="_blank">GitHub</a></td>
-              </tr>
-            </tbody>
+            <tr><th>Collection</th><th>Description</th></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-collection-toolkit">toolkit</a></td><td>CLI tool building</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-collection-design-intelligence">design-intelligence</a></td><td>Design agents</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-collection-recipes">recipes</a></td><td>Workflow orchestration</td></tr>
+            <tr><td><a href="https://github.com/microsoft/amplifier-collection-issues">issues</a></td><td>Issue management</td></tr>
           </table>
 
-          <h2>Installing Official Collections</h2>
-          <pre><code class="language-bash"># Install toolkit collection
-amplifier collection install git+https://github.com/microsoft/amplifier-collection-toolkit@main
-
-# Use profiles from collection
-amplifier run --profile toolkit:builder "Create a CLI tool"</code></pre>
+          <h2>Installing</h2>
+          <pre><code class="language-bash">amplifier collection install git+https://github.com/microsoft/amplifier-collection-toolkit@main
+amplifier run --profile toolkit:builder "Create a CLI"</code></pre>
         </div>
 
         <!-- Contributing -->
         <div class="doc-section" id="section-contributing">
           <h1>Contributing</h1>
-          <p class="section-desc">Help build Amplifier.</p>
+          <p class="lead">Help build Amplifier.</p>
 
-          <h2>Ways to Contribute</h2>
+          <h2>Ways to Help</h2>
           <ul>
-            <li><strong>Report bugs</strong>: <a href="https://github.com/microsoft/amplifier/issues" target="_blank">Open an issue</a></li>
-            <li><strong>Suggest features</strong>: Start a discussion</li>
-            <li><strong>Submit PRs</strong>: Fix bugs or add features</li>
-            <li><strong>Build modules</strong>: Create and share tools, providers, hooks</li>
-            <li><strong>Write docs</strong>: Improve documentation</li>
+            <li>Report bugs</li>
+            <li>Suggest features</li>
+            <li>Submit PRs</li>
+            <li>Build modules</li>
+            <li>Write docs</li>
           </ul>
 
-          <h2>Development Setup</h2>
-          <pre><code class="language-bash"># Clone the repo
-git clone https://github.com/microsoft/amplifier.git
+          <h2>Setup</h2>
+          <pre><code class="language-bash">git clone https://github.com/microsoft/amplifier.git
 cd amplifier
-
-# Install dependencies
 uv sync
-
-# Run tests
 uv run pytest
-
-# Run linting
 uv run ruff check .</code></pre>
-
-          <h2>Code Style</h2>
-          <ul>
-            <li>Follow existing patterns in the codebase</li>
-            <li>Use type hints</li>
-            <li>Write tests for new functionality</li>
-            <li>Keep PRs focused and small</li>
-          </ul>
         </div>
 
         <!-- Roadmap -->
         <div class="doc-section" id="section-roadmap">
           <h1>Roadmap</h1>
-          <p class="section-desc">Where Amplifier is heading.</p>
+          <p class="lead">Where we're heading.</p>
 
           <div class="callout callout-warning">
-            <p><strong>Note:</strong> This roadmap is subject to change based on priorities and discoveries.</p>
+            <p>Subject to change based on priorities.</p>
           </div>
 
           <h2>High Priority</h2>
           <ul>
-            <li><strong>Testing utilities</strong> - Built-in utilities for unit testing modules</li>
-            <li><strong>@tool decorator</strong> - 2-minute time-to-first-tool</li>
-            <li><strong>@hook decorator</strong> - Simplified hook creation</li>
+            <li>Testing utilities</li>
+            <li>@tool decorator</li>
+            <li>@hook decorator</li>
           </ul>
 
           <h2>Medium Priority</h2>
           <ul>
-            <li><strong>Event inspector</strong> - Real-time visualization (<code>amplifier inspect --events</code>)</li>
-            <li><strong>Scaffold templates</strong> - Generate module templates (<code>amplifier scaffold</code>)</li>
-            <li><strong>Hot reload</strong> - Development mode with auto-reload</li>
+            <li>Event inspector</li>
+            <li>Scaffold templates</li>
+            <li>Hot reload</li>
           </ul>
 
           <h2>Future</h2>
           <ul>
-            <li><strong>Plan visualizer</strong> - Show mount plan execution</li>
-            <li><strong>Protocol validation</strong> - Runtime contract checking</li>
-            <li><strong>Remote execution</strong> - Distributed agent coordination</li>
+            <li>Plan visualizer</li>
+            <li>Protocol validation</li>
+            <li>Remote execution</li>
           </ul>
         </div>
       </div>
     </main>
-
-    <!-- Table of Contents -->
-    <aside class="toc" id="toc">
-      <div class="toc-title">On this page</div>
-      <div id="toc-links"></div>
-    </aside>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
@@ -1891,156 +1400,68 @@ uv run ruff check .</code></pre>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-toml.min.js"></script>
 
   <script>
-    // Navigation
+    // Nav toggle
+    function toggleGroup(el) {
+      el.classList.toggle('open');
+      el.nextElementSibling.classList.toggle('show');
+    }
+
+    // Section navigation
     const navItems = document.querySelectorAll('.nav-item[data-section]');
     const sections = document.querySelectorAll('.doc-section');
 
-    function showSection(sectionId) {
-      // Update nav
-      navItems.forEach(item => {
-        item.classList.toggle('active', item.dataset.section === sectionId);
-      });
-
-      // Update sections
-      sections.forEach(section => {
-        section.classList.toggle('active', section.id === `section-${sectionId}`);
-      });
-
-      // Update URL
-      history.pushState(null, '', `#${sectionId}`);
-
-      // Update TOC
-      updateTOC(sectionId);
-
-      // Scroll to top
+    function showSection(id) {
+      navItems.forEach(item => item.classList.toggle('active', item.dataset.section === id));
+      sections.forEach(sec => sec.classList.toggle('active', sec.id === `section-${id}`));
+      history.pushState(null, '', `#${id}`);
       window.scrollTo(0, 0);
-
-      // Re-highlight code
       Prism.highlightAll();
-
-      // Close mobile sidebar
       document.getElementById('sidebar').classList.remove('open');
     }
 
-    navItems.forEach(item => {
-      item.addEventListener('click', () => {
-        showSection(item.dataset.section);
-      });
-    });
-
-    // Toggle nav groups
-    function toggleNavGroup(element) {
-      element.classList.toggle('expanded');
-      const children = element.nextElementSibling;
-      if (children && children.classList.contains('nav-children')) {
-        children.classList.toggle('show');
-      }
-    }
-
-    // Mobile sidebar toggle
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
-    }
+    navItems.forEach(item => item.addEventListener('click', () => showSection(item.dataset.section)));
 
     // Search
     const searchIndex = [];
-    sections.forEach(section => {
-      const id = section.id.replace('section-', '');
-      const title = section.querySelector('h1')?.textContent || id;
-      const desc = section.querySelector('.section-desc')?.textContent || '';
-      const content = section.textContent.toLowerCase();
-      searchIndex.push({ id, title, desc, content });
+    sections.forEach(sec => {
+      const id = sec.id.replace('section-', '');
+      const title = sec.querySelector('h1')?.textContent || id;
+      const lead = sec.querySelector('.lead')?.textContent || '';
+      const content = sec.textContent.toLowerCase();
+      searchIndex.push({ id, title, lead, content });
     });
 
-    function handleSearch(event) {
-      const query = event.target.value.toLowerCase().trim();
+    function handleSearch(e) {
+      const q = e.target.value.toLowerCase().trim();
       const results = document.getElementById('search-results');
+      if (q.length < 2) { results.classList.remove('show'); return; }
 
-      if (query.length < 2) {
-        results.classList.remove('show');
-        return;
-      }
-
-      const matches = searchIndex.filter(item =>
-        item.title.toLowerCase().includes(query) ||
-        item.content.includes(query)
-      );
-
-      if (matches.length === 0) {
-        results.innerHTML = '<div class="search-no-results">No results found</div>';
-      } else {
-        results.innerHTML = matches.slice(0, 8).map(item => `
-          <div class="search-result-item" onclick="showSection('${item.id}'); document.getElementById('search-results').classList.remove('show'); document.getElementById('search-input').value = '';">
-            <div class="search-result-title">${item.title}</div>
-            <div class="search-result-section">${item.desc.slice(0, 80)}...</div>
-          </div>
-        `).join('');
-      }
+      const matches = searchIndex.filter(i => i.title.toLowerCase().includes(q) || i.content.includes(q));
+      results.innerHTML = matches.length
+        ? matches.slice(0, 6).map(i => `<div class="search-result" onclick="showSection('${i.id}'); document.getElementById('search-results').classList.remove('show'); document.getElementById('search-input').value='';"><div class="search-result-title">${i.title}</div><div class="search-result-path">${i.lead.slice(0, 60)}...</div></div>`).join('')
+        : '<div style="padding:12px;color:var(--text-3);font-size:12px;">No results</div>';
       results.classList.add('show');
     }
 
-    // Close search on click outside
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.search-wrapper')) {
-        document.getElementById('search-results').classList.remove('show');
-      }
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.search-wrap')) document.getElementById('search-results').classList.remove('show');
     });
 
-    // Keyboard shortcut for search
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        document.getElementById('search-input').focus();
-      }
-      if (e.key === 'Escape') {
-        document.getElementById('search-results').classList.remove('show');
-        document.getElementById('search-input').blur();
-      }
+    document.addEventListener('keydown', e => {
+      if (e.key === '/' && !e.target.closest('input')) { e.preventDefault(); document.getElementById('search-input').focus(); }
+      if (e.key === 'Escape') { document.getElementById('search-results').classList.remove('show'); document.getElementById('search-input').blur(); }
     });
 
-    // Update TOC based on current section
-    function updateTOC(sectionId) {
-      const section = document.getElementById(`section-${sectionId}`);
-      const tocLinks = document.getElementById('toc-links');
+    // Init
+    const hash = window.location.hash.slice(1);
+    if (hash && searchIndex.find(i => i.id === hash)) showSection(hash);
+    else showSection('introduction');
 
-      if (!section) return;
-
-      const headings = section.querySelectorAll('h2, h3');
-      tocLinks.innerHTML = '';
-
-      headings.forEach((heading, index) => {
-        const id = `heading-${sectionId}-${index}`;
-        heading.id = id;
-
-        const link = document.createElement('a');
-        link.href = `#${id}`;
-        link.className = 'toc-link' + (heading.tagName === 'H3' ? ' toc-link-sub' : '');
-        link.textContent = heading.textContent;
-        link.onclick = (e) => {
-          e.preventDefault();
-          heading.scrollIntoView({ behavior: 'smooth' });
-        };
-        tocLinks.appendChild(link);
-      });
-    }
-
-    // Handle initial hash
-    const initialHash = window.location.hash.slice(1);
-    if (initialHash && searchIndex.find(item => item.id === initialHash)) {
-      showSection(initialHash);
-    } else {
-      showSection('introduction');
-    }
-
-    // Handle browser back/forward
     window.addEventListener('popstate', () => {
-      const hash = window.location.hash.slice(1);
-      if (hash && searchIndex.find(item => item.id === hash)) {
-        showSection(hash);
-      }
+      const h = window.location.hash.slice(1);
+      if (h && searchIndex.find(i => i.id === h)) showSection(h);
     });
 
-    // Highlight code on load
     Prism.highlightAll();
   </script>
 </body>
