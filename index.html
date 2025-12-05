@@ -1744,6 +1744,24 @@ response = await session.execute(prompt)</code></pre>
       <h1>Architecture</h1>
       <p class="section-desc">Design philosophy: kernel, not framework. Mechanism over policy.</p>
 
+      <h2>The Linux Kernel Analogy</h2>
+      <p>Amplifier mirrors Linux kernel concepts:</p>
+      <table class="ref-table">
+        <thead>
+          <tr><th>Linux Concept</th><th>Amplifier Analog</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Ring 0 kernel</td><td><code>amplifier-core</code></td><td>Mechanisms only, never policy</td></tr>
+          <tr><td>Syscalls</td><td>Session operations</td><td>Few, sharp APIs</td></tr>
+          <tr><td>Loadable drivers</td><td>Modules</td><td>Compete at edges</td></tr>
+          <tr><td>Signals/Netlink</td><td>Event bus / hooks</td><td>Observe and control</td></tr>
+          <tr><td>/proc &amp; dmesg</td><td>JSONL logs</td><td>Single canonical stream</td></tr>
+          <tr><td>Capabilities</td><td>Approval system</td><td>Deny-by-default</td></tr>
+          <tr><td>Scheduler</td><td>Orchestrator modules</td><td>Swap execution strategies</td></tr>
+          <tr><td>VM/Memory</td><td>Context manager</td><td>Conversation memory</td></tr>
+        </tbody>
+      </table>
+
       <div class="arch-viz">
         <div class="arch-tabs" id="arch-tabs">
           <button class="arch-tab active" data-view="stack">System Stack</button>
@@ -1990,44 +2008,101 @@ response = await session.execute(prompt)</code></pre>
 
       <!-- Events Tab -->
       <div id="ref-events" class="tab-content">
-        <p>30+ hookable events covering the entire agent lifecycle.</p>
+        <p>30+ hookable events covering the entire agent lifecycle. Events are logged as JSONL for debugging and observability.</p>
 
-        <div class="event-groups">
-          <div class="event-group">
-            <h4>Session</h4>
-            <code>session:start</code>
-            <code>session:end</code>
-            <code>session:fork</code>
+        <h3>Session Lifecycle</h3>
+        <table class="ref-table">
+          <thead><tr><th>Event</th><th>When</th><th>Data</th></tr></thead>
+          <tbody>
+            <tr><td><code>session:start</code></td><td>Session initialized</td><td>session_id, mount_plan</td></tr>
+            <tr><td><code>session:end</code></td><td>Session cleanup</td><td>session_id, duration</td></tr>
+            <tr><td><code>session:fork</code></td><td>Sub-session created</td><td>parent_id, child_id</td></tr>
+            <tr><td><code>session:resume</code></td><td>Session resumed</td><td>session_id</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Prompt Lifecycle</h3>
+        <table class="ref-table">
+          <thead><tr><th>Event</th><th>When</th><th>Data</th></tr></thead>
+          <tbody>
+            <tr><td><code>prompt:submit</code></td><td>User prompt received</td><td>prompt, session_id</td></tr>
+            <tr><td><code>prompt:complete</code></td><td>Response generated</td><td>response, duration</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Provider Events</h3>
+        <table class="ref-table">
+          <thead><tr><th>Event</th><th>When</th><th>Data</th></tr></thead>
+          <tbody>
+            <tr><td><code>provider:request</code></td><td>Before LLM call</td><td>messages, model</td></tr>
+            <tr><td><code>provider:response</code></td><td>After LLM response</td><td>response, usage</td></tr>
+            <tr><td><code>provider:error</code></td><td>LLM call failed</td><td>error, model</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Tool Events</h3>
+        <table class="ref-table">
+          <thead><tr><th>Event</th><th>When</th><th>Data</th></tr></thead>
+          <tbody>
+            <tr><td><code>tool:pre</code></td><td>Before tool execution</td><td>tool_name, input</td></tr>
+            <tr><td><code>tool:post</code></td><td>After tool execution</td><td>tool_name, result</td></tr>
+            <tr><td><code>tool:error</code></td><td>Tool execution failed</td><td>tool_name, error</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Context Events</h3>
+        <table class="ref-table">
+          <thead><tr><th>Event</th><th>When</th><th>Data</th></tr></thead>
+          <tbody>
+            <tr><td><code>context:pre_compact</code></td><td>Before compaction</td><td>message_count, tokens</td></tr>
+            <tr><td><code>context:post_compact</code></td><td>After compaction</td><td>message_count, tokens</td></tr>
+            <tr><td><code>context:include</code></td><td>Context injected</td><td>source, content</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Approval &amp; Streaming Events</h3>
+        <table class="ref-table">
+          <thead><tr><th>Event</th><th>When</th><th>Data</th></tr></thead>
+          <tbody>
+            <tr><td><code>approval:required</code></td><td>Approval requested</td><td>operation, prompt</td></tr>
+            <tr><td><code>approval:granted</code></td><td>User approved</td><td>operation</td></tr>
+            <tr><td><code>approval:denied</code></td><td>User denied</td><td>operation, reason</td></tr>
+            <tr><td><code>content_block:start</code></td><td>Streaming starts</td><td>block_type</td></tr>
+            <tr><td><code>content_block:delta</code></td><td>Content chunk</td><td>delta</td></tr>
+            <tr><td><code>content_block:end</code></td><td>Streaming ends</td><td>block_type</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Event Log Format (JSONL)</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">json</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
           </div>
-          <div class="event-group">
-            <h4>Provider</h4>
-            <code>provider:request</code>
-            <code>provider:response</code>
-            <code>provider:error</code>
+          <pre><code class="language-json">{
+  "ts": "2024-01-15T10:30:00.123Z",
+  "session_id": "abc123",
+  "event": "tool:pre",
+  "component": "orchestrator",
+  "module": "tool-bash",
+  "data": {"tool_name": "bash", "input": {"command": "ls"}}
+}</code></pre>
+        </div>
+
+        <h3>Finding Logs</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
           </div>
-          <div class="event-group">
-            <h4>Tool</h4>
-            <code>tool:pre</code>
-            <code>tool:post</code>
-            <code>tool:error</code>
-          </div>
-          <div class="event-group">
-            <h4>Streaming</h4>
-            <code>content_block:start</code>
-            <code>content_block:delta</code>
-            <code>content_block:end</code>
-          </div>
-          <div class="event-group">
-            <h4>Context</h4>
-            <code>context:pre_compact</code>
-            <code>context:post_compact</code>
-          </div>
-          <div class="event-group">
-            <h4>Governance</h4>
-            <code>approval:required</code>
-            <code>approval:granted</code>
-            <code>policy:violation</code>
-          </div>
+          <pre><code class="language-bash"># Session logs location
+ls ~/.amplifier/projects/&lt;project&gt;/sessions/&lt;session-id&gt;/events.jsonl
+
+# Search for tool errors
+grep '"event":"tool:error"' events.jsonl
+
+# Pretty print with jq
+cat events.jsonl | jq 'select(.event == "provider:request")'</code></pre>
         </div>
       </div>
 
@@ -2232,7 +2307,18 @@ amplifier agents show explorer</code></pre>
     <!-- CLI SECTION -->
     <section id="section-cli" class="section">
       <h1>CLI Reference</h1>
-      <p class="section-desc">Command-line interface for running and managing Amplifier.</p>
+      <p class="section-desc">Complete reference for all Amplifier command-line commands.</p>
+
+      <h3>Global Options</h3>
+      <table class="ref-table">
+        <thead><tr><th>Option</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>--version</code></td><td>Show version and exit</td></tr>
+          <tr><td><code>--help</code></td><td>Show help and exit</td></tr>
+          <tr><td><code>--install-completion</code></td><td>Install shell completion</td></tr>
+          <tr><td><code>--show-completion</code></td><td>Show shell completion script</td></tr>
+        </tbody>
+      </table>
 
       <div class="cli-groups">
         <div class="cli-group">
@@ -2241,12 +2327,17 @@ amplifier agents show explorer</code></pre>
           <div class="cli-item"><code>amplifier run "prompt"</code><span>Single command execution</span></div>
           <div class="cli-item"><code>amplifier run --profile name</code><span>Run with specific profile</span></div>
           <div class="cli-item"><code>amplifier run -m model</code><span>Override model</span></div>
+          <div class="cli-item"><code>amplifier run --max-tokens N</code><span>Max response tokens</span></div>
+          <div class="cli-item"><code>amplifier run --output-format json</code><span>Output format (text/json/json-trace)</span></div>
+          <div class="cli-item"><code>amplifier run --no-tools</code><span>Disable tool use</span></div>
+          <div class="cli-item"><code>amplifier run --resume [id]</code><span>Resume session by ID</span></div>
           <div class="cli-item"><code>amplifier continue</code><span>Resume last session</span></div>
           <div class="cli-item"><code>amplifier continue "follow-up"</code><span>Resume with new prompt</span></div>
         </div>
         <div class="cli-group">
           <h3>Sessions</h3>
           <div class="cli-item"><code>amplifier session list</code><span>Display all sessions</span></div>
+          <div class="cli-item"><code>amplifier session list --all</code><span>Show all sessions</span></div>
           <div class="cli-item"><code>amplifier session show [id]</code><span>View session details</span></div>
           <div class="cli-item"><code>amplifier session resume [id]</code><span>Resume specific session</span></div>
           <div class="cli-item"><code>amplifier session delete [id]</code><span>Remove a session</span></div>
@@ -2257,18 +2348,34 @@ amplifier agents show explorer</code></pre>
           <div class="cli-item"><code>amplifier profile list</code><span>View all profiles</span></div>
           <div class="cli-item"><code>amplifier profile use dev</code><span>Set as default</span></div>
           <div class="cli-item"><code>amplifier profile show name</code><span>Display configuration</span></div>
+          <div class="cli-item"><code>amplifier profile show --resolved</code><span>Show full resolved profile</span></div>
           <div class="cli-item"><code>amplifier profile current</code><span>Check active profile</span></div>
+          <div class="cli-item"><code>amplifier profile default [name]</code><span>Show/set default profile</span></div>
+          <div class="cli-item"><code>amplifier profile reset</code><span>Reset to defaults</span></div>
         </div>
         <div class="cli-group">
           <h3>Providers</h3>
           <div class="cli-item"><code>amplifier provider list</code><span>List available providers</span></div>
           <div class="cli-item"><code>amplifier provider use anthropic</code><span>Set default provider</span></div>
+          <div class="cli-item"><code>amplifier provider current</code><span>Show current provider</span></div>
+          <div class="cli-item"><code>amplifier provider reset</code><span>Reset to default provider</span></div>
         </div>
         <div class="cli-group">
           <h3>Modules</h3>
           <div class="cli-item"><code>amplifier module list</code><span>Display installed modules</span></div>
+          <div class="cli-item"><code>amplifier module list --type tool</code><span>Filter by type</span></div>
           <div class="cli-item"><code>amplifier module show [name]</code><span>View module details</span></div>
           <div class="cli-item"><code>amplifier module add tool-web</code><span>Add a module</span></div>
+          <div class="cli-item"><code>amplifier module add --source [url]</code><span>Add from source</span></div>
+          <div class="cli-item"><code>amplifier module remove [name]</code><span>Remove a module</span></div>
+          <div class="cli-item"><code>amplifier module check-updates</code><span>Check for updates</span></div>
+          <div class="cli-item"><code>amplifier module refresh</code><span>Refresh cache</span></div>
+        </div>
+        <div class="cli-group">
+          <h3>Tools</h3>
+          <div class="cli-item"><code>amplifier tool list</code><span>List available tools</span></div>
+          <div class="cli-item"><code>amplifier tool info [name]</code><span>Show tool details</span></div>
+          <div class="cli-item"><code>amplifier tool invoke [name]</code><span>Test tool directly</span></div>
         </div>
         <div class="cli-group">
           <h3>Agents</h3>
@@ -2279,13 +2386,24 @@ amplifier agents show explorer</code></pre>
           <h3>Collections</h3>
           <div class="cli-item"><code>amplifier collection list</code><span>List installed collections</span></div>
           <div class="cli-item"><code>amplifier collection add [url]</code><span>Add from Git</span></div>
+          <div class="cli-item"><code>amplifier collection show [name]</code><span>Show collection details</span></div>
+          <div class="cli-item"><code>amplifier collection remove [name]</code><span>Remove collection</span></div>
+          <div class="cli-item"><code>amplifier collection refresh</code><span>Refresh cache</span></div>
+        </div>
+        <div class="cli-group">
+          <h3>Sources (Dev)</h3>
+          <div class="cli-item"><code>amplifier source list</code><span>List source overrides</span></div>
+          <div class="cli-item"><code>amplifier source add [name] [path]</code><span>Add local override</span></div>
+          <div class="cli-item"><code>amplifier source remove [name]</code><span>Remove override</span></div>
+          <div class="cli-item"><code>amplifier source show [name]</code><span>Show source details</span></div>
         </div>
         <div class="cli-group">
           <h3>System</h3>
           <div class="cli-item"><code>amplifier update</code><span>Update Amplifier</span></div>
+          <div class="cli-item"><code>amplifier update --cli</code><span>Update CLI only</span></div>
+          <div class="cli-item"><code>amplifier update --modules</code><span>Update modules only</span></div>
           <div class="cli-item"><code>amplifier init</code><span>Initialize configuration</span></div>
           <div class="cli-item"><code>amplifier --help</code><span>General help</span></div>
-          <div class="cli-item"><code>amplifier run --help</code><span>Command-specific help</span></div>
         </div>
       </div>
 
@@ -2297,16 +2415,68 @@ amplifier agents show explorer</code></pre>
           <div class="cli-item"><code>/tools</code><span>List accessible tools</span></div>
           <div class="cli-item"><code>/agents</code><span>List available agents</span></div>
           <div class="cli-item"><code>/status</code><span>Show session information</span></div>
+          <div class="cli-item"><code>/think</code><span>Enable planning mode</span></div>
           <div class="cli-item"><code>/clear</code><span>Clear conversation history</span></div>
-          <div class="cli-item"><code>/quit</code><span>Exit the application</span></div>
+          <div class="cli-item"><code>/quit</code>, <code>/exit</code><span>Exit the application</span></div>
         </div>
       </div>
+
+      <h3>Using Agents &amp; Mentions</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code class="language-bash"># Use agents with @ prefix
+amplifier> @explorer Analyze this codebase
+amplifier> @bug-hunter Find issues in main.py
+
+# Reference files with @mentions
+amplifier> Review @src/main.py for issues
+amplifier> @project:context/standards.md Apply these standards
+amplifier> @collection:foundation/context/philosophy.md</code></pre>
+      </div>
+
+      <h3>Output Formats</h3>
+      <p>Use <code>--output-format</code> for automation:</p>
+      <table class="ref-table">
+        <thead><tr><th>Format</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>text</code></td><td>Human-readable markdown (default)</td></tr>
+          <tr><td><code>json</code></td><td>Structured JSON for scripting</td></tr>
+          <tr><td><code>json-trace</code></td><td>Complete execution trace with tool calls</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Environment Variables</h3>
+      <table class="ref-table">
+        <thead><tr><th>Variable</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>ANTHROPIC_API_KEY</code></td><td>Anthropic API key</td></tr>
+          <tr><td><code>OPENAI_API_KEY</code></td><td>OpenAI API key</td></tr>
+          <tr><td><code>AZURE_OPENAI_API_KEY</code></td><td>Azure OpenAI API key</td></tr>
+          <tr><td><code>AZURE_OPENAI_ENDPOINT</code></td><td>Azure OpenAI endpoint</td></tr>
+          <tr><td><code>AMPLIFIER_PROFILE</code></td><td>Default profile</td></tr>
+          <tr><td><code>AMPLIFIER_PROVIDER</code></td><td>Default provider</td></tr>
+          <tr><td><code>AMPLIFIER_DEBUG</code></td><td>Enable debug logging</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Configuration Files</h3>
+      <table class="ref-table">
+        <thead><tr><th>File</th><th>Scope</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>~/.amplifier/settings.yaml</code></td><td>User</td><td>Global user settings</td></tr>
+          <tr><td><code>.amplifier/settings.yaml</code></td><td>Project</td><td>Project settings (committed)</td></tr>
+          <tr><td><code>.amplifier/settings.local.yaml</code></td><td>Local</td><td>Machine-local (gitignored)</td></tr>
+        </tbody>
+      </table>
 
       <div class="info-box">
         <strong>Tips</strong>
         <ul>
           <li>Pipe input: <code>cat file.py | amplifier run "Explain"</code></li>
-          <li>Set default profile: <code>AMPLIFIER_PROFILE=dev</code></li>
+          <li>JSON output for scripting: <code>amplifier run -o json "What is 2+2?"</code></li>
           <li>Verbose output: <code>-v</code> or <code>--verbose</code></li>
           <li>Use agents with @ prefix: <code>@explorer What is the architecture?</code></li>
         </ul>
@@ -2901,12 +3071,32 @@ Help me understand:
         <button class="tab active" data-tab="overview">Overview</button>
         <button class="tab" data-tab="tasks">Priority Tasks</button>
         <button class="tab" data-tab="specs">Specifications</button>
+        <button class="tab" data-tab="roadmap">Roadmap</button>
       </div>
 
       <!-- Overview Tab -->
       <div id="contrib-overview" class="tab-content active">
         <div class="callout">
           <p><strong>North Star:</strong> Amplifier makes advanced AI agent systems <em>feel like scripting</em>. Developers should go from an idea to a working extension in under 2 minutes.</p>
+        </div>
+
+        <h3>Understanding the Ecosystem</h3>
+        <p>Contributing to Amplifier typically means <strong>creating your own repositories</strong> rather than submitting PRs to a monolithic codebase:</p>
+        <ul>
+          <li><strong>Core kernel</strong> (<code>amplifier-core</code>) - Small, stable, boring. High bar for changes.</li>
+          <li><strong>CLI application</strong> (<code>amplifier-app-cli</code>) - Reference CLI, not user-focused.</li>
+          <li><strong>Reference implementations</strong> - Canonical examples for each module type.</li>
+          <li><strong>Community ecosystem</strong> - Your own modules, tools, apps, and collections.</li>
+        </ul>
+
+        <div class="info-box" style="margin: 16px 0;">
+          <strong>Reference Implementations</strong>
+          <ul style="margin-top: 8px;">
+            <li><a href="https://github.com/microsoft/amplifier-module-provider-anthropic" target="_blank">provider-anthropic</a> - Claude integration</li>
+            <li><a href="https://github.com/microsoft/amplifier-module-tool-filesystem" target="_blank">tool-filesystem</a> - File operations</li>
+            <li><a href="https://github.com/microsoft/amplifier-module-tool-bash" target="_blank">tool-bash</a> - Shell commands</li>
+            <li><a href="https://github.com/payneio/amplifierd" target="_blank">amplifierd</a> - HTTP/SSE API server</li>
+          </ul>
         </div>
 
         <h3>The Gap</h3>
@@ -3140,6 +3330,70 @@ async def my_hook(event: str, data: dict):
 │
 └── amplifier-profiles/       # Profile management
     └── ...</code></pre>
+        </div>
+      </div>
+
+      <!-- Roadmap Tab -->
+      <div id="contrib-roadmap" class="tab-content">
+        <div class="callout" style="background: #fef3c7; border-color: #f59e0b;">
+          <p><strong>⚠️ Guidelines, Not Commitments:</strong> This roadmap is subject to change based on new information, priorities, and discoveries.</p>
+        </div>
+
+        <h3>Project Status</h3>
+        <p>Amplifier is an <strong>experimental platform</strong> focused on discovering what's possible when AI partnership amplifies human capability. We're building a system that makes AI assistants dramatically more effective.</p>
+
+        <h3>Current Focus Areas</h3>
+        <div class="personas">
+          <div class="persona">
+            <strong>🔧 Building Amplifier with Amplifier</strong>
+            <p>Using Amplifier to improve and extend Amplifier. Building new capabilities, improving existing features, and climbing the ladder of metacognitive recipes.</p>
+          </div>
+          <div class="persona">
+            <strong>🌟 Discovering Emergent Value</strong>
+            <p>Recognizing and amplifying use-cases that emerge from the system. Surfacing emergent uses, especially those extending beyond code development.</p>
+          </div>
+        </div>
+
+        <h3>Exploration Directions</h3>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Area</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Orchestration Strategies</strong></td>
+              <td>Specialized orchestrators tailored to specific workflows, optimization goals, or interaction patterns.</td>
+            </tr>
+            <tr>
+              <td><strong>Collections &amp; Workflows</strong></td>
+              <td>Collections for new domains, workflows, or ways of organizing reusable knowledge and patterns.</td>
+            </tr>
+            <tr>
+              <td><strong>Metacognitive Recipes</strong></td>
+              <td>Structured workflows mixing tasks with higher-level philosophy, decision-making rationale, and problem-solving.</td>
+            </tr>
+            <tr>
+              <td><strong>Context &amp; Memory</strong></td>
+              <td>Richer approaches to memory, knowledge synthesis, session learning, and team context sharing.</td>
+            </tr>
+            <tr>
+              <td><strong>Learning from Sessions</strong></td>
+              <td>Tools to parse session data, reconstruct logs, and analyze patterns for system improvement.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Naming Conventions</h3>
+        <p>When creating your own repositories:</p>
+        <ul>
+          <li><strong>Applications:</strong> <code>amplifier-app-{name}</code></li>
+          <li><strong>Modules:</strong> <code>amplifier-module-{type}-{name}</code></li>
+          <li><strong>Collections:</strong> <code>amplifier-collection-{name}</code></li>
+        </ul>
+
+        <h3>Security Warning</h3>
+        <div class="callout" style="background: #fee2e2; border-color: #ef4444;">
+          <p><strong>⚠️ Critical:</strong> Modules and applications execute arbitrary code with full system access. Users must review code before installation. Build with security in mind.</p>
         </div>
       </div>
     </section>
