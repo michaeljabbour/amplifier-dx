@@ -1098,6 +1098,14 @@
     .callout strong { color: var(--text-0); }
     .callout em { color: var(--blue); font-style: normal; }
 
+    .callout-danger {
+      background: #dc2626 !important;
+      border: 1px solid #991b1b !important;
+      border-left: 4px solid #7f1d1d !important;
+    }
+    .callout-danger p { color: #ffffff !important; }
+    .callout-danger strong { color: #ffffff !important; }
+
     .contrib-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
 
     .contrib-table th, .contrib-table td {
@@ -2637,8 +2645,8 @@ amplifier profile use convergent-dev:convergent-dev</code></pre>
       <h1>Showcase</h1>
       <p class="section-desc">Applications and modules built with Amplifier by the community.</p>
 
-      <div class="callout" style="background: #dc2626; border-color: #b91c1c; border-left: 4px solid #991b1b; margin-bottom: 24px; color: #ffffff;">
-        <p style="color: #ffffff; margin: 0;"><strong>⚠️ Security Notice:</strong> Community applications and modules execute arbitrary code with full system access. <strong>Only use from sources you trust.</strong> Review code before installation.</p>
+      <div class="callout callout-danger">
+        <p><strong>⚠️ Security Notice:</strong> Community applications and modules execute arbitrary code with full system access. <strong>Only use from sources you trust.</strong> Review code before installation.</p>
       </div>
 
       <h2>Community Applications</h2>
