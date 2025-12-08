@@ -1567,6 +1567,80 @@
 
     .footer-copy { color: var(--text-2); font-size: 13px; }
 
+    /* =================================================================
+       SPECIFICATION SECTIONS (Auto-generated from external specs)
+       ================================================================= */
+    .spec-section {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin: 12px 0;
+      overflow: hidden;
+    }
+
+    .spec-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+
+    .spec-header:hover { background: var(--bg-2); }
+
+    .spec-title {
+      flex: 1;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .spec-category {
+      font-size: 11px;
+      padding: 3px 8px;
+      background: var(--bg-2);
+      border-radius: 4px;
+      color: var(--text-2);
+      text-transform: uppercase;
+      margin-right: 12px;
+    }
+
+    .spec-arrow {
+      width: 16px;
+      height: 16px;
+      color: var(--text-2);
+      transition: transform var(--transition);
+    }
+
+    .spec-section.open .spec-arrow { transform: rotate(180deg); }
+
+    .spec-content {
+      display: none;
+      padding: 0 16px 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .spec-section.open .spec-content { display: block; }
+
+    .spec-filter-btn {
+      padding: 6px 12px;
+      border-radius: 4px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      color: var(--text-1);
+      font-size: 12px;
+      cursor: pointer;
+      margin-right: 4px;
+      transition: all var(--transition);
+    }
+
+    .spec-filter-btn:hover { background: var(--bg-3); }
+
+    .spec-filter-btn.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     @media (max-width: 900px) {
       .nav-links { display: none; }
     }
@@ -5527,6 +5601,34 @@ amplifier-ecosystem/
       URL.revokeObjectURL(url);
       toggleExportMenu();
     }
+
+    // ==========================================================================
+    // SPECIFICATION SECTIONS (Auto-generated from external specs)
+    // ==========================================================================
+    function toggleSpec(header) {
+      const section = header.parentElement;
+      section.classList.toggle('open');
+    }
+
+    // Filter specifications by category
+    document.querySelectorAll('.spec-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+
+        // Update active button
+        document.querySelectorAll('.spec-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Filter sections
+        document.querySelectorAll('.spec-section').forEach(section => {
+          if (filter === 'all' || section.dataset.category === filter) {
+            section.style.display = 'block';
+          } else {
+            section.style.display = 'none';
+          }
+        });
+      });
+    });
   </script>
 </body>
 </html>
