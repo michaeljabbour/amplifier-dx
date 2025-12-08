@@ -173,6 +173,36 @@
     .sidebar::-webkit-scrollbar-track { background: transparent; }
     .sidebar::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 2px; }
 
+    .sidebar-toggle-all {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      margin: 0 8px 12px 8px;
+      font-size: 12px;
+      color: var(--text-2);
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .sidebar-toggle-all:hover {
+      color: var(--text-0);
+      background: var(--bg-3);
+    }
+
+    .sidebar-toggle-all svg {
+      width: 14px;
+      height: 14px;
+      transition: transform var(--transition);
+    }
+
+    .sidebar-toggle-all.collapsed svg {
+      transform: rotate(180deg);
+    }
+
     .sidebar-group { margin-bottom: 8px; }
 
     .sidebar-header {
@@ -1703,6 +1733,7 @@
             </button>
           </div>
         </div>
+        <a href="https://microsoft.github.io/amplifier-docs" class="nav-github" target="_blank">Official Docs</a>
         <a href="https://github.com/microsoft/amplifier" class="nav-github" target="_blank">GitHub</a>
       </div>
     </div>
@@ -1723,6 +1754,10 @@
 
   <!-- Sidebar (for sidebar layout mode) -->
   <aside class="sidebar" id="sidebar">
+    <div class="sidebar-toggle-all" onclick="toggleAllSidebar()">
+      <span id="toggle-all-text">Collapse All</span>
+      <svg id="toggle-all-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </div>
     <div class="sidebar-group">
       <div class="sidebar-header open" onclick="toggleSidebarGroup(this)">
         <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
@@ -1731,11 +1766,11 @@
       <div class="sidebar-items show">
         <span class="sidebar-item active" data-section="home">Overview</span>
         <div class="sidebar-item-wrap">
-          <span class="sidebar-item has-children" data-section="quickstart" onclick="toggleSidebarItem(this)">
+          <span class="sidebar-item has-children open" data-section="quickstart" onclick="toggleSidebarItem(this)">
             Quickstart
             <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </span>
-          <div class="sidebar-subitems">
+          <div class="sidebar-subitems show">
             <span class="sidebar-subitem" data-section="quickstart" data-tab="consumer">Use a Profile</span>
             <span class="sidebar-subitem" data-section="quickstart" data-tab="extender">Write a Tool</span>
             <span class="sidebar-subitem" data-section="quickstart" data-tab="architect">Embed in App</span>
@@ -1744,26 +1779,26 @@
       </div>
     </div>
     <div class="sidebar-group">
-      <div class="sidebar-header" onclick="toggleSidebarGroup(this)">
+      <div class="sidebar-header open" onclick="toggleSidebarGroup(this)">
         <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
         Architecture
       </div>
-      <div class="sidebar-items">
+      <div class="sidebar-items show">
         <span class="sidebar-item" data-section="architecture">Overview</span>
       </div>
     </div>
     <div class="sidebar-group">
-      <div class="sidebar-header" onclick="toggleSidebarGroup(this)">
+      <div class="sidebar-header open" onclick="toggleSidebarGroup(this)">
         <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
         Reference
       </div>
-      <div class="sidebar-items">
+      <div class="sidebar-items show">
         <div class="sidebar-item-wrap">
-          <span class="sidebar-item has-children" data-section="reference" onclick="toggleSidebarItem(this)">
+          <span class="sidebar-item has-children open" data-section="reference" onclick="toggleSidebarItem(this)">
             Module Reference
             <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </span>
-          <div class="sidebar-subitems">
+          <div class="sidebar-subitems show">
             <span class="sidebar-subitem" data-section="reference" data-tab="contracts">Contracts</span>
             <span class="sidebar-subitem" data-section="reference" data-tab="hooks-api">Hooks API</span>
             <span class="sidebar-subitem" data-section="reference" data-tab="events">Events</span>
@@ -1776,28 +1811,28 @@
       </div>
     </div>
     <div class="sidebar-group">
-      <div class="sidebar-header" onclick="toggleSidebarGroup(this)">
+      <div class="sidebar-header open" onclick="toggleSidebarGroup(this)">
         <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
         Ecosystem
       </div>
-      <div class="sidebar-items">
+      <div class="sidebar-items show">
         <span class="sidebar-item" data-section="ecosystem">Ecosystem</span>
         <span class="sidebar-item" data-section="showcase">Showcase</span>
         <span class="sidebar-item" data-section="examples">Examples</span>
       </div>
     </div>
     <div class="sidebar-group">
-      <div class="sidebar-header" onclick="toggleSidebarGroup(this)">
+      <div class="sidebar-header open" onclick="toggleSidebarGroup(this)">
         <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
         Community
       </div>
-      <div class="sidebar-items">
+      <div class="sidebar-items show">
         <div class="sidebar-item-wrap">
-          <span class="sidebar-item has-children" data-section="contribute" onclick="toggleSidebarItem(this)">
+          <span class="sidebar-item has-children open" data-section="contribute" onclick="toggleSidebarItem(this)">
             Contribute
             <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </span>
-          <div class="sidebar-subitems">
+          <div class="sidebar-subitems show">
             <span class="sidebar-subitem" data-section="contribute" data-tab="overview">Overview</span>
             <span class="sidebar-subitem" data-section="contribute" data-tab="tasks">Priority Tasks</span>
             <span class="sidebar-subitem" data-section="contribute" data-tab="specs">Specifications</span>
@@ -1822,7 +1857,8 @@
         </p>
         <div class="hero-actions">
           <button class="btn-primary" onclick="showSection('quickstart')">Get started</button>
-          <a href="https://github.com/microsoft/amplifier" class="btn-secondary" target="_blank">View on GitHub</a>
+          <a href="https://microsoft.github.io/amplifier-docs" class="btn-secondary" target="_blank">Official Docs</a>
+          <a href="https://github.com/microsoft/amplifier" class="btn-secondary" target="_blank">GitHub</a>
         </div>
       </div>
 
@@ -1903,6 +1939,11 @@ amplifier run "List all Python files in this directory"</code></pre>
     <section id="section-quickstart" class="section">
       <h1>Quickstart</h1>
       <p class="section-desc">Choose your path. Each guide gets you productive in minutes.</p>
+
+      <div class="info-box" style="border-left: 4px solid var(--accent); margin-bottom: 24px;">
+        <strong>📚 Getting Started Guide</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">For the complete getting started experience including provider setup, see the <a href="https://microsoft.github.io/amplifier-docs/getting-started/installation/" target="_blank">official installation guide</a>.</p>
+      </div>
 
       <div class="tabs" id="quickstart-tabs">
         <button class="tab active" data-tab="consumer">Use a profile</button>
@@ -2148,6 +2189,31 @@ response = await session.execute(prompt)</code></pre>
       <h1>Architecture</h1>
       <p class="section-desc">Design philosophy: kernel, not framework. Mechanism over policy.</p>
 
+      <div class="info-box" style="border-left: 4px solid var(--blue); margin-bottom: 24px;">
+        <strong>📚 Complete Architecture Documentation</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">For in-depth architectural guides, see the <a href="https://microsoft.github.io/amplifier-docs/architecture/overview/" target="_blank">official architecture documentation</a>.</p>
+      </div>
+
+      <h2>The Four Tenets</h2>
+      <div class="concepts" style="margin-bottom: 40px;">
+        <div class="concept">
+          <h3>1. Mechanism, Not Policy</h3>
+          <p>The kernel provides capabilities and stable contracts. Behavioral decisions live outside the kernel. If teams could want different behavior, it belongs in modules.</p>
+        </div>
+        <div class="concept">
+          <h3>2. Small, Stable, Boring</h3>
+          <p>~2,600 lines of intentionally minimal code. Fewer changes = fewer breaking changes. Prioritizes auditability and predictability over clever implementations.</p>
+        </div>
+        <div class="concept">
+          <h3>3. Don't Break Modules</h3>
+          <p>Kernel interfaces follow sacred backward compatibility. Additive evolution only, with clear deprecation paths and extended sunset periods.</p>
+        </div>
+        <div class="concept">
+          <h3>4. Extensibility via Composition</h3>
+          <p>New capabilities come from combining modules, not accumulating kernel configuration flags. Avoids "configuration explosion" by pushing policy to the edges.</p>
+        </div>
+      </div>
+
       <h2>The Linux Kernel Analogy</h2>
       <p>Amplifier mirrors Linux kernel concepts:</p>
       <table class="ref-table">
@@ -2322,6 +2388,11 @@ response = await session.execute(prompt)</code></pre>
     <section id="section-reference" class="section">
       <h1>API Reference</h1>
       <p class="section-desc">Complete documentation for module developers.</p>
+
+      <div class="info-box" style="border-left: 4px solid var(--purple); margin-bottom: 24px;">
+        <strong>📚 Complete API Reference</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">For the full API documentation including all contracts and interfaces, see the <a href="https://microsoft.github.io/amplifier-docs/developer-guide/" target="_blank">official Developer Guide</a>.</p>
+      </div>
 
       <div class="tabs" id="reference-tabs">
         <button class="tab active" data-tab="contracts">Contracts</button>
@@ -2713,6 +2784,11 @@ amplifier agents show explorer</code></pre>
       <h1>CLI Reference</h1>
       <p class="section-desc">Complete reference for all Amplifier command-line commands.</p>
 
+      <div class="info-box" style="border-left: 4px solid var(--green); margin-bottom: 24px;">
+        <strong>📚 Full CLI Documentation</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">For comprehensive CLI usage including profiles, agents, and sessions, see the <a href="https://microsoft.github.io/amplifier-docs/user-guide/" target="_blank">official User Guide</a>.</p>
+      </div>
+
       <h3>Global Options</h3>
       <table class="ref-table">
         <thead><tr><th>Option</th><th>Description</th></tr></thead>
@@ -2891,6 +2967,11 @@ amplifier> @collection:foundation/context/philosophy.md</code></pre>
     <section id="section-ecosystem" class="section">
       <h1>Ecosystem</h1>
       <p class="section-desc">Available modules, libraries, and collections for extending Amplifier.</p>
+
+      <div class="info-box" style="border-left: 4px solid var(--blue); margin-bottom: 24px;">
+        <strong>📚 Complete Ecosystem Reference</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">For detailed information on all available modules including Providers, Tools, Orchestrators, Contexts, and Hooks, see the <a href="https://microsoft.github.io/amplifier-docs/ecosystem/modules/" target="_blank">official Ecosystem documentation</a>.</p>
+      </div>
 
       <h2>Runtime Modules</h2>
       <p>Swappable components that implement Amplifier's core contracts.</p>
@@ -3658,6 +3739,11 @@ Help me understand:
       <h1>Contributors Guide</h1>
       <p class="section-desc">Help us build a world-class developer experience for Amplifier.</p>
 
+      <div class="info-box" style="border-left: 4px solid var(--orange); margin-bottom: 24px;">
+        <strong>📚 Community & Contributing</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">Join the community and see the roadmap at the <a href="https://microsoft.github.io/amplifier-docs/" target="_blank">official Amplifier documentation site</a>.</p>
+      </div>
+
       <div class="tabs" id="contribute-tabs">
         <button class="tab active" data-tab="overview">Overview</button>
         <button class="tab" data-tab="tasks">Priority Tasks</button>
@@ -3995,7 +4081,7 @@ async def my_hook(event: str, data: dict):
     <div class="footer-links">
       <a href="https://github.com/microsoft/amplifier" target="_blank">GitHub</a>
       <a href="https://github.com/microsoft/amplifier/issues" target="_blank">Issues</a>
-      <a href="https://github.com/microsoft/amplifier-core" target="_blank">Core Kernel</a>
+      <a href="https://microsoft.github.io/amplifier-docs" target="_blank">Official Docs</a>
     </div>
     <p class="footer-copy">© Microsoft Corporation · MIT License</p>
   </footer>
@@ -4035,6 +4121,41 @@ async def my_hook(event: str, data: dict):
       // Also navigate to the section
       const sectionId = el.dataset.section;
       if (sectionId) showSection(sectionId);
+    }
+
+    let sidebarExpanded = true;
+    function toggleAllSidebar() {
+      const toggleBtn = document.querySelector('.sidebar-toggle-all');
+      const toggleText = document.getElementById('toggle-all-text');
+
+      if (sidebarExpanded) {
+        // Collapse all
+        document.querySelectorAll('.sidebar-header').forEach(el => {
+          el.classList.remove('open');
+          el.nextElementSibling.classList.remove('show');
+        });
+        document.querySelectorAll('.sidebar-item.has-children').forEach(el => {
+          el.classList.remove('open');
+          const subitems = el.nextElementSibling;
+          if (subitems) subitems.classList.remove('show');
+        });
+        toggleBtn.classList.add('collapsed');
+        toggleText.textContent = 'Expand All';
+      } else {
+        // Expand all
+        document.querySelectorAll('.sidebar-header').forEach(el => {
+          el.classList.add('open');
+          el.nextElementSibling.classList.add('show');
+        });
+        document.querySelectorAll('.sidebar-item.has-children').forEach(el => {
+          el.classList.add('open');
+          const subitems = el.nextElementSibling;
+          if (subitems) subitems.classList.add('show');
+        });
+        toggleBtn.classList.remove('collapsed');
+        toggleText.textContent = 'Collapse All';
+      }
+      sidebarExpanded = !sidebarExpanded;
     }
 
     // Navigate to section and activate a specific tab

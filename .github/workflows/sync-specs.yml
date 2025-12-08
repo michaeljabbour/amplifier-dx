@@ -25,21 +25,22 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: true
+
+      - name: Update specs submodule to latest
+        run: |
+          git submodule update --remote --merge specs
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Clone specs repository
-        run: |
-          git clone --depth 1 https://github.com/samueljklee/amplifier-next-specs.git specs-source
-
       - name: Generate specs content hash
         id: hash
         run: |
           # Create hash of source content for change detection
-          CONTENT_HASH=$(find specs-source -name "*.md" -exec cat {} \; | sha256sum | cut -d' ' -f1)
+          CONTENT_HASH=$(find specs -name "*.md" -exec cat {} \; | sha256sum | cut -d' ' -f1)
           echo "content_hash=$CONTENT_HASH" >> $GITHUB_OUTPUT
 
           # Check if hash file exists and compare

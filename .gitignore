@@ -3,4 +3,4 @@ BUG_REPORT.md
 
 # Specs sync (generated during CI)
 generated-specs.html
-specs-source/
+.claude/

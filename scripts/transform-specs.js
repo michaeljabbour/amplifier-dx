@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Configuration
-const SPECS_SOURCE = 'specs-source';
+const SPECS_SOURCE = 'specs';
 const OUTPUT_FILE = 'generated-specs.html';
 
 const SPEC_DIRECTORIES = [
