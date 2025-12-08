@@ -1,5 +1,5 @@
 /**
- * Amplifier Documentation Chat Widget
+ * Document Assistant - Chat Widget
  * Uses GPT-5.1 with site context for documentation assistance
  */
 
@@ -73,25 +73,24 @@
     }
   }
 
-  // Build system message with context
+  // Build system message with context - optimized for concise responses
   function buildSystemMessage() {
     const currentSection = getCurrentSection();
 
-    return 'You are an expert assistant for Amplifier, Microsoft\'s ultra-thin kernel for modular AI agents.\n' +
-      'You have access to the complete Amplifier documentation and should provide accurate, helpful answers.\n\n' +
-      'Key facts about Amplifier:\n' +
-      '- Core is ~2,600 lines providing mechanisms, not policies\n' +
-      '- Uses Linux-kernel philosophy: tiny stable center, swappable modules at edges\n' +
-      '- Module types: providers, orchestrators, contexts, tools, hooks\n' +
-      '- Only providers use Python entry points; orchestrators/contexts use local implementations\n\n' +
-      'Current user is viewing: ' + currentSection + '\n\n' +
-      'DOCUMENTATION CONTEXT:\n' +
-      (siteContext ? siteContext : 'Documentation context not loaded. Answer based on your knowledge of Amplifier.') + '\n\n' +
-      'When answering:\n' +
-      '- Be concise but complete\n' +
-      '- Reference specific sections when relevant\n' +
-      '- Provide code examples when helpful\n' +
-      '- If unsure, say so rather than guessing';
+    return 'You are a concise documentation assistant for Amplifier, Microsoft\'s ultra-thin kernel for modular AI agents.\n\n' +
+      'RESPONSE GUIDELINES:\n' +
+      '- Keep responses brief (2-4 sentences for simple questions)\n' +
+      '- Use bullet points for lists\n' +
+      '- Only include code if specifically asked or essential\n' +
+      '- If a detailed explanation would help, ask: "Would you like me to elaborate?"\n' +
+      '- Reference specific docs sections when relevant\n\n' +
+      'KEY FACTS:\n' +
+      '- Core: ~2,600 lines, mechanisms not policies\n' +
+      '- Modules: providers, orchestrators, contexts, tools, hooks\n' +
+      '- Only providers use entry points; orchestrators/contexts use local implementations\n\n' +
+      'User is viewing: ' + currentSection + '\n\n' +
+      'DOCUMENTATION:\n' +
+      (siteContext ? siteContext : 'Context not loaded.');
   }
 
   // Get current visible section
@@ -104,10 +103,9 @@
     return 'Home';
   }
 
-  // Sanitize API key - remove non-ASCII characters that break fetch headers
+  // Sanitize API key - remove non-ASCII characters
   function sanitizeApiKey(key) {
     if (!key) return '';
-    // Remove any non-ASCII characters and trim whitespace
     return key.replace(/[^\x00-\x7F]/g, '').trim();
   }
 
@@ -124,14 +122,51 @@
     return el;
   }
 
-  // Parse and render message content safely (plain text with code block support)
-  function renderMessageContent(content, container) {
-    // Split by code blocks
+  // Create SVG icon
+  function createSvgIcon(pathData, viewBox) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', viewBox || '0 0 24 24');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', pathData);
+    svg.appendChild(path);
+    return svg;
+  }
+
+  // Create copy button
+  function createCopyButton(className, getText) {
+    const btn = createElement('button', className);
+    btn.appendChild(createSvgIcon('M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'));
+    if (className === 'copy-code-btn') {
+      btn.appendChild(createTextNode('Copy'));
+    }
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const text = getText();
+      navigator.clipboard.writeText(text).then(function() {
+        showCopyTooltip(btn, 'Copied!');
+      });
+    });
+    return btn;
+  }
+
+  // Show copy tooltip
+  function showCopyTooltip(element, message) {
+    const tooltip = createElement('div', 'copy-tooltip', message);
+    const rect = element.getBoundingClientRect();
+    tooltip.style.left = rect.left + 'px';
+    tooltip.style.top = (rect.top - 40) + 'px';
+    document.body.appendChild(tooltip);
+    setTimeout(function() {
+      tooltip.remove();
+    }, 1500);
+  }
+
+  // Parse and render message content safely
+  function renderMessageContent(content, container, addCopyButtons) {
     const parts = content.split(/(```[\s\S]*?```)/g);
 
-    parts.forEach(part => {
+    parts.forEach(function(part) {
       if (part.startsWith('```')) {
-        // Code block
         const codeContent = part.slice(3, -3);
         const firstNewline = codeContent.indexOf('\n');
         const code = firstNewline > -1 ? codeContent.slice(firstNewline + 1) : codeContent;
@@ -140,22 +175,24 @@
         const codeEl = createElement('code');
         codeEl.textContent = code;
         pre.appendChild(codeEl);
+
+        if (addCopyButtons) {
+          pre.appendChild(createCopyButton('copy-code-btn', function() { return code; }));
+        }
+
         container.appendChild(pre);
       } else if (part.trim()) {
-        // Regular text - handle inline code and line breaks
         const lines = part.split('\n');
-        lines.forEach((line, i) => {
-          // Handle inline code
+        lines.forEach(function(line, i) {
           const inlineParts = line.split(/(`[^`]+`)/g);
-          inlineParts.forEach(inlinePart => {
+          inlineParts.forEach(function(inlinePart) {
             if (inlinePart.startsWith('`') && inlinePart.endsWith('`')) {
               const codeEl = createElement('code');
               codeEl.textContent = inlinePart.slice(1, -1);
               container.appendChild(codeEl);
             } else if (inlinePart) {
-              // Handle bold
               const boldParts = inlinePart.split(/(\*\*[^*]+\*\*)/g);
-              boldParts.forEach(boldPart => {
+              boldParts.forEach(function(boldPart) {
                 if (boldPart.startsWith('**') && boldPart.endsWith('**')) {
                   const strong = createElement('strong');
                   strong.textContent = boldPart.slice(2, -2);
@@ -166,7 +203,6 @@
               });
             }
           });
-          // Add line break between lines (but not after last line)
           if (i < lines.length - 1) {
             container.appendChild(document.createElement('br'));
           }
@@ -175,10 +211,15 @@
     });
   }
 
-  // Create message element
+  // Create message element with copy button
   function createMessageElement(role, content) {
     const msg = createElement('div', 'chat-message ' + role);
-    renderMessageContent(content, msg);
+    renderMessageContent(content, msg, role === 'assistant');
+
+    // Add copy button for entire message
+    const copyBtn = createCopyButton('copy-msg-btn', function() { return content; });
+    msg.appendChild(copyBtn);
+
     return msg;
   }
 
@@ -192,7 +233,6 @@
     if (isLoading) return;
     isLoading = true;
 
-    // Add user message to history
     conversationHistory.push({ role: 'user', content: userMessage });
     renderMessages();
     showTypingIndicator(true);
@@ -221,7 +261,6 @@
         throw new Error(error.error?.message || 'API error: ' + response.status);
       }
 
-      // Handle streaming response
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let assistantMessage = '';
@@ -247,12 +286,11 @@
               updateStreamingMessage(assistantMessage);
             }
           } catch (e) {
-            // Ignore parse errors for incomplete chunks
+            // Ignore parse errors
           }
         }
       }
 
-      // Finalize assistant message
       conversationHistory.push({ role: 'assistant', content: assistantMessage });
       renderMessages();
 
@@ -280,12 +318,10 @@
     container.style.display = 'flex';
     welcome.style.display = 'none';
 
-    // Clear container safely
     while (container.firstChild) {
       container.removeChild(container.firstChild);
     }
 
-    // Add messages
     conversationHistory.forEach(function(msg) {
       container.appendChild(createMessageElement(msg.role, msg.content));
     });
@@ -293,7 +329,7 @@
     container.scrollTop = container.scrollHeight;
   }
 
-  // Update streaming message in real-time
+  // Update streaming message
   function updateStreamingMessage(content) {
     const container = document.getElementById('chat-messages');
     let streamingEl = container.querySelector('.chat-message.streaming');
@@ -303,11 +339,10 @@
       container.appendChild(streamingEl);
     }
 
-    // Clear and re-render
     while (streamingEl.firstChild) {
       streamingEl.removeChild(streamingEl.firstChild);
     }
-    renderMessageContent(content, streamingEl);
+    renderMessageContent(content, streamingEl, false);
     container.scrollTop = container.scrollHeight;
   }
 
@@ -363,16 +398,19 @@
   function toggleSettings() {
     const settingsPanel = document.getElementById('chat-settings');
     settingsPanel.classList.toggle('open');
+    updateSettingsCloseButton();
   }
 
-  // Create SVG icon
-  function createSvgIcon(pathData, viewBox) {
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', viewBox || '0 0 24 24');
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', pathData);
-    svg.appendChild(path);
-    return svg;
+  // Update settings close button state
+  function updateSettingsCloseButton() {
+    const closeBtn = document.getElementById('chat-settings-close');
+    if (closeBtn) {
+      if (settings.apiKey && settings.apiKey.length > 0) {
+        closeBtn.classList.add('active');
+      } else {
+        closeBtn.classList.remove('active');
+      }
+    }
   }
 
   // Initialize widget
@@ -381,6 +419,7 @@
     loadSiteContext();
     createWidget();
     bindEvents();
+    updateSettingsCloseButton();
   }
 
   // Create widget using DOM methods
@@ -391,7 +430,7 @@
     // Toggle Button
     const toggleBtn = createElement('button', 'chat-toggle');
     toggleBtn.id = 'chat-toggle';
-    toggleBtn.title = 'Chat with documentation';
+    toggleBtn.title = 'Open Document Assistant';
 
     const chatIcon = createSvgIcon('M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z');
     chatIcon.classList.add('icon-chat');
@@ -416,12 +455,15 @@
     headerLeft.appendChild(headerIcon);
 
     const headerText = document.createElement('div');
-    const headerTitle = createElement('div', 'chat-header-title', 'Amplifier Assistant');
+    const headerTitle = createElement('div', 'chat-header-title', 'Document Assistant');
     const headerSubtitle = createElement('div', 'chat-header-subtitle', 'Powered by GPT-5.1');
     headerText.appendChild(headerTitle);
     headerText.appendChild(headerSubtitle);
     headerLeft.appendChild(headerText);
     header.appendChild(headerLeft);
+
+    // Header actions
+    const headerActions = createElement('div', 'chat-header-actions');
 
     const settingsBtn = createElement('button', 'chat-settings-btn');
     settingsBtn.id = 'chat-settings-btn';
@@ -440,8 +482,15 @@
     gearPath.setAttribute('d', 'M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z');
     gearSvg.appendChild(gearPath);
     settingsBtn.appendChild(gearSvg);
-    header.appendChild(settingsBtn);
+    headerActions.appendChild(settingsBtn);
 
+    const closeBtn = createElement('button', 'chat-close-btn');
+    closeBtn.id = 'chat-close-btn';
+    closeBtn.title = 'Close';
+    closeBtn.appendChild(createSvgIcon('M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'));
+    headerActions.appendChild(closeBtn);
+
+    header.appendChild(headerActions);
     panel.appendChild(header);
 
     // Settings Panel
@@ -478,18 +527,23 @@
     modelRow.appendChild(modelSelect);
     settingsPanel.appendChild(modelRow);
 
-    // Remember checkbox row
-    const rememberRow = createElement('div', 'chat-settings-row');
+    // Settings footer with checkbox and close button
+    const settingsFooter = createElement('div', 'chat-settings-footer');
+
     const rememberLabel = createElement('label', 'chat-settings-checkbox');
     const rememberCheckbox = document.createElement('input');
     rememberCheckbox.type = 'checkbox';
     rememberCheckbox.id = 'chat-remember';
     if (settings.rememberKey) rememberCheckbox.checked = true;
     rememberLabel.appendChild(rememberCheckbox);
-    rememberLabel.appendChild(createTextNode(' Remember API key (stored in browser)'));
-    rememberRow.appendChild(rememberLabel);
-    settingsPanel.appendChild(rememberRow);
+    rememberLabel.appendChild(createTextNode(' Remember key'));
+    settingsFooter.appendChild(rememberLabel);
 
+    const settingsCloseBtn = createElement('button', 'chat-settings-close', 'Done');
+    settingsCloseBtn.id = 'chat-settings-close';
+    settingsFooter.appendChild(settingsCloseBtn);
+
+    settingsPanel.appendChild(settingsFooter);
     panel.appendChild(settingsPanel);
 
     // Welcome State
@@ -499,8 +553,8 @@
     welcomeIcon.appendChild(createSvgIcon('M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z'));
     welcome.appendChild(welcomeIcon);
     welcome.appendChild(createElement('h3', null, 'Ask about Amplifier'));
-    welcome.appendChild(createElement('p', null, 'I have access to the complete documentation and can help you understand architecture, write code, or troubleshoot issues.'));
-    const welcomeHint = createElement('div', 'chat-welcome-hint', 'Click the gear icon to enter your OpenAI API key');
+    welcome.appendChild(createElement('p', null, 'I can help you understand the architecture, find code examples, or troubleshoot issues.'));
+    const welcomeHint = createElement('div', 'chat-welcome-hint', 'Click the gear icon to enter your API key');
     welcome.appendChild(welcomeHint);
     panel.appendChild(welcome);
 
@@ -517,7 +571,7 @@
     const textarea = document.createElement('textarea');
     textarea.id = 'chat-input';
     textarea.className = 'chat-input';
-    textarea.placeholder = 'Ask about Amplifier...';
+    textarea.placeholder = 'Ask a question...';
     textarea.rows = 1;
     inputWrapper.appendChild(textarea);
 
@@ -537,12 +591,25 @@
   // Bind event listeners
   function bindEvents() {
     document.getElementById('chat-toggle').addEventListener('click', toggleChat);
+    document.getElementById('chat-close-btn').addEventListener('click', toggleChat);
     document.getElementById('chat-settings-btn').addEventListener('click', toggleSettings);
+    document.getElementById('chat-settings-close').addEventListener('click', function() {
+      if (settings.apiKey) {
+        toggleSettings();
+      }
+    });
+
+    document.getElementById('chat-api-key').addEventListener('input', function(e) {
+      settings.apiKey = sanitizeApiKey(e.target.value);
+      saveSettings();
+      updateSettingsCloseButton();
+    });
 
     document.getElementById('chat-api-key').addEventListener('change', function(e) {
       settings.apiKey = sanitizeApiKey(e.target.value);
-      e.target.value = settings.apiKey; // Update input with sanitized value
+      e.target.value = settings.apiKey;
       saveSettings();
+      updateSettingsCloseButton();
     });
 
     document.getElementById('chat-model').addEventListener('change', function(e) {
@@ -578,7 +645,7 @@
 
     input.addEventListener('input', function() {
       input.style.height = 'auto';
-      input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+      input.style.height = Math.min(input.scrollHeight, 150) + 'px';
     });
 
     input.addEventListener('input', function() {
