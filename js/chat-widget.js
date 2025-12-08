@@ -384,10 +384,12 @@
   // Toggle chat panel
   function toggleChat() {
     const panel = document.getElementById('chat-panel');
-    const toggle = document.getElementById('chat-toggle');
+    const navBtn = document.getElementById('chat-nav-btn');
 
     panel.classList.toggle('open');
-    toggle.classList.toggle('open');
+    if (navBtn) {
+      navBtn.classList.toggle('active');
+    }
 
     if (panel.classList.contains('open')) {
       document.getElementById('chat-input').focus();
@@ -590,7 +592,11 @@
 
   // Bind event listeners
   function bindEvents() {
-    document.getElementById('chat-toggle').addEventListener('click', toggleChat);
+    // Nav button in header
+    const navBtn = document.getElementById('chat-nav-btn');
+    if (navBtn) {
+      navBtn.addEventListener('click', toggleChat);
+    }
     document.getElementById('chat-close-btn').addEventListener('click', toggleChat);
     document.getElementById('chat-settings-btn').addEventListener('click', toggleSettings);
     document.getElementById('chat-settings-close').addEventListener('click', function() {
