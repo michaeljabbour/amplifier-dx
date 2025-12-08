@@ -119,6 +119,147 @@
 
     .nav-right { display: flex; align-items: center; gap: 12px; }
 
+    /* Layout Toggle */
+    .layout-toggle {
+      display: flex;
+      gap: 2px;
+      background: var(--bg-2);
+      padding: 3px;
+      border-radius: 6px;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      padding: 5px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--text-2);
+      transition: all var(--transition);
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-btn:hover { color: var(--text-0); }
+    .toggle-btn.active { background: var(--bg-3); color: var(--text-0); }
+    .toggle-btn svg { width: 16px; height: 16px; }
+
+    /* Sidebar (for sidebar layout mode) */
+    .sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: 260px;
+      height: calc(100vh - 56px);
+      background: var(--bg-1);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 16px 0;
+      display: none;
+    }
+
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 2px; }
+
+    .sidebar-group { margin-bottom: 8px; }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .sidebar-header:hover { color: var(--text-0); }
+
+    .sidebar-arrow {
+      width: 12px;
+      height: 12px;
+      margin-right: 6px;
+      transition: transform var(--transition);
+      color: var(--text-2);
+    }
+
+    .sidebar-header.open .sidebar-arrow { transform: rotate(90deg); }
+
+    .sidebar-items { display: none; padding-left: 20px; }
+    .sidebar-items.show { display: block; }
+
+    .sidebar-item {
+      display: block;
+      padding: 6px 16px;
+      font-size: 13px;
+      color: var(--text-1);
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: all var(--transition);
+    }
+
+    .sidebar-item:hover { color: var(--text-0); background: var(--bg-2); }
+    .sidebar-item.active { color: var(--blue); border-left-color: var(--blue); background: rgba(59, 130, 246, 0.1); }
+
+    /* Layout Modes */
+    body.layout-top .sidebar { display: none !important; }
+    body.layout-top .nav-links { display: flex !important; }
+    body.layout-top .section { margin-left: auto; margin-right: auto; padding-top: 72px; max-width: 900px; }
+    body.layout-top .sub-nav { display: flex !important; justify-content: center; }
+
+    body.layout-sidebar .sidebar { display: block !important; }
+    body.layout-sidebar .nav-links { display: none !important; }
+    body.layout-sidebar .section { margin-left: 260px; max-width: calc(900px + 260px); }
+    body.layout-sidebar .sub-nav { display: none !important; }
+
+    /* Sub Navigation (horizontal, for top-nav mode) */
+    .sub-nav {
+      display: none;
+      position: sticky;
+      top: 56px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 90;
+      background: var(--bg-1);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      gap: 4px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    .sub-nav::-webkit-scrollbar { height: 0; }
+
+    .sub-nav-divider {
+      width: 1px;
+      height: 24px;
+      background: var(--border);
+      margin: 0 8px;
+      flex-shrink: 0;
+      align-self: center;
+    }
+
+    .sub-nav-item {
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--text-1);
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition);
+      flex-shrink: 0;
+    }
+
+    .sub-nav-item:hover { color: var(--text-0); }
+    .sub-nav-item.active { color: var(--blue); border-bottom-color: var(--blue); }
+
     .export-wrap { position: relative; }
 
     .export-btn {
@@ -1403,6 +1544,21 @@
         </div>
       </div>
       <div class="nav-right">
+        <!-- Layout Toggle -->
+        <div class="layout-toggle">
+          <button class="toggle-btn" onclick="setLayout('sidebar')" title="Sidebar Layout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="3" x2="9" y2="21"></line>
+            </svg>
+          </button>
+          <button class="toggle-btn active" onclick="setLayout('top')" title="Top Nav Layout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="3" y1="9" x2="21" y2="9"></line>
+            </svg>
+          </button>
+        </div>
         <div class="export-wrap">
           <button class="export-btn" onclick="toggleExportMenu()">
             Export <span class="export-caret" id="export-caret">▼</span>
@@ -1426,6 +1582,76 @@
       </div>
     </div>
   </nav>
+
+  <!-- Sub Navigation (for top-nav layout mode) -->
+  <nav class="sub-nav" id="sub-nav">
+    <span class="sub-nav-item active" data-section="home">Overview</span>
+    <span class="sub-nav-item" data-section="quickstart">Quickstart</span>
+    <span class="sub-nav-divider"></span>
+    <span class="sub-nav-item" data-section="architecture">Architecture</span>
+    <span class="sub-nav-divider"></span>
+    <span class="sub-nav-item" data-section="reference">Reference</span>
+    <span class="sub-nav-item" data-section="cli">CLI</span>
+    <span class="sub-nav-divider"></span>
+    <span class="sub-nav-item" data-section="ecosystem">Ecosystem</span>
+    <span class="sub-nav-item" data-section="showcase">Showcase</span>
+    <span class="sub-nav-item" data-section="examples">Examples</span>
+    <span class="sub-nav-divider"></span>
+    <span class="sub-nav-item" data-section="contribute">Contribute</span>
+  </nav>
+
+  <!-- Sidebar (for sidebar layout mode) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-group">
+      <div class="sidebar-header open" onclick="toggleSidebarGroup(this)">
+        <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        Getting Started
+      </div>
+      <div class="sidebar-items show">
+        <span class="sidebar-item active" data-section="home">Overview</span>
+        <span class="sidebar-item" data-section="quickstart">Quickstart</span>
+      </div>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-header" onclick="toggleSidebarGroup(this)">
+        <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        Architecture
+      </div>
+      <div class="sidebar-items">
+        <span class="sidebar-item" data-section="architecture">Overview</span>
+      </div>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-header" onclick="toggleSidebarGroup(this)">
+        <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        Reference
+      </div>
+      <div class="sidebar-items">
+        <span class="sidebar-item" data-section="reference">Module Reference</span>
+        <span class="sidebar-item" data-section="cli">CLI Commands</span>
+      </div>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-header" onclick="toggleSidebarGroup(this)">
+        <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        Ecosystem
+      </div>
+      <div class="sidebar-items">
+        <span class="sidebar-item" data-section="ecosystem">Ecosystem</span>
+        <span class="sidebar-item" data-section="showcase">Showcase</span>
+        <span class="sidebar-item" data-section="examples">Examples</span>
+      </div>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-header" onclick="toggleSidebarGroup(this)">
+        <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        Community
+      </div>
+      <div class="sidebar-items">
+        <span class="sidebar-item" data-section="contribute">Contribute</span>
+      </div>
+    </div>
+  </aside>
 
   <!-- Main Content -->
   <main>
@@ -3613,6 +3839,29 @@ async def my_hook(event: str, data: dict):
 
   <script>
     // ==========================================================================
+    // LAYOUT SWITCHER
+    // ==========================================================================
+    function setLayout(mode) {
+      document.body.className = '';
+      document.body.classList.add('layout-' + mode);
+      localStorage.setItem('preferredLayout', mode);
+
+      // Update toggle button states
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(mode));
+      });
+    }
+
+    function toggleSidebarGroup(el) {
+      el.classList.toggle('open');
+      el.nextElementSibling.classList.toggle('show');
+    }
+
+    // Initialize layout from localStorage (immediate, since script is at bottom)
+    const savedLayout = localStorage.getItem('preferredLayout') || 'top';
+    setLayout(savedLayout);
+
+    // ==========================================================================
     // NAVIGATION
     // ==========================================================================
     const VALID_SECTIONS = ['home', 'quickstart', 'architecture', 'reference', 'cli', 'ecosystem', 'showcase', 'examples', 'contribute'];
@@ -3630,6 +3879,16 @@ async def my_hook(event: str, data: dict):
       // Update nav links
       document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.toggle('active', link.dataset.section === sectionId);
+      });
+
+      // Update sidebar items
+      document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.section === sectionId);
+      });
+
+      // Update sub-nav items
+      document.querySelectorAll('.sub-nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.section === sectionId);
       });
 
       // Update URL hash
@@ -3655,6 +3914,16 @@ async def my_hook(event: str, data: dict):
     // Nav link clicks
     document.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', () => showSection(link.dataset.section));
+    });
+
+    // Sidebar item clicks
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+      item.addEventListener('click', () => showSection(item.dataset.section));
+    });
+
+    // Sub-nav item clicks
+    document.querySelectorAll('.sub-nav-item').forEach(item => {
+      item.addEventListener('click', () => showSection(item.dataset.section));
     });
 
     window.addEventListener('hashchange', handleHashChange);
