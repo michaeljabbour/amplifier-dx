@@ -3,28 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Amplifier DX</title>
+  <title>Amplifier Documentation</title>
   <link rel="icon" type="image/png" href="amplifierlogo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
   <style>
     /* =================================================================
-       DESIGN TOKENS
+       DESIGN TOKENS - OpenAI-inspired Dark Palette
        ================================================================= */
     :root {
-      --bg-0: #0d0d0d;
-      --bg-1: #171717;
-      --bg-2: #212121;
-      --bg-3: #2a2a2a;
-      --text-0: #fafafa;
-      --text-1: #a1a1a1;
-      --text-2: #6b6b6b;
-      --border: #2e2e2e;
+      --bg-0: #000000;         /* Main background (Pitch black) */
+      --bg-1: #0a0a0a;         /* Sidebar background */
+      --bg-2: #171717;         /* Card/input background */
+      --bg-3: #212121;         /* Elevated surfaces */
+      --bg-hover: #1a1a1a;
+      --text-0: #ffffff;       /* Primary text */
+      --text-1: #e5e5e5;       /* Secondary text */
+      --text-2: #a3a3a3;       /* Tertiary text */
+      --text-3: #737373;       /* Muted text */
+      --border: #262626;
+      --border-subtle: #1f1f1f;
+      --accent: #10a37f;       /* OpenAI Green */
+      --accent-dim: rgba(16, 163, 127, 0.15);
       --blue: #3b82f6;
       --green: #10b981;
       --purple: #a855f7;
       --orange: #f97316;
-      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      --red: #ef4444;
+      --sidebar-width: 260px;
+      --header-height: 56px;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
       --radius: 8px;
       --transition: 150ms ease;
     }
@@ -67,8 +77,9 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(13, 13, 13, 0.8);
+      background: rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
 
@@ -205,9 +216,49 @@
     .sidebar-item:hover { color: var(--text-0); background: var(--bg-2); }
     .sidebar-item.active { color: var(--blue); border-left-color: var(--blue); background: rgba(59, 130, 246, 0.1); }
 
+    /* Sidebar item with sub-items */
+    .sidebar-item.has-children {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-item .item-arrow {
+      width: 10px;
+      height: 10px;
+      transition: transform var(--transition);
+      opacity: 0.5;
+    }
+
+    .sidebar-item.open .item-arrow { transform: rotate(90deg); }
+
+    /* Sub-sub navigation (3rd level) */
+    .sidebar-subitems {
+      display: none;
+      padding-left: 12px;
+      margin-top: 4px;
+    }
+
+    .sidebar-subitems.show { display: block; }
+
+    .sidebar-subitem {
+      display: block;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--text-2);
+      cursor: pointer;
+      border-left: 1px solid var(--border);
+      transition: all var(--transition);
+    }
+
+    .sidebar-subitem:hover { color: var(--text-1); border-left-color: var(--text-2); }
+    .sidebar-subitem.active { color: var(--accent); border-left-color: var(--accent); }
+
+    .sidebar-item-wrap { margin-bottom: 2px; }
+
     /* Layout Modes */
     body.layout-top .sidebar { display: none !important; }
-    body.layout-top .nav-links { display: flex !important; }
+    body.layout-top .nav-links { display: none !important; }
     body.layout-top .section { margin-left: auto; margin-right: auto; padding-top: 72px; max-width: 900px; }
     body.layout-top .sub-nav { display: flex !important; justify-content: center; }
 
@@ -1587,16 +1638,12 @@
   <nav class="sub-nav" id="sub-nav">
     <span class="sub-nav-item active" data-section="home">Overview</span>
     <span class="sub-nav-item" data-section="quickstart">Quickstart</span>
-    <span class="sub-nav-divider"></span>
     <span class="sub-nav-item" data-section="architecture">Architecture</span>
-    <span class="sub-nav-divider"></span>
     <span class="sub-nav-item" data-section="reference">Reference</span>
     <span class="sub-nav-item" data-section="cli">CLI</span>
-    <span class="sub-nav-divider"></span>
     <span class="sub-nav-item" data-section="ecosystem">Ecosystem</span>
     <span class="sub-nav-item" data-section="showcase">Showcase</span>
     <span class="sub-nav-item" data-section="examples">Examples</span>
-    <span class="sub-nav-divider"></span>
     <span class="sub-nav-item" data-section="contribute">Contribute</span>
   </nav>
 
@@ -1609,7 +1656,17 @@
       </div>
       <div class="sidebar-items show">
         <span class="sidebar-item active" data-section="home">Overview</span>
-        <span class="sidebar-item" data-section="quickstart">Quickstart</span>
+        <div class="sidebar-item-wrap">
+          <span class="sidebar-item has-children" data-section="quickstart" onclick="toggleSidebarItem(this)">
+            Quickstart
+            <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </span>
+          <div class="sidebar-subitems">
+            <span class="sidebar-subitem" data-section="quickstart" data-tab="consumer">Use a Profile</span>
+            <span class="sidebar-subitem" data-section="quickstart" data-tab="extender">Write a Tool</span>
+            <span class="sidebar-subitem" data-section="quickstart" data-tab="architect">Embed in App</span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="sidebar-group">
@@ -1627,7 +1684,20 @@
         Reference
       </div>
       <div class="sidebar-items">
-        <span class="sidebar-item" data-section="reference">Module Reference</span>
+        <div class="sidebar-item-wrap">
+          <span class="sidebar-item has-children" data-section="reference" onclick="toggleSidebarItem(this)">
+            Module Reference
+            <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </span>
+          <div class="sidebar-subitems">
+            <span class="sidebar-subitem" data-section="reference" data-tab="contracts">Contracts</span>
+            <span class="sidebar-subitem" data-section="reference" data-tab="hooks-api">Hooks API</span>
+            <span class="sidebar-subitem" data-section="reference" data-tab="events">Events</span>
+            <span class="sidebar-subitem" data-section="reference" data-tab="profiles">Profiles</span>
+            <span class="sidebar-subitem" data-section="reference" data-tab="sessions">Sessions</span>
+            <span class="sidebar-subitem" data-section="reference" data-tab="agents">Agents</span>
+          </div>
+        </div>
         <span class="sidebar-item" data-section="cli">CLI Commands</span>
       </div>
     </div>
@@ -1648,7 +1718,18 @@
         Community
       </div>
       <div class="sidebar-items">
-        <span class="sidebar-item" data-section="contribute">Contribute</span>
+        <div class="sidebar-item-wrap">
+          <span class="sidebar-item has-children" data-section="contribute" onclick="toggleSidebarItem(this)">
+            Contribute
+            <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </span>
+          <div class="sidebar-subitems">
+            <span class="sidebar-subitem" data-section="contribute" data-tab="overview">Overview</span>
+            <span class="sidebar-subitem" data-section="contribute" data-tab="tasks">Priority Tasks</span>
+            <span class="sidebar-subitem" data-section="contribute" data-tab="specs">Specifications</span>
+            <span class="sidebar-subitem" data-section="contribute" data-tab="roadmap">Roadmap</span>
+          </div>
+        </div>
       </div>
     </div>
   </aside>
@@ -2742,11 +2823,12 @@ amplifier> @collection:foundation/context/philosophy.md</code></pre>
 
       <div class="ecosystem-grid">
         <div class="ecosystem-category">
-          <h3>🤖 Providers <span class="count">6</span></h3>
+          <h3>🤖 Providers <span class="count">7</span></h3>
           <p>Connect to AI model providers</p>
           <ul>
             <li><a href="https://github.com/microsoft/amplifier-module-provider-anthropic" target="_blank"><code>provider-anthropic</code></a> - Claude models</li>
             <li><a href="https://github.com/microsoft/amplifier-module-provider-openai" target="_blank"><code>provider-openai</code></a> - GPT models</li>
+            <li><a href="https://github.com/microsoft/amplifier-module-provider-gemini" target="_blank"><code>provider-gemini</code></a> - Gemini (1M context)</li>
             <li><a href="https://github.com/microsoft/amplifier-module-provider-azure" target="_blank"><code>provider-azure</code></a> - Azure OpenAI</li>
             <li><a href="https://github.com/microsoft/amplifier-module-provider-ollama" target="_blank"><code>provider-ollama</code></a> - Local models</li>
             <li><a href="https://github.com/microsoft/amplifier-module-provider-vllm" target="_blank"><code>provider-vllm</code></a> - vLLM server</li>
@@ -2905,6 +2987,21 @@ amplifier profile use convergent-dev:convergent-dev</code></pre>
             <td><a href="https://github.com/DavidKoleczek/amplifier-app-benchmarks" target="_blank"><code>app-benchmarks</code></a></td>
             <td>Benchmarking and evaluation suite for Amplifier</td>
             <td>@DavidKoleczek</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/microsoft/amplifier-app-log-viewer" target="_blank"><code>app-log-viewer</code></a></td>
+            <td>Web-based debugging interface with real-time LLM interaction visualization</td>
+            <td>@microsoft</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/microsoft/amplifier-lakehouse" target="_blank"><code>amplifier-lakehouse</code></a></td>
+            <td>Data integration daemon and web application for Amplifier</td>
+            <td>@microsoft</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/microsoft/amplifier-playground" target="_blank"><code>amplifier-playground</code></a></td>
+            <td>Interactive environment for building, configuring, and testing Amplifier sessions</td>
+            <td>@microsoft</td>
           </tr>
         </tbody>
       </table>
@@ -3857,8 +3954,34 @@ async def my_hook(event: str, data: dict):
       el.nextElementSibling.classList.toggle('show');
     }
 
+    function toggleSidebarItem(el) {
+      el.classList.toggle('open');
+      const subitems = el.nextElementSibling;
+      if (subitems) subitems.classList.toggle('show');
+      // Also navigate to the section
+      const sectionId = el.dataset.section;
+      if (sectionId) showSection(sectionId);
+    }
+
+    // Navigate to section and activate a specific tab
+    function showSectionWithTab(sectionId, tabId) {
+      showSection(sectionId);
+      // Activate the tab
+      setTimeout(() => {
+        const tabsContainer = document.querySelector(`#section-${sectionId} .tabs, #${sectionId}-tabs`);
+        if (tabsContainer) {
+          const tab = tabsContainer.querySelector(`[data-tab="${tabId}"]`);
+          if (tab) tab.click();
+        }
+        // Update sidebar subitem active state
+        document.querySelectorAll('.sidebar-subitem').forEach(item => {
+          item.classList.toggle('active', item.dataset.section === sectionId && item.dataset.tab === tabId);
+        });
+      }, 50);
+    }
+
     // Initialize layout from localStorage (immediate, since script is at bottom)
-    const savedLayout = localStorage.getItem('preferredLayout') || 'top';
+    const savedLayout = localStorage.getItem('preferredLayout') || 'sidebar';
     setLayout(savedLayout);
 
     // ==========================================================================
@@ -3916,9 +4039,16 @@ async def my_hook(event: str, data: dict):
       link.addEventListener('click', () => showSection(link.dataset.section));
     });
 
-    // Sidebar item clicks
-    document.querySelectorAll('.sidebar-item').forEach(item => {
+    // Sidebar item clicks (only items without children - items with children have onclick handlers)
+    document.querySelectorAll('.sidebar-item:not(.has-children)').forEach(item => {
       item.addEventListener('click', () => showSection(item.dataset.section));
+    });
+
+    // Sidebar sub-item clicks (3rd level - navigate to section and activate tab)
+    document.querySelectorAll('.sidebar-subitem').forEach(item => {
+      item.addEventListener('click', () => {
+        showSectionWithTab(item.dataset.section, item.dataset.tab);
+      });
     });
 
     // Sub-nav item clicks
@@ -4180,7 +4310,7 @@ HookResult actions: \`continue\`, \`deny\`, \`modify\`, \`inject_context\`, \`as
 
 ## Module Reference
 
-**Providers**: \`provider-anthropic\`, \`provider-openai\`, \`provider-azure\`, \`provider-ollama\`
+**Providers**: \`provider-anthropic\`, \`provider-openai\`, \`provider-gemini\`, \`provider-azure\`, \`provider-ollama\`, \`provider-vllm\`, \`provider-mock\`
 **Tools**: \`tool-filesystem\`, \`tool-bash\`, \`tool-web\`, \`tool-search\`, \`tool-task\`, \`tool-todo\`
 **Orchestrators**: \`loop-basic\`, \`loop-streaming\`, \`loop-event\`
 **Contexts**: \`context-simple\`, \`context-persistent\`
@@ -4791,11 +4921,12 @@ current profile → \`.amplifier/agents/\` (project) → \`~/.amplifier/agents/\
 
 ## Runtime Modules
 
-### Providers (6)
+### Providers (7)
 | Module | Purpose |
 |--------|---------|
 | \`provider-anthropic\` | Claude models |
 | \`provider-openai\` | GPT models |
+| \`provider-gemini\` | Gemini (1M context) |
 | \`provider-azure\` | Azure OpenAI |
 | \`provider-ollama\` | Local models |
 | \`provider-vllm\` | vLLM server |

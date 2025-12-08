@@ -2823,11 +2823,12 @@ amplifier> @collection:foundation/context/philosophy.md</code></pre>
 
       <div class="ecosystem-grid">
         <div class="ecosystem-category">
-          <h3>🤖 Providers <span class="count">6</span></h3>
+          <h3>🤖 Providers <span class="count">7</span></h3>
           <p>Connect to AI model providers</p>
           <ul>
             <li><a href="https://github.com/microsoft/amplifier-module-provider-anthropic" target="_blank"><code>provider-anthropic</code></a> - Claude models</li>
             <li><a href="https://github.com/microsoft/amplifier-module-provider-openai" target="_blank"><code>provider-openai</code></a> - GPT models</li>
+            <li><a href="https://github.com/microsoft/amplifier-module-provider-gemini" target="_blank"><code>provider-gemini</code></a> - Gemini (1M context)</li>
             <li><a href="https://github.com/microsoft/amplifier-module-provider-azure" target="_blank"><code>provider-azure</code></a> - Azure OpenAI</li>
             <li><a href="https://github.com/microsoft/amplifier-module-provider-ollama" target="_blank"><code>provider-ollama</code></a> - Local models</li>
             <li><a href="https://github.com/microsoft/amplifier-module-provider-vllm" target="_blank"><code>provider-vllm</code></a> - vLLM server</li>
@@ -2986,6 +2987,21 @@ amplifier profile use convergent-dev:convergent-dev</code></pre>
             <td><a href="https://github.com/DavidKoleczek/amplifier-app-benchmarks" target="_blank"><code>app-benchmarks</code></a></td>
             <td>Benchmarking and evaluation suite for Amplifier</td>
             <td>@DavidKoleczek</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/microsoft/amplifier-app-log-viewer" target="_blank"><code>app-log-viewer</code></a></td>
+            <td>Web-based debugging interface with real-time LLM interaction visualization</td>
+            <td>@microsoft</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/microsoft/amplifier-lakehouse" target="_blank"><code>amplifier-lakehouse</code></a></td>
+            <td>Data integration daemon and web application for Amplifier</td>
+            <td>@microsoft</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/microsoft/amplifier-playground" target="_blank"><code>amplifier-playground</code></a></td>
+            <td>Interactive environment for building, configuring, and testing Amplifier sessions</td>
+            <td>@microsoft</td>
           </tr>
         </tbody>
       </table>
@@ -4294,7 +4310,7 @@ HookResult actions: \`continue\`, \`deny\`, \`modify\`, \`inject_context\`, \`as
 
 ## Module Reference
 
-**Providers**: \`provider-anthropic\`, \`provider-openai\`, \`provider-azure\`, \`provider-ollama\`
+**Providers**: \`provider-anthropic\`, \`provider-openai\`, \`provider-gemini\`, \`provider-azure\`, \`provider-ollama\`, \`provider-vllm\`, \`provider-mock\`
 **Tools**: \`tool-filesystem\`, \`tool-bash\`, \`tool-web\`, \`tool-search\`, \`tool-task\`, \`tool-todo\`
 **Orchestrators**: \`loop-basic\`, \`loop-streaming\`, \`loop-event\`
 **Contexts**: \`context-simple\`, \`context-persistent\`
@@ -4905,11 +4921,12 @@ current profile → \`.amplifier/agents/\` (project) → \`~/.amplifier/agents/\
 
 ## Runtime Modules
 
-### Providers (6)
+### Providers (7)
 | Module | Purpose |
 |--------|---------|
 | \`provider-anthropic\` | Claude models |
 | \`provider-openai\` | GPT models |
+| \`provider-gemini\` | Gemini (1M context) |
 | \`provider-azure\` | Azure OpenAI |
 | \`provider-ollama\` | Local models |
 | \`provider-vllm\` | vLLM server |
