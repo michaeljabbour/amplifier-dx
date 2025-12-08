@@ -1785,6 +1785,8 @@
       </div>
       <div class="sidebar-items show">
         <span class="sidebar-item" data-section="architecture">Overview</span>
+        <span class="sidebar-item" data-section="architecture" data-scroll="module-distribution">Module Distribution</span>
+        <span class="sidebar-item" data-section="architecture" data-scroll="external-integration">External Integration</span>
       </div>
     </div>
     <div class="sidebar-group">
@@ -2382,6 +2384,203 @@ response = await session.execute(prompt)</code></pre>
           </div>
         </div>
       </div>
+
+      <h2 id="module-distribution">Module Distribution Architecture</h2>
+      <p>Understanding how modules are distributed and resolved is critical for building applications with amplifier-core.</p>
+
+      <div class="info-box" style="border-left: 4px solid var(--orange); margin: 20px 0;">
+        <strong>Key Insight</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">Only <strong>providers</strong> are distributed via Python entry points. Orchestrators and contexts use local implementations or the module cache.</p>
+      </div>
+
+      <h3>Two-Tier Module System</h3>
+      <table class="ref-table">
+        <thead>
+          <tr><th>Distribution Method</th><th>Module Types</th><th>Location</th><th>Resolution</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Entry Points</strong></td>
+            <td>Providers (<code>provider-*</code>)</td>
+            <td>Python package metadata</td>
+            <td><code>importlib.metadata</code></td>
+          </tr>
+          <tr>
+            <td><strong>Module Cache</strong></td>
+            <td>Orchestrators, Contexts, Tools, Hooks</td>
+            <td><code>~/.amplifier/module-cache/</code></td>
+            <td><code>amplifier_module_resolution</code></td>
+          </tr>
+          <tr>
+            <td><strong>Local Implementations</strong></td>
+            <td>Any module type</td>
+            <td>Application code</td>
+            <td>Custom <code>ModuleLoader</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Entry Points (<code>amplifier.modules</code>)</h3>
+      <p>Provider modules bundled with the amplifier package are registered via Python entry points:</p>
+      <div class="code-block">
+        <pre style="padding: 12px;"><code class="language-bash"># List available entry point modules
+amplifier module list
+
+# Output shows only providers:
+# provider-anthropic, provider-openai, provider-google, provider-xai...</code></pre>
+      </div>
+
+      <h3>Module Cache</h3>
+      <p>Git-based modules (orchestrators, tools, hooks) are cloned to the module cache:</p>
+      <div class="code-block">
+        <pre style="padding: 12px;"><code class="language-bash"># Cache location
+~/.amplifier/module-cache/
+
+# Structure (hashed directories)
+module-cache/
+  ├── abc123.../  # loop-streaming
+  ├── def456.../  # context-persistent
+  └── ghi789.../  # tool-filesystem</code></pre>
+      </div>
+      <p>Accessing cached modules requires the <code>amplifier_module_resolution</code> package, which handles path resolution and version management.</p>
+
+      <h3>Module Loading Priority</h3>
+      <p>When loading a module, the system checks sources in this order:</p>
+      <ol>
+        <li><strong>Local implementations</strong> — Custom loader's local module map</li>
+        <li><strong>Entry points</strong> — Python package metadata (<code>amplifier.modules</code>)</li>
+        <li><strong>Module cache</strong> — If <code>amplifier_module_resolution</code> is available</li>
+      </ol>
+
+      <h2 id="external-integration">External App Integration Guide</h2>
+      <p>Building applications with amplifier-core follows the kernel design principle: your app provides policy, amplifier provides mechanism.</p>
+
+      <div class="info-box" style="border-left: 4px solid var(--green); margin: 20px 0;">
+        <strong>Reference Implementation</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">The <code>amp</code> CLI (<code>amplifier-app-cli</code>) demonstrates the canonical integration pattern.</p>
+      </div>
+
+      <h3>Required Components</h3>
+      <p>External applications must provide three policy components:</p>
+
+      <div class="concepts" style="margin-bottom: 30px;">
+        <div class="concept">
+          <h3>1. ModuleLoader</h3>
+          <p>Custom loader to resolve modules from your preferred sources.</p>
+          <div class="code-block" style="margin-top: 8px;">
+            <pre style="padding: 12px;"><code class="language-python">from amplifier_core import ModuleLoader
+
+class LocalLoader(ModuleLoader):
+    # Always use local for orchestrators/contexts
+    ALWAYS_LOCAL = ("loop-", "context-")
+
+    async def load(self, module_id, config=None, profile_source=None):
+        if any(module_id.startswith(p) for p in self.ALWAYS_LOCAL):
+            return self.local_modules[module_id]
+        # Fall back to entry points for providers
+        return await super().load(module_id, config, profile_source)</code></pre>
+          </div>
+        </div>
+
+        <div class="concept">
+          <h3>2. ApprovalSystem</h3>
+          <p>UI/UX for user consent on tool execution.</p>
+          <div class="code-block" style="margin-top: 8px;">
+            <pre style="padding: 12px;"><code class="language-python">from amplifier_core import ApprovalCallback
+
+class MyApprovalSystem:
+    async def request(self, tool_name: str, input: dict) -> bool:
+        # Show UI dialog, return True to approve
+        return await show_approval_dialog(tool_name, input)</code></pre>
+          </div>
+        </div>
+
+        <div class="concept">
+          <h3>3. DisplaySystem</h3>
+          <p>Rendering for messages, tool calls, and streaming.</p>
+          <div class="code-block" style="margin-top: 8px;">
+            <pre style="padding: 12px;"><code class="language-python">class MyDisplaySystem:
+    async def show_message(self, role: str, content: list):
+        # Render message to your UI
+        pass
+
+    async def show_tool_call(self, name: str, input: dict, result: str):
+        # Render tool execution
+        pass</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <h3>Creating an AmplifierSession</h3>
+      <div class="code-block">
+        <pre style="padding: 12px;"><code class="language-python">from amplifier_core import AmplifierSession, SessionConfig
+
+# Create session with your policy components
+config = SessionConfig(
+    orchestrator="loop-streaming",
+    providers=[{"module": "provider-anthropic", "model": "claude-sonnet-4-20250514"}],
+    tools=[{"module": "tool-filesystem"}, {"module": "tool-bash"}],
+    context="context-simple",
+)
+
+session = AmplifierSession(
+    config,
+    loader=LocalLoader(),           # Your custom module loader
+    approval_system=MyApprovalSystem(),  # Your approval UI
+    display_system=MyDisplaySystem(),    # Your message renderer
+)
+
+# Run a prompt
+result = await session.run("What files are in this directory?")</code></pre>
+      </div>
+
+      <h3>Hook Events for Streaming UI</h3>
+      <p>Subscribe to hook events for real-time UI updates:</p>
+      <table class="ref-table">
+        <thead>
+          <tr><th>Event</th><th>Description</th><th>Payload</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>content_block:start</code></td><td>Text block begins</td><td><code>{index, type}</code></td></tr>
+          <tr><td><code>content_block:delta</code></td><td>Streaming text chunk</td><td><code>{index, delta}</code></td></tr>
+          <tr><td><code>content_block:end</code></td><td>Text block complete</td><td><code>{index}</code></td></tr>
+          <tr><td><code>thinking:delta</code></td><td>Extended thinking chunk</td><td><code>{delta}</code></td></tr>
+          <tr><td><code>thinking:final</code></td><td>Thinking complete</td><td><code>{content}</code></td></tr>
+          <tr><td><code>tool:pre</code></td><td>Before tool execution</td><td><code>{tool, input, call_id}</code></td></tr>
+          <tr><td><code>tool:post</code></td><td>After tool execution</td><td><code>{tool, input, result, call_id}</code></td></tr>
+          <tr><td><code>provider:request</code></td><td>LLM API call starts</td><td><code>{messages}</code></td></tr>
+          <tr><td><code>provider:response</code></td><td>LLM API call ends</td><td><code>{response}</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Desktop vs Core Mode Pattern</h3>
+      <p>Applications can offer dual modes for provider loading:</p>
+      <div class="concepts">
+        <div class="concept">
+          <h3>Desktop Mode (Default)</h3>
+          <p>All modules use local implementations bundled with your app.</p>
+          <ul>
+            <li>Faster startup (no entry point resolution)</li>
+            <li>Consistent behavior across environments</li>
+            <li>Self-contained distribution</li>
+          </ul>
+        </div>
+        <div class="concept">
+          <h3>Core Mode</h3>
+          <p>Providers load from amplifier-core entry points.</p>
+          <ul>
+            <li>Use latest provider implementations</li>
+            <li>Benefit from upstream bug fixes</li>
+            <li>Only affects providers (orchestrators/contexts stay local)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-box" style="border-left: 4px solid var(--purple); margin: 20px 0;">
+        <strong>Important</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">In Core mode, orchestrators (<code>loop-*</code>) and contexts (<code>context-*</code>) should always use local implementations. Only providers benefit from entry point loading.</p>
+      </div>
+
     </section>
 
     <!-- REFERENCE SECTION -->
@@ -4236,7 +4435,18 @@ async def my_hook(event: str, data: dict):
 
     // Sidebar item clicks (only items without children - items with children have onclick handlers)
     document.querySelectorAll('.sidebar-item:not(.has-children)').forEach(item => {
-      item.addEventListener('click', () => showSection(item.dataset.section));
+      item.addEventListener('click', () => {
+        showSection(item.dataset.section);
+        // If data-scroll is set, scroll to that element after showing section
+        if (item.dataset.scroll) {
+          setTimeout(() => {
+            const target = document.getElementById(item.dataset.scroll);
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 50);
+        }
+      });
     });
 
     // Sidebar sub-item clicks (3rd level - navigate to section and activate tab)
