@@ -104,6 +104,13 @@
     return 'Home';
   }
 
+  // Sanitize API key - remove non-ASCII characters that break fetch headers
+  function sanitizeApiKey(key) {
+    if (!key) return '';
+    // Remove any non-ASCII characters and trim whitespace
+    return key.replace(/[^\x00-\x7F]/g, '').trim();
+  }
+
   // Create a text node safely
   function createTextNode(text) {
     return document.createTextNode(text);
@@ -199,7 +206,7 @@
       const response = await fetch(CONFIG.apiEndpoint, {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer ' + settings.apiKey,
+          'Authorization': 'Bearer ' + sanitizeApiKey(settings.apiKey),
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -533,7 +540,8 @@
     document.getElementById('chat-settings-btn').addEventListener('click', toggleSettings);
 
     document.getElementById('chat-api-key').addEventListener('change', function(e) {
-      settings.apiKey = e.target.value;
+      settings.apiKey = sanitizeApiKey(e.target.value);
+      e.target.value = settings.apiKey; // Update input with sanitized value
       saveSettings();
     });
 
