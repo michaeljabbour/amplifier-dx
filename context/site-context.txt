@@ -1,0 +1,2269 @@
+AMPLIFIER DOCUMENTATION
+========================
+
+Amplifier is the ultra-thin kernel for modular AI agents from Microsoft.
+This context contains the complete documentation for building AI agent systems.
+
+
+============================================================
+SECTION: HOME
+============================================================
+
+Open Source · Microsoft · MIT License
+ 
+# Amplifier
+
+The ultra-thin kernel for modular AI agents
+
+ Build AI agent systems with Linux-kernel philosophy: a tiny, stable center (~2,600 lines)
+ that provides mechanisms, while policies live as swappable modules at the edges.
+
+ Get started
+ Official Docs
+ GitHub
+
+ Use it
+ 
+Run AI agents with pre-built providers and tools. Configure via profiles.
+
+ Extend it
+ 
+Write custom tools in 2 minutes. Duck typing, no inheritance.
+
+ Embed it
+ 
+Drop the kernel into your app. Full programmatic control.
+
+## Developer quickstart
+
+Make your first agent request in minutes.
+
+ bash
+ Copy
+
+`# Install
+uv tool install --force git+https://github.com/microsoft/amplifier@next
+
+# Update and initialize
+amplifier update
+amplifier init
+
+# Run
+amplifier run "List all Python files in this directory"`
+```
+
+## Start building
+
+ ▶
+ 
+ Use existing modules
+ Configure profiles and run agents
+
+ +
+ 
+ Write a custom tool
+ Extend agent capabilities
+
+ { }
+ 
+ Embed in your app
+ Programmatic session control
+
+ ◈
+ 
+ Hooks & events
+ Observe and control execution
+
+============================================================
+SECTION: QUICKSTART
+============================================================
+
+# Quickstart
+
+Choose your path. Each guide gets you productive in minutes.
+
+ 📚 Getting Started Guide
+ 
+For the complete getting started experience including provider setup, see the official installation guide.
+
+ Use a profile
+ Write a tool
+ Embed in app
+
+Run AI agents using pre-built modules and profiles.
+
+### 1. Install
+
+ bash
+ Copy
+
+`uv tool install --force git+https://github.com/microsoft/amplifier@next`
+```
+
+### 2. Update and Initialize
+
+ bash
+ Copy
+
+`amplifier update
+amplifier init`
+```
+
+### 3. Run
+
+ bash
+ Copy
+
+`# Interactive
+amplifier
+
+# Single command
+amplifier run "Explain this codebase"
+
+# With profile
+amplifier run --profile dev "Review for security issues"`
+```
+
+### 4. Customize your profile
+
+ yaml
+ Copy
+
+`# ~/.amplifier/profiles/my-profile.yaml
+name: my-profile
+session:
+ orchestrator: loop-streaming
+ context: context-persistent
+providers:
+ - module: provider-anthropic
+ config:
+ model: claude-sonnet-4-20250514
+tools:
+ - module: tool-filesystem
+ - module: tool-bash`
+```
+
+### Troubleshooting
+
+ bash
+ Copy
+
+`# Reset profile to defaults
+amplifier profile reset
+
+# Clear module cache (fixes stale module issues)
+rm -rf ~/.amplifier/module-cache
+
+# Reinstall from scratch
+uv tool install --force git+https://github.com/microsoft/amplifier@next
+amplifier update`
+```
+
+Write a custom tool in under 2 minutes using duck typing.
+
+### 1. Implement the Tool protocol
+
+ python
+ Copy
+
+`from amplifier_core.models import ToolResult
+
+class WeatherTool:
+ @property
+ def name(self) -> str:
+ return "weather"
+
+ @property
+ def description(self) -> str:
+ return "Get current weather for a city"
+
+ async def execute(self, input: dict) -> ToolResult:
+ city = input.get("city", "Unknown")
+ # Your logic here
+ return ToolResult(output=f"Weather in {city}: 72°F, Sunny", error=None)`
+```
+
+### 2. Add mount function
+
+ python
+ Copy
+
+`async def mount(coordinator, config):
+ await coordinator.mount("tools", WeatherTool(), name="weather")
+ return lambda: None # cleanup`
+```
+
+### 3. Register entry point
+
+ toml
+ Copy
+
+`# pyproject.toml
+[project.entry-points."amplifier.modules"]
+weather-tool = "my_package.weather:mount"`
+```
+
+### 4. Install and use
+
+ bash
+ Copy
+
+`pip install -e .
+amplifier run "What's the weather in Seattle?"`
+```
+
+ Tool Protocol
+
+ | `name` | property → str
+ 
+ | `description` | property → str
+ 
+ | `execute(input)` | async → ToolResult
+
+Embed Amplifier in your application with full programmatic control.
+
+### 1. Define mount plan
+
+ python
+ Copy
+
+`from amplifier_core import AmplifierSession
+
+async def run_agent(prompt: str) -> str:
+ config = {
+ "session": {
+ "orchestrator": "loop-basic",
+ "context": "context-simple"
+ },
+ "providers": [{"module": "provider-anthropic"}],
+ "tools": [{"module": "tool-filesystem"}, {"module": "tool-bash"}],
+ "hooks": [{"module": "hooks-logging"}]
+ }
+
+ async with AmplifierSession(config) as session:
+ return await session.execute(prompt)`
+```
+
+### 2. Add custom hooks
+
+ python
+ Copy
+
+`from amplifier_core.models import HookResult
+
+async def audit_hook(event: str, data: dict) -> HookResult:
+ if event == "tool:pre":
+ print(f"Executing: {data['tool_name']}")
+ return HookResult(action="continue")
+
+config["hooks"].append({"handler": audit_hook, "events": ["tool:*"]})`
+```
+
+### 3. Session persistence with ID
+
+ python
+ Copy
+
+`# Create session with explicit ID for persistence
+session = AmplifierSession(config, session_id="user-123-session")
+await session.initialize()
+
+# Load conversation history
+context = session.coordinator.get("context")
+for msg in historical_messages:
+ await context.add_message(msg)
+
+# Continue conversation
+response = await session.execute(prompt)`
+```
+
+### 4. Fork sessions for parallel work
+
+ python
+ Copy
+
+`async with AmplifierSession(config) as parent:
+ child1 = await parent.fork()
+ child2 = await parent.fork()
+
+ results = await asyncio.gather(
+ child1.execute("Analyze backend"),
+ child2.execute("Review frontend")
+ )`
+```
+
+ Reference Implementation
+ 
+See amplifierd for a complete HTTP/SSE API built on amplifier-core.
+
+============================================================
+SECTION: ARCHITECTURE
+============================================================
+
+# Architecture
+
+Design philosophy: kernel, not framework. Mechanism over policy.
+
+ 📚 Complete Architecture Documentation
+ 
+For in-depth architectural guides, see the official architecture documentation.
+
+## The Four Tenets
+
+### 1. Mechanism, Not Policy
+
+The kernel provides capabilities and stable contracts. Behavioral decisions live outside the kernel. If teams could want different behavior, it belongs in modules.
+
+### 2. Small, Stable, Boring
+
+~2,600 lines of intentionally minimal code. Fewer changes = fewer breaking changes. Prioritizes auditability and predictability over clever implementations.
+
+### 3. Don't Break Modules
+
+Kernel interfaces follow sacred backward compatibility. Additive evolution only, with clear deprecation paths and extended sunset periods.
+
+### 4. Extensibility via Composition
+
+New capabilities come from combining modules, not accumulating kernel configuration flags. Avoids "configuration explosion" by pushing policy to the edges.
+
+## The Linux Kernel Analogy
+
+Amplifier mirrors Linux kernel concepts:
+
+ | 
+ 
+ | Linux Concept | Amplifier Analog | Purpose
+
+ | Ring 0 kernel | `amplifier-core` | Mechanisms only, never policy
+ 
+ | Syscalls | Session operations | Few, sharp APIs
+ 
+ | Loadable drivers | Modules | Compete at edges
+ 
+ | Signals/Netlink | Event bus / hooks | Observe and control
+ 
+ | /proc & dmesg | JSONL logs | Single canonical stream
+ 
+ | Capabilities | Approval system | Deny-by-default
+ 
+ | Scheduler | Orchestrator modules | Swap execution strategies
+ 
+ | VM/Memory | Context manager | Conversation memory
+
+ System Stack
+ Event Flow
+ The Litmus Test
+
+ DX Layer
+ amplifier-app-cli
+ 
+ CLI, scaffolding, dev mode, inspector
+ 
+ ↓
+
+ Helpers
+ amplifier-helpers
+ 
+ @tool decorator, testing utilities
+ 
+ ↓
+
+ Kernel
+ amplifier-core
+ 
+ Session, Coordinator, Protocols, Events
+
+ 📥
+ 
+ Prompt Submitted
+ User sends a prompt to the session
+ 
+ session:start
+ 
+ ↓
+ 
+ 🤖
+ 
+ Provider Request
+ LLM generates response with tool calls
+ 
+ provider:request
+ 
+ ↓
+ 
+ 🔧
+ 
+ Tool Execution
+ Tools run with hook observation
+ 
+ tool:pre → tool:post
+ 
+ ↓
+ 
+ ✅
+ 
+ Response Complete
+ Final answer returned to user
+ 
+ session:end
+
+ "Could two teams want different behavior?"
+
+ No
+ Universal requirement
+
+ Yes
+ Team preference
+
+### It belongs in the Kernel
+
+Mechanisms that everyone needs (e.g., Session management, Event emission).
+
+### It belongs in a Module
+
+Policies that vary by team (e.g., "Allow sudo?", "Which LLM to use?").
+
+## Core concepts
+
+### Coordinator
+
+Infrastructure context injected into all modules.
+
+- `session_id` — Unique identifier
+ 
+- `config` — Session configuration
+ 
+- `mount()` — Register module
+ 
+- `emit()` — Fire events
+
+### Mount Plan
+
+Configuration specifying which modules to load.
+
+`{
+ "session": {"orchestrator": "loop-basic"},
+ "providers": [{"module": "provider-anthropic"}],
+ "tools": [{"module": "tool-filesystem"}]
+}`
+```
+
+### Session Lifecycle
+
+- Load modules from mount plan
+ 
+- Call `mount()` on each
+ 
+- Execute prompts via orchestrator
+ 
+- Cleanup on session end
+
+### Event System
+
+30+ hookable events covering the agent lifecycle.
+
+ session:*
+ provider:*
+ tool:*
+ context:*
+
+## Module Distribution Architecture
+
+Understanding how modules are distributed and resolved is critical for building applications with amplifier-core.
+
+ Key Insight
+ 
+Only providers are distributed via Python entry points. Orchestrators and contexts use local implementations or the module cache.
+
+### Two-Tier Module System
+
+ | 
+ 
+ | Distribution Method | Module Types | Location | Resolution
+
+ | Entry Points
+ | Providers (`provider-*`)
+ | Python package metadata
+ | `importlib.metadata`
+
+ | Module Cache
+ | Orchestrators, Contexts, Tools, Hooks
+ | `~/.amplifier/module-cache/`
+ | `amplifier_module_resolution`
+
+ | Local Implementations
+ | Any module type
+ | Application code
+ | Custom `ModuleLoader`
+
+### Entry Points (`amplifier.modules`)
+
+Provider modules bundled with the amplifier package are registered via Python entry points:
+
+`# List available entry point modules
+amplifier module list
+
+# Output shows only providers:
+# provider-anthropic, provider-openai, provider-google, provider-xai...`
+```
+
+### Module Cache
+
+Git-based modules (orchestrators, tools, hooks) are cloned to the module cache:
+
+`# Cache location
+~/.amplifier/module-cache/
+
+# Structure (hashed directories)
+module-cache/
+ ├── abc123.../ # loop-streaming
+ ├── def456.../ # context-persistent
+ └── ghi789.../ # tool-filesystem`
+```
+
+Accessing cached modules requires the `amplifier_module_resolution` package, which handles path resolution and version management.
+
+### Module Loading Priority
+
+When loading a module, the system checks sources in this order:
+
+- Local implementations — Custom loader's local module map
+ 
+- Entry points — Python package metadata (`amplifier.modules`)
+ 
+- Module cache — If `amplifier_module_resolution` is available
+
+## External App Integration Guide
+
+Building applications with amplifier-core follows the kernel design principle: your app provides policy, amplifier provides mechanism.
+
+ Reference Implementation
+ 
+The `amp` CLI (`amplifier-app-cli`) demonstrates the canonical integration pattern.
+
+### Required Components
+
+External applications must provide three policy components:
+
+### 1. ModuleLoader
+
+Custom loader to resolve modules from your preferred sources.
+
+`from amplifier_core import ModuleLoader
+
+class LocalLoader(ModuleLoader):
+ # Always use local for orchestrators/contexts
+ ALWAYS_LOCAL = ("loop-", "context-")
+
+ async def load(self, module_id, config=None, profile_source=None):
+ if any(module_id.startswith(p) for p in self.ALWAYS_LOCAL):
+ return self.local_modules[module_id]
+ # Fall back to entry points for providers
+ return await super().load(module_id, config, profile_source)`
+```
+
+### 2. ApprovalSystem
+
+UI/UX for user consent on tool execution.
+
+`from amplifier_core import ApprovalCallback
+
+class MyApprovalSystem:
+ async def request(self, tool_name: str, input: dict) -> bool:
+ # Show UI dialog, return True to approve
+ return await show_approval_dialog(tool_name, input)`
+```
+
+### 3. DisplaySystem
+
+Rendering for messages, tool calls, and streaming.
+
+`class MyDisplaySystem:
+ async def show_message(self, role: str, content: list):
+ # Render message to your UI
+ pass
+
+ async def show_tool_call(self, name: str, input: dict, result: str):
+ # Render tool execution
+ pass`
+```
+
+### Creating an AmplifierSession
+
+`from amplifier_core import AmplifierSession, SessionConfig
+
+# Create session with your policy components
+config = SessionConfig(
+ orchestrator="loop-streaming",
+ providers=[{"module": "provider-anthropic", "model": "claude-sonnet-4-20250514"}],
+ tools=[{"module": "tool-filesystem"}, {"module": "tool-bash"}],
+ context="context-simple",
+)
+
+session = AmplifierSession(
+ config,
+ loader=LocalLoader(), # Your custom module loader
+ approval_system=MyApprovalSystem(), # Your approval UI
+ display_system=MyDisplaySystem(), # Your message renderer
+)
+
+# Run a prompt
+result = await session.run("What files are in this directory?")`
+```
+
+### Hook Events for Streaming UI
+
+Subscribe to hook events for real-time UI updates:
+
+ | 
+ 
+ | Event | Description | Payload
+
+ | `content_block:start` | Text block begins | `{index, type}`
+ 
+ | `content_block:delta` | Streaming text chunk | `{index, delta}`
+ 
+ | `content_block:end` | Text block complete | `{index}`
+ 
+ | `thinking:delta` | Extended thinking chunk | `{delta}`
+ 
+ | `thinking:final` | Thinking complete | `{content}`
+ 
+ | `tool:pre` | Before tool execution | `{tool, input, call_id}`
+ 
+ | `tool:post` | After tool execution | `{tool, input, result, call_id}`
+ 
+ | `provider:request` | LLM API call starts | `{messages}`
+ 
+ | `provider:response` | LLM API call ends | `{response}`
+
+### Desktop vs Core Mode Pattern
+
+Applications can offer dual modes for provider loading:
+
+### Desktop Mode (Default)
+
+All modules use local implementations bundled with your app.
+
+- Faster startup (no entry point resolution)
+ 
+- Consistent behavior across environments
+ 
+- Self-contained distribution
+
+### Core Mode
+
+Providers load from amplifier-core entry points.
+
+- Use latest provider implementations
+ 
+- Benefit from upstream bug fixes
+ 
+- Only affects providers (orchestrators/contexts stay local)
+
+ Important
+ 
+In Core mode, orchestrators (`loop-*`) and contexts (`context-*`) should always use local implementations. Only providers benefit from entry point loading.
+
+============================================================
+SECTION: API REFERENCE
+============================================================
+
+# API Reference
+
+Complete documentation for module developers.
+
+ 📚 Complete API Reference
+ 
+For the full API documentation including all contracts and interfaces, see the official Developer Guide.
+
+ Contracts
+ Hooks API
+ Events
+ Profiles
+ Sessions
+ Agents
+
+All modules use Python Protocols (structural typing). No inheritance required.
+
+#### Provider LLM Backend
+
+ `name: str`
+ `get_info() → ProviderInfo`
+ `list_models() → list[ModelInfo]`
+ `complete(ChatRequest) → ChatResponse`
+ `parse_tool_calls(ChatResponse) → list`
+
+#### Tool Agent Capability
+
+ `name: str`
+ `description: str`
+ `execute(input: dict) → ToolResult`
+
+#### Orchestrator Execution Loop
+
+ `execute(prompt, context, providers, tools, hooks) → str`
+
+#### ContextManager Memory
+
+ `add_message(message)`
+ `get_messages() → list`
+ `should_compact() → bool`
+ `compact()`
+ `clear()`
+
+#### Hook Observability
+
+ `async handler(event: str, data: dict) → HookResult`
+
+Hooks observe events and optionally modify behavior via HookResult.
+
+ python
+ Copy
+
+`async def my_hook(event: str, data: dict) -> HookResult:
+ if event == "tool:pre" and "rm -rf" in str(data.get("tool_input")):
+ return HookResult(action="deny", reason="Blocked")
+ return HookResult(action="continue")`
+```
+
+### HookResult Actions
+
+ `continue`
+ Proceed normally (default)
+
+ `deny`
+ Block with reason
+
+ `modify`
+ Alter event data
+
+ `inject_context`
+ Add message to context
+
+ `ask_user`
+ Pause for approval
+
+30+ hookable events covering the entire agent lifecycle. Events are logged as JSONL for debugging and observability.
+
+### Session Lifecycle
+
+ | 
+ | Event | When | Data
+
+ | `session:start` | Session initialized | session_id, mount_plan
+ 
+ | `session:end` | Session cleanup | session_id, duration
+ 
+ | `session:fork` | Sub-session created | parent_id, child_id
+ 
+ | `session:resume` | Session resumed | session_id
+
+### Prompt Lifecycle
+
+ | 
+ | Event | When | Data
+
+ | `prompt:submit` | User prompt received | prompt, session_id
+ 
+ | `prompt:complete` | Response generated | response, duration
+
+### Provider Events
+
+ | 
+ | Event | When | Data
+
+ | `provider:request` | Before LLM call | messages, model
+ 
+ | `provider:response` | After LLM response | response, usage
+ 
+ | `provider:error` | LLM call failed | error, model
+
+### Tool Events
+
+ | 
+ | Event | When | Data
+
+ | `tool:pre` | Before tool execution | tool_name, input
+ 
+ | `tool:post` | After tool execution | tool_name, result
+ 
+ | `tool:error` | Tool execution failed | tool_name, error
+
+### Context Events
+
+ | 
+ | Event | When | Data
+
+ | `context:pre_compact` | Before compaction | message_count, tokens
+ 
+ | `context:post_compact` | After compaction | message_count, tokens
+ 
+ | `context:include` | Context injected | source, content
+
+### Approval & Streaming Events
+
+ | 
+ | Event | When | Data
+
+ | `approval:required` | Approval requested | operation, prompt
+ 
+ | `approval:granted` | User approved | operation
+ 
+ | `approval:denied` | User denied | operation, reason
+ 
+ | `content_block:start` | Streaming starts | block_type
+ 
+ | `content_block:delta` | Content chunk | delta
+ 
+ | `content_block:end` | Streaming ends | block_type
+
+### Event Log Format (JSONL)
+
+ json
+ Copy
+
+`{
+ "ts": "2024-01-15T10:30:00.123Z",
+ "session_id": "abc123",
+ "event": "tool:pre",
+ "component": "orchestrator",
+ "module": "tool-bash",
+ "data": {"tool_name": "bash", "input": {"command": "ls"}}
+}`
+```
+
+### Finding Logs
+
+ bash
+ Copy
+
+`# Session logs location
+ls ~/.amplifier/projects/<project>/sessions/<session-id>/events.jsonl
+
+# Search for tool errors
+grep '"event":"tool:error"' events.jsonl
+
+# Pretty print with jq
+cat events.jsonl | jq 'select(.event == "provider:request")'`
+```
+
+Profiles are pre-configured capability sets defining which modules are accessible during a session.
+
+### Built-in Profiles
+
+ | 
+ 
+ | Profile | Purpose | Best For
+
+ | `foundation` | Minimal LLM access only | Basic chat interactions
+ 
+ | `base` | Filesystem and bash capabilities | Light development tasks
+ 
+ | `dev` | Complete development tools | Daily development work
+ 
+ | `test` | Testing-focused configuration | Running tests, debugging
+ 
+ | `full` | All available features enabled | Exploring system capabilities
+
+### Profile Commands
+
+ bash
+ Copy
+
+`amplifier profile list # View all profiles
+amplifier profile use dev # Set as default
+amplifier profile show dev # Display configuration
+amplifier profile current # Check active profile
+amplifier run --profile dev "..." # Single command usage`
+```
+
+### Custom Profile Structure
+
+Profiles use markdown with YAML frontmatter. Store in `.amplifier/profiles/` (project) or `~/.amplifier/profiles/` (user).
+
+ yaml
+ Copy
+
+`---
+name: my-profile
+extends: base
+description: Custom development profile
+session:
+ orchestrator: loop-streaming
+ context: context-persistent
+providers:
+ - module: provider-anthropic
+ config:
+ default_model: claude-opus-4-1
+tools:
+ - module: tool-filesystem
+ - module: tool-bash
+ config:
+ timeout: 60
+hooks:
+ - module: hooks-logging
+agents:
+ code-reviewer:
+ description: Expert code reviewer
+ tools:
+ - tool-filesystem
+---
+
+# System Instructions
+
+You are an expert assistant...`
+```
+
+### Profile Inheritance
+
+Profiles inherit in a linear chain. Each level accumulates capabilities:
+
+ `foundation` → `base` → `dev` → `custom`
+
+Sessions track conversations, preserving history, tool results, and metadata for resumption.
+
+### Session Commands
+
+ bash
+ Copy
+
+`# Starting & Listing
+amplifier run "prompt" # Create new session
+amplifier session list # Display all sessions
+amplifier session show [id] # View session details
+
+# Resuming
+amplifier continue "follow-up" # Resume most recent
+amplifier session resume [id] # Resume specific session
+amplifier run --resume [id] "prompt"
+
+# Management
+amplifier session delete [id] # Remove a session
+amplifier session cleanup --days 7 # Delete old sessions`
+```
+
+### Storage Structure
+
+Sessions persist at `~/.amplifier/projects/<project-slug>/sessions/<session-id>/`
+
+ | 
+ 
+ | File | Contents
+
+ | `transcript.jsonl` | Conversation history
+ 
+ | `events.jsonl` | Complete event log
+ 
+ | `metadata.json` | Session metadata
+
+### Session Lifecycle
+
+ Creation →
+ Active →
+ Ended →
+ Resumption
+
+### Context Preservation
+
+ Preserved: Conversation history, session ID, project context
+
+ Reloaded: Current profile and provider configurations
+
+ Not preserved: Tool execution state, in-memory context beyond token limits
+
+Agents are specialized configurations functioning as sub-sessions for focused tasks.
+
+### Built-in Agents
+
+ | 
+ 
+ | Agent | Purpose
+
+ | `explorer` | Breadth-first codebase exploration
+ 
+ | `bug-hunter` | Systematic debugging and issue identification
+ 
+ | `zen-architect` | System design emphasizing simplicity
+ 
+ | `researcher` | Research and information synthesis
+ 
+ | `modular-builder` | Code implementation and creation
+
+### Using Agents
+
+ bash
+ Copy
+
+`# Interactive mode - use @ prefix
+amplifier> @explorer What is the architecture of this project?
+amplifier> @bug-hunter Find issues in the authentication module
+
+# List and show agents
+amplifier agents list
+amplifier agents show explorer`
+```
+
+### How Agents Work
+
+- Create sub-session inheriting base settings
+ 
+- Apply agent-specific tools and instructions
+ 
+- Execute the request
+ 
+- Return results to main session
+
+### Custom Agents
+
+Define in profile's `agents` section or create standalone files in `.amplifier/agents/`
+
+ yaml
+ Copy
+
+`agents:
+ my-agent:
+ description: Custom agent for specific task
+ tools:
+ - tool-filesystem
+ - tool-bash
+ system: |
+ You are an expert at...`
+```
+
+### Agent Search Path
+
+Agents load from: current profile → `.amplifier/agents/` (project) → `~/.amplifier/agents/` (user) → installed collections → bundled agents
+
+============================================================
+SECTION: CLI COMMANDS
+============================================================
+
+# CLI Reference
+
+Complete reference for all Amplifier command-line commands.
+
+ 📚 Full CLI Documentation
+ 
+For comprehensive CLI usage including profiles, agents, and sessions, see the official User Guide.
+
+### Global Options
+
+ | 
+ | Option | Description
+
+ | `--version` | Show version and exit
+ 
+ | `--help` | Show help and exit
+ 
+ | `--install-completion` | Install shell completion
+ 
+ | `--show-completion` | Show shell completion script
+
+### Running
+
+ `amplifier`Interactive chat mode
+ `amplifier run "prompt"`Single command execution
+ `amplifier run --profile name`Run with specific profile
+ `amplifier run -m model`Override model
+ `amplifier run --max-tokens N`Max response tokens
+ `amplifier run --output-format json`Output format (text/json/json-trace)
+ `amplifier run --no-tools`Disable tool use
+ `amplifier run --resume [id]`Resume session by ID
+ `amplifier continue`Resume last session
+ `amplifier continue "follow-up"`Resume with new prompt
+
+### Sessions
+
+ `amplifier session list`Display all sessions
+ `amplifier session list --all`Show all sessions
+ `amplifier session show [id]`View session details
+ `amplifier session resume [id]`Resume specific session
+ `amplifier session delete [id]`Remove a session
+ `amplifier session cleanup --days 7`Delete old sessions
+
+### Profiles
+
+ `amplifier profile list`View all profiles
+ `amplifier profile use dev`Set as default
+ `amplifier profile show name`Display configuration
+ `amplifier profile show --resolved`Show full resolved profile
+ `amplifier profile current`Check active profile
+ `amplifier profile default [name]`Show/set default profile
+ `amplifier profile reset`Reset to defaults
+
+### Providers
+
+ `amplifier provider list`List available providers
+ `amplifier provider use anthropic`Set default provider
+ `amplifier provider current`Show current provider
+ `amplifier provider reset`Reset to default provider
+
+### Modules
+
+ `amplifier module list`Display installed modules
+ `amplifier module list --type tool`Filter by type
+ `amplifier module show [name]`View module details
+ `amplifier module add tool-web`Add a module
+ `amplifier module add --source [url]`Add from source
+ `amplifier module remove [name]`Remove a module
+ `amplifier module check-updates`Check for updates
+ `amplifier module refresh`Refresh cache
+
+### Tools
+
+ `amplifier tool list`List available tools
+ `amplifier tool info [name]`Show tool details
+ `amplifier tool invoke [name]`Test tool directly
+
+### Agents
+
+ `amplifier agents list`List available agents
+ `amplifier agents show [name]`View agent details
+
+### Collections
+
+ `amplifier collection list`List installed collections
+ `amplifier collection add [url]`Add from Git
+ `amplifier collection show [name]`Show collection details
+ `amplifier collection remove [name]`Remove collection
+ `amplifier collection refresh`Refresh cache
+
+### Sources (Dev)
+
+ `amplifier source list`List source overrides
+ `amplifier source add [name] [path]`Add local override
+ `amplifier source remove [name]`Remove override
+ `amplifier source show [name]`Show source details
+
+### System
+
+ `amplifier update`Update Amplifier
+ `amplifier update --cli`Update CLI only
+ `amplifier update --modules`Update modules only
+ `amplifier init`Initialize configuration
+ `amplifier --help`General help
+
+### Interactive Commands
+
+While in interactive mode, use these slash commands:
+
+ `/help`Display available commands
+ `/tools`List accessible tools
+ `/agents`List available agents
+ `/status`Show session information
+ `/think`Enable planning mode
+ `/clear`Clear conversation history
+ `/quit`, `/exit`Exit the application
+
+### Using Agents & Mentions
+
+ bash
+ Copy
+
+`# Use agents with @ prefix
+amplifier> @explorer Analyze this codebase
+amplifier> @bug-hunter Find issues in main.py
+
+# Reference files with @mentions
+amplifier> Review @src/main.py for issues
+amplifier> @project:context/standards.md Apply these standards
+amplifier> @collection:foundation/context/philosophy.md`
+```
+
+### Output Formats
+
+Use `--output-format` for automation:
+
+ | 
+ | Format | Description
+
+ | `text` | Human-readable markdown (default)
+ 
+ | `json` | Structured JSON for scripting
+ 
+ | `json-trace` | Complete execution trace with tool calls
+
+### Environment Variables
+
+ | 
+ | Variable | Description
+
+ | `ANTHROPIC_API_KEY` | Anthropic API key
+ 
+ | `OPENAI_API_KEY` | OpenAI API key
+ 
+ | `AZURE_OPENAI_API_KEY` | Azure OpenAI API key
+ 
+ | `AZURE_OPENAI_ENDPOINT` | Azure OpenAI endpoint
+ 
+ | `AMPLIFIER_PROFILE` | Default profile
+ 
+ | `AMPLIFIER_PROVIDER` | Default provider
+ 
+ | `AMPLIFIER_DEBUG` | Enable debug logging
+
+### Configuration Files
+
+ | 
+ | File | Scope | Purpose
+
+ | `~/.amplifier/settings.yaml` | User | Global user settings
+ 
+ | `.amplifier/settings.yaml` | Project | Project settings (committed)
+ 
+ | `.amplifier/settings.local.yaml` | Local | Machine-local (gitignored)
+
+ Tips
+
+- Pipe input: `cat file.py | amplifier run "Explain"`
+ 
+- JSON output for scripting: `amplifier run -o json "What is 2+2?"`
+ 
+- Verbose output: `-v` or `--verbose`
+ 
+- Use agents with @ prefix: `@explorer What is the architecture?`
+
+============================================================
+SECTION: ECOSYSTEM
+============================================================
+
+# Ecosystem
+
+Available modules, libraries, and collections for extending Amplifier.
+
+ 📚 Complete Ecosystem Reference
+ 
+For detailed information on all available modules including Providers, Tools, Orchestrators, Contexts, and Hooks, see the official Ecosystem documentation.
+
+## Runtime Modules
+
+Swappable components that implement Amplifier's core contracts.
+
+### 🤖 Providers 7
+
+Connect to AI model providers
+
+- `provider-anthropic` - Claude models
+ 
+- `provider-openai` - GPT models
+ 
+- `provider-gemini` - Gemini (1M context)
+ 
+- `provider-azure` - Azure OpenAI
+ 
+- `provider-ollama` - Local models
+ 
+- `provider-vllm` - vLLM server
+ 
+- `provider-mock` - Testing
+
+### 🔧 Tools 6
+
+Extend agent capabilities
+
+- `tool-filesystem` - Read/write files
+ 
+- `tool-bash` - Shell commands
+ 
+- `tool-web` - Web browsing
+ 
+- `tool-search` - Code search
+ 
+- `tool-task` - Task delegation
+ 
+- `tool-todo` - Todo management
+
+### 🔄 Orchestrators 3
+
+Control execution loops
+
+- `loop-basic` - Simple request/response
+ 
+- `loop-streaming` - Streaming responses
+ 
+- `loop-event` - Event-driven execution
+
+### 💾 Contexts 2
+
+Manage conversation state
+
+- `context-simple` - In-memory storage
+ 
+- `context-persistent` - Disk persistence
+
+### ⚡ Hooks 9
+
+Observe and control behavior
+
+- `hooks-logging` - Event logging
+ 
+- `hooks-approval` - User approval gates
+ 
+- `hooks-redaction` - Sensitive data filtering
+ 
+- `hooks-backup` - Session backup
+ 
+- `hooks-streaming-ui` - Streaming display
+ 
+- `hooks-scheduler` - Rate limiting
+ 
+- + 3 more...
+
+## Libraries
+
+Consumed by applications (not runtime modules).
+
+ | 
+ 
+ | Library | Purpose | Repository
+
+ | `amplifier-profiles` | Profile and agent loading with inheritance | GitHub
+ 
+ | `amplifier-collections` | Collection discovery and management | GitHub
+ 
+ | `amplifier-config` | Three-scope configuration management | GitHub
+ 
+ | `amplifier-module-resolution` | Module source resolution | GitHub
+
+## Collections
+
+Shareable bundles of profiles, agents, and modules.
+
+ Toolkit
+ Essential development tools
+
+ Design Intelligence
+ Architecture and design agents
+
+ Recipes
+ Common patterns and workflows
+
+ Issues
+ Issue tracking integration
+
+ Convergent Dev
+ Ideation → sprints → TDD workflow
+
+### Community Collections
+
+ bash
+ Copy
+
+`# Install convergent-dev collection
+amplifier collection add git+https://github.com/momuno/amplifier-collection-convergent-dev@main
+
+# Activate the profile
+amplifier profile use convergent-dev:convergent-dev`
+```
+
+ Module Architecture
+
+- Runtime modules only depend on `amplifier-core`
+ 
+- Libraries are consumed by applications, never by modules
+ 
+- Use `amplifier module list` to see installed modules
+ 
+- Use `amplifier module show [name]` for details
+
+============================================================
+SECTION: SHOWCASE
+============================================================
+
+# Showcase
+
+Applications and modules built with Amplifier by the community.
+
+⚠️ Security Notice: Community applications and modules execute arbitrary code with full system access. Only use from sources you trust. Review code before installation.
+
+## Community Applications
+
+ | 
+ 
+ | Application | Description | Author
+
+ | `app-transcribe`
+ | Transform YouTube videos and audio files into searchable transcripts with AI-powered insights
+ | @robotdad
+
+ | `app-blog-creator`
+ | AI-powered blog creation with style-aware generation and rich markdown editor
+ | @robotdad
+
+ | `app-voice`
+ | Desktop voice assistant with native speech-to-speech via OpenAI Realtime API
+ | @robotdad
+
+ | `app-tool-generator`
+ | AI-powered tool generator for creating custom Amplifier tools
+ | @samueljklee
+
+ | `app-benchmarks`
+ | Benchmarking and evaluation suite for Amplifier
+ | @DavidKoleczek
+
+ | `app-log-viewer`
+ | Web-based debugging interface with real-time LLM interaction visualization
+ | @microsoft
+
+ | `amplifier-lakehouse`
+ | Data integration daemon and web application for Amplifier
+ | @microsoft
+
+ | `amplifier-playground`
+ | Interactive environment for building, configuring, and testing Amplifier sessions
+ | @microsoft
+
+## Community Modules
+
+### Providers
+
+ | 
+ 
+ | Module | Description | Author
+
+ | `provider-bedrock`
+ | AWS Bedrock integration with cross-region inference support for Claude models
+ | @brycecutt-msft
+
+ | `provider-openai-realtime`
+ | OpenAI Realtime API for native speech-to-speech with ultra-low latency
+ | @robotdad
+
+### Tools
+
+ | 
+ 
+ | Module | Description | Author
+
+ | `tool-mcp`
+ | Model Context Protocol integration for MCP servers
+ | @robotdad
+
+ | `tool-skills`
+ | Load domain knowledge with progressive disclosure
+ | @robotdad
+
+ | `tool-youtube-dl`
+ | Download audio/video from YouTube with metadata extraction
+ | @robotdad
+
+ | `tool-whisper`
+ | Speech-to-text transcription using OpenAI Whisper
+ | @robotdad
+
+ | `module-image-generation`
+ | Multi-provider AI image generation (DALL-E, Imagen, GPT-Image-1)
+ | @robotdad
+
+ | `module-style-extraction`
+ | Extract and apply writing styles from text samples
+ | @robotdad
+
+ | `module-markdown-utils`
+ | Markdown parsing, injection, and metadata utilities
+ | @robotdad
+
+### Collections
+
+ | 
+ 
+ | Collection | Description | Author
+
+ | `collection-ddd`
+ | Document-Driven Development with 5 specialized workflow agents
+ | @robotdad
+
+ | `collection-spec-kit`
+ | Specification-Driven Development with 8 agents and constitutional governance
+ | @robotdad
+
+ | `collection-convergent-dev`
+ | Ideation → sprints → TDD workflow
+ | @momuno
+
+## Official Collections
+
+ | 
+ 
+ | Collection | Description | Repository
+
+ | `toolkit`
+ | Building sophisticated CLI tools using metacognitive recipes
+ | GitHub
+
+ | `design-intelligence`
+ | Comprehensive design intelligence with specialized agents
+ | GitHub
+
+ | `recipes`
+ | Multi-step AI agent orchestration for repeatable workflows
+ | GitHub
+
+ | `issues`
+ | Issue management workflows
+ | GitHub
+
+## Submit Your Project
+
+Built something with Amplifier? Share it with the community!
+
+- Build your project - Follow Amplifier conventions
+ 
+- Publish to GitHub - Make code publicly reviewable
+ 
+- Test thoroughly - Ensure compatibility with current Amplifier versions
+ 
+- Submit a PR - Add to the MODULES.md catalog
+
+============================================================
+SECTION: CODE EXAMPLES
+============================================================
+
+# Examples
+
+Copy-paste patterns for common Amplifier use cases.
+
+ ⚡ Hooks
+ 🔧 Tools
+ ⚙️ Configuration
+ 📖 Recipes
+
+### Approval Gate
+
+ Copy
+
+Require user approval before executing sensitive operations like shell commands.
+
+`async def approval_gate(event, data) -> HookResult:
+ """Pause for user approval on bash commands."""
+ if event == "tool:pre" and data["tool_name"] == "bash":
+ return HookResult(
+ action="ask_user",
+ approval_prompt=f"Allow bash: {data['tool_input']}?",
+ approval_options=["Allow", "Deny"]
+ )
+ return HookResult(action="continue")`
+```
+
+ Usage
+ 
+hooks:
+ - handler: approval_gate
+ events: ["tool:pre"]
+```
+
+### Security Guard
+
+ Copy
+
+Block dangerous shell commands before they execute. Returns deny action with reason.
+
+`from amplifier_core.models import HookResult
+
+async def security_hook(event: str, data: dict) -> HookResult:
+ """Block dangerous bash commands."""
+ if event == "tool:pre" and data.get("tool_name") == "bash":
+ cmd = str(data.get("tool_input", {}))
+ dangerous = ["rm -rf", "mkfs", "dd if=", "> /dev/"]
+
+ for pattern in dangerous:
+ if pattern in cmd:
+ return HookResult(
+ action="deny",
+ reason=f"Blocked dangerous pattern: {pattern}"
+ )
+
+ return HookResult(action="continue")`
+```
+
+ Output
+ 
+Action: deny
+Reason: Blocked dangerous pattern: rm -rf
+```
+
+### Token Tracker
+
+ Copy
+
+Monitor and log token usage across all provider calls for cost tracking.
+
+`async def track_tokens(event, data) -> HookResult:
+ """Log token usage from provider responses."""
+ if event == "provider:response":
+ usage = data.get("usage", {})
+ tokens = usage.get("total_tokens", 0)
+ cost = tokens * 0.00001 # Example pricing
+ print(f"Used {tokens} tokens (~\${cost:.4f})")
+ return HookResult(action="continue")`
+```
+
+ Output
+ 
+Used 1523 tokens (~$0.0152)
+```
+
+### PII Redaction
+
+ Copy
+
+Automatically detect and redact sensitive information from streamed responses.
+
+`import re
+from amplifier_core.models import HookResult
+
+PATTERNS = {
+ "email": r'[\w.-]+@[\w.-]+\.[a-z]{2,}',
+ "ssn": r'\d{3}-\d{2}-\d{4}',
+ "phone": r'\d{3}[-.\s]?\d{3}[-.\s]?\d{4}'
+}
+
+async def redact_pii(event, data) -> HookResult:
+ """Redact PII from streaming content."""
+ if event == "content_block:delta":
+ content = data.get("delta", "")
+ for name, pattern in PATTERNS.items():
+ content = re.sub(pattern, f"[{name.upper()}_REDACTED]", content)
+ return HookResult(action="modify", data={"delta": content})
+ return HookResult(action="continue")`
+```
+
+ Output
+ 
+Input: "Contact john@email.com or 555-123-4567"
+Output: "Contact [EMAIL_REDACTED] or [PHONE_REDACTED]"
+```
+
+### Custom Tool
+
+ Copy
+
+Implement a tool using the Protocol pattern - duck typing, no inheritance required.
+
+`from amplifier_core.models import ToolResult
+
+class WeatherTool:
+ """A simple weather lookup tool."""
+
+ @property
+ def name(self) -> str:
+ return "weather"
+
+ @property
+ def description(self) -> str:
+ return "Get current weather for a city"
+
+ async def execute(self, input: dict) -> ToolResult:
+ city = input.get("city", "Unknown")
+ # Your API call here
+ return ToolResult(
+ output=f"Weather in {city}: 72°F, Sunny"
+ )
+
+# Mount function for module discovery
+async def mount(coordinator, config):
+ await coordinator.mount("tools", WeatherTool(), name="weather")
+ return lambda: None # cleanup function`
+```
+
+ pyproject.toml
+ 
+[project.entry-points."amplifier.modules"]
+weather-tool = "my_package.weather:mount"
+```
+
+### ToolResult: Success
+
+ Copy
+
+Return successful execution results. The LLM sees this output and can act on it.
+
+`from amplifier_core.models import ToolResult
+
+# Simple success
+result = ToolResult(output="File created: /tmp/example.txt")
+
+# Structured success with details
+result = ToolResult(
+ output="""Created: /tmp/report.csv
+Rows: 1,523
+Size: 45.2 KB
+Columns: id, name, email, created_at"""
+)`
+```
+
+ Output
+ 
+Created: /tmp/report.csv
+Rows: 1,523
+Size: 45.2 KB
+```
+
+### ToolResult: Error
+
+ Copy
+
+Communicate failures so the LLM can try a different approach or ask for help.
+
+`from amplifier_core.models import ToolResult
+
+# Error with clear message
+result = ToolResult(
+ output="",
+ error="Permission denied: /etc/passwd is read-only"
+)
+
+# Error with partial output
+result = ToolResult(
+ output="Processed 50 of 100 files",
+ error="Disk full - operation incomplete"
+)`
+```
+
+ Output
+ 
+Error: Permission denied: /etc/passwd is read-only
+```
+
+### Session Configuration
+
+ Copy
+
+The mount plan structure that configures an Amplifier session with all components.
+
+`from amplifier_core import AmplifierSession
+
+config = {
+ "session": {
+ "orchestrator": "loop-basic",
+ "context": "context-simple"
+ },
+ "providers": [
+ {"module": "provider-anthropic"}
+ ],
+ "tools": [
+ {"module": "tool-filesystem"},
+ {"module": "tool-bash"}
+ ],
+ "hooks": [
+ {"module": "hooks-logging"},
+ {"handler": "my_security_hook"}
+ ]
+}
+
+async with AmplifierSession(config) as session:
+ response = await session.execute("Your prompt here")`
+```
+
+ CLI Usage
+ 
+amplifier run --profile my_config "Hello!"
+```
+
+### Multi-Provider Fallback
+
+ Copy
+
+Configure provider priority for automatic failover between LLM backends.
+
+`# profile.yaml - Provider failover chain
+providers:
+ - module: provider-anthropic
+ priority: 1 # Primary - Claude
+ config:
+ model: claude-sonnet-4-20250514
+
+ - module: provider-openai
+ priority: 2 # First fallback - GPT-4
+ config:
+ model: gpt-4o
+
+ - module: provider-ollama
+ priority: 3 # Local fallback
+ config:
+ model: llama3.1`
+```
+
+ Behavior
+ 
+1. Try Anthropic (primary)
+2. On error → Try OpenAI
+3. On error → Try Ollama (local)
+```
+
+### Chat Agent with Memory
+
+ Copy
+
+Build a conversational agent that maintains context across multiple turns.
+
+`from amplifier_core import AmplifierSession
+
+async def chat_loop():
+ config = {
+ "session": {
+ "orchestrator": "loop-basic",
+ "context": "context-simple"
+ },
+ "providers": [{"module": "provider-anthropic"}],
+ "tools": [{"module": "tool-bash"}, {"module": "tool-filesystem"}]
+ }
+
+ async with AmplifierSession(config) as session:
+ print("Chat started. Type 'quit' to exit.")
+ while True:
+ user_input = input("You: ")
+ if user_input.lower() == 'quit':
+ break
+
+ # Context is automatically maintained
+ response = await session.execute(user_input)
+ print(f"Agent: {response}")`
+```
+
+ Output
+ 
+You: What files are in the current directory?
+Agent: I'll check that for you...
+[Lists files]
+You: Create a summary of the largest one
+Agent: Looking at the largest file...
+```
+
+### Real-time Cost Tracking
+
+ Copy
+
+Monitor API costs in real-time with budget alerts and automatic cutoffs.
+
+`from amplifier_core.models import HookResult
+
+class CostTracker:
+ PRICING = {
+ "claude-sonnet-4-20250514": {"input": 0.003, "output": 0.015},
+ "gpt-4o": {"input": 0.005, "output": 0.015},
+ }
+
+ def __init__(self, budget: float = 10.0):
+ self.budget = budget
+ self.spent = 0.0
+
+ def track(self, model: str, input_tokens: int, output_tokens: int):
+ rates = self.PRICING.get(model, {"input": 0.01, "output": 0.03})
+ cost = (input_tokens * rates["input"] +
+ output_tokens * rates["output"]) / 1000
+ self.spent += cost
+ return cost
+
+tracker = CostTracker(budget=5.0)
+
+async def cost_hook(event, data) -> HookResult:
+ if event == "provider:response":
+ usage = data.get("usage", {})
+ cost = tracker.track(
+ data.get("model", "unknown"),
+ usage.get("input_tokens", 0),
+ usage.get("output_tokens", 0)
+ )
+ print(f"Cost: \${cost:.4f} | Total: \${tracker.spent:.2f}")
+
+ if tracker.spent >= tracker.budget:
+ return HookResult(action="deny", reason="Budget exhausted")
+
+ return HookResult(action="continue")`
+```
+
+ Output
+ 
+Cost: $0.0234 | Total: $4.89/$5.00
+Cost: $0.0156 | Total: $5.05/$5.00
+Action: deny - Budget exhausted
+```
+
+### Complete Audit Trail
+
+ Copy
+
+Log every agent action to file for compliance and debugging.
+
+`import json
+from datetime import datetime
+from pathlib import Path
+from amplifier_core.models import HookResult
+
+class AuditLogger:
+ def __init__(self, log_dir: str = "./logs"):
+ self.log_dir = Path(log_dir)
+ self.log_dir.mkdir(exist_ok=True)
+ self.session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+ self.log_file = self.log_dir / f"session_{self.session_id}.jsonl"
+
+ def log(self, event: str, data: dict):
+ entry = {
+ "timestamp": datetime.now().isoformat(),
+ "event": event,
+ "data": {k: str(v)[:500] for k, v in data.items()}
+ }
+ with open(self.log_file, "a") as f:
+ f.write(json.dumps(entry) + "\n")
+
+audit = AuditLogger()
+
+async def audit_hook(event, data) -> HookResult:
+ if not event.startswith("content_block:"):
+ audit.log(event, data)
+ return HookResult(action="continue")`
+```
+
+ Output
+ 
+# Creates: logs/session_20250115_143052.jsonl
+{"timestamp": "2025-01-15T14:30:52", "event": "tool:pre", ...}
+```
+
+### Collection Migration Pattern
+
+ Copy
+
+Use Amplifier to analyze existing tools/agents and migrate them to a collection structure.
+
+`# Point Amplifier at your project and the official docs
+amplifier run "Analyze my project structure in ./my-tools
+and compare it to the collection format in
+github.com/microsoft/amplifier/docs/MODULES.md
+
+Help me understand:
+1. Which of my tools map to Amplifier modules?
+2. How should my agents be structured?
+3. What goes in profiles vs context?
+4. Create a migration plan to collection format."`
+```
+
+ Result
+ 
+my-collection/
+├── agents/ # Agent definitions
+│ ├── my-agent.md
+│ └── helper-agent.md
+├── context/ # Workflow docs
+│ └── commands/
+├── profiles/ # Configuration
+│ └── my-profile.md
+└── collection.toml # Manifest
+```
+
+============================================================
+SECTION: CONTRIBUTE
+============================================================
+
+# Contributors Guide
+
+Help us build a world-class developer experience for Amplifier.
+
+ 📚 Community & Contributing
+ 
+Join the community and see the roadmap at the official Amplifier documentation site.
+
+ Overview
+ Priority Tasks
+ Specifications
+ Roadmap
+
+North Star: Amplifier makes advanced AI agent systems feel like scripting. Developers should go from an idea to a working extension in under 2 minutes.
+
+### Understanding the Ecosystem
+
+Contributing to Amplifier typically means creating your own repositories rather than submitting PRs to a monolithic codebase:
+
+- Core kernel (`amplifier-core`) - Small, stable, boring. High bar for changes.
+ 
+- CLI application (`amplifier-app-cli`) - Reference CLI, not user-focused.
+ 
+- Reference implementations - Canonical examples for each module type.
+ 
+- Community ecosystem - Your own modules, tools, apps, and collections.
+
+ Reference Implementations
+
+- provider-anthropic - Claude integration
+ 
+- tool-filesystem - File operations
+ 
+- tool-bash - Shell commands
+ 
+- amplifierd - HTTP/SSE API server
+
+### The Gap
+
+The kernel is already built. It's stable, minimal, and powerful. What's missing is the developer experience layer—the tooling that makes the kernel approachable.
+
+### What Belongs Where
+
+ | 
+ 
+ | Feature | Layer | Status
+
+ | Protocol contracts | Kernel (core) | ✓ Done
+ 
+ | AmplifierSession | Kernel (core) | ✓ Done
+ 
+ | Event system (30+ events) | Kernel (core) | ✓ Done
+ 
+ | Testing utilities (TestCoordinator, etc.) | Kernel (core) | ✓ Done
+ 
+ | Protocol validation utility | Kernel (core) | Needed
+ 
+ | @tool / @hook decorators | Helpers | Needed
+ 
+ | Test harness utilities | Helpers | Needed
+ 
+ | `amplifier dev` (hot reload) | CLI | Needed
+ 
+ | `amplifier inspect --events` | CLI | Needed
+ 
+ | `amplifier scaffold` | CLI | Needed
+ 
+ | `amplifier check` (validation) | CLI | Needed
+ 
+ | `amplifier plan show` | CLI | Needed
+
+### Developer Personas
+
+ Consumer
+ 
+Uses existing modules. Cares about profiles, CLI, and configuration.
+
+ Extender
+ 
+Adds custom tools/hooks. Needs minimal boilerplate and fast feedback.
+
+ Architect
+ 
+Embeds Amplifier in products. Needs integration patterns and observability.
+
+### 🔴 High Priority
+
+ Testing Utilities ✓
+ amplifier-core
+
+Built-in utilities for unit testing modules (AVAILABLE):
+
+ python
+ Copy
+
+`from amplifier_core.testing import (
+ TestCoordinator, MockTool, MockContextManager,
+ EventRecorder, create_test_coordinator
+)
+
+# Usage in tests
+async def test_my_tool():
+ coord = create_test_coordinator()
+ await mount(coord, {})
+
+ tool = coord.mounted["tools"]["my_tool"]
+ result = await tool.execute({"input": "test"})
+ assert result.error is None`
+```
+
+ @tool Decorator
+ amplifier-helpers
+
+2-minute time-to-first-tool. Reduces boilerplate dramatically.
+
+ python
+ Copy
+
+`# amplifier_helpers/decorators.py
+def tool(name: str, description: str):
+ def decorator(func):
+ class GeneratedTool:
+ @property
+ def name(self): return name
+ @property
+ def description(self): return description
+ async def execute(self, input: dict):
+ return await func(**input)
+ return GeneratedTool()
+ return decorator
+
+# Usage
+from amplifier_helpers import tool
+
+@tool(name="greet", description="Says hello")
+async def greet(name: str) -> str:
+ return f"Hello, {name}!"`
+```
+
+### 🟡 Medium Priority
+
+ Event Inspector
+ amplifier-app-cli
+
+Real-time visualization of the event stream.
+
+ bash
+ Copy
+
+`$ amplifier inspect --events
+
+# Output:
+# 14:32:01.234 session:start {session_id: "abc123"}
+# 14:32:01.567 prompt:submit {content: "Hello"}
+# 14:32:02.123 provider:request {provider: "anthropic", messages: 1}
+# 14:32:03.456 provider:response {tokens: 42}`
+```
+
+ Scaffold Templates
+ amplifier-app-cli
+
+Generate module templates with correct structure.
+
+ bash
+ Copy
+
+`$ amplifier scaffold tool my_tool
+# Creates:
+# my_tool/
+# __init__.py
+# my_tool.py # Tool class + mount()
+# pyproject.toml # Entry point configured
+# tests/
+# test_my_tool.py
+
+$ amplifier scaffold hook --pattern approval
+# Generates approval gate hook template`
+```
+
+### @hook Decorator Specification
+
+ python
+ Copy
+
+`# amplifier_helpers/decorators.py
+from functools import wraps
+from amplifier_core.models import HookResult
+
+def hook(events: list[str], priority: int = 100):
+ """
+ Decorator to create a hook handler.
+
+ Args:
+ events: List of event patterns (supports globs like "tool:*")
+ priority: Lower runs first (default 100)
+ """
+ def decorator(func):
+ @wraps(func)
+ async def wrapper(event: str, data: dict) -> HookResult:
+ result = await func(event, data)
+ if result is None:
+ return HookResult(action="continue")
+ return result
+
+ wrapper._hook_events = events
+ wrapper._hook_priority = priority
+ return wrapper
+ return decorator
+
+# Usage
+@hook(events=["tool:pre", "tool:post"], priority=10)
+async def my_hook(event: str, data: dict):
+ print(f"{event}: {data}")
+ # Returning None = continue`
+```
+
+### Directory Structure
+
+ text
+
+`amplifier-ecosystem/
+├── amplifier-core/ # Kernel (this repo)
+│ ├── amplifier_core/
+│ │ ├── session.py # AmplifierSession
+│ │ ├── coordinator.py # Coordinator
+│ │ ├── hooks.py # HookRegistry
+│ │ ├── protocols.py # Protocol definitions
+│ │ ├── models.py # ToolResult, HookResult, etc.
+│ │ ├── testing.py # TestCoordinator, MockTool, etc.
+│ │ └── validation.py # check_protocol() (NEW)
+│ └── pyproject.toml
+│
+├── amplifier-helpers/ # Convenience utilities (NEW)
+│ ├── amplifier_helpers/
+│ │ ├── decorators.py # @tool, @hook
+│ │ └── testing.py # ToolTestHarness
+│ └── pyproject.toml
+│
+├── amplifier-app-cli/ # CLI application
+│ ├── amplifier_cli/
+│ │ ├── commands/
+│ │ │ ├── run.py
+│ │ │ ├── dev.py # Hot reload (NEW)
+│ │ │ ├── inspect.py # Event inspector (NEW)
+│ │ │ ├── scaffold.py # Templates (NEW)
+│ │ │ ├── check.py # Validation (NEW)
+│ │ │ └── plan.py # Visualizer (NEW)
+│ │ └── main.py
+│ └── pyproject.toml
+│
+└── amplifier-profiles/ # Profile management
+ └── ...`
+```
+
+⚠️ Guidelines, Not Commitments: This roadmap is subject to change based on new information, priorities, and discoveries.
+
+### Project Status
+
+Amplifier is an experimental platform focused on discovering what's possible when AI partnership amplifies human capability. We're building a system that makes AI assistants dramatically more effective.
+
+### Current Focus Areas
+
+ 🔧 Building Amplifier with Amplifier
+ 
+Using Amplifier to improve and extend Amplifier. Building new capabilities, improving existing features, and climbing the ladder of metacognitive recipes.
+
+ 🌟 Discovering Emergent Value
+ 
+Recognizing and amplifying use-cases that emerge from the system. Surfacing emergent uses, especially those extending beyond code development.
+
+### Exploration Directions
+
+ | 
+ 
+ | Area | Description
+
+ | Orchestration Strategies
+ | Specialized orchestrators tailored to specific workflows, optimization goals, or interaction patterns.
+
+ | Collections & Workflows
+ | Collections for new domains, workflows, or ways of organizing reusable knowledge and patterns.
+
+ | Metacognitive Recipes
+ | Structured workflows mixing tasks with higher-level philosophy, decision-making rationale, and problem-solving.
+
+ | Context & Memory
+ | Richer approaches to memory, knowledge synthesis, session learning, and team context sharing.
+
+ | Learning from Sessions
+ | Tools to parse session data, reconstruct logs, and analyze patterns for system improvement.
+
+### Naming Conventions
+
+When creating your own repositories:
+
+- Applications: `amplifier-app-{name}`
+ 
+- Modules: `amplifier-module-{type}-{name}`
+ 
+- Collections: `amplifier-collection-{name}`
+
+### Security Warning
+
+⚠️ Critical: Modules and applications execute arbitrary code with full system access. Users must review code before installation. Build with security in mind.
+
+============================================================
+END OF DOCUMENTATION
+Generated: 2025-12-08T21:42:56.375Z
+Source: https://michaeljabbour.github.io/amplifier-dx/
