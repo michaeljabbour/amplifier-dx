@@ -84,10 +84,17 @@
       '- Only include code if specifically asked or essential\n' +
       '- If a detailed explanation would help, ask: "Would you like me to elaborate?"\n' +
       '- Reference specific docs sections when relevant\n\n' +
+      'DIAGRAM/ASCII ART GUIDELINES:\n' +
+      '- Panel width is ~400px (~50 characters max per line)\n' +
+      '- Keep ASCII diagrams narrow (max 45 chars wide) to prevent word-wrap\n' +
+      '- For Mermaid diagrams, use simple vertical layouts over horizontal\n' +
+      '- Prefer compact node labels (abbreviate if needed)\n' +
+      '- If a diagram would be too wide, describe it textually instead\n\n' +
       'KEY FACTS:\n' +
       '- Core: ~2,600 lines, mechanisms not policies\n' +
       '- Modules: providers, orchestrators, contexts, tools, hooks\n' +
-      '- Only providers use entry points; orchestrators/contexts use local implementations\n\n' +
+      '- Only providers use entry points; orchestrators/contexts use local implementations\n' +
+      '- Production: Use max_tokens 8192+ to prevent truncated tool calls\n\n' +
       'User is viewing: ' + currentSection + '\n\n' +
       'DOCUMENTATION:\n' +
       (siteContext ? siteContext : 'Context not loaded.');
