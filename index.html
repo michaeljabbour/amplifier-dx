@@ -1792,6 +1792,9 @@
       </div>
       <div class="sidebar-items show">
         <span class="sidebar-item" data-section="architecture">Overview</span>
+        <span class="sidebar-item" data-section="architecture" data-scroll="four-tenets">The Four Tenets</span>
+        <span class="sidebar-item" data-section="architecture" data-scroll="linux-kernel-analogy">Linux Kernel Analogy</span>
+        <span class="sidebar-item" data-section="architecture" data-scroll="core-concepts">Core Concepts</span>
         <span class="sidebar-item" data-section="architecture" data-scroll="module-distribution">Module Distribution</span>
         <span class="sidebar-item" data-section="architecture" data-scroll="external-integration">External Integration</span>
         <span class="sidebar-item" data-section="architecture" data-scroll="production-config">Production Config</span>
@@ -1827,7 +1830,17 @@
         Ecosystem
       </div>
       <div class="sidebar-items show">
-        <span class="sidebar-item" data-section="ecosystem">Ecosystem</span>
+        <div class="sidebar-item-wrap">
+          <span class="sidebar-item has-children open" data-section="ecosystem" onclick="toggleSidebarItem(this)">
+            Ecosystem
+            <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </span>
+          <div class="sidebar-subitems show">
+            <span class="sidebar-subitem" data-section="ecosystem" data-scroll="runtime-modules">Runtime Modules</span>
+            <span class="sidebar-subitem" data-section="ecosystem" data-scroll="libraries">Libraries</span>
+            <span class="sidebar-subitem" data-section="ecosystem" data-scroll="collections">Collections</span>
+          </div>
+        </div>
         <span class="sidebar-item" data-section="showcase">Showcase</span>
         <span class="sidebar-item" data-section="examples">Examples</span>
       </div>
@@ -2221,7 +2234,7 @@ response = await session.execute(prompt)</code></pre>
         <p style="margin: 8px 0 0 0; color: var(--text-1);">For in-depth architectural guides, see the <a href="https://microsoft.github.io/amplifier-docs/architecture/overview/" target="_blank">official architecture documentation</a>.</p>
       </div>
 
-      <h2>The Four Tenets</h2>
+      <h2 id="four-tenets">The Four Tenets</h2>
       <div class="concepts" style="margin-bottom: 40px;">
         <div class="concept">
           <h3>1. Mechanism, Not Policy</h3>
@@ -2241,7 +2254,7 @@ response = await session.execute(prompt)</code></pre>
         </div>
       </div>
 
-      <h2>The Linux Kernel Analogy</h2>
+      <h2 id="linux-kernel-analogy">The Linux Kernel Analogy</h2>
       <p>Amplifier mirrors Linux kernel concepts:</p>
       <table class="ref-table">
         <thead>
@@ -2366,7 +2379,7 @@ response = await session.execute(prompt)</code></pre>
         </div>
       </div>
 
-      <h2>Core concepts</h2>
+      <h2 id="core-concepts">Core concepts</h2>
       <div class="concepts">
         <div class="concept">
           <h3>Coordinator</h3>
@@ -3553,7 +3566,7 @@ amplifier> @collection:foundation/context/philosophy.md</code></pre>
         <p style="margin: 8px 0 0 0; color: var(--text-1);">For detailed information on all available modules including Providers, Tools, Orchestrators, Contexts, and Hooks, see the <a href="https://microsoft.github.io/amplifier-docs/ecosystem/modules/" target="_blank">official Ecosystem documentation</a>.</p>
       </div>
 
-      <h2>Runtime Modules</h2>
+      <h2 id="runtime-modules">Runtime Modules</h2>
       <p>Swappable components that implement Amplifier's core contracts.</p>
 
       <div class="ecosystem-grid">
@@ -3618,7 +3631,7 @@ amplifier> @collection:foundation/context/philosophy.md</code></pre>
         </div>
       </div>
 
-      <h2>Libraries</h2>
+      <h2 id="libraries">Libraries</h2>
       <p>Consumed by applications (not runtime modules).</p>
 
       <table class="ref-table">
@@ -3633,7 +3646,7 @@ amplifier> @collection:foundation/context/philosophy.md</code></pre>
         </tbody>
       </table>
 
-      <h2>Collections</h2>
+      <h2 id="collections">Collections</h2>
       <p>Shareable bundles of profiles, agents, and modules.</p>
 
       <div class="collections-grid">
@@ -5331,6 +5344,31 @@ async with AmplifierSession(config) as parent:
 # Architecture
 
 Design philosophy: kernel, not framework. Mechanism over policy.
+
+## The Four Tenets
+
+1. **Mechanism, Not Policy** - The kernel provides capabilities and stable contracts. Behavioral decisions live outside the kernel. If teams could want different behavior, it belongs in modules.
+
+2. **Small, Stable, Boring** - ~2,600 lines of intentionally minimal code. Fewer changes = fewer breaking changes. Prioritizes auditability and predictability.
+
+3. **Don't Break Modules** - Kernel interfaces follow sacred backward compatibility. Additive evolution only, with clear deprecation paths.
+
+4. **Extensibility via Composition** - New capabilities come from combining modules, not accumulating kernel configuration flags.
+
+## The Linux Kernel Analogy
+
+Amplifier mirrors Linux kernel concepts:
+
+| Linux Concept | Amplifier Analog | Purpose |
+|---------------|------------------|---------|
+| Ring 0 kernel | \`amplifier-core\` | Mechanisms only, never policy |
+| Syscalls | Session operations | Few, sharp APIs |
+| Loadable drivers | Modules | Compete at edges |
+| Signals/Netlink | Event bus / hooks | Observe and control |
+| /proc & dmesg | JSONL logs | Single canonical stream |
+| Capabilities | Approval system | Deny-by-default |
+| Scheduler | Orchestrator modules | Swap execution strategies |
+| VM/Memory | Context manager | Conversation memory |
 
 ## System Stack
 
