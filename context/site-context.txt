@@ -42,7 +42,7 @@ Make your first agent request in minutes.
  Copy
 
 `# Install
-uv tool install --force git+https://github.com/microsoft/amplifier@next
+uv tool install --force git+https://github.com/microsoft/amplifier@main
 
 # Update and initialize
 amplifier update
@@ -97,7 +97,7 @@ Run AI agents using pre-built modules and profiles.
  bash
  Copy
 
-`uv tool install --force git+https://github.com/microsoft/amplifier@next`
+`uv tool install --force git+https://github.com/microsoft/amplifier@main`
 ```
 
 ### 2. Update and Initialize
@@ -155,7 +155,7 @@ amplifier profile reset
 rm -rf ~/.amplifier/module-cache
 
 # Reinstall from scratch
-uv tool install --force git+https://github.com/microsoft/amplifier@next
+uv tool install --force git+https://github.com/microsoft/amplifier@main
 amplifier update`
 ```
 
@@ -918,7 +918,7 @@ amplifier profile reset
 rm -rf ~/.amplifier/module-cache
 
 # Reinstall from scratch
-uv tool install --force git+https://github.com/microsoft/amplifier@next
+uv tool install --force git+https://github.com/microsoft/amplifier@main
 amplifier update`
 ```
 
@@ -2556,5 +2556,5 @@ When creating your own repositories:
 
 ============================================================
 END OF DOCUMENTATION
-Generated: 2025-12-09T21:01:18.539Z
+Generated: 2025-12-09T22:48:10.621Z
 Source: https://michaeljabbour.github.io/amplifier-dx/
