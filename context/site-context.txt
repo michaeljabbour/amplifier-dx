@@ -177,11 +177,26 @@ class WeatherTool:
  def description(self) -> str:
  return "Get current weather for a city"
 
+ @property
+ def input_schema(self) -> dict:
+ """JSON Schema for input validation (RECOMMENDED)."""
+ return {
+ "type": "object",
+ "properties": {
+ "city": {"type": "string", "description": "City name"}
+ },
+ "required": ["city"]
+ }
+
  async def execute(self, input: dict) -> ToolResult:
- city = input.get("city", "Unknown")
- # Your logic here
- return ToolResult(output=f"Weather in {city}: 72°F, Sunny", error=None)`
+ # input["city"] is GUARANTEED to exist if we get here
+ city = input["city"]
+ return ToolResult(output=f"Weather in {city}: 72°F, Sunny")`
 ```
+
+ Why input_schema matters
+ 
+The Kernel validates inputs against `input_schema` before calling `execute()`. Without it, truncated LLM output may pass through. With it, missing required arguments are caught early with clear errors.
 
 ### 2. Add mount function
 
@@ -541,6 +556,138 @@ Building applications with amplifier-core follows the kernel design principle: y
  
 The `amp` CLI (`amplifier-app-cli`) demonstrates the canonical integration pattern.
 
+### Architecture Overview
+
+The following diagram shows how external applications integrate with amplifier-core:
+
+- 
+
+- 
+
+- 
+
+- 
+
+ Amplifier External App Architecture
+
+ Your App UI
+ web - desktop - service
+
+- 
+ session.execute("prompt")
+
+ AmplifierSession
+ amplifier-core kernel - config (mount plan)
+ 
+ creates
+
+ Coordinator
+ session_id - mount_points - get() - emit()
+ infrastructure for module access and events
+
+ ModuleLoader
+ entry points - filesystem - source resolver
+ loader.load(id) - mount_fn(coordinator)
+
+ uses
+ Mount Plan defines all modules
+
+ loads all modules at init time
+
+ Orchestrator
+ loop-*
+ 
+- 
+ DRIVES EXECUTION
+ - plan - act - refine loop
+ - calls providers
+ - executes tools
+ - returns to user
+
+ Context
+ context-*
+ conversation
+ memory / history
+ add - get - compact
+
+ Providers
+ provider-*
+ Anthropic - OpenAI
+ Gemini - Local
+ complete() - list_models()
+
+ Tools
+ tool-*
+ filesystem - bash
+ web - task - custom
+ execute(input)
+
+ Hooks
+ hooks-*
+ logging - approval
+ redaction - tracking
+ observe - modify
+
+- 
+ 
+- 
+ 
+- 
+
+- 
+ 
+- 
+ 
+- 
+ 
+- 
+
+ Orchestrator drives execution via coordinator.get()
+
+ returns result
+
+ Policy Layer
+ (You own these)
+ 
+ ModuleLoader
+ 
+ ApprovalSystem
+ 
+ DisplaySystem
+ 
+ SourceResolver
+
+ Execution Flow
+ 1. App calls session.execute(prompt)
+ 2. Session calls orchestrator.execute()
+ 3. Orchestrator takes control:
+ - builds messages from context
+ - calls provider.complete()
+ - executes tools - emits hooks
+
+ Legend
+ 
+ Core / Session
+ 
+ Loader
+ 
+ Orchestrator (driver)
+ 
+- 
+ Load path (init)
+ 
+- 
+ Execution (orchestrator drives)
+ 
+- 
+ Return to app
+
+ Orchestrator Owns the Transaction
+ - Loaded as a module (like others)
+ - But once execute() is called...
+ - It decides: loops, exits, displays
+ - Other modules serve the orchestrator
+
 ### Required Components
 
 External applications must provide three policy components:
@@ -611,6 +758,57 @@ session = AmplifierSession(
 result = await session.run("What files are in this directory?")`
 ```
 
+### Production Configuration
+
+When deploying agents for code generation or complex tasks, configure providers defensively:
+
+ Critical: Token Limits
+ 
+The default `max_tokens` (4096) is insufficient for code generation. When the model hits this limit mid-stream, it truncates output producing incomplete JSON tool calls.
+
+ | 
+ 
+ | Setting | Default | Recommended | Why
+
+ | `max_tokens`
+ | 4096
+ | 8192+
+ | Prevents truncated tool calls during code generation
+
+ | `temperature`
+ | 1.0
+ | 0.5-0.7
+ | More consistent tool use and JSON structure
+
+ | `timeout`
+ | 60s
+ | 120s
+ | Long operations need time to complete
+
+ python
+ Copy
+
+`# Production configuration for coding agents
+config = {
+ "session": {
+ "orchestrator": "loop-streaming",
+ "context": "context-persistent"
+ },
+ "providers": [{
+ "module": "provider-anthropic",
+ "config": {
+ "model": "claude-sonnet-4-20250514",
+ "max_tokens": 8192, # CRITICAL for code generation
+ "temperature": 0.7, # More consistent tool calls
+ }
+ }],
+ "tools": [
+ {"module": "tool-filesystem"},
+ {"module": "tool-bash"}
+ ]
+}`
+```
+
 ### Hook Events for Streaming UI
 
 Subscribe to hook events for real-time UI updates:
@@ -665,6 +863,98 @@ Providers load from amplifier-core entry points.
  
 In Core mode, orchestrators (`loop-*`) and contexts (`context-*`) should always use local implementations. Only providers benefit from entry point loading.
 
+## Troubleshooting Common Errors
+
+Common issues when integrating with amplifier-core and their solutions:
+
+### `Missing required arguments: ['content']`
+
+Cause: Token limit hit mid-generation, truncating JSON output.
+
+Fix: Increase `max_tokens` in provider config to 8192+.
+
+`"providers": [{
+ "module": "provider-anthropic",
+ "config": {"max_tokens": 8192}
+}]`
+```
+
+### `tool_use.name: String should have at least 1 character`
+
+Cause: LLM generated empty tool name (hallucination).
+
+Fix: Add sanitization layer in your provider integration:
+
+`# Sanitize empty tool names before API call
+if not tool_call.get("name") or not tool_call["name"].strip():
+ tool_call["name"] = "unknown_tool"
+ logger.warning(f"Fixed empty tool name")`
+```
+
+### `ToolCallBlock has invalid name`
+
+Cause: Same as above - LLM returned malformed tool call.
+
+Fix: Validate tool calls before execution and add a sanitization hook.
+
+### `'tuple' object has no attribute 'get'`
+
+Cause: Patch/modification applied to incompatible module type (cached vs local).
+
+Fix: Check module implementation matches expected interface. Clear module cache:
+
+`rm -rf ~/.amplifier/module-cache`
+```
+
+### Reset Commands
+
+ bash
+ Copy
+
+`# Reset profile to defaults
+amplifier profile reset
+
+# Clear module cache (fixes stale module issues)
+rm -rf ~/.amplifier/module-cache
+
+# Reinstall from scratch
+uv tool install --force git+https://github.com/microsoft/amplifier@next
+amplifier update`
+```
+
+### LLM Edge Case Handling
+
+LLMs can generate invalid tool calls. Your integration should sanitize these defensively:
+
+ python
+ Copy
+
+`def sanitize_tool_calls(tool_calls: list) -> list:
+ """Clean up malformed LLM tool calls before execution."""
+ sanitized = []
+ for tc in tool_calls:
+ # Fix empty names
+ name = tc.get("name", "").strip()
+ if not name:
+ name = "unknown_tool"
+ logger.warning(f"Fixed empty tool name for id={tc.get('id')}")
+
+ # Ensure arguments is a dict
+ args = tc.get("arguments") or tc.get("input") or {}
+ if isinstance(args, str):
+ try:
+ args = json.loads(args)
+ except json.JSONDecodeError:
+ args = {"raw": args}
+
+ sanitized.append({
+ "id": tc.get("id"),
+ "name": name,
+ "arguments": args
+ })
+ return sanitized`
+```
+
 ============================================================
 SECTION: API REFERENCE
 ============================================================
@@ -698,6 +988,7 @@ All modules use Python Protocols (structural typing). No inheritance required.
 
  `name: str`
  `description: str`
+ `input_schema: dict` (recommended)
  `execute(input: dict) → ToolResult`
 
 #### Orchestrator Execution Loop
@@ -2265,5 +2556,5 @@ When creating your own repositories:
 
 ============================================================
 END OF DOCUMENTATION
-Generated: 2025-12-08T21:42:56.375Z
+Generated: 2025-12-09T03:40:31.696Z
 Source: https://michaeljabbour.github.io/amplifier-dx/

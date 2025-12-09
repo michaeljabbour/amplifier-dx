@@ -1794,6 +1794,8 @@
         <span class="sidebar-item" data-section="architecture">Overview</span>
         <span class="sidebar-item" data-section="architecture" data-scroll="module-distribution">Module Distribution</span>
         <span class="sidebar-item" data-section="architecture" data-scroll="external-integration">External Integration</span>
+        <span class="sidebar-item" data-section="architecture" data-scroll="production-config">Production Config</span>
+        <span class="sidebar-item" data-section="architecture" data-scroll="troubleshooting">Troubleshooting</span>
       </div>
     </div>
     <div class="sidebar-group">
@@ -2058,10 +2060,26 @@ class WeatherTool:
     def description(self) -> str:
         return "Get current weather for a city"
 
+    @property
+    def input_schema(self) -> dict:
+        """JSON Schema for input validation (RECOMMENDED)."""
+        return {
+            "type": "object",
+            "properties": {
+                "city": {"type": "string", "description": "City name"}
+            },
+            "required": ["city"]
+        }
+
     async def execute(self, input: dict) -> ToolResult:
-        city = input.get("city", "Unknown")
-        # Your logic here
-        return ToolResult(output=f"Weather in {city}: 72°F, Sunny", error=None)</code></pre>
+        # input["city"] is GUARANTEED to exist if we get here
+        city = input["city"]
+        return ToolResult(output=f"Weather in {city}: 72°F, Sunny")</code></pre>
+        </div>
+
+        <div class="info-box" style="border-left: 4px solid var(--orange); margin: 16px 0;">
+          <strong>Why input_schema matters</strong>
+          <p style="margin: 8px 0 0 0; color: var(--text-1);">The Kernel validates inputs against <code>input_schema</code> <strong>before</strong> calling <code>execute()</code>. Without it, truncated LLM output may pass through. With it, missing required arguments are caught early with clear errors.</p>
         </div>
 
         <h3>2. Add mount function</h3>
@@ -2467,6 +2485,207 @@ module-cache/
         <p style="margin: 8px 0 0 0; color: var(--text-1);">The <code>amp</code> CLI (<code>amplifier-app-cli</code>) demonstrates the canonical integration pattern.</p>
       </div>
 
+      <h3>Architecture Overview</h3>
+      <p>The following diagram shows how external applications integrate with amplifier-core:</p>
+      <div style="background: #f8fafc; border-radius: 12px; padding: 20px; margin: 20px 0; overflow-x: auto;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 780" style="width: 100%; max-width: 1000px; display: block; margin: 0 auto;">
+          <defs>
+            <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="coreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="moduleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="orchestratorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#4338ca;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+            </linearGradient>
+            <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.15"/>
+            </filter>
+            <filter id="softShadow" x="-5%" y="-5%" width="110%" height="115%">
+              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+            </filter>
+            <filter id="glowPurple" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#6366f1" flood-opacity="0.4"/>
+            </filter>
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+            </marker>
+            <marker id="arrowheadBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#0284c7"/>
+            </marker>
+            <marker id="arrowheadPurpleUp" markerWidth="8" markerHeight="6" refX="4" refY="6" orient="auto">
+              <polygon points="0 6, 4 0, 8 6" fill="#6366f1"/>
+            </marker>
+            <marker id="arrowheadGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#059669"/>
+            </marker>
+          </defs>
+          <rect width="1100" height="780" fill="#f8fafc"/>
+          <text x="550" y="35" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="600" fill="#1e293b" text-anchor="middle">Amplifier External App Architecture</text>
+          <g filter="url(#shadow)">
+            <rect x="400" y="55" width="300" height="60" rx="12" fill="url(#headerGrad)"/>
+            <text x="550" y="82" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white" text-anchor="middle">Your App UI</text>
+            <text x="550" y="100" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.8)" text-anchor="middle">web - desktop - service</text>
+          </g>
+          <line x1="550" y1="115" x2="550" y2="145" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+          <text x="620" y="135" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">session.execute("prompt")</text>
+          <g filter="url(#shadow)">
+            <rect x="375" y="150" width="350" height="55" rx="12" fill="url(#coreGrad)"/>
+            <text x="550" y="177" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white" text-anchor="middle">AmplifierSession</text>
+            <text x="550" y="193" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.8)" text-anchor="middle">amplifier-core kernel - config (mount plan)</text>
+          </g>
+          <text x="550" y="225" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">creates</text>
+          <g filter="url(#softShadow)">
+            <rect x="180" y="235" width="740" height="100" rx="12" fill="white" stroke="#cbd5e1" stroke-width="1"/>
+          </g>
+          <g>
+            <rect x="200" y="250" width="380" height="70" rx="10" fill="white" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="390" y="273" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#1e293b" text-anchor="middle">Coordinator</text>
+            <text x="390" y="291" font-family="system-ui, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">session_id - mount_points - get() - emit()</text>
+            <text x="390" y="308" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">infrastructure for module access and events</text>
+          </g>
+          <g>
+            <rect x="620" y="250" width="280" height="70" rx="10" fill="white" stroke="#0ea5e9" stroke-width="2"/>
+            <rect x="620" y="250" width="280" height="24" rx="10" fill="#e0f2fe"/>
+            <rect x="620" y="266" width="280" height="8" fill="#e0f2fe"/>
+            <text x="760" y="268" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#0369a1" text-anchor="middle">ModuleLoader</text>
+            <text x="760" y="293" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">entry points - filesystem - source resolver</text>
+            <text x="760" y="308" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">loader.load(id) - mount_fn(coordinator)</text>
+          </g>
+          <path d="M 580 285 L 620 285" fill="none" stroke="#0ea5e9" stroke-width="2" marker-end="url(#arrowheadBlue)"/>
+          <text x="600" y="278" font-family="system-ui, sans-serif" font-size="8" fill="#0284c7" text-anchor="middle">uses</text>
+          <text x="550" y="355" font-family="system-ui, sans-serif" font-size="10" font-weight="500" fill="#6366f1" text-anchor="middle">Mount Plan defines all modules</text>
+          <path d="M 760 320 L 760 365 L 140 365 L 140 400" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowheadBlue)"/>
+          <path d="M 760 320 L 760 365 L 360 365 L 360 400" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowheadBlue)"/>
+          <path d="M 760 320 L 760 365 L 580 365 L 580 400" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowheadBlue)"/>
+          <path d="M 760 320 L 760 365 L 800 365 L 800 400" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowheadBlue)"/>
+          <path d="M 760 320 L 760 365 L 1000 365 L 1000 400" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowheadBlue)"/>
+          <text x="550" y="378" font-family="system-ui, sans-serif" font-size="8" fill="#0284c7" text-anchor="middle">loads all modules at init time</text>
+          <g filter="url(#glowPurple)">
+            <rect x="55" y="405" width="170" height="140" rx="10" fill="url(#orchestratorGrad)"/>
+            <text x="140" y="430" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="white" text-anchor="middle">Orchestrator</text>
+            <text x="140" y="448" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.9)" text-anchor="middle">loop-*</text>
+            <line x1="75" y1="458" x2="205" y2="458" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+            <text x="140" y="475" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)" text-anchor="middle">DRIVES EXECUTION</text>
+            <text x="140" y="492" font-family="system-ui, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">- plan - act - refine loop</text>
+            <text x="140" y="506" font-family="system-ui, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">- calls providers</text>
+            <text x="140" y="520" font-family="system-ui, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">- executes tools</text>
+            <text x="140" y="534" font-family="system-ui, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">- returns to user</text>
+          </g>
+          <g filter="url(#softShadow)">
+            <rect x="275" y="405" width="170" height="105" rx="8" fill="url(#moduleGrad)" stroke="#cbd5e1" stroke-width="1"/>
+            <rect x="275" y="405" width="170" height="26" rx="8" fill="#dbeafe"/>
+            <rect x="275" y="423" width="170" height="8" fill="#dbeafe"/>
+            <text x="360" y="425" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1d4ed8" text-anchor="middle">Context</text>
+            <text x="360" y="448" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">context-*</text>
+            <text x="360" y="465" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">conversation</text>
+            <text x="360" y="480" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">memory / history</text>
+            <text x="360" y="495" font-family="system-ui, sans-serif" font-size="8" fill="#94a3b8" text-anchor="middle">add - get - compact</text>
+          </g>
+          <g filter="url(#softShadow)">
+            <rect x="495" y="405" width="170" height="105" rx="8" fill="url(#moduleGrad)" stroke="#cbd5e1" stroke-width="1"/>
+            <rect x="495" y="405" width="170" height="26" rx="8" fill="#d1fae5"/>
+            <rect x="495" y="423" width="170" height="8" fill="#d1fae5"/>
+            <text x="580" y="425" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#047857" text-anchor="middle">Providers</text>
+            <text x="580" y="448" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">provider-*</text>
+            <text x="580" y="465" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Anthropic - OpenAI</text>
+            <text x="580" y="480" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Gemini - Local</text>
+            <text x="580" y="495" font-family="system-ui, sans-serif" font-size="8" fill="#94a3b8" text-anchor="middle">complete() - list_models()</text>
+          </g>
+          <g filter="url(#softShadow)">
+            <rect x="715" y="405" width="170" height="105" rx="8" fill="url(#moduleGrad)" stroke="#cbd5e1" stroke-width="1"/>
+            <rect x="715" y="405" width="170" height="26" rx="8" fill="#fef3c7"/>
+            <rect x="715" y="423" width="170" height="8" fill="#fef3c7"/>
+            <text x="800" y="425" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#b45309" text-anchor="middle">Tools</text>
+            <text x="800" y="448" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">tool-*</text>
+            <text x="800" y="465" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">filesystem - bash</text>
+            <text x="800" y="480" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">web - task - custom</text>
+            <text x="800" y="495" font-family="system-ui, sans-serif" font-size="8" fill="#94a3b8" text-anchor="middle">execute(input)</text>
+          </g>
+          <g filter="url(#softShadow)">
+            <rect x="915" y="405" width="170" height="105" rx="8" fill="url(#moduleGrad)" stroke="#cbd5e1" stroke-width="1"/>
+            <rect x="915" y="405" width="170" height="26" rx="8" fill="#fce7f3"/>
+            <rect x="915" y="423" width="170" height="8" fill="#fce7f3"/>
+            <text x="1000" y="425" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#be185d" text-anchor="middle">Hooks</text>
+            <text x="1000" y="448" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">hooks-*</text>
+            <text x="1000" y="465" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">logging - approval</text>
+            <text x="1000" y="480" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">redaction - tracking</text>
+            <text x="1000" y="495" font-family="system-ui, sans-serif" font-size="8" fill="#94a3b8" text-anchor="middle">observe - modify</text>
+          </g>
+          <line x1="225" y1="530" x2="1000" y2="530" stroke="#6366f1" stroke-width="2"/>
+          <line x1="225" y1="475" x2="250" y2="475" stroke="#6366f1" stroke-width="2"/>
+          <line x1="250" y1="475" x2="250" y2="530" stroke="#6366f1" stroke-width="2"/>
+          <circle cx="225" cy="475" r="4" fill="#6366f1"/>
+          <line x1="360" y1="530" x2="360" y2="515" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowheadPurpleUp)"/>
+          <line x1="580" y1="530" x2="580" y2="515" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowheadPurpleUp)"/>
+          <line x1="800" y1="530" x2="800" y2="515" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowheadPurpleUp)"/>
+          <line x1="1000" y1="530" x2="1000" y2="515" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowheadPurpleUp)"/>
+          <circle cx="360" cy="530" r="3" fill="#6366f1"/>
+          <circle cx="580" cy="530" r="3" fill="#6366f1"/>
+          <circle cx="800" cy="530" r="3" fill="#6366f1"/>
+          <circle cx="1000" cy="530" r="3" fill="#6366f1"/>
+          <text x="620" y="550" font-family="system-ui, sans-serif" font-size="9" font-weight="500" fill="#6366f1" text-anchor="middle">Orchestrator drives execution via coordinator.get()</text>
+          <path d="M 55 475 L 35 475 L 35 177 L 375 177" fill="none" stroke="#059669" stroke-width="2" marker-end="url(#arrowheadGreen)"/>
+          <text x="35" y="330" font-family="system-ui, sans-serif" font-size="8" fill="#059669" writing-mode="tb" text-anchor="middle">returns result</text>
+          <g filter="url(#softShadow)">
+            <rect x="940" y="150" width="140" height="165" rx="10" fill="white" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,2"/>
+            <text x="1010" y="173" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#b45309" text-anchor="middle">Policy Layer</text>
+            <text x="1010" y="190" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">(You own these)</text>
+            <rect x="955" y="203" width="110" height="24" rx="5" fill="#fef3c7"/>
+            <text x="1010" y="219" font-family="system-ui, sans-serif" font-size="10" fill="#92400e" text-anchor="middle">ModuleLoader</text>
+            <rect x="955" y="233" width="110" height="24" rx="5" fill="#fef3c7"/>
+            <text x="1010" y="249" font-family="system-ui, sans-serif" font-size="10" fill="#92400e" text-anchor="middle">ApprovalSystem</text>
+            <rect x="955" y="263" width="110" height="24" rx="5" fill="#fef3c7"/>
+            <text x="1010" y="279" font-family="system-ui, sans-serif" font-size="10" fill="#92400e" text-anchor="middle">DisplaySystem</text>
+            <rect x="955" y="293" width="110" height="15" rx="3" fill="#fef9c3"/>
+            <text x="1010" y="304" font-family="system-ui, sans-serif" font-size="8" fill="#a16207" text-anchor="middle">SourceResolver</text>
+          </g>
+          <path d="M 940 200 L 725 177" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrowhead)"/>
+          <g transform="translate(30, 55)">
+            <rect x="0" y="0" width="240" height="115" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
+            <text x="120" y="20" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#1d4ed8" text-anchor="middle">Execution Flow</text>
+            <text x="120" y="40" font-family="system-ui, sans-serif" font-size="9" fill="#3b82f6" text-anchor="middle">1. App calls session.execute(prompt)</text>
+            <text x="120" y="55" font-family="system-ui, sans-serif" font-size="9" fill="#3b82f6" text-anchor="middle">2. Session calls orchestrator.execute()</text>
+            <text x="120" y="70" font-family="system-ui, sans-serif" font-size="9" fill="#6366f1" font-weight="600" text-anchor="middle">3. Orchestrator takes control:</text>
+            <text x="120" y="85" font-family="system-ui, sans-serif" font-size="8" fill="#64748b" text-anchor="middle">- builds messages from context</text>
+            <text x="120" y="97" font-family="system-ui, sans-serif" font-size="8" fill="#64748b" text-anchor="middle">- calls provider.complete()</text>
+            <text x="120" y="109" font-family="system-ui, sans-serif" font-size="8" fill="#64748b" text-anchor="middle">- executes tools - emits hooks</text>
+          </g>
+          <g transform="translate(30, 620)">
+            <rect x="0" y="0" width="350" height="90" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#softShadow)"/>
+            <text x="175" y="18" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#64748b" text-anchor="middle">Legend</text>
+            <circle cx="20" cy="38" r="6" fill="url(#coreGrad)"/>
+            <text x="35" y="42" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Core / Session</text>
+            <rect x="14" y="50" width="12" height="12" rx="2" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="1"/>
+            <text x="35" y="60" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Loader</text>
+            <rect x="14" y="68" width="12" height="12" rx="2" fill="url(#orchestratorGrad)"/>
+            <text x="35" y="78" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Orchestrator (driver)</text>
+            <line x1="130" y1="38" x2="160" y2="38" stroke="#0ea5e9" stroke-width="2" stroke-dasharray="4,2"/>
+            <text x="170" y="42" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Load path (init)</text>
+            <line x1="130" y1="55" x2="160" y2="55" stroke="#6366f1" stroke-width="2"/>
+            <text x="170" y="59" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Execution (orchestrator drives)</text>
+            <line x1="130" y1="72" x2="160" y2="72" stroke="#059669" stroke-width="2"/>
+            <text x="170" y="76" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Return to app</text>
+          </g>
+          <g transform="translate(400, 620)">
+            <rect x="0" y="0" width="300" height="90" rx="8" fill="#f5f3ff" stroke="#6366f1" stroke-width="1" filter="url(#softShadow)"/>
+            <text x="150" y="20" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#4338ca" text-anchor="middle">Orchestrator Owns the Transaction</text>
+            <text x="150" y="40" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">- Loaded as a module (like others)</text>
+            <text x="150" y="55" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">- But once execute() is called...</text>
+            <text x="150" y="70" font-family="system-ui, sans-serif" font-size="9" fill="#6366f1" font-weight="500" text-anchor="middle">- It decides: loops, exits, displays</text>
+            <text x="150" y="85" font-family="system-ui, sans-serif" font-size="9" fill="#6366f1" font-weight="500" text-anchor="middle">- Other modules serve the orchestrator</text>
+          </g>
+        </svg>
+      </div>
+
       <h3>Required Components</h3>
       <p>External applications must provide three policy components:</p>
 
@@ -2541,6 +2760,66 @@ session = AmplifierSession(
 result = await session.run("What files are in this directory?")</code></pre>
       </div>
 
+      <h3 id="production-config">Production Configuration</h3>
+      <p>When deploying agents for code generation or complex tasks, configure providers defensively:</p>
+
+      <div class="info-box" style="border-left: 4px solid var(--red); margin: 20px 0;">
+        <strong>Critical: Token Limits</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">The default <code>max_tokens</code> (4096) is insufficient for code generation. When the model hits this limit mid-stream, it truncates output producing incomplete JSON tool calls.</p>
+      </div>
+
+      <table class="ref-table">
+        <thead>
+          <tr><th>Setting</th><th>Default</th><th>Recommended</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>max_tokens</code></td>
+            <td>4096</td>
+            <td><strong>8192+</strong></td>
+            <td>Prevents truncated tool calls during code generation</td>
+          </tr>
+          <tr>
+            <td><code>temperature</code></td>
+            <td>1.0</td>
+            <td>0.5-0.7</td>
+            <td>More consistent tool use and JSON structure</td>
+          </tr>
+          <tr>
+            <td><code>timeout</code></td>
+            <td>60s</td>
+            <td>120s</td>
+            <td>Long operations need time to complete</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">python</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre style="padding: 12px;"><code class="language-python"># Production configuration for coding agents
+config = {
+    "session": {
+        "orchestrator": "loop-streaming",
+        "context": "context-persistent"
+    },
+    "providers": [{
+        "module": "provider-anthropic",
+        "config": {
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 8192,   # CRITICAL for code generation
+            "temperature": 0.7,   # More consistent tool calls
+        }
+    }],
+    "tools": [
+        {"module": "tool-filesystem"},
+        {"module": "tool-bash"}
+    ]
+}</code></pre>
+      </div>
+
       <h3>Hook Events for Streaming UI</h3>
       <p>Subscribe to hook events for real-time UI updates:</p>
       <table class="ref-table">
@@ -2588,6 +2867,100 @@ result = await session.run("What files are in this directory?")</code></pre>
         <p style="margin: 8px 0 0 0; color: var(--text-1);">In Core mode, orchestrators (<code>loop-*</code>) and contexts (<code>context-*</code>) should always use local implementations. Only providers benefit from entry point loading.</p>
       </div>
 
+      <h2 id="troubleshooting">Troubleshooting Common Errors</h2>
+      <p>Common issues when integrating with amplifier-core and their solutions:</p>
+
+      <div class="concepts">
+        <div class="concept" style="border-left: 3px solid var(--red);">
+          <h3><code>Missing required arguments: ['content']</code></h3>
+          <p><strong>Cause:</strong> Token limit hit mid-generation, truncating JSON output.</p>
+          <p><strong>Fix:</strong> Increase <code>max_tokens</code> in provider config to 8192+.</p>
+          <div class="code-block" style="margin-top: 10px;">
+            <pre style="padding: 10px; font-size: 12px;"><code>"providers": [{
+    "module": "provider-anthropic",
+    "config": {"max_tokens": 8192}
+}]</code></pre>
+          </div>
+        </div>
+
+        <div class="concept" style="border-left: 3px solid var(--orange);">
+          <h3><code>tool_use.name: String should have at least 1 character</code></h3>
+          <p><strong>Cause:</strong> LLM generated empty tool name (hallucination).</p>
+          <p><strong>Fix:</strong> Add sanitization layer in your provider integration:</p>
+          <div class="code-block" style="margin-top: 10px;">
+            <pre style="padding: 10px; font-size: 12px;"><code># Sanitize empty tool names before API call
+if not tool_call.get("name") or not tool_call["name"].strip():
+    tool_call["name"] = "unknown_tool"
+    logger.warning(f"Fixed empty tool name")</code></pre>
+          </div>
+        </div>
+
+        <div class="concept" style="border-left: 3px solid var(--yellow);">
+          <h3><code>ToolCallBlock has invalid name</code></h3>
+          <p><strong>Cause:</strong> Same as above - LLM returned malformed tool call.</p>
+          <p><strong>Fix:</strong> Validate tool calls before execution and add a sanitization hook.</p>
+        </div>
+
+        <div class="concept" style="border-left: 3px solid var(--blue);">
+          <h3><code>'tuple' object has no attribute 'get'</code></h3>
+          <p><strong>Cause:</strong> Patch/modification applied to incompatible module type (cached vs local).</p>
+          <p><strong>Fix:</strong> Check module implementation matches expected interface. Clear module cache:</p>
+          <div class="code-block" style="margin-top: 10px;">
+            <pre style="padding: 10px; font-size: 12px;"><code>rm -rf ~/.amplifier/module-cache</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <h3>Reset Commands</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre style="padding: 12px;"><code class="language-bash"># Reset profile to defaults
+amplifier profile reset
+
+# Clear module cache (fixes stale module issues)
+rm -rf ~/.amplifier/module-cache
+
+# Reinstall from scratch
+uv tool install --force git+https://github.com/microsoft/amplifier@next
+amplifier update</code></pre>
+      </div>
+
+      <h3>LLM Edge Case Handling</h3>
+      <p>LLMs can generate invalid tool calls. Your integration should sanitize these defensively:</p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">python</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre style="padding: 12px;"><code class="language-python">def sanitize_tool_calls(tool_calls: list) -> list:
+    """Clean up malformed LLM tool calls before execution."""
+    sanitized = []
+    for tc in tool_calls:
+        # Fix empty names
+        name = tc.get("name", "").strip()
+        if not name:
+            name = "unknown_tool"
+            logger.warning(f"Fixed empty tool name for id={tc.get('id')}")
+
+        # Ensure arguments is a dict
+        args = tc.get("arguments") or tc.get("input") or {}
+        if isinstance(args, str):
+            try:
+                args = json.loads(args)
+            except json.JSONDecodeError:
+                args = {"raw": args}
+
+        sanitized.append({
+            "id": tc.get("id"),
+            "name": name,
+            "arguments": args
+        })
+    return sanitized</code></pre>
+      </div>
+
     </section>
 
     <!-- REFERENCE SECTION -->
@@ -2626,6 +2999,7 @@ result = await session.run("What files are in this directory?")</code></pre>
             <h4>Tool <span>Agent Capability</span></h4>
             <code>name: str</code>
             <code>description: str</code>
+            <code>input_schema: dict</code> <span style="color: var(--orange); font-size: 11px;">(recommended)</span>
             <code>execute(input: dict) → ToolResult</code>
           </div>
           <div class="contract">
