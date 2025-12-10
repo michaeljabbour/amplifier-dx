@@ -8,6 +8,7 @@ const SPECS_SOURCE = 'specs';
 const OUTPUT_FILE = 'generated-specs.html';
 
 const SPEC_DIRECTORIES = [
+  'design',
   'tools',
   'hooks',
   'recipes',
@@ -290,6 +291,7 @@ function main() {
         <div class="spec-filter" style="margin-bottom: 20px;">
           <span style="font-size: 13px; color: var(--text-2); margin-right: 12px;">Filter:</span>
           <button class="spec-filter-btn active" data-filter="all">All</button>
+          <button class="spec-filter-btn" data-filter="design">Design</button>
           <button class="spec-filter-btn" data-filter="tools">Tools</button>
           <button class="spec-filter-btn" data-filter="hooks">Hooks</button>
           <button class="spec-filter-btn" data-filter="recipes">Recipes</button>
