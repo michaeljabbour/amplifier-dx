@@ -42048,5 +42048,5 @@ When creating your own repositories:
 
 ============================================================
 END OF DOCUMENTATION
-Generated: 2025-12-10T22:16:51.012Z
+Generated: 2025-12-10T22:28:20.592Z
 Source: https://michaeljabbour.github.io/amplifier-dx/
