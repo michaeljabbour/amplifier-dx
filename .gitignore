@@ -1,6 +1,10 @@
+# macOS
+.DS_Store
+
+# Local development
 CLAUDE.md
 BUG_REPORT.md
+.claude/
 
 # Specs sync (generated during CI)
 generated-specs.html
-.claude/
