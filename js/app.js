@@ -6,6 +6,7 @@ import { CONFIG } from './config.js';
 import { initNavigation } from './navigation.js';
 import { getWithBackgroundRefresh, onDataReady } from './github-api.js';
 import { renderBell, renderSection } from './updates.js';
+import './export.js'; // Export menu functionality (exposes global functions)
 
 /**
  * Initialize mermaid with dark theme

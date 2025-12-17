@@ -119,6 +119,16 @@ export function initNavigation() {
     if (navItem && navItem.dataset.section) {
       e.preventDefault();
       showSection(navItem.dataset.section);
+
+      // Handle scroll-to-target for subitems with data-scroll attribute
+      if (navItem.dataset.scroll) {
+        setTimeout(() => {
+          const target = document.getElementById(navItem.dataset.scroll);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      }
       return;
     }
 
