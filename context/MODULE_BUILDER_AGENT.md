@@ -712,6 +712,31 @@ Correct action:
   5. Optionally: Add to MODULES.md bundles section
 ```
 
+
+### Repository Rules (IMPORTANT)
+
+The Amplifier ecosystem follows strict rules about where content lives. See [REPOSITORY_RULES.md](https://github.com/microsoft/amplifier/blob/main/docs/REPOSITORY_RULES.md).
+
+**Key Principle**: Single source of truth - content lives in ONE place.
+
+| Content Type | Correct Repository | Notes |
+|--------------|-------------------|-------|
+| **MODULES.md** | `microsoft/amplifier` | Entry point repo - ecosystem catalog |
+| **Kernel specs** | `microsoft/amplifier-core` | Core mechanisms only |
+| **Foundation bundles** | `microsoft/amplifier-foundation` | Curated bundles |
+| **App-specific bundles** | Your app repo | NOT in foundation |
+| **Module implementations** | Separate module repos | `amplifier-module-*` |
+
+**Common Mistake**: Opening PRs to the wrong repo.
+
+```
+❌ WRONG: PR to amplifier-core with MODULES.md changes
+✅ CORRECT: PR to microsoft/amplifier for MODULES.md
+
+❌ WRONG: PR to amplifier-foundation with app bundle
+✅ CORRECT: Bundle in your app repo, optionally share separately
+```
+
 ### Real-World Example: Desktop App Bundle
 
 Here's how the Amplifier Desktop bundle is structured:
