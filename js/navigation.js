@@ -46,8 +46,9 @@ export function setLayout(mode) {
 /**
  * Show a section, hide others
  * @param {string} id - Section ID to show
+ * @param {Element} [clickedElement] - Optional element that was clicked (to activate only that element)
  */
-export function showSection(id) {
+export function showSection(id, clickedElement = null) {
   initDomCache();
 
   // Validate section
@@ -64,10 +65,18 @@ export function showSection(id) {
     }
   });
 
-  // Update nav active state
+  // Update nav active state - only activate the clicked element
   domCache.navItems.forEach(item => {
-    const isActive = item.dataset.section === id;
-    item.classList.toggle('active', isActive);
+    if (clickedElement) {
+      // If we know what was clicked, only activate that exact element
+      item.classList.toggle('active', item === clickedElement);
+    } else {
+      // Fallback: activate items matching section WITHOUT a data-scroll
+      // (top-level section items only)
+      const isTopLevel = !item.dataset.scroll;
+      const matchesSection = item.dataset.section === id;
+      item.classList.toggle('active', isTopLevel && matchesSection);
+    }
   });
 
   // Update URL hash
@@ -99,7 +108,9 @@ export function showSection(id) {
  */
 function handleHash() {
   const hash = window.location.hash.slice(1) || 'home';
-  showSection(hash);
+  // Find the top-level nav item for this section (one without data-scroll)
+  const matchingItem = document.querySelector(`[data-section="${hash}"]:not([data-scroll])`);
+  showSection(hash, matchingItem);
 }
 
 /**
@@ -118,7 +129,7 @@ export function initNavigation() {
     const navItem = e.target.closest('.nav-item, .sub-nav-item, .sidebar-item, .sidebar-subitem, [data-section]');
     if (navItem && navItem.dataset.section) {
       e.preventDefault();
-      showSection(navItem.dataset.section);
+      showSection(navItem.dataset.section, navItem);
 
       // Handle scroll-to-target for subitems with data-scroll attribute
       if (navItem.dataset.scroll) {
