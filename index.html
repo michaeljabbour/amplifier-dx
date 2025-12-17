@@ -2298,16 +2298,201 @@
     .notification-footer a { font-size: 12px; color: var(--accent); text-decoration: none; }
     .notification-footer a:hover { text-decoration: underline; }
 
-    /* Updates section - full width cards */
+    /* Updates section - redesigned with filters */
     .updates-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .updates-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .updates-search {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg-0);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .updates-search svg {
+      color: var(--text-2);
+      flex-shrink: 0;
+    }
+
+    .updates-search input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-0);
+      font-size: 14px;
+    }
+
+    .updates-search input::placeholder {
+      color: var(--text-2);
+    }
+
+    .updates-filter-row {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
 
+    @media (min-width: 768px) {
+      .updates-filter-row {
+        flex-direction: row;
+        gap: 24px;
+      }
+    }
+
+    .updates-filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .updates-filter-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .updates-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .updates-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--text-1);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .updates-chip:hover {
+      background: var(--bg-3);
+      border-color: var(--text-2);
+    }
+
+    .updates-chip.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .updates-chip svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .chip-count {
+      font-size: 11px;
+      padding: 2px 6px;
+      background: var(--bg-3);
+      border-radius: 10px;
+      color: var(--text-2);
+    }
+
+    .updates-chip.active .chip-count {
+      background: var(--accent);
+      color: var(--bg-0);
+    }
+
+    .updates-results-count {
+      font-size: 13px;
+      color: var(--text-2);
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .updates-results-count strong {
+      color: var(--text-0);
+    }
+
+    .updates-clear-filters {
+      margin-left: 12px;
+      padding: 4px 10px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--text-1);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .updates-clear-filters:hover {
+      background: var(--bg-2);
+      border-color: var(--text-2);
+    }
+
+    .updates-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .updates-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .updates-group-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .updates-group-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    .updates-group-count {
+      font-size: 12px;
+      padding: 2px 8px;
+      background: var(--bg-2);
+      border-radius: 10px;
+      color: var(--text-2);
+    }
+
+    .updates-group-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
     .update-card {
-      display: block;
-      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px;
       background: var(--bg-1);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -2318,15 +2503,39 @@
 
     .update-card:hover {
       background: var(--bg-2);
-      border-color: var(--text-2);
+      border-color: var(--accent);
       text-decoration: none;
+    }
+
+    .update-card-left {
+      flex-shrink: 0;
+    }
+
+    .update-card-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+    }
+
+    .update-card-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .update-card-content {
+      flex: 1;
+      min-width: 0;
     }
 
     .update-card-header {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
+      gap: 8px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
     }
 
     .update-card-repo {
@@ -2334,14 +2543,33 @@
       font-weight: 600;
       padding: 3px 8px;
       border-radius: 4px;
+    }
+
+    .update-card-type {
+      font-size: 11px;
+      color: var(--text-2);
       text-transform: uppercase;
     }
 
-    .update-card-repo.amplifier { background: rgba(59, 130, 246, 0.15); color: var(--blue); }
-    .update-card-repo.amplifier-core { background: rgba(16, 185, 129, 0.15); color: var(--green); }
-    .update-card-repo.amplifier-foundation { background: rgba(168, 85, 247, 0.15); color: var(--purple); }
+    .update-card-sha {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      background: var(--bg-2);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
 
-    .update-card-date {
+    .update-card-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--green);
+      background: rgba(16, 185, 129, 0.15);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .update-card-time {
       font-size: 12px;
       color: var(--text-2);
       margin-left: auto;
@@ -2351,18 +2579,40 @@
       font-size: 14px;
       color: var(--text-0);
       line-height: 1.5;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
-    .update-card-meta {
+    .update-card-body {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+
+    .update-card-author {
       font-size: 12px;
       color: var(--text-2);
     }
 
-    .update-card-sha {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--accent);
+    .update-card-arrow {
+      flex-shrink: 0;
+      color: var(--text-2);
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .update-card:hover .update-card-arrow {
+      opacity: 1;
+    }
+
+    .updates-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--text-2);
     }
 
   </style>
@@ -43860,19 +44110,11 @@ tools:
     <!-- UPDATES SECTION -->
     <section id="section-updates" class="section">
       <h1>Ecosystem Updates</h1>
-      <p class="section-desc">Recent commits and changes across the Amplifier ecosystem repositories.</p>
+      <p class="section-desc">Recent commits, releases, and spec changes across the Amplifier ecosystem.</p>
 
-      <!-- Repo Filter -->
-      <div class="notification-tabs" id="updates-tabs" style="margin-bottom: 24px; padding: 0; border: none; background: transparent;">
-        <button class="notification-tab active" data-repo="all">All Repos</button>
-        <button class="notification-tab" data-repo="amplifier">amplifier</button>
-        <button class="notification-tab" data-repo="amplifier-core">amplifier-core</button>
-        <button class="notification-tab" data-repo="amplifier-foundation">amplifier-foundation</button>
-      </div>
-
-      <!-- Updates List -->
+      <!-- Updates List (rendered by JS with search and filters) -->
       <div id="updates-list" class="updates-list">
-        <div class="notification-empty">
+        <div class="updates-empty">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.5;">
             <circle cx="12" cy="12" r="10"></circle>
             <path d="M12 6v6l4 2"></path>

@@ -7,7 +7,11 @@ import { showSection } from './navigation.js';
 
 // State
 let allItems = [];
-let currentFilter = 'all';
+let filters = {
+  repo: 'all',
+  type: 'all',
+  search: ''
+};
 
 /**
  * Format relative time
@@ -25,7 +29,23 @@ function formatRelativeTime(date) {
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   if (days < 7) return `${days}d ago`;
+  if (days < 30) return `${Math.floor(days / 7)}w ago`;
   return date.toLocaleDateString();
+}
+
+/**
+ * Format full date
+ * @param {Date} date - Date to format
+ * @returns {string} - Full date string
+ */
+function formatFullDate(date) {
+  return date.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
 
 /**
@@ -52,6 +72,63 @@ function getRecentItems(items, days) {
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - days);
   return items.filter(item => item.date > cutoff);
+}
+
+/**
+ * Apply all filters to items
+ * @param {Array} items - All items
+ * @returns {Array} - Filtered items
+ */
+function applyFilters(items) {
+  return items.filter(item => {
+    // Repo filter
+    if (filters.repo !== 'all' && item.repo !== filters.repo) {
+      return false;
+    }
+    // Type filter
+    if (filters.type !== 'all' && item.type !== filters.type) {
+      return false;
+    }
+    // Search filter
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      const message = (item.message || item.name || item.tag || '').toLowerCase();
+      const author = (item.author || '').toLowerCase();
+      if (!message.includes(searchLower) && !author.includes(searchLower)) {
+        return false;
+      }
+    }
+    return true;
+  });
+}
+
+/**
+ * Get unique repos from items
+ * @param {Array} items - All items
+ * @returns {Array} - Unique repo objects with counts
+ */
+function getRepoStats(items) {
+  const repos = {};
+  items.forEach(item => {
+    if (!repos[item.repo]) {
+      repos[item.repo] = { name: item.repo, color: item.repoColor, count: 0 };
+    }
+    repos[item.repo].count++;
+  });
+  return Object.values(repos).sort((a, b) => b.count - a.count);
+}
+
+/**
+ * Get type stats from items
+ * @param {Array} items - All items
+ * @returns {Object} - Type counts
+ */
+function getTypeStats(items) {
+  return {
+    commit: items.filter(i => i.type === 'commit').length,
+    release: items.filter(i => i.type === 'release').length,
+    spec: items.filter(i => i.type === 'spec').length
+  };
 }
 
 /**
@@ -141,63 +218,189 @@ export function renderSection(items) {
     return;
   }
 
-  // Filter items
-  const filtered = currentFilter === 'all'
-    ? items
-    : items.filter(item => item.type === currentFilter);
+  const repoStats = getRepoStats(items);
+  const typeStats = getTypeStats(items);
+  const filtered = applyFilters(items);
 
   // Group by date
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const weekAgo = new Date(today);
   weekAgo.setDate(weekAgo.getDate() - 7);
+  const monthAgo = new Date(today);
+  monthAgo.setDate(monthAgo.getDate() - 30);
 
   const groups = {
     today: filtered.filter(i => i.date >= today),
     thisWeek: filtered.filter(i => i.date >= weekAgo && i.date < today),
-    earlier: filtered.filter(i => i.date < weekAgo)
+    thisMonth: filtered.filter(i => i.date >= monthAgo && i.date < weekAgo),
+    earlier: filtered.filter(i => i.date < monthAgo)
   };
 
   container.innerHTML = `
-    <div class="updates-filters">
-      <button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" data-filter="all">All</button>
-      <button class="filter-btn ${currentFilter === 'commit' ? 'active' : ''}" data-filter="commit">Commits</button>
-      <button class="filter-btn ${currentFilter === 'release' ? 'active' : ''}" data-filter="release">Releases</button>
-      <button class="filter-btn ${currentFilter === 'spec' ? 'active' : ''}" data-filter="spec">Specs</button>
+    <div class="updates-controls">
+      <!-- Search -->
+      <div class="updates-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="M21 21l-4.35-4.35"></path>
+        </svg>
+        <input type="text" placeholder="Search commits, releases..." value="${escapeHtml(filters.search)}" id="updates-search-input">
+      </div>
+
+      <!-- Filter Row -->
+      <div class="updates-filter-row">
+        <!-- Repo Filters -->
+        <div class="updates-filter-group">
+          <span class="updates-filter-label">Repository:</span>
+          <div class="updates-chips">
+            <button class="updates-chip ${filters.repo === 'all' ? 'active' : ''}" data-repo="all">
+              All <span class="chip-count">${items.length}</span>
+            </button>
+            ${repoStats.map(repo => `
+              <button class="updates-chip ${filters.repo === repo.name ? 'active' : ''}" data-repo="${repo.name}" style="--chip-color: ${repo.color}">
+                ${repo.name} <span class="chip-count">${repo.count}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Type Filters -->
+        <div class="updates-filter-group">
+          <span class="updates-filter-label">Type:</span>
+          <div class="updates-chips">
+            <button class="updates-chip ${filters.type === 'all' ? 'active' : ''}" data-type="all">
+              All
+            </button>
+            <button class="updates-chip ${filters.type === 'commit' ? 'active' : ''}" data-type="commit">
+              ${getTypeIcon('commit')} Commits <span class="chip-count">${typeStats.commit}</span>
+            </button>
+            <button class="updates-chip ${filters.type === 'release' ? 'active' : ''}" data-type="release">
+              ${getTypeIcon('release')} Releases <span class="chip-count">${typeStats.release}</span>
+            </button>
+            <button class="updates-chip ${filters.type === 'spec' ? 'active' : ''}" data-type="spec">
+              ${getTypeIcon('spec')} Specs <span class="chip-count">${typeStats.spec}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results count -->
+      <div class="updates-results-count">
+        Showing <strong>${filtered.length}</strong> of ${items.length} updates
+        ${filters.repo !== 'all' || filters.type !== 'all' || filters.search ? `
+          <button class="updates-clear-filters" data-action="clear-filters">Clear filters</button>
+        ` : ''}
+      </div>
     </div>
 
-    ${groups.today.length > 0 ? `
-      <div class="updates-group">
-        <h3 class="updates-group-title">Today</h3>
-        ${groups.today.map(renderCard).join('')}
-      </div>
-    ` : ''}
+    <div class="updates-timeline">
+      ${groups.today.length > 0 ? `
+        <div class="updates-group">
+          <div class="updates-group-header">
+            <span class="updates-group-title">Today</span>
+            <span class="updates-group-count">${groups.today.length}</span>
+          </div>
+          <div class="updates-group-items">
+            ${groups.today.map(renderCard).join('')}
+          </div>
+        </div>
+      ` : ''}
 
-    ${groups.thisWeek.length > 0 ? `
-      <div class="updates-group">
-        <h3 class="updates-group-title">This Week</h3>
-        ${groups.thisWeek.map(renderCard).join('')}
-      </div>
-    ` : ''}
+      ${groups.thisWeek.length > 0 ? `
+        <div class="updates-group">
+          <div class="updates-group-header">
+            <span class="updates-group-title">This Week</span>
+            <span class="updates-group-count">${groups.thisWeek.length}</span>
+          </div>
+          <div class="updates-group-items">
+            ${groups.thisWeek.map(renderCard).join('')}
+          </div>
+        </div>
+      ` : ''}
 
-    ${groups.earlier.length > 0 ? `
-      <div class="updates-group">
-        <h3 class="updates-group-title">Earlier</h3>
-        ${groups.earlier.map(renderCard).join('')}
-      </div>
-    ` : ''}
+      ${groups.thisMonth.length > 0 ? `
+        <div class="updates-group">
+          <div class="updates-group-header">
+            <span class="updates-group-title">This Month</span>
+            <span class="updates-group-count">${groups.thisMonth.length}</span>
+          </div>
+          <div class="updates-group-items">
+            ${groups.thisMonth.map(renderCard).join('')}
+          </div>
+        </div>
+      ` : ''}
 
-    ${filtered.length === 0 ? `
-      <div class="updates-empty">
-        <p>No updates found</p>
-      </div>
-    ` : ''}
+      ${groups.earlier.length > 0 ? `
+        <div class="updates-group">
+          <div class="updates-group-header">
+            <span class="updates-group-title">Earlier</span>
+            <span class="updates-group-count">${groups.earlier.length}</span>
+          </div>
+          <div class="updates-group-items">
+            ${groups.earlier.map(renderCard).join('')}
+          </div>
+        </div>
+      ` : ''}
+
+      ${filtered.length === 0 ? `
+        <div class="updates-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.5;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 6v6l4 2"></path>
+          </svg>
+          <div>No updates match your filters</div>
+          <button class="updates-clear-filters" data-action="clear-filters" style="margin-top: 12px;">Clear filters</button>
+        </div>
+      ` : ''}
+    </div>
   `;
 
-  // Filter click handlers
-  container.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.onclick = () => {
-      currentFilter = btn.dataset.filter;
+  // Attach event handlers
+  attachEventHandlers(container);
+}
+
+/**
+ * Attach event handlers to the updates container
+ * @param {HTMLElement} container - Updates container
+ */
+function attachEventHandlers(container) {
+  // Repo filter clicks
+  container.querySelectorAll('[data-repo]').forEach(btn => {
+    btn.onclick = (e) => {
+      e.preventDefault();
+      filters.repo = btn.dataset.repo;
+      renderSection(allItems);
+    };
+  });
+
+  // Type filter clicks
+  container.querySelectorAll('[data-type]').forEach(btn => {
+    btn.onclick = (e) => {
+      e.preventDefault();
+      filters.type = btn.dataset.type;
+      renderSection(allItems);
+    };
+  });
+
+  // Search input
+  const searchInput = container.querySelector('#updates-search-input');
+  if (searchInput) {
+    let debounceTimer;
+    searchInput.oninput = (e) => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        filters.search = e.target.value;
+        renderSection(allItems);
+      }, 300);
+    };
+  }
+
+  // Clear filters
+  container.querySelectorAll('[data-action="clear-filters"]').forEach(btn => {
+    btn.onclick = (e) => {
+      e.preventDefault();
+      filters = { repo: 'all', type: 'all', search: '' };
       renderSection(allItems);
     };
   });
@@ -209,21 +412,31 @@ export function renderSection(items) {
  * @returns {string} - Card HTML
  */
 function renderCard(item) {
+  const typeLabels = { commit: 'Commit', release: 'Release', spec: 'Spec' };
+
   return `
     <a href="${item.url}" target="_blank" class="update-card" data-type="${item.type}">
-      <div class="update-card-header">
-        <span class="update-type-badge" style="background: ${item.repoColor}20; color: ${item.repoColor}">
+      <div class="update-card-left">
+        <div class="update-card-icon" style="background: ${item.repoColor}20; color: ${item.repoColor}">
           ${getTypeIcon(item.type)}
-          <span>${item.type}</span>
-        </span>
-        <span class="update-repo" style="color: ${item.repoColor}">${item.repo}</span>
-        <span class="update-time">${formatRelativeTime(item.date)}</span>
+        </div>
       </div>
-      <div class="update-card-body">
-        <h4 class="update-title">${escapeHtml(item.message || item.name || item.tag)}</h4>
-        ${item.body ? `<p class="update-body">${escapeHtml(item.body)}</p>` : ''}
-        ${item.sha ? `<code class="update-sha">${item.sha}</code>` : ''}
-        ${item.author ? `<span class="update-author">by ${escapeHtml(item.author)}</span>` : ''}
+      <div class="update-card-content">
+        <div class="update-card-header">
+          <span class="update-card-repo" style="background: ${item.repoColor}15; color: ${item.repoColor}">${item.repo}</span>
+          <span class="update-card-type">${typeLabels[item.type]}</span>
+          ${item.sha ? `<code class="update-card-sha">${item.sha}</code>` : ''}
+          ${item.tag ? `<span class="update-card-tag">${item.tag}</span>` : ''}
+          <span class="update-card-time" title="${formatFullDate(item.date)}">${formatRelativeTime(item.date)}</span>
+        </div>
+        <div class="update-card-message">${escapeHtml(item.message || item.name || item.tag)}</div>
+        ${item.body ? `<div class="update-card-body">${escapeHtml(item.body.substring(0, 150))}${item.body.length > 150 ? '...' : ''}</div>` : ''}
+        ${item.author ? `<div class="update-card-author">by ${escapeHtml(item.author)}</div>` : ''}
+      </div>
+      <div class="update-card-arrow">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
       </div>
     </a>
   `;
