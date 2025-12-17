@@ -1,7 +1,7 @@
 # Amplifier Module Builder Agent Guide
 
 **Purpose**: Authoritative guide for AI coding agents building Amplifier modules  
-**Version**: 1.1.0  
+**Version**: 1.2.0  
 **Last Updated**: December 17, 2024
 
 ---
@@ -583,6 +583,208 @@ To list your module in the ecosystem:
 1. Ensure it follows this guide
 2. Open PR to MODULES.md
 3. Module should be general-purpose (not app-specific)
+
+---
+
+## 12. Decision Guide: Bundles, Modules, and Ecosystem Participation
+
+This section helps you make the right decisions about where your code belongs and how to participate in the ecosystem.
+
+### Decision Tree: Where Does My Code Go?
+
+```
+START: I need to add functionality to my Amplifier app
+           │
+           ▼
+    ┌──────────────────────────────────────┐
+    │ Is this functionality reusable by    │
+    │ OTHER Amplifier apps?                │
+    └──────────────────────────────────────┘
+           │
+     ┌─────┴─────┐
+     │           │
+    YES          NO
+     │           │
+     ▼           ▼
+┌─────────┐  ┌─────────────────────────────┐
+│ Create  │  │ Keep in your app's codebase │
+│ MODULE  │  │ (not a module)              │
+└────┬────┘  └─────────────────────────────┘
+     │
+     ▼
+┌──────────────────────────────────────┐
+│ Is this module general-purpose       │
+│ (useful to the broader community)?   │
+└──────────────────────────────────────┘
+     │
+┌────┴────┐
+│         │
+YES       NO
+│         │
+▼         ▼
+┌─────────────────┐  ┌─────────────────────────┐
+│ Publish module  │  │ Publish module in your  │
+│ to community    │  │ own repo, don't add to  │
+│ + add to        │  │ MODULES.md              │
+│ MODULES.md      │  └─────────────────────────┘
+└─────────────────┘
+```
+
+### Decision Tree: Bundle Location
+
+```
+START: I need a bundle for my app
+           │
+           ▼
+    ┌──────────────────────────────────────┐
+    │ Is this bundle app-specific          │
+    │ (only useful for my app)?            │
+    └──────────────────────────────────────┘
+           │
+     ┌─────┴─────┐
+     │           │
+    YES          NO
+     │           │
+     ▼           ▼
+┌─────────────────────┐  ┌─────────────────────────────┐
+│ Put bundle.yaml     │  │ Is it useful to others      │
+│ IN YOUR APP REPO    │  │ building similar apps?      │
+│                     │  └──────────────┬──────────────┘
+│ Example:            │           ┌─────┴─────┐
+│ my-app/             │          YES          NO
+│   bundle.yaml       │           │           │
+│   src/              │           ▼           ▼
+│   ...               │  ┌────────────────┐  ┌─────────────┐
+└─────────────────────┘  │ Create separate│  │ Keep in app │
+                         │ bundle repo +  │  │ repo        │
+                         │ add to         │  └─────────────┘
+                         │ MODULES.md     │
+                         └────────────────┘
+```
+
+### Key Principle: Bundles Compose, They Don't Merge
+
+**NEVER** try to merge your bundle INTO `amplifier-foundation`. Bundles compose ON TOP of foundation.
+
+```
+✅ CORRECT: Composition
+┌─────────────────────────────┐
+│   Your App Bundle           │  ← Your repo
+│   (composes on foundation)  │
+├─────────────────────────────┤
+│   amplifier-foundation      │  ← Microsoft repo (unchanged)
+└─────────────────────────────┘
+
+❌ WRONG: Merging
+┌─────────────────────────────┐
+│   amplifier-foundation      │  ← DON'T modify this!
+│   + your stuff merged in    │
+└─────────────────────────────┘
+```
+
+### Handling Ecosystem Feedback
+
+When ecosystem maintainers provide feedback on PRs:
+
+**Scenario: "Please don't merge this into foundation"**
+
+This is common and correct! The ecosystem separates concerns:
+
+1. **Accept the feedback gracefully** - it's guiding you to the right pattern
+2. **Move your bundle** to your app repo or a separate community repo
+3. **Use `includes:`** to compose on top of foundation
+4. **Share via MODULES.md** if it's useful to others
+
+**Example Response Pattern**:
+
+```
+Original attempt:
+  PR to amplifier-foundation with "desktop bundle"
+  
+Feedback received:
+  "Please apply it within your app as a composed bundle"
+  
+Correct action:
+  1. Close the PR (or let maintainer close it)
+  2. Create bundle.yaml in your app repo
+  3. Use includes: to compose on foundation
+  4. Optionally: Create separate bundle repo for community sharing
+  5. Optionally: Add to MODULES.md bundles section
+```
+
+### Real-World Example: Desktop App Bundle
+
+Here's how the Amplifier Desktop bundle is structured:
+
+```yaml
+# amplifier-desktop/sidecar/bundle.yaml
+bundle:
+  name: amplifier-desktop
+  version: 1.0.0
+  description: Desktop application bundle
+
+# COMPOSE on foundation (don't merge into it)
+includes:
+  - source: git+https://github.com/microsoft/amplifier-foundation@main
+    path: bundles/default/bundle.md
+
+# Desktop-specific additions
+session:
+  orchestrator:
+    module: loop-streaming
+    config:
+      extended_thinking: true
+
+hooks:
+  # Event broadcast for streaming UI
+  - module: hooks-event-broadcast
+    source: git+https://github.com/microsoft/amplifier-module-hooks-event-broadcast@v0.1.0
+    config:
+      events: [content_block:*, tool:*, orchestrator:complete]
+
+tools:
+  # Persistent memory across sessions
+  - module: tool-memory
+    source: git+https://github.com/microsoft/amplifier-module-tool-memory@v0.1.0
+```
+
+**Why this is correct**:
+- Bundle lives in the desktop app repo (not foundation)
+- Uses `includes:` to compose on foundation
+- Adds desktop-specific modules via source URLs
+- Modules are published separately (can be used by other apps)
+
+### When to Create a Separate Bundle Repo
+
+Create a separate `amplifier-bundle-*` repo when:
+
+| Condition | Action |
+|-----------|--------|
+| Multiple apps could use your bundle | Separate repo |
+| You want community visibility | Separate repo + MODULES.md |
+| Bundle is app-specific | Keep in app repo |
+| Bundle is experimental | Keep in app repo first |
+
+### Community Sharing Checklist
+
+Before adding to MODULES.md:
+
+- [ ] Module/bundle follows ecosystem patterns
+- [ ] Uses capability injection (not hard-coded transports)
+- [ ] Works with ANY Amplifier app (not app-specific)
+- [ ] Has documentation (README.md)
+- [ ] Has tagged releases
+- [ ] Follows naming conventions (`amplifier-module-*`, `amplifier-bundle-*`)
+
+### Summary: Ecosystem Participation Levels
+
+| Level | What You Do | Where It Lives |
+|-------|-------------|----------------|
+| **Private** | App-specific code | Your app repo |
+| **Module** | Reusable module | Your module repo |
+| **Community Module** | General-purpose module | Your repo + MODULES.md |
+| **App Bundle** | App-specific bundle | Your app repo |
+| **Community Bundle** | Shareable bundle | Separate bundle repo + MODULES.md |
 
 ---
 
