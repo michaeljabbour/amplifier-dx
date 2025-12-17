@@ -1,0 +1,117 @@
+AMPLIFIER CONCEPTUAL DOCUMENTATION INDEX
+=========================================
+
+This document indexes the new conceptual/pedagogical documentation located in the docs/ directory.
+These docs provide a "mental spa" experience for understanding Amplifier architecture.
+
+
+DOCUMENT INDEX
+--------------
+
+00-index.md       - Master index and reading paths
+01-data-flow.md   - Visual diagrams of how data flows through Amplifier
+02-certainties.md - Contracts and guarantees developers can rely on
+03-mental-models.md - Analogies: Orchestra, Kitchen, Airport, Lego, Assembly Line
+04-what-happens-when.md - Concrete scenarios traced step by step
+05-quick-start.md - 5-minute understanding for busy people
+06-layers.md      - Progressive depth: Use → Configure → Extend → Embed → Understand
+07-desktop-case-study.md - Real-world embedding example (Amplifier Desktop)
+
+
+READING PATHS BY GOAL
+---------------------
+
+"I just want to use it":
+  05-quick-start.md → main docs quickstart
+
+"I need to configure it for my team":
+  05-quick-start.md → 01-data-flow.md → main docs profiles
+
+"I want to write a custom tool":
+  06-layers.md (Layer 3) → main docs creating modules
+
+"I'm building a product on Amplifier":
+  01-data-flow.md → 02-certainties.md → 07-desktop-case-study.md → API docs
+
+"I want to understand everything":
+  All documents in order → source code
+
+
+KEY CONCEPTS COVERED
+--------------------
+
+1. DATA FLOW
+   - The 5 components: Provider, Tool, Context, Orchestrator, Hook
+   - Step-by-step prompt processing
+   - Event stream tracing
+   - File system storage locations
+
+2. CERTAINTIES (Contracts)
+   - Hooks always fire
+   - Events are ordered
+   - Context is append-only
+   - Tools are isolated
+   - Provider responses are immutable
+   - Configuration hierarchy is deterministic
+   - Hooks can block, tools cannot
+
+3. MENTAL MODELS
+   - Orchestra: Conductor (orchestrator), instruments (tools), soloist (LLM)
+   - Kitchen: Head chef (orchestrator), stations (tools), ticket rail (context)
+   - Airport: Security (hooks), air traffic control (orchestrator), flight log (context)
+   - Lego Set: Bricks (modules), instructions (profiles), built creation (session)
+   - Assembly Line: Conveyor (context), stations (tools), quality control (hooks)
+
+4. SCENARIOS COVERED
+   - Simple question (no tools)
+   - File operation (single tool)
+   - Multi-tool task
+   - Hook blocking
+   - Streaming response
+   - Profile inheritance
+   - Error recovery
+   - Session persistence
+
+5. UNDERSTANDING LAYERS
+   - Layer 1: USE - Run commands, get work done
+   - Layer 2: CONFIGURE - Profiles, settings, module selection
+   - Layer 3: EXTEND - Write custom tools and hooks
+   - Layer 4: EMBED - Use as a library in your app
+   - Layer 5: UNDERSTAND - Internals, architecture, contribute
+
+
+DESIGN PHILOSOPHY
+-----------------
+
+These docs follow pedagogical principles:
+
+1. PROGRESSIVE DISCLOSURE
+   Start simple, add depth gradually. Most people never need past Layer 2.
+
+2. MULTIPLE ENTRY POINTS
+   Quick start for the impatient, deep dives for the curious.
+
+3. VISUAL FIRST
+   ASCII diagrams make concepts stick.
+
+4. CONCRETE EXAMPLES
+   Every concept has a worked example.
+
+5. HONEST LIMITATIONS
+   "What We Don't Guarantee" builds trust.
+
+6. ANALOGIES FOR INTUITION
+   Mental models turn complexity into intuition.
+
+
+INTEGRATION NOTES
+-----------------
+
+These docs complement the main site (index.html) by providing:
+- Deeper conceptual understanding
+- Visual architecture diagrams
+- Progressive learning paths
+- Real-world case studies
+
+The main site focuses on: How to do things
+These docs focus on: How to think about things
