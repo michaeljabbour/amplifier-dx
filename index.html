@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <!-- Mermaid.js for diagram rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     /* =================================================================
        DESIGN TOKENS - OpenAI-inspired Dark Palette
@@ -1674,6 +1676,194 @@
     @media (max-width: 900px) {
       .nav-links { display: none; }
     }
+
+    /* =================================================================
+       MERMAID DIAGRAMS
+       ================================================================= */
+    .mermaid-container {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin: 24px 0;
+      overflow-x: auto;
+    }
+
+    .mermaid-container .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+
+    .mermaid-container svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Dark theme adjustments for mermaid */
+    .mermaid .node rect,
+    .mermaid .node circle,
+    .mermaid .node polygon {
+      fill: var(--bg-3) !important;
+      stroke: var(--border) !important;
+    }
+
+    .mermaid .edgePath .path {
+      stroke: var(--text-2) !important;
+    }
+
+    .mermaid .edgeLabel {
+      background-color: var(--bg-2) !important;
+      color: var(--text-1) !important;
+    }
+
+    .mermaid .cluster rect {
+      fill: var(--bg-1) !important;
+      stroke: var(--border) !important;
+    }
+
+    .mermaid .cluster text {
+      fill: var(--text-0) !important;
+    }
+
+    .mermaid text {
+      fill: var(--text-0) !important;
+    }
+
+    /* Diagram caption */
+    .diagram-caption {
+      text-align: center;
+      color: var(--text-2);
+      font-size: 13px;
+      margin-top: 12px;
+      font-style: italic;
+    }
+
+    /* =================================================================
+       ARCHITECTURE BOUNDARIES SECTION STYLES
+       ================================================================= */
+    .layer-diagram {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0;
+      margin: 24px 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      overflow: hidden;
+    }
+
+    .layer-box {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .layer-box:last-child {
+      border-bottom: none;
+    }
+
+    .layer-box.app-layer {
+      background: rgba(59, 130, 246, 0.1);
+      border-left: 4px solid var(--blue);
+    }
+
+    .layer-box.kernel-layer {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid var(--green);
+    }
+
+    .layer-box.module-layer {
+      background: rgba(168, 85, 247, 0.1);
+      border-left: 4px solid var(--purple);
+    }
+
+    .layer-title {
+      font-weight: 600;
+      color: var(--text-0);
+      margin-bottom: 4px;
+    }
+
+    .layer-subtitle {
+      color: var(--text-2);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .layer-desc {
+      color: var(--text-1);
+      font-family: var(--font-sans);
+      font-size: 14px;
+    }
+
+    /* Pattern/Anti-pattern cards */
+    .pattern-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin: 12px 0;
+    }
+
+    .pattern-card.correct {
+      border-left: 4px solid var(--green);
+    }
+
+    .pattern-card.incorrect {
+      border-left: 4px solid var(--red);
+    }
+
+    .pattern-label {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .pattern-card.correct .pattern-label {
+      color: var(--green);
+    }
+
+    .pattern-card.incorrect .pattern-label {
+      color: var(--red);
+    }
+
+    /* Boundary test questions */
+    .boundary-test {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .boundary-question {
+      font-weight: 500;
+      color: var(--text-0);
+      margin-bottom: 12px;
+    }
+
+    .boundary-answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .boundary-answer {
+      padding: 12px;
+      background: var(--bg-3);
+      border-radius: 6px;
+    }
+
+    .boundary-answer strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .boundary-answer.yes {
+      border-left: 3px solid var(--blue);
+    }
+
+    .boundary-answer.no {
+      border-left: 3px solid var(--green);
+    }
   </style>
   <link rel="stylesheet" href="css/chat-widget.css">
 </head>
@@ -1691,6 +1881,7 @@
           <button class="nav-link active" data-section="home">Overview</button>
           <button class="nav-link" data-section="quickstart">Quickstart</button>
           <button class="nav-link" data-section="architecture">Architecture</button>
+          <button class="nav-link" data-section="guides">Guides</button>
           <button class="nav-link" data-section="reference">Reference</button>
           <button class="nav-link" data-section="cli">CLI</button>
           <button class="nav-link" data-section="ecosystem">Ecosystem</button>
@@ -1799,6 +1990,20 @@
         <span class="sidebar-item" data-section="architecture" data-scroll="external-integration">External Integration</span>
         <span class="sidebar-item" data-section="architecture" data-scroll="production-config">Production Config</span>
         <span class="sidebar-item" data-section="architecture" data-scroll="troubleshooting">Troubleshooting</span>
+      </div>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-header open" onclick="toggleSidebarGroup(this)">
+        <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        Guides
+      </div>
+      <div class="sidebar-items show">
+        <span class="sidebar-item" data-section="guides" data-scroll="boundaries-overview">Architecture Boundaries</span>
+        <span class="sidebar-item" data-section="guides" data-scroll="boundary-test">The Boundary Test</span>
+        <span class="sidebar-item" data-section="guides" data-scroll="correct-patterns">Correct Patterns</span>
+        <span class="sidebar-item" data-section="guides" data-scroll="anti-patterns">Anti-Patterns</span>
+        <span class="sidebar-item" data-section="guides" data-scroll="module-builder">Module Builder Guide</span>
+        <span class="sidebar-item" data-section="guides" data-scroll="dx-review">DX Review & Diagrams</span>
       </div>
     </div>
     <div class="sidebar-group">
@@ -4324,6 +4529,574 @@ Help me understand:
           </div>
         </div>
       </div>
+
+    </section>
+
+    <!-- GUIDES SECTION -->
+    <section id="section-guides" class="section">
+      <h1>Architecture & Developer Guides</h1>
+      <p class="section-desc">Deep-dive documentation on Amplifier's architecture boundaries, module building, and system design.</p>
+
+      <!-- ARCHITECTURE BOUNDARIES -->
+      <h2 id="boundaries-overview">Architecture Boundaries</h2>
+      <p>The single most important concept for Amplifier developers: <strong>what belongs where</strong>.</p>
+
+      <div class="info-box" style="border-left: 4px solid var(--accent); margin: 24px 0;">
+        <strong>Core Insight</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">Amplifier separates <strong>mechanism</strong> (how things work) from <strong>policy</strong> (what to do). This separation is what makes modules portable across applications.</p>
+      </div>
+
+      <div class="layer-diagram">
+        <div class="layer-box app-layer">
+          <div class="layer-title">APPLICATION LAYER</div>
+          <div class="layer-subtitle">amplifier-app-cli, amplifier-desktop, your-custom-app</div>
+          <div class="layer-desc">"Policy" - What to do, how to present, where to find things</div>
+        </div>
+        <div class="layer-box kernel-layer">
+          <div class="layer-title">KERNEL LAYER</div>
+          <div class="layer-subtitle">amplifier-core (one implementation, many consumers)</div>
+          <div class="layer-desc">"Mechanism" - How to coordinate, dispatch, validate</div>
+        </div>
+        <div class="layer-box module-layer">
+          <div class="layer-title">MODULE LAYER</div>
+          <div class="layer-subtitle">amplifier-module-* (many implementations, shared by apps)</div>
+          <div class="layer-desc">"Capabilities" - What can be done (tools, providers, hooks)</div>
+        </div>
+      </div>
+
+      <h3>Why This Matters</h3>
+      <div class="concepts">
+        <div class="concept">
+          <h3>When boundaries are respected</h3>
+          <ul>
+            <li>Apps can share modules without conflict</li>
+            <li>Kernel updates benefit all apps</li>
+            <li>Modules work in any compliant app</li>
+            <li>Testing is isolated and predictable</li>
+          </ul>
+        </div>
+        <div class="concept">
+          <h3>When boundaries are violated</h3>
+          <ul>
+            <li>Apps become fragile and hard to maintain</li>
+            <li>Kernel bypasses create inconsistent behavior</li>
+            <li>Modules only work in specific apps</li>
+            <li>Bugs are hard to trace</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>What Belongs Where</h3>
+
+      <h4>Application Layer Responsibilities</h4>
+      <table class="ref-table">
+        <thead>
+          <tr><th>Responsibility</th><th>Example</th><th>Why App Layer</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>UX Systems</td><td><code>CLIApprovalSystem</code>, <code>WebSocketDisplay</code></td><td>Apps decide how to show things</td></tr>
+          <tr><td>Module Resolution Policy</td><td><code>CompositeModuleResolver</code></td><td>Apps decide where to find modules</td></tr>
+          <tr><td>Settings Persistence</td><td><code>~/.amplifier/settings.yaml</code></td><td>Apps decide where to store config</td></tr>
+          <tr><td>Profile/Bundle Loading</td><td><code>ProfileLoader</code>, <code>load_bundle()</code></td><td>Apps decide what configurations exist</td></tr>
+          <tr><td>@Mention Processing</td><td><code>MentionResolver</code></td><td>Apps decide what @mentions mean</td></tr>
+          <tr><td>Capability Registration</td><td><code>session.spawn</code>, <code>broadcast</code></td><td>Apps inject their behaviors</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Key principle:</strong> If it touches the user or filesystem, it's app-layer.</p>
+
+      <h4>Kernel Layer Responsibilities</h4>
+      <table class="ref-table">
+        <thead>
+          <tr><th>Responsibility</th><th>Example</th><th>Why Kernel Layer</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Session Lifecycle</td><td>create, initialize, execute, cleanup</td><td>Standard lifecycle for all apps</td></tr>
+          <tr><td>Module Coordination</td><td><code>ModuleCoordinator.mount()</code></td><td>Standard way to compose modules</td></tr>
+          <tr><td>Hook Dispatch</td><td><code>HookRegistry.emit()</code></td><td>Standard event ordering</td></tr>
+          <tr><td>Capability Registry</td><td><code>coordinator.register_capability()</code></td><td>Standard extension point</td></tr>
+          <tr><td>Config Validation</td><td>Validate mount plan structure</td><td>Standard contract enforcement</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Key principle:</strong> If it's about coordinating modules, it's kernel-layer.</p>
+
+      <h4>Module Layer Responsibilities</h4>
+      <table class="ref-table">
+        <thead>
+          <tr><th>Responsibility</th><th>Example</th><th>Why Module Layer</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Tool Execution</td><td><code>tool-filesystem</code>, <code>tool-memory</code></td><td>Reusable actions</td></tr>
+          <tr><td>Provider Communication</td><td><code>provider-anthropic</code></td><td>LLM API abstraction</td></tr>
+          <tr><td>Hook Behavior</td><td><code>hooks-logging</code>, <code>hooks-event-broadcast</code></td><td>Reusable event handling</td></tr>
+          <tr><td>Orchestration Logic</td><td><code>loop-streaming</code></td><td>Execution patterns</td></tr>
+          <tr><td>Context Management</td><td><code>context-simple</code></td><td>Message storage strategies</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Key principle:</strong> If it's a reusable capability, it's module-layer.</p>
+
+      <!-- BOUNDARY TEST -->
+      <h2 id="boundary-test">The Boundary Test</h2>
+      <p>Ask these questions to determine where code belongs:</p>
+
+      <div class="boundary-test">
+        <div class="boundary-question">"Does this need to know about the user interface?"</div>
+        <div class="boundary-answers">
+          <div class="boundary-answer yes">
+            <strong>Yes → Application Layer</strong>
+            <span style="color: var(--text-2); font-size: 13px;">Code that knows about console, WebSocket, etc.</span>
+          </div>
+          <div class="boundary-answer no">
+            <strong>No → Kernel or Module Layer</strong>
+            <span style="color: var(--text-2); font-size: 13px;">Code that just coordinates or provides capability</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="boundary-test">
+        <div class="boundary-question">"Does this define HOW to do something vs WHAT to do?"</div>
+        <div class="boundary-answers">
+          <div class="boundary-answer no">
+            <strong>HOW (mechanism) → Kernel Layer</strong>
+            <span style="color: var(--text-2); font-size: 13px;">How hooks dispatch, how modules coordinate</span>
+          </div>
+          <div class="boundary-answer yes">
+            <strong>WHAT (policy) → Application Layer</strong>
+            <span style="color: var(--text-2); font-size: 13px;">What hooks to load, what modules to use</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="boundary-test">
+        <div class="boundary-question">"Could another app use this unchanged?"</div>
+        <div class="boundary-answers">
+          <div class="boundary-answer no">
+            <strong>Yes → Module Layer</strong>
+            <span style="color: var(--text-2); font-size: 13px;">Reusable tool, hook, or provider</span>
+          </div>
+          <div class="boundary-answer yes">
+            <strong>No → Application Layer</strong>
+            <span style="color: var(--text-2); font-size: 13px;">App-specific code (e.g., WebSocket transport)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CORRECT PATTERNS -->
+      <h2 id="correct-patterns">Correct Patterns</h2>
+
+      <h3>Pattern 1: Capability Injection</h3>
+      <p>Apps provide transport; modules use it without knowing the details.</p>
+
+      <div class="pattern-card correct">
+        <div class="pattern-label">✓ CORRECT</div>
+        <div class="code-block">
+          <pre><code class="language-python"># APP LAYER - registers capability
+async def desktop_broadcast(event: str, data: dict):
+    await websocket.send_json({"type": event, **data})
+
+session.coordinator.register_capability("broadcast", desktop_broadcast)
+
+# MODULE LAYER - uses capability abstractly
+async def on_event(event: str, data: dict):
+    broadcast = coordinator.get_capability("broadcast")
+    if broadcast:
+        await broadcast(event, data)  # Works for any transport!</code></pre>
+        </div>
+      </div>
+
+      <h3>Pattern 2: Bundle Loading</h3>
+      <p>Apps load bundles; foundation resolves modules.</p>
+
+      <div class="pattern-card correct">
+        <div class="pattern-label">✓ CORRECT</div>
+        <div class="code-block">
+          <pre><code class="language-python"># APP LAYER - decides what bundle to load
+bundle = await load_bundle("foundation:bundles/desktop")
+
+# KERNEL LAYER - mounts modules to coordinator
+session = await bundle.prepare().create_session()</code></pre>
+        </div>
+      </div>
+
+      <h3>Pattern 3: Event Handling</h3>
+      <p>Kernel dispatches; modules react; apps display.</p>
+
+      <div class="pattern-card correct">
+        <div class="pattern-label">✓ CORRECT</div>
+        <div class="code-block">
+          <pre><code class="language-python"># KERNEL LAYER - dispatches events
+await hooks.emit("tool:post", {"tool": "bash", "result": output})
+
+# MODULE LAYER - logs the event
+async def on_tool_post(event, data):
+    logger.info(f"Tool {data['tool']} completed")
+
+# APP LAYER - displays to user
+async def on_tool_post(event, data):
+    console.print(f"✓ {data['tool']}")  # CLI-specific display</code></pre>
+        </div>
+      </div>
+
+      <!-- ANTI-PATTERNS -->
+      <h2 id="anti-patterns">Anti-Patterns to Avoid</h2>
+
+      <h3>❌ Kernel Bypass</h3>
+      <div class="pattern-card incorrect">
+        <div class="pattern-label">✗ WRONG</div>
+        <div class="code-block">
+          <pre><code class="language-python"># App calling provider directly, bypassing kernel
+response = await anthropic_client.messages.create(...)</code></pre>
+        </div>
+      </div>
+      <div class="pattern-card correct">
+        <div class="pattern-label">✓ CORRECT</div>
+        <div class="code-block">
+          <pre><code class="language-python"># App goes through session
+result = await session.execute(prompt)</code></pre>
+        </div>
+      </div>
+
+      <h3>❌ Module with Transport Knowledge</h3>
+      <div class="pattern-card incorrect">
+        <div class="pattern-label">✗ WRONG</div>
+        <div class="code-block">
+          <pre><code class="language-python">class MyHook:
+    async def on_event(self, event, data):
+        await websocket.send_json(data)  # Module shouldn't know this!</code></pre>
+        </div>
+      </div>
+      <div class="pattern-card correct">
+        <div class="pattern-label">✓ CORRECT</div>
+        <div class="code-block">
+          <pre><code class="language-python">class MyHook:
+    async def on_event(self, event, data):
+        broadcast = self.coordinator.get_capability("broadcast")
+        if broadcast:
+            await broadcast(event, data)</code></pre>
+        </div>
+      </div>
+
+      <h3>❌ App Reimplementing Kernel Logic</h3>
+      <div class="pattern-card incorrect">
+        <div class="pattern-label">✗ WRONG</div>
+        <div class="code-block">
+          <pre><code class="language-python"># App has its own orchestrator loop
+while True:
+    response = await provider.complete(messages)
+    if response.tool_calls:
+        for call in response.tool_calls:
+            result = await tools[call.name].execute(call.input)
+            messages.append(...)</code></pre>
+        </div>
+      </div>
+      <div class="pattern-card correct">
+        <div class="pattern-label">✓ CORRECT</div>
+        <div class="code-block">
+          <pre><code class="language-python"># App uses session.execute()
+result = await session.execute(prompt)</code></pre>
+        </div>
+      </div>
+
+      <!-- MODULE BUILDER GUIDE -->
+      <h2 id="module-builder">Module Builder Guide</h2>
+      <p>Authoritative guide for creating Amplifier modules.</p>
+
+      <div class="info-box" style="border-left: 4px solid var(--purple); margin: 24px 0;">
+        <strong>Quick Reference</strong>
+        <ul style="margin: 8px 0 0 0; color: var(--text-1);">
+          <li>Git is the registry</li>
+          <li>Entry-point key = Module ID (non-negotiable)</li>
+          <li>Bundles compose on top of foundation</li>
+          <li>CLI is optional</li>
+        </ul>
+      </div>
+
+      <h3>Module Types</h3>
+      <table class="ref-table">
+        <thead>
+          <tr><th>Type</th><th>Protocol</th><th>Mount Point</th><th>Examples</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Tool</strong></td><td><code>Tool</code></td><td>tools</td><td>filesystem, bash, web, memory</td></tr>
+          <tr><td><strong>Hook</strong></td><td><code>Hook</code></td><td>hooks</td><td>logging, approval, redaction</td></tr>
+          <tr><td><strong>Provider</strong></td><td><code>Provider</code></td><td>providers</td><td>anthropic, openai, azure</td></tr>
+          <tr><td><strong>Orchestrator</strong></td><td><code>Orchestrator</code></td><td>orchestrator</td><td>loop-basic, loop-streaming</td></tr>
+          <tr><td><strong>Context</strong></td><td><code>Context</code></td><td>context</td><td>context-simple</td></tr>
+        </tbody>
+      </table>
+
+      <h3>pyproject.toml (CRITICAL)</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code class="language-toml">[project]
+name = "amplifier-module-tool-myfeature"
+version = "0.1.0"
+description = "My feature tool for Amplifier"
+requires-python = ">=3.11"
+dependencies = ["amplifier-core"]
+
+[project.entry-points."amplifier.modules"]
+# CRITICAL: Entry-point key IS the module ID
+# This MUST match how users reference it in profiles/bundles
+tool-myfeature = "amplifier_module_tool_myfeature:mount"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"</code></pre>
+      </div>
+
+      <div class="info-box" style="border-left: 4px solid var(--red); margin: 24px 0;">
+        <strong>Non-negotiable Rules</strong>
+        <ol style="margin: 8px 0 0 0; color: var(--text-1);">
+          <li>Entry-point key (<code>tool-myfeature</code>) = Module ID used everywhere</li>
+          <li>Value points to <code>mount</code> function, not a class</li>
+          <li>Naming convention: <code>tool-*</code>, <code>hooks-*</code>, <code>provider-*</code>, <code>context-*</code></li>
+        </ol>
+      </div>
+
+      <h3>The mount() Function</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre><code class="language-python"># amplifier_module_tool_myfeature/__init__.py
+
+from amplifier_core.coordinator import ModuleCoordinator
+from .tools import MyFeatureTool
+
+def mount(coordinator: ModuleCoordinator, config: dict | None = None) -> None:
+    """Mount this module's tools to the coordinator.
+
+    Args:
+        coordinator: The kernel's module coordinator
+        config: Optional configuration from bundle/profile
+    """
+    config = config or {}
+
+    # Create tool instance with config
+    tool = MyFeatureTool(
+        storage_path=config.get("storage_path", "~/.amplifier/myfeature.db"),
+        max_items=config.get("max_items", 1000),
+    )
+
+    # Register all tools provided by this module
+    for t in tool.get_tools():
+        coordinator.register_tool(t)</code></pre>
+      </div>
+
+      <h3>Common Mistakes</h3>
+
+      <div class="pattern-card incorrect">
+        <div class="pattern-label">✗ Wrong Entry Point</div>
+        <div class="code-block">
+          <pre><code class="language-toml"># WRONG - points to class, not mount function
+tool-myfeature = "amplifier_module_tool_myfeature:MyFeatureTool"
+
+# CORRECT - points to mount function
+tool-myfeature = "amplifier_module_tool_myfeature:mount"</code></pre>
+        </div>
+      </div>
+
+      <div class="pattern-card incorrect">
+        <div class="pattern-label">✗ Missing mount() Return</div>
+        <div class="code-block">
+          <pre><code class="language-python"># WRONG - returns something
+def mount(coordinator, config):
+    return MyTool()  # Don't return!
+
+# CORRECT - returns None, registers with coordinator
+def mount(coordinator, config):
+    tool = MyTool(config)
+    for t in tool.get_tools():
+        coordinator.register_tool(t)
+    # No return statement</code></pre>
+        </div>
+      </div>
+
+      <h3>Event Names Reference</h3>
+      <table class="ref-table">
+        <thead>
+          <tr><th>Event</th><th>When</th><th>Hook Can Block?</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>session:start</code></td><td>Session begins</td><td>No</td></tr>
+          <tr><td><code>session:end</code></td><td>Session ends</td><td>No</td></tr>
+          <tr><td><code>prompt:submit</code></td><td>User message received</td><td>No</td></tr>
+          <tr><td><code>provider:request</code></td><td>Before LLM API call</td><td>No</td></tr>
+          <tr><td><code>provider:response</code></td><td>After LLM response</td><td>No</td></tr>
+          <tr><td><code>content_block:start</code></td><td>Streaming block begins</td><td>No</td></tr>
+          <tr><td><code>content_block:delta</code></td><td>Streaming content chunk</td><td>No</td></tr>
+          <tr><td><code>content_block:end</code></td><td>Streaming block ends</td><td>No</td></tr>
+          <tr><td><code>tool:pre</code></td><td>Before tool execution</td><td><strong>Yes</strong></td></tr>
+          <tr><td><code>tool:post</code></td><td>After tool execution</td><td>No</td></tr>
+          <tr><td><code>tool:error</code></td><td>Tool execution failed</td><td>No</td></tr>
+          <tr><td><code>orchestrator:complete</code></td><td>Orchestration done</td><td>No</td></tr>
+        </tbody>
+      </table>
+
+      <!-- DX REVIEW & DIAGRAMS -->
+      <h2 id="dx-review">DX Review & Architecture Diagrams</h2>
+      <p>Visual diagrams showing Amplifier's architecture and execution flows.</p>
+
+      <h3>Architecture Overview</h3>
+      <p>The three-layer architecture showing kernel, app, and module boundaries:</p>
+
+      <div class="mermaid-container">
+        <div class="mermaid">
+flowchart TB
+    subgraph USER["User"]
+        U1["CLI Command"]
+        U2["Interactive REPL"]
+    end
+
+    subgraph CLI["amplifier-app-cli (Application Layer)"]
+        direction TB
+
+        subgraph CLI_COMMANDS["Commands"]
+            CMD1["run"]
+            CMD2["init"]
+            CMD3["update"]
+        end
+
+        subgraph CLI_CONFIG["Configuration Resolution"]
+            CFG1["ConfigManager"]
+            CFG2["ProfileLoader"]
+            CFG3["BundleRegistry"]
+        end
+
+        subgraph CLI_UX["UX Systems"]
+            UX1["CLIApprovalSystem"]
+            UX2["CLIDisplaySystem"]
+        end
+
+        subgraph CLI_POLICY["App-Layer Policies"]
+            POL1["MentionResolver"]
+            POL2["ContentDeduplicator"]
+            POL3["CompositeModuleResolver"]
+        end
+    end
+
+    subgraph CORE["amplifier-core (Kernel Layer)"]
+        direction TB
+
+        subgraph CORE_SESSION["AmplifierSession"]
+            S1["session_id"]
+            S2["config validation"]
+            S3["lifecycle methods"]
+        end
+
+        subgraph CORE_COORD["ModuleCoordinator"]
+            C1["Mount points registry"]
+            C2["Capability registry"]
+        end
+
+        subgraph CORE_HOOKS["HookRegistry"]
+            H1["Priority-based dispatch"]
+            H2["Event emission"]
+        end
+    end
+
+    subgraph MODULES["Pluggable Modules"]
+        MOD1["orchestrator-*"]
+        MOD2["provider-*"]
+        MOD3["tool-*"]
+        MOD4["hooks-*"]
+    end
+
+    U1 --> CMD1
+    CMD1 --> CFG1
+    CFG1 --> S1
+    UX1 --> S1
+    POL3 --> C1
+    S1 --> C1
+    MODULES --> C1
+        </div>
+        <div class="diagram-caption">Figure 1: Architecture Overview - Kernel/App/Module Layers</div>
+      </div>
+
+      <h3>Execute Flow</h3>
+      <p>What happens when <code>session.execute(prompt)</code> is called:</p>
+
+      <div class="mermaid-container">
+        <div class="mermaid">
+flowchart TD
+    subgraph KERNEL_EXEC["KERNEL: session.execute&#40;prompt&#41;"]
+        E1["Get orchestrator from coordinator"]
+        E2["Get context manager"]
+        E3["Get providers dict"]
+        E4["Get tools dict"]
+        E5["orchestrator.execute&#40;&#41;"]
+    end
+
+    subgraph ORCH_LOOP["KERNEL: Orchestrator Loop"]
+        O1["Build messages from context"]
+        O2["Call provider.create_message&#40;&#41;"]
+        O3{"Tool calls in response?"}
+        O4["Emit tool:pre hooks"]
+        O5["Execute tool via tools dict"]
+        O6["Emit tool:post hooks"]
+        O7["Add tool result to context"]
+        O8["Extract final response text"]
+    end
+
+    E1 --> E2 --> E3 --> E4 --> E5
+    E5 --> O1
+    O1 --> O2
+    O2 --> O3
+    O3 -->|Yes| O4
+    O4 --> O5
+    O5 --> O6
+    O6 --> O7
+    O7 --> O2
+    O3 -->|No| O8
+        </div>
+        <div class="diagram-caption">Figure 2: Execute Flow - Orchestrator Loop with Hooks</div>
+      </div>
+
+      <h3>Improvement Roadmap</h3>
+      <p>Based on the DX review analysis:</p>
+
+      <div class="concepts">
+        <div class="concept">
+          <h3>Phase 1 (P0) - Critical</h3>
+          <ul>
+            <li>Architecture boundary documentation</li>
+            <li>Module lifecycle guide</li>
+            <li>Fix asset model confusion (Profile/Bundle/Recipe)</li>
+          </ul>
+        </div>
+        <div class="concept">
+          <h3>Phase 2 (P1) - Updates</h3>
+          <ul>
+            <li>Revise desktop case study</li>
+            <li>Integrate mermaid diagrams</li>
+            <li>Link to ecosystem resources</li>
+          </ul>
+        </div>
+        <div class="concept">
+          <h3>Phase 3 (P2) - Enhancements</h3>
+          <ul>
+            <li>Interactive documentation</li>
+            <li>Downloadable agent guide</li>
+            <li>Complete ecosystem map</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Architecture Checklist</h3>
+      <div class="info-box" style="border-left: 4px solid var(--green); margin: 24px 0;">
+        <strong>Is My Architecture Correct?</strong>
+        <ul style="margin: 8px 0 0 0; color: var(--text-1);">
+          <li>☐ App layer handles all UX (display, approval, user input)</li>
+          <li>☐ App layer loads bundles/profiles (kernel doesn't know where they come from)</li>
+          <li>☐ App layer registers capabilities (modules request them abstractly)</li>
+          <li>☐ Kernel layer validates config structure (not content policy)</li>
+          <li>☐ Kernel layer dispatches hooks (doesn't know what they do)</li>
+          <li>☐ Kernel layer coordinates modules (doesn't implement capabilities)</li>
+          <li>☐ Modules implement protocols (Tool, Hook, Provider, etc.)</li>
+          <li>☐ Modules use capabilities, not imports from apps</li>
+          <li>☐ Modules are transport-agnostic (no WebSocket/console/HTTP knowledge)</li>
+        </ul>
+      </div>
+
+      <p style="text-align: center; color: var(--text-2); margin-top: 40px;"><strong>When in doubt:</strong> Can another app use this unchanged? If not, it belongs in the app layer.</p>
 
     </section>
 
@@ -42382,7 +43155,7 @@ Raw SQL string concatenation detected. Must use parameterized queries.
     // ==========================================================================
     // NAVIGATION
     // ==========================================================================
-    const VALID_SECTIONS = ['home', 'quickstart', 'architecture', 'reference', 'cli', 'ecosystem', 'showcase', 'examples', 'contribute'];
+    const VALID_SECTIONS = ['home', 'quickstart', 'architecture', 'guides', 'reference', 'cli', 'ecosystem', 'showcase', 'examples', 'contribute'];
 
     function showSection(sectionId, updateHash = true) {
       if (!VALID_SECTIONS.includes(sectionId)) sectionId = 'home';
@@ -42418,6 +43191,13 @@ Raw SQL string concatenation detected. Must use parameterized queries.
 
       // Re-highlight code
       if (typeof Prism !== 'undefined') Prism.highlightAll();
+
+      // Re-render mermaid diagrams in the newly visible section
+      if (typeof mermaid !== 'undefined' && sectionId === 'guides') {
+        setTimeout(() => {
+          mermaid.init(undefined, document.querySelectorAll('#section-guides .mermaid:not([data-processed])'));
+        }, 100);
+      }
 
       // Scroll to top
       window.scrollTo(0, 0);
@@ -42466,6 +43246,34 @@ Raw SQL string concatenation detected. Must use parameterized queries.
     window.addEventListener('DOMContentLoaded', () => {
       handleHashChange();
       if (typeof Prism !== 'undefined') Prism.highlightAll();
+      // Initialize Mermaid with dark theme
+      if (typeof mermaid !== 'undefined') {
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'dark',
+          themeVariables: {
+            darkMode: true,
+            background: '#171717',
+            primaryColor: '#3b82f6',
+            secondaryColor: '#10b981',
+            tertiaryColor: '#a855f7',
+            primaryTextColor: '#ffffff',
+            secondaryTextColor: '#e5e5e5',
+            lineColor: '#a3a3a3',
+            textColor: '#ffffff',
+            mainBkg: '#212121',
+            nodeBorder: '#262626',
+            clusterBkg: '#0a0a0a',
+            clusterBorder: '#262626',
+            titleColor: '#ffffff',
+            edgeLabelBackground: '#171717'
+          },
+          flowchart: {
+            htmlLabels: true,
+            curve: 'basis'
+          }
+        });
+      }
     });
 
     // ==========================================================================
