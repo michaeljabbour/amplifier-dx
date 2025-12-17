@@ -123,6 +123,9 @@ export function initNavigation() {
   const savedLayout = localStorage.getItem('preferredLayout') || 'sidebar';
   setLayout(savedLayout);
 
+  // Initialize tab click handlers
+  initTabs();
+
   // Delegated click handler for nav items
   document.addEventListener('click', (e) => {
     // Nav item clicks (handles all nav variants)
@@ -131,8 +134,20 @@ export function initNavigation() {
       e.preventDefault();
       showSection(navItem.dataset.section, navItem);
 
+      // Handle tab switching for subitems with data-tab attribute
+      if (navItem.dataset.tab) {
+        setTimeout(() => {
+          const section = document.getElementById(`section-${navItem.dataset.section}`);
+          if (section) {
+            const tabsContainer = section.querySelector('.tabs');
+            if (tabsContainer) {
+              switchTab(navItem.dataset.tab, tabsContainer);
+            }
+          }
+        }, 50);
+      }
       // Handle scroll-to-target for subitems with data-scroll attribute
-      if (navItem.dataset.scroll) {
+      else if (navItem.dataset.scroll) {
         setTimeout(() => {
           const target = document.getElementById(navItem.dataset.scroll);
           if (target) {
@@ -232,16 +247,69 @@ function toggleAllSidebar() {
 }
 
 /**
+ * Switch to a specific tab within a tabs container
+ * @param {string} tabId - The tab ID to activate
+ * @param {HTMLElement} tabsContainer - The .tabs container element
+ */
+function switchTab(tabId, tabsContainer) {
+  if (!tabsContainer) return;
+
+  // Find the section containing this tabs container
+  const section = tabsContainer.closest('.section');
+  if (!section) return;
+
+  // Deactivate all tabs in this container
+  tabsContainer.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+  // Activate the clicked tab
+  const activeTab = tabsContainer.querySelector(`[data-tab="${tabId}"]`);
+  if (activeTab) activeTab.classList.add('active');
+
+  // Hide all tab content in this section
+  section.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+
+  // Show the matching tab content
+  // Try different ID patterns: qs-consumer, ref-hooks-api, contrib-overview, etc.
+  const prefixes = ['qs-', 'ref-', 'contrib-', 'eco-', ''];
+  for (const prefix of prefixes) {
+    const content = section.querySelector(`#${prefix}${tabId}`);
+    if (content) {
+      content.classList.add('active');
+      break;
+    }
+  }
+}
+
+/**
+ * Initialize tab click handlers for all .tabs containers
+ */
+function initTabs() {
+  document.querySelectorAll('.tabs').forEach(tabsContainer => {
+    tabsContainer.addEventListener('click', (e) => {
+      const tab = e.target.closest('.tab[data-tab]');
+      if (tab) {
+        e.preventDefault();
+        switchTab(tab.dataset.tab, tabsContainer);
+      }
+    });
+  });
+}
+
+/**
  * Navigate to section and activate a specific tab
  */
 export function showSectionWithTab(sectionId, tabId) {
   showSection(sectionId);
   // Activate the tab
   setTimeout(() => {
-    const tabsContainer = document.querySelector(`#section-${sectionId} .tabs, #${sectionId}-tabs`);
-    if (tabsContainer) {
-      const tab = tabsContainer.querySelector(`[data-tab="${tabId}"]`);
-      if (tab) tab.click();
+    const section = document.getElementById(`section-${sectionId}`);
+    if (section) {
+      const tabsContainer = section.querySelector('.tabs');
+      if (tabsContainer) {
+        switchTab(tabId, tabsContainer);
+      }
     }
   }, 50);
 }
