@@ -5504,6 +5504,58 @@ def mount(coordinator, config):
         </div>
       </div>
 
+
+      <h3>Capability Injection Pattern</h3>
+      <p>Modules must be <strong>transport-agnostic</strong>. They request capabilities abstractly; the app provides implementations.</p>
+
+      <div class="pattern-card correct">
+        <div class="pattern-label">✓ CORRECT: Request capability, app provides it</div>
+        <div class="code-block">
+          <pre><code class="language-python"># In module mount()
+def mount(coordinator, config):
+    # Request a capability by NAME, not by importing app code
+    broadcast = coordinator.get_capability("broadcast")
+    
+    hook = MyStreamingHook(broadcast_fn=broadcast)
+    coordinator.register_hook(hook)
+
+# In app startup
+def setup_session():
+    # App registers the capability with its transport
+    session.register_capability("broadcast", websocket_broadcast)
+    # Module gets websocket_broadcast when it asks for "broadcast"</code></pre>
+        </div>
+      </div>
+
+      <div class="pattern-card incorrect">
+        <div class="pattern-label">✗ WRONG: Module imports app/transport code</div>
+        <div class="code-block">
+          <pre><code class="language-python"># WRONG - module knows about WebSocket
+from my_app.websocket import broadcast_to_clients
+
+def mount(coordinator, config):
+    hook = MyHook(broadcast_fn=broadcast_to_clients)  # Tight coupling!</code></pre>
+        </div>
+      </div>
+
+      <div class="info-box" style="border-left: 4px solid var(--green); margin: 16px 0;">
+        <strong>Why This Matters</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">The same module works unchanged in CLI apps (console output), web apps (WebSocket), desktop apps (IPC), or test harnesses (mock). The module never knows or cares which transport is used.</p>
+      </div>
+
+      <h3>Publishing Your Module</h3>
+      <div class="info-box">
+        <strong>To share with the ecosystem:</strong>
+        <ol style="margin: 8px 0 0 0; color: var(--text-1);">
+          <li>Create repo: <code>amplifier-module-{type}-{name}</code></li>
+          <li>Add comprehensive README with usage examples</li>
+          <li>Include tests</li>
+          <li>Tag releases (e.g., <code>v0.1.0</code>)</li>
+          <li>Submit PR to <a href="https://github.com/microsoft/amplifier/blob/main/docs/MODULES.md" target="_blank">amplifier/docs/MODULES.md</a></li>
+        </ol>
+        <p style="margin-top: 12px; color: var(--text-2);"><strong>Note:</strong> MODULES.md lives in the <code>amplifier</code> repo (entry point), NOT in <code>amplifier-core</code>.</p>
+      </div>
+
       <h3>Event Names Reference</h3>
       <table class="ref-table">
         <thead>
