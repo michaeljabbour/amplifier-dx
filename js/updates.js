@@ -365,8 +365,8 @@ export function renderSection(items) {
  * @param {HTMLElement} container - Updates container
  */
 function attachEventHandlers(container) {
-  // Repo filter clicks
-  container.querySelectorAll('[data-repo]').forEach(btn => {
+  // Repo filter clicks (only target chips, not cards)
+  container.querySelectorAll('.updates-chip[data-repo]').forEach(btn => {
     btn.onclick = (e) => {
       e.preventDefault();
       filters.repo = btn.dataset.repo;
@@ -374,8 +374,8 @@ function attachEventHandlers(container) {
     };
   });
 
-  // Type filter clicks
-  container.querySelectorAll('[data-type]').forEach(btn => {
+  // Type filter clicks (only target chips, not cards)
+  container.querySelectorAll('.updates-chip[data-type]').forEach(btn => {
     btn.onclick = (e) => {
       e.preventDefault();
       filters.type = btn.dataset.type;
