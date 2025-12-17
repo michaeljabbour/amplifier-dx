@@ -1,7 +1,7 @@
 # Amplifier Module Builder Agent Guide
 
 **Purpose**: Authoritative guide for AI coding agents building Amplifier modules  
-**Version**: 1.0.0  
+**Version**: 1.1.0  
 **Last Updated**: December 17, 2024
 
 ---
@@ -13,7 +13,7 @@ Module Lifecycle: Create → Test → Publish → Bundle → Consume
 
 Git is the registry.
 Entry-point key = Module ID (non-negotiable).
-Bundles > Collections for distribution.
+Bundles compose on top of foundation.
 CLI is optional.
 ```
 
@@ -38,12 +38,12 @@ CLI is optional.
 
 ### Module Types
 
-| Type | Protocol | Mount Point | Example |
-|------|----------|-------------|---------|
-| **Tool** | `Tool` | `tools` | tool-filesystem, tool-memory |
-| **Hook** | `Hook` | `hooks` | hooks-logging, hooks-event-broadcast |
-| **Provider** | `Provider` | `providers` | provider-anthropic |
-| **Orchestrator** | `Orchestrator` | `orchestrator` | loop-streaming |
+| Type | Protocol | Mount Point | Examples |
+|------|----------|-------------|----------|
+| **Tool** | `Tool` | `tools` | filesystem, bash, web, memory |
+| **Hook** | `Hook` | `hooks` | logging, approval, redaction |
+| **Provider** | `Provider` | `providers` | anthropic, openai, azure |
+| **Orchestrator** | `Orchestrator` | `orchestrator` | loop-basic, loop-streaming |
 | **Context** | `Context` | `context` | context-simple |
 
 ---
@@ -204,7 +204,7 @@ def mount(coordinator: ModuleCoordinator, config: dict | None = None) -> None:
     
     for event in events:
         if event.endswith(":*"):
-            # Wildcard pattern
+            # Wildcard pattern - expand to specific events
             base = event[:-2]
             for specific in [f"{base}:start", f"{base}:delta", f"{base}:end"]:
                 coordinator.hooks.register(
@@ -226,7 +226,7 @@ def create_handler(coordinator: ModuleCoordinator, config: dict):
     
     async def handler(event: str, data: dict) -> HookResult:
         # Do something with the event
-        # Example: relay to a capability
+        # Example: relay to a capability (transport-agnostic)
         relay = coordinator.get_capability("relay")
         if relay:
             await relay(event, data)
@@ -259,7 +259,6 @@ uv run pytest
 ```python
 # tests/conftest.py
 import pytest
-from amplifier_module_tool_myfeature import mount
 
 @pytest.fixture
 def mock_coordinator():
@@ -292,7 +291,6 @@ async def test_mount_registers_tools(mock_coordinator):
     
     assert "add_item" in mock_coordinator.tools
     assert "list_items" in mock_coordinator.tools
-    assert "search_items" in mock_coordinator.tools
 
 @pytest.mark.asyncio
 async def test_add_item_tool(mock_coordinator):
@@ -331,7 +329,66 @@ Tags are the stability contract. Users reference tags, not branches, for product
 
 ---
 
-## 5. Consumption
+## 5. Bundles (Composition Model)
+
+### Key Principle: Bundles Compose ON TOP of Foundation
+
+Bundles don't merge into `amplifier-foundation` - they compose on top of it.
+
+```yaml
+# your-bundle/bundle.yaml
+bundle:
+  name: my-app-bundle
+  version: 1.0.0
+  description: Bundle for my application
+
+# Compose on top of foundation
+includes:
+  - source: git+https://github.com/microsoft/amplifier-foundation@main
+    path: bundle.md
+
+# Add your modules
+tools:
+  - module: tool-myfeature
+    source: git+https://github.com/you/amplifier-module-tool-myfeature@v0.1.0
+    config:
+      storage_path: ~/.my-app/data.db
+
+hooks:
+  - module: hooks-myfeature
+    source: git+https://github.com/you/amplifier-module-hooks-myfeature@v0.1.0
+```
+
+### Bundle Structure
+
+```
+amplifier-bundle-my-app/
+├── README.md
+├── bundle.yaml          # Main bundle definition
+└── docs/
+    └── USAGE.md
+```
+
+### Sharing Bundles
+
+To share with the community:
+1. Create bundle per [BUNDLE_GUIDE.md](https://github.com/microsoft/amplifier-foundation/blob/main/docs/BUNDLE_GUIDE.md)
+2. Add to [MODULES.md](https://github.com/microsoft/amplifier/blob/main/docs/MODULES.md) bundles section
+
+### Loading Bundles
+
+```python
+from amplifier_foundation import load_bundle
+
+# Load your composed bundle
+bundle = await load_bundle("git+https://github.com/you/amplifier-bundle-my-app@v1.0.0")
+session = await bundle.prepare().create_session()
+result = await session.execute("use my feature")
+```
+
+---
+
+## 6. Consumption
 
 ### In a Profile
 
@@ -359,23 +416,11 @@ bundle:
 tools:
   - module: tool-myfeature
     source: git+https://github.com/you/amplifier-module-tool-myfeature@v0.1.0
-    config:
-      storage_path: ~/.amplifier/myfeature.db
-```
-
-### Programmatic Loading
-
-```python
-from amplifier_foundation import load_bundle
-
-bundle = await load_bundle("git+https://github.com/you/my-bundle@v1.0.0")
-session = await bundle.prepare().create_session()
-result = await session.execute("use my feature")
 ```
 
 ---
 
-## 6. Common Mistakes
+## 7. Common Mistakes
 
 ### ❌ Wrong Entry Point
 
@@ -432,9 +477,23 @@ async def handler(event, data):
     return HookResult(action="continue")
 ```
 
+### ❌ Module with Transport Knowledge
+
+```python
+# WRONG - module knows about specific transport
+async def handler(event, data):
+    await websocket.send_json(data)  # Module shouldn't know this!
+
+# CORRECT - module uses capability injection
+async def handler(event, data):
+    broadcast = coordinator.get_capability("broadcast")
+    if broadcast:
+        await broadcast(event, data)  # Transport-agnostic
+```
+
 ---
 
-## 7. Event Names Reference
+## 8. Event Names Reference
 
 These are the actual event names from amplifier-core:
 
@@ -452,30 +511,6 @@ These are the actual event names from amplifier-core:
 | `tool:post` | After tool execution | No |
 | `tool:error` | Tool execution failed | No |
 | `orchestrator:complete` | Orchestration done | No |
-
----
-
-## 8. Reference Implementations
-
-### tool-memory (Persistent Cross-Session Memory)
-
-Repository: https://github.com/michaeljabbour/amplifier-module-tool-memory
-
-Key patterns:
-- SQLite storage with migrations
-- Multiple tools from single module
-- Category-based organization
-- Search functionality
-
-### hooks-event-broadcast (Transport-Agnostic Events)
-
-Repository: https://github.com/michaeljabbour/amplifier-module-hooks-event-broadcast
-
-Key patterns:
-- Capability injection (transport provided by app)
-- Wildcard event patterns
-- Graceful degradation when no capability
-- Priority-based registration
 
 ---
 
@@ -515,6 +550,39 @@ git tag v0.1.0 && git push origin v0.1.0
 # Verify entry point
 python -c "from amplifier_module_tool_myfeature import mount; print(mount)"
 ```
+
+---
+
+## 11. Ecosystem Modules
+
+The Amplifier ecosystem includes official and community modules. For the current catalog, see:
+
+- **Official modules**: https://github.com/microsoft/amplifier/blob/main/docs/MODULES.md
+- **Foundation bundles**: https://github.com/microsoft/amplifier-foundation
+- **Bundle guide**: https://github.com/microsoft/amplifier-foundation/blob/main/docs/BUNDLE_GUIDE.md
+
+### Module Categories
+
+| Category | Description | Examples |
+|----------|-------------|----------|
+| **Orchestrators** | Execution loop patterns | loop-basic, loop-streaming |
+| **Providers** | LLM API connections | anthropic, openai, azure |
+| **Tools** | Executable actions | filesystem, bash, web, search |
+| **Hooks** | Event observers | logging, approval, redaction |
+| **Context** | Message management | context-simple |
+
+### Finding Modules
+
+1. Check official MODULES.md for curated modules
+2. Search GitHub for `amplifier-module-*`
+3. Ask in community channels
+
+### Contributing Modules
+
+To list your module in the ecosystem:
+1. Ensure it follows this guide
+2. Open PR to MODULES.md
+3. Module should be general-purpose (not app-specific)
 
 ---
 

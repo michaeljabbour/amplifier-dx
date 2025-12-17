@@ -27,7 +27,7 @@ The amplifier-dx documentation site is **exceptionally strong** in several areas
 | **Desktop case study outdated** | References patterns we've deprecated | P1 |
 | **Bundles vs Collections vs Profiles** confusing | Asset model ambiguity leads to wrong patterns | P1 |
 | **No visual architecture diagrams** (mermaid) | Text-only limits comprehension | P1 |
-| **Missing ecosystem integration** | New modules (tool-memory, hooks-event-broadcast) not documented | P2 |
+| **Missing ecosystem integration** | No link to live MODULES.md catalog | P2 |
 
 ---
 
@@ -73,7 +73,7 @@ Should clarify that this is a **profile** (session configuration), distinct from
 - No spec for the **ecosystem architecture** itself
 - No spec for **module resolution** patterns
 - Orchestrators section (specs/orchestrators/) contains designs that contradict "mechanism vs policy" principle
-- Missing specs for our new modules: `tool-memory`, `hooks-event-broadcast`
+- Specs should link to live MODULES.md for current implementations
 
 ### 3. The Kernel/App Layer Boundary Problem
 
@@ -114,17 +114,17 @@ This is the **single most important architectural concept** that the documentati
 │                                                                              │
 │  Types:                                                                      │
 │  • Orchestrators: loop-basic, loop-streaming                                │
-│  • Providers: provider-anthropic, provider-openai                           │
-│  • Tools: tool-filesystem, tool-bash, tool-memory                           │
-│  • Hooks: hooks-logging, hooks-event-broadcast                              │
+│  • Providers: provider-anthropic, provider-openai, provider-azure           │
+│  • Tools: tool-filesystem, tool-bash, tool-web, tool-mcp                    │
+│  • Hooks: hooks-logging, hooks-approval, hooks-redaction                    │
 │  • Context: context-simple                                                  │
 │                                                                              │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **The documentation doesn't make this explicit**, leading to:
-- Desktop sidecar bypassing kernel contracts (the problem we just solved)
-- Developers embedding CLI-specific logic in modules
+- Apps bypassing kernel contracts
+- Developers embedding app-specific logic in modules
 - Confusion about where settings/profiles belong
 
 ### 4. Asset Model Confusion
@@ -138,11 +138,11 @@ The current docs use "profiles," "bundles," "recipes," and "collections" somewha
 | **Recipe** | Declarative multi-step workflow | Bundles or collections | Recipe engine |
 | **Collection** | Discoverable module package (deprecated pattern) | Git repos | Being replaced by bundles |
 
-**The key insight**: Bundles > Collections for distribution. This needs explicit documentation.
+**Key insight from ecosystem lead**: Bundles **compose ON TOP of** foundation, not merged into it. App bundles live in app repos (or separate community bundle repos), not in amplifier-foundation.
 
 ### 5. Missing Visual Diagrams
 
-The mermaid diagrams I created earlier fill critical gaps:
+The mermaid diagrams created in this session fill critical gaps:
 
 1. **`amplifier run` flow** - Shows CLI → Config → Session → Execute
 2. **`amplifier update` flow** - Shows update checking and execution
@@ -151,6 +151,49 @@ The mermaid diagrams I created earlier fill critical gaps:
 5. **Execute flow** - Shows orchestrator loop with hooks
 
 These should be integrated into the documentation.
+
+---
+
+## Ecosystem Modules
+
+### Module Categories
+
+The Amplifier ecosystem includes modules across these categories:
+
+| Category | Description | Examples |
+|----------|-------------|----------|
+| **Orchestrators** | Execution loop patterns | loop-basic, loop-streaming |
+| **Providers** | LLM API connections | provider-anthropic, provider-openai, provider-azure |
+| **Tools** | Executable actions | tool-filesystem, tool-bash, tool-web, tool-mcp |
+| **Hooks** | Event observers | hooks-logging, hooks-approval, hooks-redaction |
+| **Context** | Message management | context-simple |
+
+### Finding Modules
+
+- **Official catalog**: https://github.com/microsoft/amplifier/blob/main/docs/MODULES.md
+- **Foundation bundles**: https://github.com/microsoft/amplifier-foundation
+- **Bundle guide**: https://github.com/microsoft/amplifier-foundation/blob/main/docs/BUNDLE_GUIDE.md
+
+### Bundle Composition Model
+
+Bundles compose on top of foundation (they don't merge into it):
+
+```yaml
+# app-specific-bundle.yaml
+bundle:
+  name: my-app
+  version: 1.0.0
+
+# Compose on top of foundation
+includes:
+  - source: git+https://github.com/microsoft/amplifier-foundation@main
+    path: bundle.md
+
+# Add app-specific modules
+tools:
+  - module: tool-custom
+    source: git+https://github.com/you/amplifier-module-tool-custom@v1.0.0
+```
 
 ---
 
@@ -198,7 +241,7 @@ Update `05-quick-start.md` and create `docs/10-asset-model.md`:
 
 - Clear definitions of Profile, Bundle, Recipe, Collection
 - When to use each
-- Migration guidance (collections → bundles)
+- Bundle composition model (on top of foundation, not merged)
 
 ### Phase 2: Updates (P1) - 1-2 Weeks
 
@@ -214,11 +257,11 @@ async for event in session.stream(message["content"]):
 
 **Correct (ecosystem-compliant)**:
 ```python
-# Load desktop bundle from foundation
-bundle = await load_bundle("foundation:bundles/desktop")
+# Load app bundle (composes on top of foundation)
+bundle = await load_bundle("file:./bundle.yaml")
 session = await bundle.prepare().create_session()
 
-# Register broadcast capability (hooks-event-broadcast uses this)
+# Register broadcast capability
 session.coordinator.register_capability("broadcast", ws_broadcast)
 
 # Execute - events flow via hooks
@@ -232,11 +275,12 @@ Add visual architecture diagrams to:
 - `06-layers.md` - Add component diagram
 - `07-desktop-case-study.md` - Add architecture diagram
 
-#### 2.3 Add New Module Specs
+#### 2.3 Link to Ecosystem Resources
 
-Create specs for ecosystem modules:
-- `specs/tools/tool-memory.md` - Already implemented
-- `specs/hooks/hooks-event-broadcast.md` - Already implemented
+Update documentation to link to:
+- MODULES.md for current module catalog
+- BUNDLE_GUIDE.md for bundle creation
+- Foundation repo for official bundles
 
 ### Phase 3: Enhancements (P2) - 2-3 Weeks
 
@@ -258,7 +302,7 @@ Create a downloadable `MODULE_BUILDER_AGENT.md` that AI coding agents can use:
 
 When asked to create an Amplifier module, first read:
 1. ~/dev/amplifier-core/amplifier_core/interfaces.py (protocols)
-2. ~/dev/amplifier-module-*/  (examples)
+2. Examples from MODULES.md
 
 ## Required Structure
 
@@ -279,8 +323,7 @@ When asked to create an Amplifier module, first read:
 Create visual map showing:
 - All repositories
 - Dependencies
-- Which modules each app uses
-- Bundle composition
+- Bundle composition relationships
 
 ---
 
@@ -294,8 +337,6 @@ Create visual map showing:
 | `docs/09-module-lifecycle.md` | Module creation guide | P0 |
 | `docs/10-asset-model.md` | Profile/Bundle/Recipe/Collection definitions | P1 |
 | `docs/diagrams/` | Mermaid source files | P1 |
-| `specs/tools/tool-memory.md` | Memory tool spec | P2 |
-| `specs/hooks/hooks-event-broadcast.md` | Event broadcast spec | P2 |
 | `context/MODULE_BUILDER_AGENT.md` | AI agent guide | P2 |
 
 ### Files to Update
@@ -306,44 +347,13 @@ Create visual map showing:
 | `docs/05-quick-start.md` | Fix profile/recipe conflation | P1 |
 | `docs/07-desktop-case-study.md` | Major revision with new patterns | P1 |
 | `docs/06-layers.md` | Add ecosystem integration at Layer 4 | P1 |
-| `specs/INDEX.md` | Add new module specs | P2 |
+| `specs/INDEX.md` | Link to MODULES.md | P2 |
 
 ### Files to Consider Removing/Deprecating
 
 | File | Reason |
 |------|--------|
 | `specs/orchestrators/orchestrator-loop-*.md` | Violates "mechanism vs policy" - complex orchestration belongs in tools/recipes |
-
----
-
-## Integration with Existing Work
-
-### From Desktop Rebuild Session
-
-We created:
-1. **tool-memory** module - https://github.com/michaeljabbour/amplifier-module-tool-memory
-2. **hooks-event-broadcast** module - https://github.com/michaeljabbour/amplifier-module-hooks-event-broadcast
-3. **Desktop bundle** PR - https://github.com/microsoft/amplifier-foundation/pull/2
-4. **MODULES.md** PR - https://github.com/microsoft/amplifier-core/pull/4
-
-These should be referenced in:
-- Desktop case study
-- Module examples
-- Ecosystem map
-
-### From Mermaid Diagrams
-
-The 5 diagrams I created cover:
-1. `amplifier update` flow
-2. `amplifier run` flow (part 1: CLI to mode selection)
-3. `amplifier run` flow (part 2: session creation)
-4. `amplifier run` flow (part 3: full execute)
-5. Architecture overview (kernel/app/module layers)
-
-These should be:
-- Converted to embedded diagrams in documentation
-- Rendered as images for the static site
-- Linked from relevant sections
 
 ---
 
@@ -359,7 +369,7 @@ These should be:
 
 - [ ] Desktop case study shows correct ecosystem patterns
 - [ ] Visual diagrams embedded in key documents
-- [ ] New modules have specs
+- [ ] Documentation links to live ecosystem resources
 
 ### After Phase 3 (P2)
 
