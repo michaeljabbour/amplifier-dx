@@ -144,7 +144,7 @@ async function fetchReleases(repo) {
 async function fetchSpecChanges() {
   try {
     // Check amplifier-dx repo for spec changes
-    const url = 'https://api.github.com/repos/microsoft/amplifier-dx/commits?path=specs&per_page=5';
+    const url = 'https://api.github.com/repos/michaeljabbour/amplifier-dx/commits?path=specs&per_page=5';
     const response = await fetch(url);
     if (!response.ok) return [];
 
