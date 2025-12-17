@@ -738,14 +738,14 @@ session:
 hooks:
   # Event broadcast for streaming UI
   - module: hooks-event-broadcast
-    source: git+https://github.com/microsoft/amplifier-module-hooks-event-broadcast@v0.1.0
+    source: git+https://github.com/michaeljabbour/amplifier-module-hooks-event-broadcast@v0.1.0
     config:
       events: [content_block:*, tool:*, orchestrator:complete]
 
 tools:
   # Persistent memory across sessions
   - module: tool-memory
-    source: git+https://github.com/microsoft/amplifier-module-tool-memory@v0.1.0
+    source: git+https://github.com/michaeljabbour/amplifier-module-tool-memory@v0.1.0
 ```
 
 **Why this is correct**:
