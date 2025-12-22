@@ -2,6 +2,8 @@
 
 Learn by example. Here are real scenarios traced through the system, step by step.
 
+**Validated in practice:** All scenarios below match the behavior observed in [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli), which implements these exact patterns with 14 modules.
+
 ---
 
 ## Scenario 1: A Simple Question

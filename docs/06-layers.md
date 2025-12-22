@@ -50,6 +50,9 @@ amplifier profile list
 amplifier module list
 ```
 
+**Working example:**
+- [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli) - Complete CLI ready to use
+
 **Docs for this layer:**
 - [Quickstart](../index.html#quickstart)
 - [CLI Reference](../index.html#cli)
@@ -182,6 +185,9 @@ tools:
   - module: my_custom_tool
 ```
 
+**Learn this layer:**
+- [amplifier-modulebuilder-skill](https://github.com/michaeljabbour/amplifier-modulebuilder-skill) - Agent Skill teaching module development
+
 **Docs for this layer:**
 - [Creating Modules](../index.html#creating-modules)
 - [Tool Interface](../index.html#tool-interface)
@@ -239,6 +245,10 @@ async def with_custom_handling():
 
         await session.run("Do something complex")
 ```
+
+**Learn this layer:**
+- [amplifier-cli-skill](https://github.com/michaeljabbour/amplifier-cli-skill) - Agent Skill teaching CLI application building
+- [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli) - Working CLI implementation (study the source)
 
 **Docs for this layer:**
 - [Python API](../index.html#python-api)

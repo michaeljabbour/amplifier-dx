@@ -2,6 +2,8 @@
 
 The single most important concept for Amplifier developers: **what belongs where**.
 
+**Foundation Layer Note:** This document groups Application + Foundation as "Application Layer." In practice, **amplifier-foundation** sits between your app and amplifier-core, acting as a factory that loads bundles, composes configuration, and creates sessions. See [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli) for a working example showing the three-layer architecture: Application → Foundation → Core.
+
 ---
 
 ## The Core Insight

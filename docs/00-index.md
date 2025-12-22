@@ -64,7 +64,7 @@ A progressive guide from "what is this?" to "I could build this."
 
 ### "I just want to use it"
 ```
-5-Minute Understanding → [main docs quickstart]
+5-Minute Understanding → amplifier-simplecli → [main docs quickstart]
 ```
 
 ### "I need to configure it for my team"
@@ -74,17 +74,57 @@ A progressive guide from "what is this?" to "I could build this."
 
 ### "I want to write a custom tool"
 ```
-Layers of Understanding (Layer 3) → [main docs creating modules]
+Layers of Understanding (Layer 3) → amplifier-modulebuilder-skill → [main docs creating modules]
 ```
 
 ### "I'm building a product on Amplifier"
 ```
-How Data Flows → The Certainties → Desktop Case Study → [API docs]
+How Data Flows → The Certainties → amplifier-simplecli source → Desktop Case Study → [API docs]
 ```
 
 ### "I want to understand everything"
 ```
 All documents in order → source code
+```
+
+---
+
+## Learning Resources
+
+### Agent Skills
+
+These skills teach Amplifier patterns through AI-assisted learning:
+
+- **[amplifier-cli-skill](https://github.com/michaeljabbour/amplifier-cli-skill)** - Build CLI applications with amplifier-foundation
+  - Bundle composition and session orchestration
+  - Module usage patterns and production best practices
+  - Memory systems, hooks, and terminal UI
+
+- **[amplifier-modulebuilder-skill](https://github.com/michaeljabbour/amplifier-modulebuilder-skill)** - Build amplifier-foundation modules
+  - Create custom tools, hooks, providers, contexts, orchestrators
+  - "Bricks and studs" architecture patterns
+  - Testing strategies (60/30/10 pyramid)
+
+### Reference Implementations
+
+See these patterns in action:
+
+- **[amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli)** - Production CLI application
+  - 14 pre-configured modules working together
+  - Memory system (tool-memory, hooks-memory-capture, context-memory)
+  - Bundle composition (base.md + opus.yaml)
+  - Interactive terminal UI with Rich
+
+### Suggested Learning Path
+
+**For CLI application builders:**
+```
+5-Minute Understanding → amplifier-simplecli (see it working) → amplifier-cli-skill (learn patterns) → build your CLI
+```
+
+**For module developers:**
+```
+amplifier-modulebuilder-skill → build a module → test in amplifier-simplecli
 ```
 
 ---

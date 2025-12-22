@@ -2,6 +2,8 @@
 
 Understanding data flow is the fastest way to understand any system. This page traces exactly what happens to your prompt from the moment you hit enter to the moment you see a response.
 
+**See it in action:** [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli) is a working implementation that demonstrates this exact flow with 14 pre-configured modules.
+
 ## The Big Picture
 
 ```
@@ -52,7 +54,9 @@ Every Amplifier session has exactly five types of components. No more, no less.
 
 ## Step-by-Step: What Happens When You Run a Prompt
 
-Let's trace `amplifier run "List Python files"` through the entire system.
+Let's trace a prompt through the entire system. The flow is identical whether you use:
+- Official CLI: `amplifier run "List Python files"` (from amplifier monorepo)
+- Working example: `python simple_cli.py` in [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli)
 
 ### Step 1: Session Creation
 
@@ -314,6 +318,15 @@ These rules are **guaranteed** - you can build systems that depend on them:
 ```
 
 ## Interactive: Trace Your Own Request
+
+**Option 1: See the flow in a working implementation**
+
+Clone and run [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli) to see this exact flow with:
+- Event logging to `~/.amplifier/logs/events.jsonl`
+- Streaming UI showing each step
+- 14 modules working together (orchestrator, providers, tools, context, hooks)
+
+**Option 2: Debug mode with official CLI**
 
 Run this to see the event stream in real-time:
 

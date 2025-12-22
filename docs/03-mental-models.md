@@ -2,6 +2,8 @@
 
 The right mental model turns complexity into intuition. Here are several ways to think about Amplifier - use whichever clicks for you.
 
+**Validated in practice:** All models below accurately represent the system as confirmed in [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli).
+
 ---
 
 ## Model 1: The Orchestra

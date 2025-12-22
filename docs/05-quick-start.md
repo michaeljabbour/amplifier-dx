@@ -10,6 +10,27 @@ You're busy. Here's Amplifier in 5 minutes.
 
 ---
 
+## See It Working
+
+Want to see this in action right now? Clone and run **[amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli)**:
+
+```bash
+git clone https://github.com/michaeljabbour/amplifier-simplecli
+cd amplifier-simplecli
+python simple_cli.py --init
+python simple_cli.py
+```
+
+This is a complete working CLI with:
+- 14 pre-configured modules (orchestrator, providers, tools, hooks)
+- Memory system that learns across sessions
+- Interactive terminal UI with Rich
+- Bundle composition (base.md + opus.yaml)
+
+Study the source to see exactly how it all fits together.
+
+---
+
 ## The 30-Second Version
 
 ```
@@ -83,7 +104,9 @@ hooks:
 You are a helpful coding assistant.
 ```
 
-Run it: `amplifier run --profile my-assistant "Help me refactor this"`
+**Run it:**
+- Official CLI: `amplifier run --profile my-assistant "Help me refactor this"`
+- Working example: See [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli) for bundle-based approach
 
 Need a multi-step workflow? Create a **recipe** (`recipes/*.yaml`), package it inside a bundle, and reference it from a profile or invoke it as a tool. See [`08-asset-model.md`](./08-asset-model.md).
 
@@ -206,11 +229,15 @@ Profiles let you:
 │    ---                                                              │
 │    System prompt in markdown body                                   │
 │                                                                     │
-│  COMMANDS                                                           │
+│  COMMANDS (official CLI)                                            │
 │    amplifier run "prompt"                                           │
 │    amplifier run --profile name "prompt"                            │
 │    amplifier session list                                           │
 │    amplifier profile list                                           │
+│                                                                     │
+│  WORKING EXAMPLE                                                    │
+│    github.com/michaeljabbour/amplifier-simplecli                    │
+│    python simple_cli.py   (bundle-based approach)                   │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
 ```

@@ -2,6 +2,8 @@
 
 These are the things you can absolutely rely on. Not implementation details that might change - these are **contracts**. Build your systems on them.
 
+**Validated in practice:** All guarantees below have been confirmed in [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli), a production CLI implementation with 14 modules.
+
 ## Why This Page Exists
 
 Documentation usually tells you what *is*. This page tells you what *will always be*. When you're building on top of a platform, you need to know which behaviors are guaranteed versus which are just how things happen to work today.
@@ -224,7 +226,29 @@ Honesty builds trust. Here's what might change:
 
 You don't have to take our word for it. Here's how to verify:
 
-### Verify Hooks Always Fire
+### Option 1: Using amplifier-simplecli (Working Example)
+
+```bash
+# Clone and run
+git clone https://github.com/michaeljabbour/amplifier-simplecli
+cd amplifier-simplecli
+python simple_cli.py --init
+
+# Verify Hooks Always Fire
+# Run any command and check the event log
+python simple_cli.py
+cat ~/.amplifier/logs/events.jsonl | grep "tool:"
+# Every tool call has tool:pre and tool:post
+
+# Verify Event Ordering
+# Watch the streaming UI - events appear in deterministic order
+# Check logs show monotonically increasing timestamps
+
+# Verify Config Hierarchy
+# Edit ~/.amplifier-cli/settings.yaml and see changes take effect
+```
+
+### Option 2: Using Official CLI
 
 ```bash
 # Create a hook that logs everything
@@ -234,16 +258,12 @@ amplifier run --hooks hooks-logging "Do something with files"
 cat ~/.amplifier/projects/*/sessions/*/events.jsonl | grep "tool:"
 ```
 
-### Verify Event Ordering
-
 ```bash
 # Run with debug to see event timestamps
 AMPLIFIER_DEBUG=1 amplifier run "List files and count them"
 
 # Timestamps are monotonically increasing for causal chains
 ```
-
-### Verify Config Hierarchy
 
 ```bash
 # Set different values at each level and check which wins
