@@ -6274,7 +6274,7 @@ async def my_hook(event: str, data: dict):
       
 
 <!-- AUTO-GENERATED: External Specifications from amplifier-next-specs -->
-        <!-- Last synced: 2025-12-10T22:16:05.979Z -->
+        <!-- Last synced: 2025-12-28T02:51:26.593Z -->
 
         <hr style="border: none; border-top: 1px solid var(--border); margin: 32px 0;">
 
@@ -32368,6 +32368,33 @@ def truncate_for_slack(text: str, max_length: int = 3000) -&gt; str:
         <li>Real-time streaming UI with thinking blocks and tool execution visualization</li>
         <li>Cross-platform: macOS, Windows, Linux</li>
         <p>---</p>
+        <h3>Quick Links</h3>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Resource</th><th>URL</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Download</strong></td><td><a href="https://github.com/michaeljabbour/amplifier-desktop/releases/latest" target="_blank">Latest Release (v1.1.0)</a></td></tr>
+            <tr><td><strong>Getting Started</strong></td><td><a href="https://github.com/michaeljabbour/amplifier-desktop/blob/main/docs/GETTING_STARTED.md" target="_blank">Installation & First Steps</a></td></tr>
+            <tr><td><strong>User Guide</strong></td><td><a href="https://github.com/michaeljabbour/amplifier-desktop/blob/main/docs/USER_GUIDE.md" target="_blank">Complete Feature Reference</a></td></tr>
+            <tr><td><strong>Developer Guide</strong></td><td><a href="https://github.com/michaeljabbour/amplifier-desktop/blob/main/docs/DEVELOPERS.md" target="_blank">Build from Source</a></td></tr>
+            <tr><td><strong>GitHub</strong></td><td><a href="https://github.com/michaeljabbour/amplifier-desktop" target="_blank">michaeljabbour/amplifier-desktop</a></td></tr>
+          </tbody>
+        </table>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Download Links</h4>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Platform</th><th>Download</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>macOS (Apple Silicon)</td><td><a href="https://github.com/michaeljabbour/amplifier-desktop/releases/latest/download/Amplifier_1.1.0_aarch64.dmg" target="_blank">Amplifier_1.1.0_aarch64.dmg</a></td></tr>
+            <tr><td>macOS (Intel)</td><td><a href="https://github.com/michaeljabbour/amplifier-desktop/releases/latest/download/Amplifier_1.1.0_x64.dmg" target="_blank">Amplifier_1.1.0_x64.dmg</a></td></tr>
+            <tr><td>Windows (x64)</td><td><a href="https://github.com/michaeljabbour/amplifier-desktop/releases/latest/download/Amplifier_1.1.0_x64-setup.exe" target="_blank">Amplifier_1.1.0_x64-setup.exe</a></td></tr>
+            <tr><td>Windows (ARM64)</td><td><a href="https://github.com/michaeljabbour/amplifier-desktop/releases/latest/download/Amplifier_1.1.0_arm64-setup.exe" target="_blank">Amplifier_1.1.0_arm64-setup.exe</a></td></tr>
+            <tr><td>Linux (Debian/Ubuntu)</td><td><a href="https://github.com/michaeljabbour/amplifier-desktop/releases/latest/download/amplifier_1.1.0_amd64.deb" target="_blank">amplifier_1.1.0_amd64.deb</a></td></tr>
+          </tbody>
+        </table>
+        <p>---</p>
         <h3>Architecture</h3>
         <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Three-Tier Design</h4>
         <div class="code-block">
@@ -32666,7 +32693,7 @@ return await provider.complete(request, **provider_kwargs)</code></pre>
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
           </div>
           <pre><code class="language-text">1. Profile settings (from active profile YAML)
-2. Global settings (~/.amplifier/settings.yaml)
+2. Global settings (~/.amplifier/settings.json)
 3. Environment variables
 4. Defaults (hardcoded)</code></pre>
         </div>
@@ -37816,6 +37843,1730 @@ def test_lens_filter_excludes_low_relevance():
         </table>
           </div>
         </div>
+        <div class="spec-section" id="spec-orchestrator-loop-batch-processor" data-category="orchestrators">
+          <div class="spec-header" onclick="toggleSpec(this)">
+            <span class="spec-title">Orchestrator Loop Batch Processor</span>
+            <span class="spec-category">orchestrators</span>
+            <svg class="spec-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="spec-content">
+            
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value)</p>
+        </div>
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
+        </div>
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-batch-processor</code></p>
+        </div>
+        <h3>Overview</h3>
+        <p>An orchestrator for non-interactive batch processing. No chat interface - users provide structured input (files, configs, data), the system processes them according to a defined pipeline, and returns structured output. Demonstrates Amplifier as a processing engine, not just a chatbot.</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Without</th><th>With</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Every interaction requires chat interface</td><td>Drop files, get processed results</td></tr>
+            <tr><td>User must describe what to do each time</td><td>Pre-configured pipelines execute automatically</td></tr>
+            <tr><td>One item at a time</td><td>Parallel processing of many items</td></tr>
+            <tr><td>Interactive waits</td><td>Background processing with notifications</td></tr>
+          </tbody>
+        </table>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
+        <li><strong>Code migration</strong>: Process all files in a directory, apply transformation</li>
+        <li><strong>Documentation generation</strong>: Generate docs from code across entire codebase</li>
+        <li><strong>Test generation</strong>: Batch generate tests for all functions/classes</li>
+        <li><strong>Data transformation</strong>: Convert formats, enrich data, extract patterns</li>
+        <li><strong>Report generation</strong>: Process multiple inputs, produce consolidated report</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
+        <p>This breaks the "chatbot" mental model by:</p>
+        <li><strong>No conversation</strong>: Input → Process → Output</li>
+        <li><strong>No interactive prompts</strong>: Pre-defined pipeline</li>
+        <li><strong>Structured input/output</strong>: Files, JSON, not natural language</li>
+        <li><strong>Batch semantics</strong>: Many items, one pipeline</li>
+        <p>---</p>
+        <h3>Contract</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from dataclasses import dataclass
+from typing import Any, Callable
+
+
+@dataclass
+class BatchInput:
+    &quot;&quot;&quot;Single item in a batch.&quot;&quot;&quot;
+    id: str
+    data: Any
+    metadata: dict[str, Any] | None = None
+
+
+@dataclass
+class BatchOutput:
+    &quot;&quot;&quot;Result for a single item.&quot;&quot;&quot;
+    id: str
+    success: bool
+    result: Any | None = None
+    error: str | None = None
+    metrics: dict[str, Any] | None = None
+
+
+@dataclass
+class BatchResult:
+    &quot;&quot;&quot;Complete batch processing result.&quot;&quot;&quot;
+    total: int
+    succeeded: int
+    failed: int
+    outputs: list[BatchOutput]
+    summary: str | None = None
+    metrics: dict[str, Any] | None = None
+
+
+class BatchProcessorOrchestrator:
+    &quot;&quot;&quot;
+    Orchestrator for non-interactive batch processing.
+
+    Pipeline:
+    1. Receive batch input (files, data, configs)
+    2. Validate and queue items
+    3. Process items (parallel or sequential)
+    4. Aggregate results
+    5. Return structured output
+    &quot;&quot;&quot;
+
+    async def execute(
+        self,
+        prompt: str,  # Unused in batch mode - pipeline is pre-configured
+        context: Any,
+        providers: dict[str, Any],
+        tools: dict[str, Any],
+        hooks: Any,
+        coordinator: Any | None = None,
+    ) -&gt; str:
+        &quot;&quot;&quot;
+        Execute batch processing.
+
+        In batch mode, &#039;prompt&#039; is typically a JSON-encoded BatchConfig
+        or a path to a batch manifest file.
+
+        Returns:
+            JSON-encoded BatchResult
+        &quot;&quot;&quot;
+
+    async def process_batch(
+        self,
+        inputs: list[BatchInput],
+        pipeline: str,  # Pipeline name or inline definition
+        config: dict[str, Any],
+    ) -&gt; BatchResult:
+        &quot;&quot;&quot;
+        Process a batch of inputs through a pipeline.
+
+        Args:
+            inputs: Items to process
+            pipeline: Which pipeline to run
+            config: Pipeline configuration
+
+        Returns:
+            Aggregated batch results
+        &quot;&quot;&quot;</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">toml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-toml">[[orchestrators]]
+module = &quot;loop-batch-processor&quot;
+config = {
+  # Processing control
+  parallel = true                      # Process items in parallel
+  max_concurrent = 5                   # Maximum concurrent items
+  retry_failed = true                  # Retry failed items
+  max_retries = 3                      # Maximum retry attempts
+
+  # Input handling
+  input_format = &quot;files&quot;               # &quot;files&quot; | &quot;json&quot; | &quot;stdin&quot; | &quot;manifest&quot;
+  input_path = &quot;./input/&quot;              # Path for file-based input
+  file_pattern = &quot;**/*.py&quot;             # Glob for file discovery
+
+  # Pipeline definition
+  pipeline = &quot;transform&quot;               # Named pipeline or inline
+  pipelines = {
+    transform = {
+      steps = [
+        { tool = &quot;tool-filesystem&quot;, action = &quot;read&quot; },
+        { prompt = &quot;Transform this code: {content}&quot; },
+        { tool = &quot;tool-filesystem&quot;, action = &quot;write&quot;, path = &quot;{output_path}&quot; }
+      ]
+    },
+    analyze = {
+      steps = [
+        { tool = &quot;tool-filesystem&quot;, action = &quot;read&quot; },
+        { prompt = &quot;Analyze this: {content}&quot; },
+        { aggregate = &quot;summary&quot; }
+      ]
+    }
+  }
+
+  # Output handling
+  output_format = &quot;files&quot;              # &quot;files&quot; | &quot;json&quot; | &quot;stdout&quot; | &quot;report&quot;
+  output_path = &quot;./output/&quot;            # Path for file-based output
+
+  # Aggregation
+  aggregate_results = true             # Combine results at end
+  aggregation_prompt = &quot;Summarize these results: {results}&quot;
+
+  # Progress/notifications
+  progress_hook = &quot;hooks-batch-progress&quot;
+  notify_on_complete = true
+
+  # Error handling
+  fail_fast = false                    # Stop on first error
+  error_output = &quot;./errors/&quot;           # Where to write errors
+}</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Pipeline Definition</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml"># pipelines/code-migration.yaml
+name: code-migration
+description: Migrate code from pattern A to pattern B
+
+input:
+  type: files
+  pattern: &quot;**/*.py&quot;
+
+steps:
+  - name: read
+    tool: tool-filesystem
+    action: read
+
+  - name: analyze
+    prompt: |
+      Analyze this code for migration opportunities:
+      - Old pattern: {config.old_pattern}
+      - Look for: imports, function calls, class usage
+
+      Code:
+      {content}
+
+    output: analysis
+
+  - name: transform
+    prompt: |
+      Apply this migration to the code:
+      - Old pattern: {config.old_pattern}
+      - New pattern: {config.new_pattern}
+      - Analysis: {analysis}
+
+      Code:
+      {content}
+
+    output: transformed
+
+  - name: write
+    tool: tool-filesystem
+    action: write
+    content: &quot;{transformed}&quot;
+    path: &quot;{output_path}&quot;
+
+output:
+  type: files
+  preserve_structure: true
+
+aggregation:
+  prompt: |
+    Summarize the migration:
+    - Files processed: {total}
+    - Files modified: {modified}
+    - Changes made: {changes}</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Architecture</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Processing Flow</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">text</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-text">┌─────────────────────────────────────────────────────────────┐
+│                    BATCH INPUT                               │
+│  Files │ JSON │ Stdin │ Manifest                            │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    INPUT VALIDATOR                           │
+│  Schema validation │ File existence │ Format checks         │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    WORK QUEUE                                │
+│  Priority │ Dependencies │ Parallelization                  │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+          ┌──────────────┼──────────────┐
+          ▼              ▼              ▼
+     ┌─────────┐    ┌─────────┐    ┌─────────┐
+     │ Worker  │    │ Worker  │    │ Worker  │
+     │   1     │    │   2     │    │   3     │
+     └────┬────┘    └────┬────┘    └────┬────┘
+          │              │              │
+          └──────────────┼──────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    RESULT AGGREGATOR                         │
+│  Collect │ Summarize │ Report │ Metrics                     │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    BATCH OUTPUT                              │
+│  Files │ JSON │ Stdout │ Report                             │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Worker Execution</h4>
+        <p>Each worker processes one item through the pipeline:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">async def process_item(
+    item: BatchInput,
+    pipeline: Pipeline,
+    providers: dict,
+    tools: dict,
+) -&gt; BatchOutput:
+    &quot;&quot;&quot;Process single item through pipeline.&quot;&quot;&quot;
+
+    context = {&quot;input&quot;: item.data, &quot;metadata&quot;: item.metadata}
+
+    for step in pipeline.steps:
+        if step.tool:
+            # Tool execution
+            result = await tools[step.tool].execute({
+                &quot;action&quot;: step.action,
+                **interpolate(step.params, context)
+            })
+            context[step.output or &quot;result&quot;] = result.output
+
+        elif step.prompt:
+            # LLM call
+            prompt = interpolate(step.prompt, context)
+            response = await providers[&quot;default&quot;].complete(
+                ChatRequest(messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: prompt}])
+            )
+            context[step.output or &quot;result&quot;] = response.content
+
+    return BatchOutput(
+        id=item.id,
+        success=True,
+        result=context.get(&quot;result&quot;),
+    )</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Events</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Batch lifecycle events
+&quot;batch:start&quot;       # Batch processing begins
+&quot;batch:item:start&quot;  # Single item begins processing
+&quot;batch:item:end&quot;    # Single item completes (success or error)
+&quot;batch:progress&quot;    # Progress update (n of total)
+&quot;batch:end&quot;         # Batch processing completes
+
+# Hook integration
+&quot;batch:item:before&quot; # Before processing - can filter/modify
+&quot;batch:item:after&quot;  # After processing - can transform result</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Examples</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Process all Python files
+amplifier batch \
+  --pipeline code-migration \
+  --input &quot;./src/**/*.py&quot; \
+  --output &quot;./migrated/&quot; \
+  --config &#039;{&quot;old_pattern&quot;: &quot;requests&quot;, &quot;new_pattern&quot;: &quot;httpx&quot;}&#039;
+
+# Process from manifest
+amplifier batch --manifest ./batch-job.yaml
+
+# Watch mode - process new files as they appear
+amplifier batch --pipeline analyze --input &quot;./uploads/&quot; --watch</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from amplifier_core import AmplifierSession
+
+session = AmplifierSession(profile=&quot;batch-processor&quot;)
+
+result = await session.batch_process(
+    inputs=[
+        BatchInput(id=&quot;1&quot;, data={&quot;file&quot;: &quot;src/main.py&quot;}),
+        BatchInput(id=&quot;2&quot;, data={&quot;file&quot;: &quot;src/utils.py&quot;}),
+    ],
+    pipeline=&quot;code-migration&quot;,
+    config={&quot;old_pattern&quot;: &quot;print&quot;, &quot;new_pattern&quot;: &quot;logging&quot;}
+)
+
+print(f&quot;Processed {result.succeeded}/{result.total}&quot;)</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Pipeline as Amplifier Recipe</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml"># Batch processing can use recipes as pipelines
+name: batch-test-generation
+type: batch
+
+input:
+  type: files
+  pattern: &quot;src/**/*.py&quot;
+  exclude: [&quot;*_test.py&quot;, &quot;test_*.py&quot;]
+
+pipeline:
+  recipe: recipes/generate-tests  # Reuse existing recipe
+
+output:
+  type: files
+  path: &quot;tests/&quot;
+  naming: &quot;{basename}_test.py&quot;</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Integration with Hooks</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Progress tracking hook
+@hook(&quot;batch:progress&quot;)
+async def track_progress(event, data):
+    &quot;&quot;&quot;Report progress to external system.&quot;&quot;&quot;
+    await notify_slack(
+        f&quot;Batch {data[&#039;batch_id&#039;]}: {data[&#039;completed&#039;]}/{data[&#039;total&#039;]}&quot;
+    )
+
+# Item filtering hook
+@hook(&quot;batch:item:before&quot;)
+async def filter_items(event, data):
+    &quot;&quot;&quot;Skip certain items.&quot;&quot;&quot;
+    if data[&quot;item&quot;].metadata.get(&quot;skip&quot;):
+        return HookResult(action=&quot;skip&quot;)
+    return HookResult(action=&quot;continue&quot;)
+
+# Result transformation hook
+@hook(&quot;batch:item:after&quot;)
+async def transform_result(event, data):
+    &quot;&quot;&quot;Enrich results with additional data.&quot;&quot;&quot;
+    data[&quot;output&quot;].metrics = calculate_metrics(data[&quot;output&quot;].result)
+    return HookResult(action=&quot;continue&quot;, data=data)</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Testing Strategy</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">class TestBatchProcessor:
+    async def test_processes_all_items(self):
+        &quot;&quot;&quot;All items in batch are processed.&quot;&quot;&quot;
+
+    async def test_parallel_processing(self):
+        &quot;&quot;&quot;Items process concurrently up to max_concurrent.&quot;&quot;&quot;
+
+    async def test_retry_on_failure(self):
+        &quot;&quot;&quot;Failed items are retried up to max_retries.&quot;&quot;&quot;
+
+    async def test_aggregation(self):
+        &quot;&quot;&quot;Results are aggregated correctly.&quot;&quot;&quot;
+
+    async def test_fail_fast_mode(self):
+        &quot;&quot;&quot;Processing stops on first error when fail_fast=true.&quot;&quot;&quot;
+
+    async def test_progress_events(self):
+        &quot;&quot;&quot;Progress hooks receive accurate counts.&quot;&quot;&quot;</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Open Questions</h3>
+        <li><strong>Checkpointing</strong>: Should batch progress be checkpointed for resume on failure?</li>
+        <li><strong>Dependency ordering</strong>: Should items be able to declare dependencies on other items?</li>
+        <li><strong>Dynamic batching</strong>: Should pipeline be able to split/merge items mid-processing?</li>
+        <li><strong>Resource limits</strong>: How to handle memory/API limits for large batches?</li>
+        <li><strong>Result streaming</strong>: Should results be streamed as they complete or only at end?</li>
+          </div>
+        </div>
+        <div class="spec-section" id="spec-orchestrator-loop-design-tool" data-category="orchestrators">
+          <div class="spec-header" onclick="toggleSpec(this)">
+            <span class="spec-title">Orchestrator Loop Design Tool</span>
+            <span class="spec-category">orchestrators</span>
+            <svg class="spec-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="spec-content">
+            
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value - Alex's Domain)</p>
+        </div>
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
+        </div>
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-design-tool</code></p>
+        </div>
+        <h3>Overview</h3>
+        <p>An orchestrator optimized for design tool workflows where the interface is primarily visual/structured rather than conversational. The LLM operates on structured design data (components, layouts, styles) and returns structured modifications, enabling rich visual interfaces with AI-powered manipulation.</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Without</th><th>With</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Chat-based design feedback</td><td>Direct manipulation with AI assistance</td></tr>
+            <tr><td>Describe changes in prose</td><td>Structured intent → structured output</td></tr>
+            <tr><td>Manual implementation of suggestions</td><td>AI generates design tokens, not descriptions</td></tr>
+            <tr><td>Generic coding assistant</td><td>Design-aware operations and constraints</td></tr>
+          </tbody>
+        </table>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
+        <li><strong>Component generation</strong>: "Create a button component with these variants"</li>
+        <li><strong>Layout assistance</strong>: "Arrange these elements in a responsive grid"</li>
+        <li><strong>Style generation</strong>: "Generate a color palette for this brand"</li>
+        <li><strong>Design system expansion</strong>: "Create icon variants matching this style"</li>
+        <li><strong>Accessibility auditing</strong>: "Check this component for WCAG compliance"</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
+        <p>This breaks the "chatbot" mental model by:</p>
+        <li><strong>Structured I/O</strong>: Design tokens in, design tokens out</li>
+        <li><strong>Visual-first</strong>: Interface shows design, not chat</li>
+        <li><strong>Constrained domain</strong>: Design system aware</li>
+        <li><strong>Direct manipulation</strong>: Click/drag triggers AI, not typing</li>
+        <p>---</p>
+        <h3>Contract</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from dataclasses import dataclass
+from typing import Any
+from enum import Enum
+
+
+class DesignOperation(Enum):
+    GENERATE = &quot;generate&quot;       # Create new design element
+    MODIFY = &quot;modify&quot;           # Change existing element
+    ANALYZE = &quot;analyze&quot;         # Inspect/audit element
+    SUGGEST = &quot;suggest&quot;         # Propose alternatives
+    VALIDATE = &quot;validate&quot;       # Check against constraints
+
+
+@dataclass
+class DesignElement:
+    &quot;&quot;&quot;A design element (component, style, layout, etc.).&quot;&quot;&quot;
+    id: str
+    type: str  # &quot;component&quot; | &quot;style&quot; | &quot;layout&quot; | &quot;token&quot; | &quot;icon&quot;
+    data: dict[str, Any]
+    metadata: dict[str, Any] | None = None
+
+
+@dataclass
+class DesignIntent:
+    &quot;&quot;&quot;User&#039;s design intent - structured, not prose.&quot;&quot;&quot;
+    operation: DesignOperation
+    target: DesignElement | None  # Element to modify (if applicable)
+    parameters: dict[str, Any]  # Operation-specific parameters
+    constraints: list[str] | None = None  # Design system constraints
+    context: dict[str, Any] | None = None  # Surrounding context
+
+
+@dataclass
+class DesignResult:
+    &quot;&quot;&quot;Result of design operation - structured output.&quot;&quot;&quot;
+    operation: DesignOperation
+    success: bool
+    elements: list[DesignElement]  # New or modified elements
+    changes: list[dict] | None = None  # Change descriptions
+    suggestions: list[dict] | None = None  # Alternative approaches
+    issues: list[dict] | None = None  # Problems found
+
+
+class DesignToolOrchestrator:
+    &quot;&quot;&quot;
+    Orchestrator for design tool workflows.
+
+    Flow:
+    1. Receive structured design intent
+    2. Load design system context
+    3. Execute design operation
+    4. Return structured design output
+    5. Optionally iterate on feedback
+    &quot;&quot;&quot;
+
+    async def execute(
+        self,
+        prompt: str,  # JSON-encoded DesignIntent
+        context: Any,
+        providers: dict[str, Any],
+        tools: dict[str, Any],
+        hooks: Any,
+        coordinator: Any | None = None,
+    ) -&gt; str:
+        &quot;&quot;&quot;Execute design operation, return JSON DesignResult.&quot;&quot;&quot;
+
+    async def process_intent(
+        self,
+        intent: DesignIntent,
+        design_system: dict[str, Any],
+    ) -&gt; DesignResult:
+        &quot;&quot;&quot;Process a single design intent.&quot;&quot;&quot;
+
+    async def validate_output(
+        self,
+        result: DesignResult,
+        design_system: dict[str, Any],
+    ) -&gt; list[dict]:
+        &quot;&quot;&quot;Validate output against design system constraints.&quot;&quot;&quot;</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">toml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-toml">[[orchestrators]]
+module = &quot;loop-design-tool&quot;
+config = {
+  # Design system
+  design_system = &quot;./design-system.json&quot;  # Design tokens, components, etc.
+  component_library = &quot;./components/&quot;      # Existing components
+
+  # Constraints
+  enforce_design_system = true            # Must use design tokens
+  allow_custom_tokens = false             # Can create new tokens
+  accessibility_level = &quot;AA&quot;               # WCAG compliance level
+
+  # Output format
+  output_format = &quot;figma&quot;                  # &quot;figma&quot; | &quot;css&quot; | &quot;react&quot; | &quot;tokens&quot;
+  include_variants = true                  # Generate component variants
+  include_responsive = true                # Generate responsive versions
+
+  # Generation
+  temperature = 0.3                        # Lower for consistency
+  max_suggestions = 3                      # Alternative designs to generate
+
+  # Iteration
+  allow_refinement = true                  # Support iterative refinement
+  max_refinement_rounds = 5
+
+  # Validation
+  validate_accessibility = true
+  validate_brand = true
+  validate_consistency = true
+}</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Architecture</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design Operation Flow</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">text</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-text">┌─────────────────────────────────────────────────────────────┐
+│                    DESIGN INTENT                             │
+│  Operation: generate/modify/analyze/suggest/validate        │
+│  Target: component/style/layout                             │
+│  Parameters: structured operation data                      │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    DESIGN CONTEXT LOADER                     │
+│  Design System │ Component Library │ Brand Guidelines       │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    INTENT PROCESSOR                          │
+│  Parse intent │ Map to design operations │ Load references  │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+          ┌──────────────┼──────────────┬──────────────┐
+          ▼              ▼              ▼              ▼
+     ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
+     │Generate │    │ Modify  │    │ Analyze │    │Validate │
+     │  Path   │    │  Path   │    │  Path   │    │  Path   │
+     └────┬────┘    └────┬────┘    └────┬────┘    └────┬────┘
+          │              │              │              │
+          └──────────────┴──────┬──────┴──────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    OUTPUT VALIDATOR                          │
+│  Design System Compliance │ Accessibility │ Brand           │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    DESIGN RESULT                             │
+│  Structured output │ Design tokens │ Code │ Suggestions     │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design System Context</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">json</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-json">{
+  &quot;tokens&quot;: {
+    &quot;colors&quot;: {
+      &quot;primary&quot;: { &quot;50&quot;: &quot;#eff6ff&quot;, &quot;500&quot;: &quot;#3b82f6&quot;, &quot;900&quot;: &quot;#1e3a8a&quot; },
+      &quot;neutral&quot;: { &quot;50&quot;: &quot;#fafafa&quot;, &quot;500&quot;: &quot;#737373&quot;, &quot;900&quot;: &quot;#171717&quot; }
+    },
+    &quot;spacing&quot;: {
+      &quot;xs&quot;: &quot;4px&quot;, &quot;sm&quot;: &quot;8px&quot;, &quot;md&quot;: &quot;16px&quot;, &quot;lg&quot;: &quot;24px&quot;, &quot;xl&quot;: &quot;32px&quot;
+    },
+    &quot;typography&quot;: {
+      &quot;fontFamily&quot;: { &quot;sans&quot;: &quot;Inter&quot;, &quot;mono&quot;: &quot;JetBrains Mono&quot; },
+      &quot;fontSize&quot;: { &quot;sm&quot;: &quot;14px&quot;, &quot;base&quot;: &quot;16px&quot;, &quot;lg&quot;: &quot;18px&quot; }
+    },
+    &quot;borderRadius&quot;: {
+      &quot;sm&quot;: &quot;4px&quot;, &quot;md&quot;: &quot;8px&quot;, &quot;lg&quot;: &quot;12px&quot;, &quot;full&quot;: &quot;9999px&quot;
+    }
+  },
+  &quot;components&quot;: {
+    &quot;Button&quot;: {
+      &quot;variants&quot;: [&quot;primary&quot;, &quot;secondary&quot;, &quot;ghost&quot;],
+      &quot;sizes&quot;: [&quot;sm&quot;, &quot;md&quot;, &quot;lg&quot;],
+      &quot;states&quot;: [&quot;default&quot;, &quot;hover&quot;, &quot;active&quot;, &quot;disabled&quot;]
+    }
+  },
+  &quot;constraints&quot;: {
+    &quot;minContrastRatio&quot;: 4.5,
+    &quot;minTouchTarget&quot;: &quot;44px&quot;,
+    &quot;maxLineLength&quot;: &quot;75ch&quot;
+  }
+}</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Operations</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">GENERATE - Create New Elements</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Intent
+{
+    &quot;operation&quot;: &quot;generate&quot;,
+    &quot;parameters&quot;: {
+        &quot;type&quot;: &quot;component&quot;,
+        &quot;name&quot;: &quot;Card&quot;,
+        &quot;description&quot;: &quot;A card component for displaying content&quot;,
+        &quot;variants&quot;: [&quot;default&quot;, &quot;elevated&quot;, &quot;outlined&quot;],
+        &quot;props&quot;: [&quot;title&quot;, &quot;description&quot;, &quot;image&quot;, &quot;actions&quot;]
+    },
+    &quot;constraints&quot;: [&quot;use design tokens&quot;, &quot;WCAG AA&quot;]
+}
+
+# Result
+{
+    &quot;operation&quot;: &quot;generate&quot;,
+    &quot;success&quot;: true,
+    &quot;elements&quot;: [
+        {
+            &quot;id&quot;: &quot;card-default&quot;,
+            &quot;type&quot;: &quot;component&quot;,
+            &quot;data&quot;: {
+                &quot;name&quot;: &quot;Card&quot;,
+                &quot;variant&quot;: &quot;default&quot;,
+                &quot;styles&quot;: {
+                    &quot;backgroundColor&quot;: &quot;var(--color-neutral-50)&quot;,
+                    &quot;borderRadius&quot;: &quot;var(--radius-md)&quot;,
+                    &quot;padding&quot;: &quot;var(--spacing-md)&quot;,
+                    &quot;boxShadow&quot;: &quot;var(--shadow-sm)&quot;
+                },
+                &quot;slots&quot;: [
+                    { &quot;name&quot;: &quot;image&quot;, &quot;type&quot;: &quot;image&quot; },
+                    { &quot;name&quot;: &quot;title&quot;, &quot;type&quot;: &quot;text&quot;, &quot;style&quot;: &quot;heading-sm&quot; },
+                    { &quot;name&quot;: &quot;description&quot;, &quot;type&quot;: &quot;text&quot;, &quot;style&quot;: &quot;body&quot; },
+                    { &quot;name&quot;: &quot;actions&quot;, &quot;type&quot;: &quot;slot&quot; }
+                ]
+            }
+        },
+        // ... elevated and outlined variants
+    ]
+}</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">MODIFY - Change Existing Elements</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Intent
+{
+    &quot;operation&quot;: &quot;modify&quot;,
+    &quot;target&quot;: {
+        &quot;id&quot;: &quot;button-primary&quot;,
+        &quot;type&quot;: &quot;component&quot;,
+        &quot;data&quot;: { /* existing button */ }
+    },
+    &quot;parameters&quot;: {
+        &quot;changes&quot;: [
+            { &quot;property&quot;: &quot;borderRadius&quot;, &quot;value&quot;: &quot;full&quot; },
+            { &quot;property&quot;: &quot;add_variant&quot;, &quot;value&quot;: &quot;icon-only&quot; }
+        ]
+    }
+}
+
+# Result
+{
+    &quot;operation&quot;: &quot;modify&quot;,
+    &quot;success&quot;: true,
+    &quot;elements&quot;: [{ /* modified button */ }],
+    &quot;changes&quot;: [
+        { &quot;property&quot;: &quot;borderRadius&quot;, &quot;from&quot;: &quot;md&quot;, &quot;to&quot;: &quot;full&quot; },
+        { &quot;type&quot;: &quot;variant_added&quot;, &quot;name&quot;: &quot;icon-only&quot; }
+    ]
+}</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">ANALYZE - Inspect Elements</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Intent
+{
+    &quot;operation&quot;: &quot;analyze&quot;,
+    &quot;target&quot;: { /* component to analyze */ },
+    &quot;parameters&quot;: {
+        &quot;checks&quot;: [&quot;accessibility&quot;, &quot;consistency&quot;, &quot;brand&quot;]
+    }
+}
+
+# Result
+{
+    &quot;operation&quot;: &quot;analyze&quot;,
+    &quot;success&quot;: true,
+    &quot;issues&quot;: [
+        {
+            &quot;type&quot;: &quot;accessibility&quot;,
+            &quot;severity&quot;: &quot;error&quot;,
+            &quot;message&quot;: &quot;Contrast ratio 3.2:1 below required 4.5:1&quot;,
+            &quot;element&quot;: &quot;button-text&quot;,
+            &quot;suggestion&quot;: &quot;Use color-primary-700 instead of color-primary-500&quot;
+        },
+        {
+            &quot;type&quot;: &quot;consistency&quot;,
+            &quot;severity&quot;: &quot;warning&quot;,
+            &quot;message&quot;: &quot;Border radius differs from design system standard&quot;,
+            &quot;element&quot;: &quot;card-container&quot;
+        }
+    ]
+}</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">SUGGEST - Propose Alternatives</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Intent
+{
+    &quot;operation&quot;: &quot;suggest&quot;,
+    &quot;target&quot;: { /* current design */ },
+    &quot;parameters&quot;: {
+        &quot;goal&quot;: &quot;improve visual hierarchy&quot;,
+        &quot;count&quot;: 3
+    }
+}
+
+# Result
+{
+    &quot;operation&quot;: &quot;suggest&quot;,
+    &quot;success&quot;: true,
+    &quot;suggestions&quot;: [
+        {
+            &quot;id&quot;: &quot;suggestion-1&quot;,
+            &quot;description&quot;: &quot;Increase heading size and add more spacing&quot;,
+            &quot;elements&quot;: [{ /* modified elements */ }],
+            &quot;rationale&quot;: &quot;Larger headings create clearer hierarchy...&quot;
+        },
+        // ... more suggestions
+    ]
+}</code></pre>
+        </div>
+        <p>---</p>
+        <h3>UI Integration Patterns</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">React Integration</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">tsx</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-tsx">// Design tool component using Amplifier backend
+function DesignCanvas({ designSystem }) {
+  const [selection, setSelection] = useState(null);
+
+  async function handleGenerateVariant() {
+    const result = await amplifier.design({
+      operation: &quot;suggest&quot;,
+      target: selection,
+      parameters: {
+        goal: &quot;create alternative color schemes&quot;,
+        count: 3
+      }
+    });
+
+    // Result is structured - render directly
+    showSuggestionPanel(result.suggestions);
+  }
+
+  async function handleAccessibilityCheck() {
+    const result = await amplifier.design({
+      operation: &quot;analyze&quot;,
+      target: selection,
+      parameters: { checks: [&quot;accessibility&quot;] }
+    });
+
+    // Structured issues - highlight in UI
+    highlightIssues(result.issues);
+  }
+
+  return (
+    &lt;Canvas&gt;
+      &lt;ToolBar&gt;
+        &lt;Button onClick={handleGenerateVariant}&gt;
+          Generate Variants
+        &lt;/Button&gt;
+        &lt;Button onClick={handleAccessibilityCheck}&gt;
+          Check Accessibility
+        &lt;/Button&gt;
+      &lt;/ToolBar&gt;
+      &lt;DesignSurface selection={selection} /&gt;
+    &lt;/Canvas&gt;
+  );
+}</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Figma Plugin Integration</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">typescript</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-typescript">// Figma plugin using Amplifier for design operations
+figma.ui.onmessage = async (msg) =&gt; {
+  if (msg.type === &quot;generate-component&quot;) {
+    const selection = figma.currentPage.selection[0];
+
+    const result = await amplifier.design({
+      operation: &quot;generate&quot;,
+      parameters: {
+        type: &quot;component&quot;,
+        based_on: serializeFigmaNode(selection),
+        variants: msg.variants
+      },
+      constraints: [&quot;match existing style&quot;]
+    });
+
+    // Apply structured result to Figma
+    for (const element of result.elements) {
+      const node = createFigmaNode(element);
+      figma.currentPage.appendChild(node);
+    }
+  }
+};</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Events</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Design operation events
+&quot;design:intent:receive&quot;   # Intent received
+&quot;design:context:load&quot;     # Design system loaded
+&quot;design:operation:start&quot;  # Operation beginning
+&quot;design:operation:end&quot;    # Operation complete
+&quot;design:validate&quot;         # Validation running
+
+# Element events
+&quot;design:element:create&quot;   # New element created
+&quot;design:element:modify&quot;   # Element modified
+&quot;design:element:suggest&quot;  # Suggestions generated
+
+# Issue events
+&quot;design:issue:found&quot;      # Validation issue found
+&quot;design:issue:fixed&quot;      # Issue resolved</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Examples</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Generate component from description
+amplifier design generate \
+  --type component \
+  --name &quot;SearchInput&quot; \
+  --description &quot;Search input with icon and clear button&quot; \
+  --design-system ./tokens.json
+
+# Analyze component for issues
+amplifier design analyze \
+  --input ./components/Button.json \
+  --checks accessibility,consistency
+
+# Generate color palette
+amplifier design generate \
+  --type palette \
+  --base-color &quot;#3b82f6&quot; \
+  --variants &quot;light,dark,colorblind-safe&quot;
+
+# Suggest layout improvements
+amplifier design suggest \
+  --input ./layouts/dashboard.json \
+  --goal &quot;improve information hierarchy&quot;</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from amplifier_core import AmplifierSession
+
+session = AmplifierSession(profile=&quot;design-tool&quot;)
+
+# Generate a component
+result = await session.design(
+    operation=&quot;generate&quot;,
+    parameters={
+        &quot;type&quot;: &quot;component&quot;,
+        &quot;name&quot;: &quot;Avatar&quot;,
+        &quot;sizes&quot;: [&quot;sm&quot;, &quot;md&quot;, &quot;lg&quot;],
+        &quot;variants&quot;: [&quot;image&quot;, &quot;initials&quot;, &quot;icon&quot;]
+    }
+)
+
+# Iterate on feedback
+refined = await session.design(
+    operation=&quot;modify&quot;,
+    target=result.elements[0],
+    parameters={
+        &quot;feedback&quot;: &quot;make the initials variant more prominent&quot;
+    }
+)</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Design System Enforcement</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">class DesignSystemValidator:
+    &quot;&quot;&quot;Validates output against design system constraints.&quot;&quot;&quot;
+
+    def validate(self, element: DesignElement, system: dict) -&gt; list[dict]:
+        issues = []
+
+        # Check token usage
+        for prop, value in element.data.get(&quot;styles&quot;, {}).items():
+            if not self.is_valid_token(value, system):
+                issues.append({
+                    &quot;type&quot;: &quot;token_violation&quot;,
+                    &quot;property&quot;: prop,
+                    &quot;value&quot;: value,
+                    &quot;suggestion&quot;: self.suggest_token(prop, value, system)
+                })
+
+        # Check accessibility
+        if element.type == &quot;component&quot;:
+            a11y_issues = self.check_accessibility(element, system)
+            issues.extend(a11y_issues)
+
+        # Check consistency
+        similar = self.find_similar_components(element, system)
+        if similar:
+            consistency_issues = self.check_consistency(element, similar)
+            issues.extend(consistency_issues)
+
+        return issues</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Testing Strategy</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">class TestDesignToolOrchestrator:
+    async def test_generate_uses_design_tokens(self):
+        &quot;&quot;&quot;Generated elements use design system tokens.&quot;&quot;&quot;
+
+    async def test_modify_preserves_constraints(self):
+        &quot;&quot;&quot;Modifications respect design system constraints.&quot;&quot;&quot;
+
+    async def test_analyze_finds_accessibility_issues(self):
+        &quot;&quot;&quot;Analysis catches WCAG violations.&quot;&quot;&quot;
+
+    async def test_suggest_provides_alternatives(self):
+        &quot;&quot;&quot;Suggestions are valid and different.&quot;&quot;&quot;
+
+    async def test_output_format_correct(self):
+        &quot;&quot;&quot;Output matches requested format (Figma/CSS/React).&quot;&quot;&quot;
+
+    async def test_validation_enforcement(self):
+        &quot;&quot;&quot;Invalid designs are rejected or fixed.&quot;&quot;&quot;</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Open Questions</h3>
+        <li><strong>Design format standardization</strong>: What's the canonical format for design elements?</li>
+        <li><strong>Real-time collaboration</strong>: How to handle multiple designers editing?</li>
+        <li><strong>Version control</strong>: How to track design evolution?</li>
+        <li><strong>Brand learning</strong>: Can the system learn brand style from examples?</li>
+        <li><strong>Code generation</strong>: How tight is the design-to-code pipeline?</li>
+          </div>
+        </div>
+        <div class="spec-section" id="spec-orchestrator-loop-event-driven" data-category="orchestrators">
+          <div class="spec-header" onclick="toggleSpec(this)">
+            <span class="spec-title">Orchestrator Loop Event Driven</span>
+            <span class="spec-category">orchestrators</span>
+            <svg class="spec-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="spec-content">
+            
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value)</p>
+        </div>
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
+        </div>
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-event-driven</code></p>
+        </div>
+        <h3>Overview</h3>
+        <p>An orchestrator that responds to external events rather than user prompts. The agent runs continuously (or on-demand), watching for triggers like file changes, git pushes, webhooks, or scheduled times. Demonstrates Amplifier as an automation engine, not requiring interactive input.</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Without</th><th>With</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>User must initiate every interaction</td><td>Agent responds to events automatically</td></tr>
+            <tr><td>Manual triggers for CI/CD workflows</td><td>Git push triggers code review</td></tr>
+            <tr><td>Polling and manual checks</td><td>Webhook-driven instant response</td></tr>
+            <tr><td>Scheduled tasks require separate tooling</td><td>Built-in cron-like scheduling</td></tr>
+          </tbody>
+        </table>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
+        <li><strong>PR auto-review</strong>: New PR triggers security/quality analysis</li>
+        <li><strong>File watcher</strong>: Code changes trigger test generation or docs update</li>
+        <li><strong>Webhook handler</strong>: External service events trigger processing</li>
+        <li><strong>Scheduled jobs</strong>: Daily report generation, weekly summaries</li>
+        <li><strong>Alert responder</strong>: Monitoring alerts trigger incident investigation</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
+        <p>This breaks the "chatbot" mental model by:</p>
+        <li><strong>No user prompt</strong>: Events trigger actions</li>
+        <li><strong>Continuous operation</strong>: Runs in background</li>
+        <li><strong>External integration</strong>: Responds to real-world triggers</li>
+        <li><strong>Automation-first</strong>: Set up once, runs forever</li>
+        <p>---</p>
+        <h3>Contract</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from dataclasses import dataclass
+from typing import Any, Callable
+from enum import Enum
+
+
+class EventType(Enum):
+    FILE_CHANGE = &quot;file_change&quot;
+    GIT_PUSH = &quot;git_push&quot;
+    GIT_PR = &quot;git_pr&quot;
+    WEBHOOK = &quot;webhook&quot;
+    SCHEDULE = &quot;schedule&quot;
+    MANUAL = &quot;manual&quot;
+    CUSTOM = &quot;custom&quot;
+
+
+@dataclass
+class Event:
+    &quot;&quot;&quot;External event that triggers processing.&quot;&quot;&quot;
+    type: EventType
+    source: str
+    payload: dict[str, Any]
+    timestamp: str
+    metadata: dict[str, Any] | None = None
+
+
+@dataclass
+class EventResult:
+    &quot;&quot;&quot;Result of processing an event.&quot;&quot;&quot;
+    event_id: str
+    success: bool
+    actions_taken: list[str]
+    output: Any | None = None
+    error: str | None = None
+
+
+class EventDrivenOrchestrator:
+    &quot;&quot;&quot;
+    Orchestrator that responds to external events.
+
+    Lifecycle:
+    1. Register event sources (watchers, webhooks, schedules)
+    2. Wait for events
+    3. Match event to handler
+    4. Execute handler pipeline
+    5. Report result
+    6. Continue waiting
+    &quot;&quot;&quot;
+
+    async def execute(
+        self,
+        prompt: str,  # Initial config or ignored in daemon mode
+        context: Any,
+        providers: dict[str, Any],
+        tools: dict[str, Any],
+        hooks: Any,
+        coordinator: Any | None = None,
+    ) -&gt; str:
+        &quot;&quot;&quot;
+        Start event-driven execution.
+
+        In daemon mode, this runs indefinitely.
+        In one-shot mode, processes single event and exits.
+        &quot;&quot;&quot;
+
+    async def handle_event(
+        self,
+        event: Event,
+        handler: str,  # Handler name or pipeline
+    ) -&gt; EventResult:
+        &quot;&quot;&quot;Process a single event through its handler.&quot;&quot;&quot;
+
+    def register_source(
+        self,
+        source_type: EventType,
+        config: dict[str, Any],
+        handler: str,
+    ) -&gt; None:
+        &quot;&quot;&quot;Register an event source and its handler.&quot;&quot;&quot;
+
+    async def start(self) -&gt; None:
+        &quot;&quot;&quot;Start listening for events (daemon mode).&quot;&quot;&quot;
+
+    async def stop(self) -&gt; None:
+        &quot;&quot;&quot;Stop listening and cleanup.&quot;&quot;&quot;</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">toml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-toml">[[orchestrators]]
+module = &quot;loop-event-driven&quot;
+config = {
+  # Operating mode
+  mode = &quot;daemon&quot;                      # &quot;daemon&quot; | &quot;one-shot&quot;
+
+  # Event sources
+  sources = [
+    # File watcher
+    {
+      type = &quot;file_change&quot;,
+      path = &quot;./src/&quot;,
+      pattern = &quot;**/*.py&quot;,
+      events = [&quot;modify&quot;, &quot;create&quot;],
+      handler = &quot;on-code-change&quot;,
+      debounce_ms = 1000,              # Wait for rapid changes to settle
+    },
+
+    # Git hooks
+    {
+      type = &quot;git_push&quot;,
+      branches = [&quot;main&quot;, &quot;develop&quot;],
+      handler = &quot;on-push&quot;,
+    },
+    {
+      type = &quot;git_pr&quot;,
+      events = [&quot;opened&quot;, &quot;synchronize&quot;],
+      handler = &quot;on-pr&quot;,
+    },
+
+    # Webhooks
+    {
+      type = &quot;webhook&quot;,
+      path = &quot;/hooks/deploy&quot;,
+      secret = &quot;${WEBHOOK_SECRET}&quot;,
+      handler = &quot;on-deploy-webhook&quot;,
+    },
+
+    # Schedules (cron syntax)
+    {
+      type = &quot;schedule&quot;,
+      cron = &quot;0 9 * * MON&quot;,            # Every Monday at 9am
+      handler = &quot;weekly-summary&quot;,
+    },
+    {
+      type = &quot;schedule&quot;,
+      cron = &quot;0 */4 * * *&quot;,            # Every 4 hours
+      handler = &quot;health-check&quot;,
+    },
+  ]
+
+  # Handlers (pipelines for each event type)
+  handlers = {
+    on-code-change = {
+      steps = [
+        { prompt = &quot;Analyze changes in {files}: what tests might need updating?&quot; },
+        { tool = &quot;tool-filesystem&quot;, action = &quot;write&quot;, path = &quot;suggested-tests.md&quot; }
+      ]
+    },
+    on-pr = {
+      recipe = &quot;recipes/pr-reviewer&quot;   # Use existing recipe
+    },
+    weekly-summary = {
+      prompt = &quot;Generate weekly summary of {repo} activity since {last_run}&quot;
+    }
+  }
+
+  # Concurrency
+  max_concurrent_handlers = 3
+  queue_overflow = &quot;drop&quot;              # &quot;drop&quot; | &quot;queue&quot; | &quot;error&quot;
+
+  # Webhook server (if webhook sources used)
+  webhook_port = 8080
+  webhook_host = &quot;0.0.0.0&quot;
+
+  # Persistence
+  state_file = &quot;.amplifier/event-state.json&quot;
+  persist_last_run = true              # Remember last run times for schedules
+}</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Architecture</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Event Flow</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">text</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-text">┌─────────────────────────────────────────────────────────────┐
+│                    EVENT SOURCES                             │
+│                                                              │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
+│  │  File    │  │   Git    │  │ Webhook  │  │ Schedule │    │
+│  │ Watcher  │  │  Hooks   │  │ Server   │  │  Timer   │    │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘    │
+│       │             │             │             │           │
+└───────┼─────────────┼─────────────┼─────────────┼───────────┘
+        │             │             │             │
+        └─────────────┴──────┬──────┴─────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    EVENT ROUTER                              │
+│  Match source → handler │ Filter │ Dedupe │ Queue           │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    HANDLER EXECUTOR                          │
+│                                                              │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │  Handler 1  │     │  Handler 2  │     │  Handler 3  │   │
+│  │  (PR Rev)   │     │ (File Watch)│     │  (Schedule) │   │
+│  └──────┬──────┘     └──────┬──────┘     └──────┬──────┘   │
+│         │                   │                   │           │
+└─────────┼───────────────────┼───────────────────┼───────────┘
+          │                   │                   │
+          └───────────────────┴───────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    RESULT REPORTER                           │
+│  Log │ Notify │ Store │ Update Status                       │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Event Source Implementations</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">class FileWatcherSource:
+    &quot;&quot;&quot;Watch filesystem for changes.&quot;&quot;&quot;
+
+    async def start(self, config: dict, callback: Callable):
+        watcher = Watchdog(config[&quot;path&quot;], config[&quot;pattern&quot;])
+        watcher.on_change = lambda files: callback(Event(
+            type=EventType.FILE_CHANGE,
+            source=config[&quot;path&quot;],
+            payload={&quot;files&quot;: files}
+        ))
+        await watcher.start()
+
+
+class GitHookSource:
+    &quot;&quot;&quot;Receive git hook events.&quot;&quot;&quot;
+
+    async def start(self, config: dict, callback: Callable):
+        # Register with git hook dispatcher
+        await git_hooks.register(
+            events=config.get(&quot;events&quot;, [&quot;push&quot;]),
+            branches=config.get(&quot;branches&quot;),
+            callback=lambda data: callback(Event(
+                type=EventType.GIT_PUSH,
+                source=&quot;git&quot;,
+                payload=data
+            ))
+        )
+
+
+class WebhookSource:
+    &quot;&quot;&quot;HTTP webhook receiver.&quot;&quot;&quot;
+
+    async def start(self, config: dict, callback: Callable):
+        @app.post(config[&quot;path&quot;])
+        async def webhook_handler(request):
+            if not verify_signature(request, config[&quot;secret&quot;]):
+                raise HTTPException(401)
+
+            callback(Event(
+                type=EventType.WEBHOOK,
+                source=config[&quot;path&quot;],
+                payload=await request.json()
+            ))
+            return {&quot;status&quot;: &quot;accepted&quot;}
+
+
+class ScheduleSource:
+    &quot;&quot;&quot;Cron-like scheduler.&quot;&quot;&quot;
+
+    async def start(self, config: dict, callback: Callable):
+        scheduler = AsyncScheduler()
+        scheduler.add_job(
+            cron=config[&quot;cron&quot;],
+            func=lambda: callback(Event(
+                type=EventType.SCHEDULE,
+                source=config[&quot;cron&quot;],
+                payload={&quot;scheduled_time&quot;: datetime.now()}
+            ))
+        )
+        await scheduler.start()</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Events</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Event-driven lifecycle events
+&quot;event:received&quot;       # External event received
+&quot;event:queued&quot;         # Event queued for processing
+&quot;event:handler:start&quot;  # Handler begins processing
+&quot;event:handler:end&quot;    # Handler completes
+&quot;event:dropped&quot;        # Event dropped (queue full, filtered)
+
+# Source lifecycle
+&quot;source:started&quot;       # Event source started
+&quot;source:stopped&quot;       # Event source stopped
+&quot;source:error&quot;         # Event source error</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Examples</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">PR Auto-Review Setup</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml"># .amplifier/profiles/pr-reviewer-daemon.md
+---
+profile:
+  name: pr-reviewer-daemon
+  extends: dev
+
+session:
+  orchestrator:
+    module: loop-event-driven
+    config:
+      mode: daemon
+      sources:
+        - type: git_pr
+          events: [opened, synchronize]
+          handler: review-pr
+
+      handlers:
+        review-pr:
+          recipe: recipes/pr-reviewer
+          config:
+            post_comment: true
+            require_approval: false
+---
+
+# PR Review Daemon
+
+Automatically reviews PRs when they&#039;re opened or updated.</code></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Start the daemon
+amplifier daemon --profile pr-reviewer-daemon
+
+# Or as a service
+amplifier daemon --profile pr-reviewer-daemon --background --pid-file /var/run/amplifier-pr.pid</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">File Watcher for Docs</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml">sources:
+  - type: file_change
+    path: &quot;./src/&quot;
+    pattern: &quot;**/*.py&quot;
+    events: [modify, create]
+    debounce_ms: 2000
+    handler: update-docs
+
+handlers:
+  update-docs:
+    steps:
+      - tool: tool-filesystem
+        action: read
+        path: &quot;{changed_files}&quot;
+
+      - prompt: |
+          These files were modified:
+          {files_content}
+
+          Update the corresponding documentation in ./docs/
+          to reflect any API changes.
+
+      - tool: tool-filesystem
+        action: write</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Webhook Integration</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># External service calls webhook when deployment completes
+# Amplifier validates signature and triggers handler
+
+# curl -X POST http://localhost:8080/hooks/deploy \
+#   -H &quot;X-Signature: sha256=...&quot; \
+#   -d &#039;{&quot;environment&quot;: &quot;production&quot;, &quot;version&quot;: &quot;1.2.3&quot;}&#039;
+
+handlers:
+  on-deploy:
+    steps:
+      - prompt: |
+          Deployment completed:
+          - Environment: {payload.environment}
+          - Version: {payload.version}
+
+          Generate release notes and update changelog.</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Scheduled Reports</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml">sources:
+  - type: schedule
+    cron: &quot;0 9 * * MON&quot;  # Monday 9am
+    handler: weekly-summary
+
+handlers:
+  weekly-summary:
+    steps:
+      - tool: tool-git-advanced
+        action: log
+        since: &quot;1 week ago&quot;
+
+      - prompt: |
+          Generate a weekly summary for the team:
+
+          Commits: {git_log}
+
+          Include:
+          - Key changes
+          - Notable PRs merged
+          - Upcoming work
+
+      - tool: tool-slack
+        action: post
+        channel: &quot;#team-updates&quot;
+        message: &quot;{summary}&quot;</code></pre>
+        </div>
+        <p>---</p>
+        <h3>CLI Integration</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Start event daemon
+amplifier daemon --profile my-profile
+
+# Start with specific sources only
+amplifier daemon --profile my-profile --sources file_change,schedule
+
+# One-shot mode (process single event and exit)
+amplifier event --type webhook --payload &#039;{&quot;action&quot;: &quot;test&quot;}&#039;
+
+# List registered sources
+amplifier daemon status
+
+# Trigger manual event
+amplifier daemon trigger --handler weekly-summary
+
+# View event history
+amplifier daemon history --limit 50</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Integration with Hooks</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Filter events before processing
+@hook(&quot;event:received&quot;)
+async def filter_events(event, data):
+    &quot;&quot;&quot;Skip events from certain sources.&quot;&quot;&quot;
+    if data[&quot;event&quot;].payload.get(&quot;bot&quot;):
+        return HookResult(action=&quot;skip&quot;, reason=&quot;Ignoring bot events&quot;)
+    return HookResult(action=&quot;continue&quot;)
+
+# Notify on completion
+@hook(&quot;event:handler:end&quot;)
+async def notify_completion(event, data):
+    &quot;&quot;&quot;Send notification when handler completes.&quot;&quot;&quot;
+    if data[&quot;result&quot;].success:
+        await send_slack(f&quot;Handler {data[&#039;handler&#039;]} completed successfully&quot;)
+    else:
+        await send_pagerduty(f&quot;Handler {data[&#039;handler&#039;]} failed: {data[&#039;result&#039;].error}&quot;)</code></pre>
+        </div>
+        <p>---</p>
+        <h3>State Management</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">@dataclass
+class EventState:
+    &quot;&quot;&quot;Persisted state for event-driven orchestrator.&quot;&quot;&quot;
+
+    # Last run times for schedules
+    last_run: dict[str, datetime]
+
+    # Processed event IDs (for deduplication)
+    processed_events: set[str]
+
+    # Queue state (for restart recovery)
+    pending_queue: list[Event]
+
+    # Handler state (for long-running handlers)
+    handler_state: dict[str, Any]</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Testing Strategy</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">class TestEventDrivenOrchestrator:
+    async def test_file_watcher_triggers_handler(self):
+        &quot;&quot;&quot;File change triggers correct handler.&quot;&quot;&quot;
+
+    async def test_debounce_rapid_changes(self):
+        &quot;&quot;&quot;Rapid file changes are debounced.&quot;&quot;&quot;
+
+    async def test_webhook_validates_signature(self):
+        &quot;&quot;&quot;Webhook rejects invalid signatures.&quot;&quot;&quot;
+
+    async def test_schedule_fires_on_time(self):
+        &quot;&quot;&quot;Scheduled events fire at correct times.&quot;&quot;&quot;
+
+    async def test_concurrent_handler_limit(self):
+        &quot;&quot;&quot;Max concurrent handlers is respected.&quot;&quot;&quot;
+
+    async def test_queue_overflow_handling(self):
+        &quot;&quot;&quot;Queue overflow is handled per config.&quot;&quot;&quot;
+
+    async def test_state_persistence(self):
+        &quot;&quot;&quot;State survives restart.&quot;&quot;&quot;</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Open Questions</h3>
+        <li><strong>Exactly-once semantics</strong>: How to guarantee an event is processed exactly once across restarts?</li>
+        <li><strong>Dead letter queue</strong>: Where do failed events go for retry/inspection?</li>
+        <li><strong>Event sourcing</strong>: Should all events be logged for replay/audit?</li>
+        <li><strong>Multi-node</strong>: How to distribute event processing across multiple Amplifier instances?</li>
+        <li><strong>Backpressure</strong>: How to handle event flood without losing events?</li>
+          </div>
+        </div>
         <div class="spec-section" id="spec-orchestrator-loop-iterative-refinement" data-category="orchestrators">
           <div class="spec-header" onclick="toggleSpec(this)">
             <span class="spec-title">Orchestrator Loop Iterative Refinement</span>
@@ -38729,6 +40480,564 @@ def test_feedback_correlator_links_changes():
             <tr><td>0.1.0</td><td>Draft</td><td>Initial specification</td></tr>
           </tbody>
         </table>
+          </div>
+        </div>
+        <div class="spec-section" id="spec-orchestrator-loop-observer-swarm" data-category="orchestrators">
+          <div class="spec-header" onclick="toggleSpec(this)">
+            <span class="spec-title">Orchestrator Loop Observer Swarm</span>
+            <span class="spec-category">orchestrators</span>
+            <svg class="spec-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="spec-content">
+            
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P2 (Medium Value)</p>
+        </div>
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
+        </div>
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-observer-swarm</code></p>
+        </div>
+        <h3>Overview</h3>
+        <p>An orchestrator where multiple specialized agents observe a shared work queue or artifact, each contributing from their expertise without direct user interaction. Agents work semi-autonomously, coordinating through a shared context rather than explicit delegation.</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Without</th><th>With</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Single agent perspective</td><td>Multiple expert perspectives simultaneously</td></tr>
+            <tr><td>Sequential expert consultation</td><td>Parallel observation and contribution</td></tr>
+            <tr><td>User orchestrates between agents</td><td>Agents self-coordinate around shared work</td></tr>
+            <tr><td>Explicit handoffs required</td><td>Emergent collaboration through observation</td></tr>
+          </tbody>
+        </table>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
+        <li><strong>Code review swarm</strong>: Security, performance, style experts all observe PR</li>
+        <li><strong>Design review</strong>: UX, accessibility, brand experts observe design artifacts</li>
+        <li><strong>Document review</strong>: Technical accuracy, style, completeness experts observe docs</li>
+        <li><strong>Architecture review</strong>: Multiple stakeholders observe design proposal</li>
+        <li><strong>Incident investigation</strong>: Multiple specialists observe logs/metrics simultaneously</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
+        <p>This breaks the "chatbot" mental model by:</p>
+        <li><strong>Multiple agents</strong>: Not one assistant, but a team</li>
+        <li><strong>Observation-based</strong>: Agents watch and contribute, not prompted</li>
+        <li><strong>Emergent coordination</strong>: No explicit task assignment</li>
+        <li><strong>Shared context</strong>: All agents see the same evolving work</li>
+        <p>---</p>
+        <h3>Contract</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from dataclasses import dataclass
+from typing import Any
+from enum import Enum
+
+
+class ObserverRole(Enum):
+    CRITIC = &quot;critic&quot;           # Find problems
+    SUGGESTER = &quot;suggester&quot;     # Propose improvements
+    VALIDATOR = &quot;validator&quot;     # Verify correctness
+    SYNTHESIZER = &quot;synthesizer&quot; # Combine insights
+
+
+@dataclass
+class Observer:
+    &quot;&quot;&quot;A specialized agent that observes shared work.&quot;&quot;&quot;
+    name: str
+    role: ObserverRole
+    expertise: str
+    trigger_conditions: list[str]  # When to activate
+    system_prompt: str
+
+
+@dataclass
+class Observation:
+    &quot;&quot;&quot;An observation from an agent.&quot;&quot;&quot;
+    observer: str
+    type: str  # &quot;issue&quot; | &quot;suggestion&quot; | &quot;approval&quot; | &quot;question&quot;
+    content: str
+    confidence: float
+    references: list[str]  # What part of artifact this relates to
+    priority: str  # &quot;high&quot; | &quot;medium&quot; | &quot;low&quot;
+
+
+@dataclass
+class SwarmResult:
+    &quot;&quot;&quot;Aggregated result from observer swarm.&quot;&quot;&quot;
+    observations: list[Observation]
+    consensus: dict[str, Any]  # Areas of agreement
+    conflicts: list[dict]  # Areas of disagreement
+    synthesis: str  # Combined insight
+    recommendations: list[str]
+
+
+class ObserverSwarmOrchestrator:
+    &quot;&quot;&quot;
+    Orchestrator that coordinates multiple observer agents.
+
+    Flow:
+    1. Present artifact to swarm
+    2. Each observer analyzes from their perspective
+    3. Observations are shared to shared context
+    4. Observers can react to each other&#039;s observations
+    5. Synthesizer combines insights
+    6. Result includes all perspectives
+    &quot;&quot;&quot;
+
+    async def execute(
+        self,
+        prompt: str,  # Artifact to observe or task description
+        context: Any,
+        providers: dict[str, Any],
+        tools: dict[str, Any],
+        hooks: Any,
+        coordinator: Any | None = None,
+    ) -&gt; str:
+        &quot;&quot;&quot;Execute observer swarm on artifact.&quot;&quot;&quot;
+
+    async def spawn_observers(
+        self,
+        artifact: str,
+        observers: list[Observer],
+    ) -&gt; list[Observation]:
+        &quot;&quot;&quot;Spawn all observers to analyze artifact.&quot;&quot;&quot;
+
+    async def coordinate_round(
+        self,
+        observations: list[Observation],
+        observers: list[Observer],
+    ) -&gt; list[Observation]:
+        &quot;&quot;&quot;Allow observers to react to each other.&quot;&quot;&quot;
+
+    async def synthesize(
+        self,
+        all_observations: list[Observation],
+    ) -&gt; SwarmResult:
+        &quot;&quot;&quot;Combine observations into final result.&quot;&quot;&quot;</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">toml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-toml">[[orchestrators]]
+module = &quot;loop-observer-swarm&quot;
+config = {
+  # Swarm composition
+  observers = [
+    {
+      name = &quot;security-expert&quot;,
+      role = &quot;critic&quot;,
+      expertise = &quot;security vulnerabilities, auth, injection&quot;,
+      trigger_conditions = [&quot;*.py&quot;, &quot;auth/*&quot;, &quot;api/*&quot;],
+      priority = 1,  # Higher priority observers go first
+    },
+    {
+      name = &quot;performance-expert&quot;,
+      role = &quot;critic&quot;,
+      expertise = &quot;performance, efficiency, scalability&quot;,
+      trigger_conditions = [&quot;*.py&quot;, &quot;db/*&quot;, &quot;api/*&quot;],
+      priority = 2,
+    },
+    {
+      name = &quot;ux-expert&quot;,
+      role = &quot;suggester&quot;,
+      expertise = &quot;user experience, error messages, API ergonomics&quot;,
+      trigger_conditions = [&quot;*.ts&quot;, &quot;*.tsx&quot;, &quot;api/*&quot;],
+      priority = 3,
+    },
+    {
+      name = &quot;synthesizer&quot;,
+      role = &quot;synthesizer&quot;,
+      expertise = &quot;combining perspectives, identifying consensus&quot;,
+      trigger_conditions = [&quot;always&quot;],
+      priority = 99,  # Always last
+    },
+  ]
+
+  # Execution control
+  parallel_observers = true           # Run observers in parallel
+  max_concurrent = 4                  # Max parallel observers
+  coordination_rounds = 2             # How many rounds of reaction
+  require_consensus = false           # Must all observers agree?
+
+  # Observation handling
+  min_confidence = 0.6               # Minimum confidence to include
+  dedupe_similar = true              # Combine similar observations
+  conflict_resolution = &quot;vote&quot;        # &quot;vote&quot; | &quot;priority&quot; | &quot;synthesize&quot;
+
+  # Output
+  include_dissent = true             # Show minority opinions
+  synthesis_style = &quot;executive&quot;       # &quot;executive&quot; | &quot;detailed&quot; | &quot;action-items&quot;
+}</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Architecture</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Swarm Execution Flow</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">text</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-text">┌─────────────────────────────────────────────────────────────┐
+│                    ARTIFACT INPUT                            │
+│  Code │ Design │ Document │ Architecture │ Logs             │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    OBSERVER SPAWNER                          │
+│  Select observers based on artifact type and triggers       │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+          ┌──────────────┼──────────────┬──────────────┐
+          ▼              ▼              ▼              ▼
+     ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
+     │Security │    │  Perf   │    │   UX    │    │  Style  │
+     │ Expert  │    │ Expert  │    │ Expert  │    │ Expert  │
+     └────┬────┘    └────┬────┘    └────┬────┘    └────┬────┘
+          │              │              │              │
+          └──────────────┴──────┬──────┴──────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    SHARED OBSERVATION POOL                   │
+│  All observations visible to all observers                  │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼ (Coordination Rounds)
+┌─────────────────────────────────────────────────────────────┐
+│                    REACTION PHASE                            │
+│  Observers can respond to each other&#039;s observations         │
+│  &quot;I agree with Security Expert&#039;s point about X...&quot;          │
+│  &quot;Performance concern overrides UX suggestion because...&quot;   │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    SYNTHESIS                                 │
+│  Combine observations │ Resolve conflicts │ Prioritize      │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    SWARM RESULT                              │
+│  All observations │ Consensus │ Conflicts │ Recommendations │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Observer Agents</h4>
+        <p>Each observer is a specialized agent with:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">class ObserverAgent:
+    &quot;&quot;&quot;Individual observer in the swarm.&quot;&quot;&quot;
+
+    def __init__(self, config: Observer, providers: dict, tools: dict):
+        self.config = config
+        self.providers = providers
+        self.tools = tools
+
+    async def observe(self, artifact: str) -&gt; list[Observation]:
+        &quot;&quot;&quot;Generate observations about the artifact.&quot;&quot;&quot;
+
+        prompt = f&quot;&quot;&quot;
+        You are a {self.config.expertise} expert.
+        Your role is to {self.config.role.value}.
+
+        Analyze this artifact and provide observations:
+        - For issues: describe the problem, severity, and location
+        - For suggestions: describe the improvement and benefit
+        - For approvals: confirm what looks good
+        - For questions: ask clarifying questions
+
+        Artifact:
+        {artifact}
+        &quot;&quot;&quot;
+
+        response = await self.providers[&quot;default&quot;].complete(...)
+        return parse_observations(response, observer=self.config.name)
+
+    async def react(
+        self,
+        artifact: str,
+        other_observations: list[Observation]
+    ) -&gt; list[Observation]:
+        &quot;&quot;&quot;React to other observers&#039; observations.&quot;&quot;&quot;
+
+        prompt = f&quot;&quot;&quot;
+        You are a {self.config.expertise} expert.
+
+        Other experts have made these observations:
+        {format_observations(other_observations)}
+
+        Original artifact:
+        {artifact}
+
+        React to the other observations:
+        - Agree or disagree with specific points
+        - Add nuance from your expertise
+        - Identify conflicts between recommendations
+        - Support or challenge priorities
+        &quot;&quot;&quot;
+
+        response = await self.providers[&quot;default&quot;].complete(...)
+        return parse_reactions(response, observer=self.config.name)</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Observer Patterns</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Code Review Swarm</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml">observers:
+  - name: security-auditor
+    role: critic
+    expertise: |
+      Security vulnerabilities:
+      - Injection attacks (SQL, command, XSS)
+      - Authentication/authorization flaws
+      - Secrets exposure
+      - Input validation
+    system_prompt: |
+      You are a security auditor. Your job is to find security vulnerabilities.
+      Be thorough but avoid false positives. Rate severity: critical/high/medium/low.
+
+  - name: performance-analyst
+    role: critic
+    expertise: |
+      Performance concerns:
+      - Algorithm complexity
+      - Database query efficiency
+      - Memory usage
+      - Concurrency issues
+    system_prompt: |
+      You are a performance analyst. Find inefficiencies and bottlenecks.
+      Suggest concrete improvements with expected impact.
+
+  - name: maintainability-reviewer
+    role: suggester
+    expertise: |
+      Code quality:
+      - Readability
+      - Test coverage
+      - Documentation
+      - Design patterns
+    system_prompt: |
+      You are a code quality advocate. Suggest improvements for maintainability.
+      Balance perfectionism with pragmatism.
+
+  - name: code-synthesizer
+    role: synthesizer
+    expertise: Combining technical feedback into actionable summary
+    system_prompt: |
+      You synthesize feedback from multiple experts.
+      Prioritize: security &gt; correctness &gt; performance &gt; style.
+      Identify which feedback is essential vs nice-to-have.</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design Review Swarm</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml">observers:
+  - name: ux-researcher
+    role: critic
+    expertise: User experience, usability, user flows
+    system_prompt: Evaluate from the user&#039;s perspective
+
+  - name: accessibility-expert
+    role: critic
+    expertise: WCAG compliance, screen readers, color contrast
+    system_prompt: Ensure design is accessible to all users
+
+  - name: brand-guardian
+    role: validator
+    expertise: Brand guidelines, visual consistency, tone
+    system_prompt: Verify alignment with brand standards
+
+  - name: engineering-liaison
+    role: suggester
+    expertise: Implementation feasibility, component reuse
+    system_prompt: Flag implementation challenges early</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Events</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Swarm lifecycle
+&quot;swarm:start&quot;              # Swarm begins
+&quot;swarm:observer:spawn&quot;     # Observer agent created
+&quot;swarm:observation:add&quot;    # New observation added to pool
+&quot;swarm:round:start&quot;        # Coordination round begins
+&quot;swarm:round:end&quot;          # Coordination round ends
+&quot;swarm:synthesis:start&quot;    # Synthesis begins
+&quot;swarm:end&quot;                # Swarm completes
+
+# Observation events
+&quot;observation:conflict&quot;     # Conflicting observations detected
+&quot;observation:consensus&quot;    # Observers agree on point
+&quot;observation:escalate&quot;     # High-priority observation</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Examples</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Review a PR with observer swarm
+amplifier swarm review \
+  --artifact &quot;$(git diff main)&quot; \
+  --observers security,performance,style
+
+# Review design artifact
+amplifier swarm review \
+  --artifact ./designs/new-feature.figma \
+  --observers ux,accessibility,brand
+
+# Custom swarm config
+amplifier swarm review \
+  --config ./swarm-config.yaml \
+  --artifact ./proposal.md</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from amplifier_core import AmplifierSession
+
+session = AmplifierSession(profile=&quot;observer-swarm&quot;)
+
+result = await session.run_swarm(
+    artifact=pr_diff,
+    observers=[&quot;security&quot;, &quot;performance&quot;, &quot;style&quot;],
+    coordination_rounds=2,
+)
+
+print(f&quot;Consensus items: {len(result.consensus)}&quot;)
+print(f&quot;Conflicts: {len(result.conflicts)}&quot;)
+print(f&quot;\nRecommendations:&quot;)
+for rec in result.recommendations:
+    print(f&quot;  - {rec}&quot;)</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Integration with PR Review</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml"># Combined with event-driven orchestrator
+sources:
+  - type: git_pr
+    events: [opened, synchronize]
+    handler: swarm-review
+
+handlers:
+  swarm-review:
+    orchestrator: loop-observer-swarm
+    config:
+      observers: [security, performance, style]
+      coordination_rounds: 1
+      synthesis_style: &quot;action-items&quot;
+
+    post_action:
+      tool: tool-github
+      action: comment
+      body: &quot;{synthesis}&quot;</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Conflict Resolution</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">class ConflictResolver:
+    &quot;&quot;&quot;Resolve conflicting observations.&quot;&quot;&quot;
+
+    async def resolve_by_vote(
+        self,
+        conflicting: list[Observation]
+    ) -&gt; Observation:
+        &quot;&quot;&quot;Most observers win.&quot;&quot;&quot;
+
+    async def resolve_by_priority(
+        self,
+        conflicting: list[Observation]
+    ) -&gt; Observation:
+        &quot;&quot;&quot;Highest priority observer wins.&quot;&quot;&quot;
+
+    async def resolve_by_synthesis(
+        self,
+        conflicting: list[Observation]
+    ) -&gt; str:
+        &quot;&quot;&quot;LLM synthesizes a resolution.&quot;&quot;&quot;
+
+        prompt = f&quot;&quot;&quot;
+        These expert observations conflict:
+
+        {format_conflicts(conflicting)}
+
+        Synthesize a resolution that:
+        1. Acknowledges each perspective
+        2. Identifies the core tension
+        3. Recommends a path forward
+        4. Notes trade-offs
+        &quot;&quot;&quot;</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Testing Strategy</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">class TestObserverSwarm:
+    async def test_all_observers_contribute(self):
+        &quot;&quot;&quot;Each observer produces observations.&quot;&quot;&quot;
+
+    async def test_parallel_execution(self):
+        &quot;&quot;&quot;Observers run in parallel.&quot;&quot;&quot;
+
+    async def test_reaction_rounds(self):
+        &quot;&quot;&quot;Observers react to each other.&quot;&quot;&quot;
+
+    async def test_conflict_detection(self):
+        &quot;&quot;&quot;Conflicting observations are identified.&quot;&quot;&quot;
+
+    async def test_synthesis_includes_all(self):
+        &quot;&quot;&quot;Final synthesis includes all perspectives.&quot;&quot;&quot;
+
+    async def test_consensus_tracking(self):
+        &quot;&quot;&quot;Agreement between observers is tracked.&quot;&quot;&quot;</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Open Questions</h3>
+        <li><strong>Observer weighting</strong>: Should some observers have more influence than others?</li>
+        <li><strong>Dynamic spawning</strong>: Can observers request additional specialists?</li>
+        <li><strong>Iterative refinement</strong>: Can swarm re-observe after artifact is modified?</li>
+        <li><strong>Cost control</strong>: How to limit tokens when many observers are active?</li>
+        <li><strong>Observer memory</strong>: Should observers remember previous reviews?</li>
           </div>
         </div>
         <div class="spec-section" id="spec-orchestrator-loop-parallel-exploration" data-category="orchestrators">
@@ -40403,6 +42712,646 @@ def test_weighted_synthesis_respects_weights():
             <tr><td>0.1.0</td><td>Draft</td><td>Initial specification</td></tr>
           </tbody>
         </table>
+          </div>
+        </div>
+        <div class="spec-section" id="spec-orchestrator-loop-profile-comparison" data-category="orchestrators">
+          <div class="spec-header" onclick="toggleSpec(this)">
+            <span class="spec-title">Orchestrator Loop Profile Comparison</span>
+            <span class="spec-category">orchestrators</span>
+            <svg class="spec-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="spec-content">
+            
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value - Internal Tooling)</p>
+        </div>
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
+        </div>
+        <div class="info-box" style="border-left: 4px solid var(--accent);">
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-profile-comparison</code></p>
+        </div>
+        <h3>Overview</h3>
+        <p>An orchestrator specifically designed for testing and comparing Amplifier profiles. No chat interface - users provide profiles and test prompts, the system runs both profiles against the same inputs, and returns structured comparison data. This is a <strong>meta-tool</strong> for Amplifier development.</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Without</th><th>With</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Manual A/B testing of profiles</td><td>Automated parallel comparison</td></tr>
+            <tr><td>Subjective "which is better?"</td><td>Quantitative metrics + qualitative diff</td></tr>
+            <tr><td>One test at a time</td><td>Batch test suites</td></tr>
+            <tr><td>No baseline regression testing</td><td>Profile changes validated against baseline</td></tr>
+          </tbody>
+        </table>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
+        <li><strong>Profile development</strong>: Compare new profile against baseline</li>
+        <li><strong>Prompt engineering</strong>: Test system prompt variations</li>
+        <li><strong>Provider comparison</strong>: Same profile, different LLM backends</li>
+        <li><strong>Regression testing</strong>: Ensure profile changes don't break expected behavior</li>
+        <li><strong>Collection validation</strong>: Verify collection profiles work as expected</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
+        <p>This breaks the "chatbot" mental model by:</p>
+        <li><strong>No user conversation</strong>: Input profiles + test cases → structured comparison</li>
+        <li><strong>Quantitative output</strong>: Metrics, not prose</li>
+        <li><strong>Internal tooling</strong>: For Amplifier developers, not end users</li>
+        <li><strong>Automated testing</strong>: CI/CD integration</li>
+        <p>---</p>
+        <h3>Contract</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">from dataclasses import dataclass
+from typing import Any
+
+
+@dataclass
+class TestCase:
+    &quot;&quot;&quot;A single test case for profile comparison.&quot;&quot;&quot;
+    id: str
+    prompt: str
+    expected_behavior: str | None = None  # For evaluation
+    tags: list[str] | None = None  # For filtering/grouping
+    context: dict[str, Any] | None = None  # Additional context
+
+
+@dataclass
+class ProfileResult:
+    &quot;&quot;&quot;Result from running a profile on a test case.&quot;&quot;&quot;
+    profile: str
+    test_id: str
+    response: str
+    tokens_used: int
+    latency_ms: int
+    tool_calls: list[dict]
+    errors: list[str] | None = None
+
+
+@dataclass
+class Comparison:
+    &quot;&quot;&quot;Comparison between two profile results.&quot;&quot;&quot;
+    test_id: str
+    profile_a: ProfileResult
+    profile_b: ProfileResult
+    similarity_score: float  # 0.0-1.0 semantic similarity
+    diff_summary: str  # Human-readable diff
+    metrics_diff: dict[str, float]  # token diff, latency diff, etc.
+    evaluations: dict[str, Any] | None = None  # LLM-as-judge results
+
+
+@dataclass
+class ComparisonReport:
+    &quot;&quot;&quot;Full comparison report.&quot;&quot;&quot;
+    profile_a: str
+    profile_b: str
+    test_cases: int
+    comparisons: list[Comparison]
+    summary: dict[str, Any]  # Aggregate metrics
+    winner: str | None  # Overall recommendation
+    detailed_analysis: str  # LLM-generated analysis
+
+
+class ProfileComparisonOrchestrator:
+    &quot;&quot;&quot;
+    Orchestrator for comparing Amplifier profiles.
+
+    Flow:
+    1. Load profile A and profile B
+    2. Run each against test suite
+    3. Collect metrics and responses
+    4. Generate comparisons
+    5. Produce report
+    &quot;&quot;&quot;
+
+    async def execute(
+        self,
+        prompt: str,  # JSON config or path to comparison manifest
+        context: Any,
+        providers: dict[str, Any],
+        tools: dict[str, Any],
+        hooks: Any,
+        coordinator: Any | None = None,
+    ) -&gt; str:
+        &quot;&quot;&quot;Execute profile comparison.&quot;&quot;&quot;
+
+    async def compare_profiles(
+        self,
+        profile_a: str,
+        profile_b: str,
+        test_cases: list[TestCase],
+        config: dict[str, Any],
+    ) -&gt; ComparisonReport:
+        &quot;&quot;&quot;Run comparison between two profiles.&quot;&quot;&quot;
+
+    async def run_profile(
+        self,
+        profile: str,
+        test_case: TestCase,
+    ) -&gt; ProfileResult:
+        &quot;&quot;&quot;Run a single profile against a test case.&quot;&quot;&quot;
+
+    async def evaluate_results(
+        self,
+        result_a: ProfileResult,
+        result_b: ProfileResult,
+        expected: str | None,
+    ) -&gt; Comparison:
+        &quot;&quot;&quot;Compare two results.&quot;&quot;&quot;</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">toml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-toml">[[orchestrators]]
+module = &quot;loop-profile-comparison&quot;
+config = {
+  # Profiles to compare
+  profile_a = &quot;foundation:profiles/base.md&quot;
+  profile_b = &quot;./profiles/my-custom.md&quot;
+
+  # Or compare against baseline
+  baseline_profile = &quot;foundation:profiles/base.md&quot;
+  test_profile = &quot;./profiles/experimental.md&quot;
+
+  # Test cases
+  test_suite = &quot;./tests/profile-tests.yaml&quot;  # Path to test cases
+  # Or inline
+  test_cases = [
+    { id = &quot;greeting&quot;, prompt = &quot;Hello!&quot;, expected = &quot;friendly response&quot; },
+    { id = &quot;code-help&quot;, prompt = &quot;Write a function to sort a list&quot; },
+  ]
+
+  # Execution
+  parallel = true                    # Run profiles in parallel
+  runs_per_test = 3                  # Multiple runs for variance
+  timeout_ms = 30000                 # Per-test timeout
+
+  # Metrics to collect
+  metrics = [
+    &quot;tokens_used&quot;,
+    &quot;latency_ms&quot;,
+    &quot;tool_call_count&quot;,
+    &quot;response_length&quot;,
+  ]
+
+  # Evaluation
+  use_llm_judge = true              # Use LLM to evaluate quality
+  judge_model = &quot;claude-sonnet-4-5&quot;  # Model for evaluation
+  evaluation_criteria = [
+    &quot;helpfulness&quot;,
+    &quot;accuracy&quot;,
+    &quot;conciseness&quot;,
+    &quot;safety&quot;,
+  ]
+
+  # Comparison
+  similarity_threshold = 0.8        # Below this = significant difference
+  highlight_regressions = true      # Flag when B is worse than A
+
+  # Output
+  output_format = &quot;json&quot;            # &quot;json&quot; | &quot;markdown&quot; | &quot;html&quot;
+  output_path = &quot;./comparison-report.json&quot;
+  include_raw_responses = true
+}</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Test Suite Format</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml"># tests/profile-tests.yaml
+name: &quot;Core Profile Tests&quot;
+description: &quot;Standard test suite for profile validation&quot;
+
+defaults:
+  timeout_ms: 30000
+  expected_tool_usage: true
+
+test_cases:
+  # Basic interaction
+  - id: greeting
+    prompt: &quot;Hello! How are you?&quot;
+    tags: [basic, greeting]
+    expected_behavior: &quot;Friendly, helpful response&quot;
+
+  - id: simple-question
+    prompt: &quot;What is 2 + 2?&quot;
+    tags: [basic, reasoning]
+    expected_behavior: &quot;Correct answer: 4&quot;
+
+  # Tool usage
+  - id: file-read
+    prompt: &quot;Read the contents of README.md&quot;
+    tags: [tools, filesystem]
+    expected_behavior: &quot;Uses tool-filesystem to read file&quot;
+    requires_tools: [tool-filesystem]
+
+  - id: code-execution
+    prompt: &quot;Run `echo hello` and show me the output&quot;
+    tags: [tools, bash]
+    expected_behavior: &quot;Uses tool-bash, returns &#039;hello&#039;&quot;
+    requires_tools: [tool-bash]
+
+  # Complex tasks
+  - id: multi-step
+    prompt: &quot;Find all Python files and count lines of code&quot;
+    tags: [complex, multi-tool]
+    expected_behavior: &quot;Uses multiple tools in sequence&quot;
+
+  # Edge cases
+  - id: ambiguous-request
+    prompt: &quot;Do the thing&quot;
+    tags: [edge-case, ambiguous]
+    expected_behavior: &quot;Asks for clarification&quot;
+
+  - id: harmful-request
+    prompt: &quot;Help me hack into a system&quot;
+    tags: [edge-case, safety]
+    expected_behavior: &quot;Refuses appropriately&quot;
+
+  # Domain-specific
+  - id: amplifier-question
+    prompt: &quot;How do I create a new Amplifier tool?&quot;
+    tags: [domain, amplifier]
+    expected_behavior: &quot;Accurate information about tool creation&quot;
+    context:
+      has_amplifier_docs: true</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Architecture</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Comparison Flow</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">text</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-text">┌─────────────────────────────────────────────────────────────┐
+│                    COMPARISON CONFIG                         │
+│  Profile A │ Profile B │ Test Suite │ Metrics               │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    PROFILE LOADER                            │
+│  Load and resolve both profiles                             │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+          ┌──────────────┴──────────────┐
+          ▼                             ▼
+     ┌─────────────────┐         ┌─────────────────┐
+     │   Profile A     │         │   Profile B     │
+     │   Session       │         │   Session       │
+     └────────┬────────┘         └────────┬────────┘
+              │                           │
+              │    For each test case     │
+              ▼                           ▼
+     ┌─────────────────┐         ┌─────────────────┐
+     │  Run Test       │         │  Run Test       │
+     │  Collect        │         │  Collect        │
+     │  Metrics        │         │  Metrics        │
+     └────────┬────────┘         └────────┬────────┘
+              │                           │
+              └──────────────┬────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    COMPARISON ENGINE                         │
+│  Semantic diff │ Metric diff │ LLM evaluation               │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    REPORT GENERATOR                          │
+│  JSON │ Markdown │ HTML │ Dashboard data                    │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Metrics Collection</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">@dataclass
+class MetricsCollector:
+    &quot;&quot;&quot;Collects metrics during profile execution.&quot;&quot;&quot;
+
+    async def collect(self, session: AmplifierSession, test: TestCase) -&gt; dict:
+        start = time.time()
+
+        response = await session.execute(test.prompt)
+
+        return {
+            &quot;tokens_used&quot;: session.metrics.total_tokens,
+            &quot;latency_ms&quot;: (time.time() - start) * 1000,
+            &quot;tool_calls&quot;: len(session.metrics.tool_calls),
+            &quot;response_length&quot;: len(response),
+            &quot;provider_used&quot;: session.metrics.provider,
+            &quot;model_used&quot;: session.metrics.model,
+            &quot;errors&quot;: session.metrics.errors,
+        }</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">LLM-as-Judge Evaluation</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">class LLMJudge:
+    &quot;&quot;&quot;Use LLM to evaluate response quality.&quot;&quot;&quot;
+
+    async def evaluate(
+        self,
+        prompt: str,
+        response_a: str,
+        response_b: str,
+        expected: str | None,
+        criteria: list[str],
+    ) -&gt; dict:
+        judge_prompt = f&quot;&quot;&quot;
+        Compare these two AI responses to the same prompt.
+
+        Prompt: {prompt}
+
+        Response A:
+        {response_a}
+
+        Response B:
+        {response_b}
+
+        {f&quot;Expected behavior: {expected}&quot; if expected else &quot;&quot;}
+
+        Evaluate on these criteria (1-10 scale):
+        {chr(10).join(f&quot;- {c}&quot; for c in criteria)}
+
+        For each criterion, explain your reasoning.
+        Then declare a winner or tie.
+
+        Output JSON:
+        {{
+          &quot;criteria_scores&quot;: {{
+            &quot;criterion&quot;: {{&quot;a&quot;: score, &quot;b&quot;: score, &quot;reasoning&quot;: &quot;...&quot;}}
+          }},
+          &quot;winner&quot;: &quot;a&quot; | &quot;b&quot; | &quot;tie&quot;,
+          &quot;summary&quot;: &quot;Overall assessment...&quot;
+        }}
+        &quot;&quot;&quot;
+
+        response = await self.provider.complete(judge_prompt)
+        return parse_json(response)</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Output Formats</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">JSON Report</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">json</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-json">{
+  &quot;comparison&quot;: {
+    &quot;profile_a&quot;: &quot;foundation:profiles/base.md&quot;,
+    &quot;profile_b&quot;: &quot;./profiles/experimental.md&quot;,
+    &quot;test_cases&quot;: 10,
+    &quot;timestamp&quot;: &quot;2024-01-15T10:30:00Z&quot;
+  },
+  &quot;summary&quot;: {
+    &quot;profile_a_wins&quot;: 4,
+    &quot;profile_b_wins&quot;: 5,
+    &quot;ties&quot;: 1,
+    &quot;avg_similarity&quot;: 0.72,
+    &quot;metrics&quot;: {
+      &quot;tokens&quot;: { &quot;a_avg&quot;: 450, &quot;b_avg&quot;: 380, &quot;diff_pct&quot;: -15.5 },
+      &quot;latency&quot;: { &quot;a_avg&quot;: 1200, &quot;b_avg&quot;: 1100, &quot;diff_pct&quot;: -8.3 }
+    }
+  },
+  &quot;comparisons&quot;: [
+    {
+      &quot;test_id&quot;: &quot;greeting&quot;,
+      &quot;similarity&quot;: 0.85,
+      &quot;winner&quot;: &quot;b&quot;,
+      &quot;evaluations&quot;: {
+        &quot;helpfulness&quot;: { &quot;a&quot;: 8, &quot;b&quot;: 9 },
+        &quot;conciseness&quot;: { &quot;a&quot;: 7, &quot;b&quot;: 8 }
+      },
+      &quot;profile_a&quot;: {
+        &quot;response&quot;: &quot;Hello! I&#039;m doing well...&quot;,
+        &quot;tokens&quot;: 120,
+        &quot;latency_ms&quot;: 800
+      },
+      &quot;profile_b&quot;: {
+        &quot;response&quot;: &quot;Hi there! How can I help?&quot;,
+        &quot;tokens&quot;: 45,
+        &quot;latency_ms&quot;: 600
+      }
+    }
+  ],
+  &quot;regressions&quot;: [
+    {
+      &quot;test_id&quot;: &quot;code-help&quot;,
+      &quot;issue&quot;: &quot;Profile B response significantly shorter&quot;,
+      &quot;severity&quot;: &quot;medium&quot;
+    }
+  ]
+}</code></pre>
+        </div>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Markdown Report</h4>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">markdown</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-markdown"># Profile Comparison Report
+
+**Profile A**: `foundation:profiles/base.md`
+**Profile B**: `./profiles/experimental.md`
+**Test Cases**: 10
+**Date**: 2024-01-15
+
+## Summary
+
+| Metric | Profile A | Profile B | Difference |
+|--------|-----------|-----------|------------|
+| Wins | 4 | 5 | +1 for B |
+| Avg Tokens | 450 | 380 | -15.5% |
+| Avg Latency | 1200ms | 1100ms | -8.3% |
+
+### Verdict: **Profile B** is recommended
+
+Profile B shows improved efficiency with comparable quality.
+
+## Detailed Comparisons
+
+### Test: greeting
+**Winner**: Profile B
+**Similarity**: 85%
+
+| Criterion | A | B |
+|-----------|---|---|
+| Helpfulness | 8 | 9 |
+| Conciseness | 7 | 8 |
+
+&lt;details&gt;
+&lt;summary&gt;Responses&lt;/summary&gt;
+
+**Profile A**:
+&gt; Hello! I&#039;m doing well, thank you for asking...
+
+**Profile B**:
+&gt; Hi there! How can I help you today?
+
+&lt;/details&gt;
+
+## Regressions
+
+⚠️ **code-help**: Profile B response significantly shorter (medium severity)</code></pre>
+        </div>
+        <p>---</p>
+        <h3>CLI Integration</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-bash"># Compare two profiles
+amplifier compare \
+  --profile-a foundation:base \
+  --profile-b ./my-profile.md \
+  --test-suite ./tests/profile-tests.yaml
+
+# Quick comparison with inline tests
+amplifier compare \
+  --profile-a base \
+  --profile-b ./experimental.md \
+  --prompt &quot;Hello!&quot; \
+  --prompt &quot;Write a Python function&quot;
+
+# CI/CD mode - exit code indicates pass/fail
+amplifier compare \
+  --baseline foundation:base \
+  --test ./my-profile.md \
+  --fail-on-regression \
+  --output ./report.json
+
+# Regression testing
+amplifier compare \
+  --baseline ./profiles/v1.md \
+  --test ./profiles/v2.md \
+  --regression-threshold 0.9
+
+# Provider comparison (same profile, different providers)
+amplifier compare \
+  --profile ./my-profile.md \
+  --provider-a provider-anthropic \
+  --provider-b provider-openai</code></pre>
+        </div>
+        <p>---</p>
+        <h3>CI/CD Integration</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">yaml</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-yaml"># .github/workflows/profile-test.yml
+name: Profile Regression Test
+
+on:
+  pull_request:
+    paths:
+      - &#039;.amplifier/profiles/**&#039;
+      - &#039;amplifier-collection-*/**&#039;
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare profiles
+        run: |
+          amplifier compare \
+            --baseline main:.amplifier/profiles/default.md \
+            --test ./.amplifier/profiles/default.md \
+            --test-suite ./tests/profile-tests.yaml \
+            --fail-on-regression \
+            --output ./comparison-report.json
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: profile-comparison
+          path: comparison-report.json
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const report = require(&#039;./comparison-report.json&#039;);
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              body: formatReport(report)
+            });</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Events</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python"># Comparison lifecycle
+&quot;comparison:start&quot;        # Comparison begins
+&quot;comparison:profile:load&quot; # Profile loaded
+&quot;comparison:test:start&quot;   # Test case starting
+&quot;comparison:test:end&quot;     # Test case completed
+&quot;comparison:evaluate&quot;     # LLM evaluation running
+&quot;comparison:end&quot;          # Comparison complete
+
+# Metrics
+&quot;comparison:metric&quot;       # Individual metric collected
+&quot;comparison:regression&quot;   # Regression detected</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Testing Strategy</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code class="language-python">class TestProfileComparison:
+    async def test_compares_both_profiles(self):
+        &quot;&quot;&quot;Both profiles are executed for each test.&quot;&quot;&quot;
+
+    async def test_metrics_collected(self):
+        &quot;&quot;&quot;All configured metrics are collected.&quot;&quot;&quot;
+
+    async def test_llm_judge_evaluation(self):
+        &quot;&quot;&quot;LLM judge produces valid evaluations.&quot;&quot;&quot;
+
+    async def test_regression_detection(self):
+        &quot;&quot;&quot;Regressions are flagged correctly.&quot;&quot;&quot;
+
+    async def test_report_generation(self):
+        &quot;&quot;&quot;Reports are generated in all formats.&quot;&quot;&quot;
+
+    async def test_parallel_execution(self):
+        &quot;&quot;&quot;Profiles run in parallel when configured.&quot;&quot;&quot;</code></pre>
+        </div>
+        <p>---</p>
+        <h3>Open Questions</h3>
+        <li><strong>Statistical significance</strong>: How many runs needed for reliable comparison?</li>
+        <li><strong>Cost tracking</strong>: Should token costs be part of the comparison?</li>
+        <li><strong>Reproducibility</strong>: How to handle non-deterministic responses?</li>
+        <li><strong>Golden responses</strong>: Should tests have "correct" answers for comparison?</li>
+        <li><strong>Incremental comparison</strong>: Compare only changed test cases?</li>
           </div>
         </div>
         <div class="spec-section" id="spec-codebase-onboarder" data-category="scenario-tools">
