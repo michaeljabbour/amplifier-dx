@@ -17,7 +17,7 @@ Amplifier separates **mechanism** (how things work) from **policy** (what to do)
 │   ─────────────────                                                         │
 │   "Policy" - What to do, how to present, where to find things               │
 │                                                                             │
-│   Examples: amplifier-app-cli, amplifier-desktop, your-custom-app           │
+│   Examples: amplifier-app-cli (reference), your-custom-app                  │
 │                                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
@@ -54,7 +54,7 @@ When boundaries are violated:
 - Modules only work in specific apps
 - Bugs are hard to trace
 
-**The Amplifier Desktop rebuild was necessary specifically because the sidecar violated these boundaries.**
+**When boundaries are violated in practice, the result is fragile apps that need costly rework.**
 
 ---
 
@@ -298,13 +298,13 @@ broadcast = coordinator.get_capability("broadcast")
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                        APPLICATION LAYER                                     │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  amplifier-app-cli          OR    amplifier-desktop                  │   │
-│  │  ────────────────                  ─────────────────                 │   │
-│  │  • CLIApprovalSystem               • WebSocketTransport              │   │
-│  │  • CLIDisplaySystem                • TauriLifecycle                  │   │
-│  │  • ConsoleRenderer                 • ReactFrontend                   │   │
-│  │  • ProfileLoader                   • SettingsStore                   │   │
-│  │  • MentionResolver                 • ProfileManager                  │   │
+│  │  amplifier-app-cli          OR    your-custom-app                    │   │
+│  │  ────────────────                  ────────────────                  │   │
+│  │  • CLIApprovalSystem               • CustomApprovalUI                │   │
+│  │  • CLIDisplaySystem                • CustomDisplayLayer              │   │
+│  │  • ConsoleRenderer                 • CustomRenderer                  │   │
+│  │  • ProfileLoader                   • AppConfigLoader                 │   │
+│  │  • MentionResolver                 • AppMentionHandler               │   │
 │  └─────────────────────────────────────────────────────────────────────┘   │
 │                                   │                                         │
 │                    register_capability("broadcast", ...)                    │
@@ -369,4 +369,4 @@ broadcast = coordinator.get_capability("broadcast")
 ---
 
 **Previous**: [5-Minute Understanding](./05-quick-start.md)  
-**Next**: [Module Lifecycle →](./09-module-lifecycle.md)
+**Next**: [Ecosystem Quick Map →](./09-ecosystem-quick-map.md)
