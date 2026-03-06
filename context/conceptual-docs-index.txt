@@ -16,6 +16,9 @@ DOCUMENT INDEX
 05-quick-start.md - 5-minute understanding for busy people
 06-layers.md      - Progressive depth: Use → Configure → Extend → Embed → Understand
 07-desktop-case-study.md - Real-world embedding example (Amplifier Desktop)
+08-architecture-boundaries.md - What belongs where: app, kernel, and module layers
+09-ecosystem-quick-map.md - Which repo owns what, dependency direction, change placement
+13-working-with-ai.md - Practical guide: vibe coding vs structured AI-assisted development
 
 
 READING PATHS BY GOAL
