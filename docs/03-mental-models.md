@@ -2,7 +2,7 @@
 
 The right mental model turns complexity into intuition. Here are several ways to think about Amplifier - use whichever clicks for you.
 
-**Validated in practice:** All models below accurately represent the system as confirmed in [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli).
+**Reference implementation:** [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli) demonstrates all models below in a working CLI application.
 
 ---
 
@@ -111,7 +111,7 @@ The right mental model turns complexity into intuition. Here are several ways to
 │         ▼                                                           │
 │  ┌─────────────┐                                                    │
 │  │   CHECK-IN  │  Session creation                                  │
-│  │   (start)   │  Profile loaded, modules mounted                   │
+│  │   (start)   │  Bundle loaded, modules mounted                    │
 │  └──────┬──────┘                                                    │
 │         │                                                           │
 │         ▼                                                           │
@@ -170,7 +170,7 @@ The right mental model turns complexity into intuition. Here are several ways to
 │  │                                                             │    │
 │  └────────────────────────────────────────────────────────────┘    │
 │                                                                     │
-│  Profile = The instruction manual                                   │
+│  Bundle = The instruction manual                                   │
 │            "Connect these bricks in this order"                     │
 │                                                                     │
 │  Session = Your built creation                                      │
@@ -178,9 +178,9 @@ The right mental model turns complexity into intuition. Here are several ways to
 │                                                                     │
 │  ┌────────────────────────────────────────────────────────────┐    │
 │  │                                                             │    │
-│  │  Profile A:     ▓▓▓▓─░░░░─████                              │    │
-│  │  Profile B:     ▓▓▓▓─░░░░─░░░░─░░░░─████─▒▒▒▒               │    │
-│  │  Profile C:     ▓▓▓▓─████                                   │    │
+│  │  Bundle A:      ▓▓▓▓─░░░░─████                              │    │
+│  │  Bundle B:      ▓▓▓▓─░░░░─░░░░─░░░░─████─▒▒▒▒               │    │
+│  │  Bundle C:      ▓▓▓▓─████                                   │    │
 │  │                                                             │    │
 │  │  Same brick types, different configurations                 │    │
 │  │                                                             │    │

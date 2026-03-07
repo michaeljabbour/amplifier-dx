@@ -21,7 +21,7 @@ A native desktop AI coding assistant built on:
 │  │                     REACT FRONTEND                            │  │
 │  │                                                               │  │
 │  │   ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐        │  │
-│  │   │ Sidebar │  │  Chat   │  │ Profile │  │Settings │        │  │
+│  │   │ Sidebar │  │  Chat   │  │ Bundle  │  │Settings │        │  │
 │  │   │         │  │Container│  │ Selector│  │  Modal  │        │  │
 │  │   └─────────┘  └─────────┘  └─────────┘  └─────────┘        │  │
 │  │                      │                                        │  │
@@ -41,7 +41,7 @@ A native desktop AI coding assistant built on:
 │  │   │                                                      │    │  │
 │  │   └─────────────────────────────────────────────────────┘    │  │
 │  │                                                               │  │
-│  │   + Profile Manager (CRUD for profiles)                       │  │
+│  │   + Bundle Manager (CRUD for bundles)                       │  │
 │  │   + Config Manager (three-tier settings)                      │  │
 │  │   + Custom Tools (filesystem, bash, grep, etc.)               │  │
 │  │                                                               │  │
@@ -185,38 +185,38 @@ def get_merged_config(project_dir: Path) -> dict:
 
 ---
 
-## Profile Integration
+## Bundle Integration
 
-Amplifier Desktop exposes profile management in the UI:
+Amplifier Desktop exposes bundle management in the UI:
 
-### ProfileSelector Component
+### BundleSelector Component
 ```typescript
-// Shows dropdown of available profiles
+// Shows dropdown of available bundles
 // Groups by scope (user vs project)
 // Allows activation/deactivation
 
-<ProfileSelector
-  profiles={profiles}
-  activeProfile={activeProfile}
-  onSelect={handleProfileSelect}
-  onCreateNew={openProfileEditor}
+<BundleSelector
+  bundles={bundles}
+  activeBundle={activeBundle}
+  onSelect={handleBundleSelect}
+  onCreateNew={openBundleEditor}
 />
 ```
 
-### Profile API (REST)
+### Bundle API (REST)
 ```
-GET    /api/profiles              # List all profiles
-GET    /api/profiles/{name}       # Get profile details
-POST   /api/profiles              # Create new profile
-PUT    /api/profiles/{name}       # Update profile
-DELETE /api/profiles/{name}       # Delete profile
-POST   /api/profiles/{name}/activate   # Set as active
+GET    /api/bundles               # List all bundles
+GET    /api/bundles/{name}        # Get bundle details
+POST   /api/bundles               # Create new bundle
+PUT    /api/bundles/{name}        # Update bundle
+DELETE /api/bundles/{name}        # Delete bundle
+POST   /api/bundles/{name}/activate    # Set as active
 ```
 
 ### Inheritance Visualization
 ```
 ┌─────────────────────────────────────────┐
-│  Profile: team-coding                   │
+│  Bundle: team-coding                    │
 ├─────────────────────────────────────────┤
 │  extends: coding-base                   │
 │                                         │
@@ -277,7 +277,7 @@ class GrepTool(Tool):
 1. **Sidecar architecture** - Clean separation, easy updates
 2. **WebSocket streaming** - Great UX, natural for LLMs
 3. **Full config hierarchy** - Users trust it works like CLI
-4. **Profile inheritance** - Teams love shared base profiles
+4. **Bundle inheritance** - Teams love shared base bundles
 
 ### What Was Challenging
 

@@ -43,20 +43,14 @@ A progressive guide from "what is this?" to "I could build this."
 7. **[Amplifier Desktop Case Study](./07-desktop-case-study.md)**
    How a production desktop app embeds Amplifier.
 
-8. **[Asset Model](./08-asset-model.md)**
-   Canonical definitions of bundles, recipes, profiles, and collections (plus migration guidance).
+8. **[Architecture Boundaries](./08-architecture-boundaries.md)**
+   What belongs where: app layer, kernel layer, and module layer.
 
-9. **[Module Resolution](./09-module-resolution.md)**
-   How modules load across bundled, user, and project scopes; execution modes and plugin manifests.
+9. **[Ecosystem Quick Map](./09-ecosystem-quick-map.md)**
+   Three-repo architecture at a glance: core, foundation, and app-cli roles, dependency order, and troubleshooting by layer.
 
-10. **[Transport Contracts](./10-transport-contracts.md)**
-    WebSocket/REST schemas for Desktop ↔ sidecar communication.
-
-11. **[Runtime Ownership](./11-runtime-ownership.md)**
-    Table showing which repo/file owns each category of state.
-
-12. **[Testing Matrix](./12-testing-matrix.md)**
-    Required test suites per layer/epic.
+10. **[Working with AI](./13-working-with-ai.md)**
+    Practical comparison of vibe coding and structured AI-assisted development.
 
 ---
 
@@ -69,7 +63,7 @@ A progressive guide from "what is this?" to "I could build this."
 
 ### "I need to configure it for my team"
 ```
-5-Minute Understanding → How Data Flows → [main docs profiles]
+5-Minute Understanding → How Data Flows → [main docs bundles]
 ```
 
 ### "I want to write a custom tool"

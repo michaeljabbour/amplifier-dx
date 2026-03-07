@@ -6,7 +6,7 @@ You're busy. Here's Amplifier in 5 minutes.
 
 ## The One-Sentence Version
 
-> Amplifier is a framework for building AI coding assistants by composing modular pieces (providers, tools, hooks) through configuration files called profiles.
+> Amplifier is a framework for building AI coding assistants by composing modular pieces (providers, tools, hooks) through configuration files called bundles.
 
 ---
 
@@ -36,7 +36,7 @@ Study the source to see exactly how it all fits together.
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                                                                     │
-│  You write a PROFILE (a YAML file) that says:                       │
+│  You write a BUNDLE (a YAML/MD file) that says:                     │
 │                                                                     │
 │    "Use Claude for the brain,                                       │
 │     give it filesystem and bash tools,                              │
@@ -84,9 +84,9 @@ Settings come from three places, merged in order:
 
 More specific wins.
 
-### Profiles Define Sessions
+### Bundles Define Sessions
 
-Profiles configure sessions (modules, providers, hooks). Recipes are separate declarative workflows referenced by profiles or bundles.
+Bundles configure sessions (modules, providers, hooks). Recipes are separate declarative workflows referenced by or packaged inside bundles.
 
 ```yaml
 ---
@@ -105,10 +105,10 @@ You are a helpful coding assistant.
 ```
 
 **Run it:**
-- Official CLI: `amplifier run --profile my-assistant "Help me refactor this"`
+- Official CLI: `amplifier run --bundle my-assistant "Help me refactor this"`
 - Working example: See [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli) for bundle-based approach
 
-Need a multi-step workflow? Create a **recipe** (`recipes/*.yaml`), package it inside a bundle, and reference it from a profile or invoke it as a tool. See [`08-asset-model.md`](./08-asset-model.md).
+Need a multi-step workflow? Create a **recipe** (`recipes/*.yaml`), package it inside a bundle, and reference it from a bundle or invoke it as a tool. See [Layers of Understanding](./06-layers.md).
 
 ---
 
@@ -121,7 +121,7 @@ Need a multi-step workflow? Create a **recipe** (`recipes/*.yaml`), package it i
                      │
                      ▼
               ┌─────────────┐
-              │   Profile   │  ← Defines what modules to load
+              │   Bundle    │  ← Defines what modules to load
               └──────┬──────┘
                      │
                      ▼
@@ -176,13 +176,13 @@ Hooks observe everything. They fire on events:
 
 A hook can return `{action: "deny"}` on `tool:pre` to block execution.
 
-### Why Profiles Matter
+### Why Bundles Matter
 
-Profiles let you:
+Bundles let you:
 - **Share configurations** - Team uses same setup
-- **Inherit** - `extends: base-profile` builds on another
-- **Customize** - Different profiles for different tasks
-- **Version** - Track profile changes over time
+- **Inherit** - `extends: base-bundle` builds on another
+- **Customize** - Different bundles for different tasks
+- **Version** - Track bundle changes over time
 
 ---
 
@@ -219,7 +219,7 @@ Profiles let you:
 │    tool:pre    Before tool runs (can block)                         │
 │    tool:post   After tool completes                                 │
 │                                                                     │
-│  PROFILE STRUCTURE                                                  │
+│  BUNDLE STRUCTURE                                                  │
 │    ---                                                              │
 │    name: string                                                     │
 │    extends: optional-parent                                         │
@@ -231,9 +231,9 @@ Profiles let you:
 │                                                                     │
 │  COMMANDS (official CLI)                                            │
 │    amplifier run "prompt"                                           │
-│    amplifier run --profile name "prompt"                            │
+│    amplifier run --bundle name "prompt"                            │
 │    amplifier session list                                           │
-│    amplifier profile list                                           │
+│    amplifier bundle list                                           │
 │                                                                     │
 │  WORKING EXAMPLE                                                    │
 │    github.com/michaeljabbour/amplifier-simplecli                    │

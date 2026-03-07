@@ -26,7 +26,7 @@ CLI is optional.
 ```
 ┌────────────────────────────────────────────────────────────┐
 │ APPLICATION LAYER (amplifier-app-cli, amplifier-desktop)   │
-│ • UX systems, settings, profile loading, @mentions         │
+│ • UX systems, settings, bundle loading, @mentions         │
 ├────────────────────────────────────────────────────────────┤
 │ KERNEL LAYER (amplifier-core)                              │
 │ • Session, Coordinator, HookRegistry, ModuleLoader         │
@@ -77,7 +77,7 @@ dependencies = ["amplifier-core"]
 
 [project.entry-points."amplifier.modules"]
 # CRITICAL: Entry-point key IS the module ID
-# This MUST match how users reference it in profiles/bundles
+# This MUST match how users reference it in bundles
 tool-myfeature = "amplifier_module_tool_myfeature:mount"
 
 [build-system]
@@ -103,7 +103,7 @@ def mount(coordinator: ModuleCoordinator, config: dict | None = None) -> None:
     
     Args:
         coordinator: The kernel's module coordinator
-        config: Optional configuration from bundle/profile
+        config: Optional configuration from bundle
     """
     config = config or {}
     
@@ -159,7 +159,7 @@ class AddItemTool:
     
     @property
     def description(self) -> str:
-        return "Add an item to the collection"
+        return "Add an item to the list"
     
     def get_schema(self) -> dict:
         return {
@@ -390,11 +390,11 @@ result = await session.execute("use my feature")
 
 ## 6. Consumption
 
-### In a Profile
+### In a Bundle
 
 ```yaml
 ---
-name: my-profile
+name: my-bundle
 tools:
   - module: tool-myfeature
     source: git+https://github.com/you/amplifier-module-tool-myfeature@v0.1.0
@@ -438,7 +438,7 @@ tool-myfeature = "amplifier_module_tool_myfeature:mount"
 # In pyproject.toml
 tool-my-feature = "..."  # Note: hyphen
 
-# In profile (WRONG - underscore)
+# In bundle (WRONG - underscore)
 tools:
   - module: tool_my_feature  # This won't resolve!
 

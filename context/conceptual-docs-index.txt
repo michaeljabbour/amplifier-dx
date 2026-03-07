@@ -16,6 +16,9 @@ DOCUMENT INDEX
 05-quick-start.md - 5-minute understanding for busy people
 06-layers.md      - Progressive depth: Use → Configure → Extend → Embed → Understand
 07-desktop-case-study.md - Real-world embedding example (Amplifier Desktop)
+08-architecture-boundaries.md - What belongs where: app, kernel, and module layers
+09-ecosystem-quick-map.md - Which repo owns what, dependency direction, change placement
+13-working-with-ai.md - Practical guide: vibe coding vs structured AI-assisted development
 
 
 READING PATHS BY GOAL
@@ -25,7 +28,7 @@ READING PATHS BY GOAL
   05-quick-start.md → main docs quickstart
 
 "I need to configure it for my team":
-  05-quick-start.md → 01-data-flow.md → main docs profiles
+  05-quick-start.md → 01-data-flow.md → main docs bundles
 
 "I want to write a custom tool":
   06-layers.md (Layer 3) → main docs creating modules
@@ -59,7 +62,7 @@ KEY CONCEPTS COVERED
    - Orchestra: Conductor (orchestrator), instruments (tools), soloist (LLM)
    - Kitchen: Head chef (orchestrator), stations (tools), ticket rail (context)
    - Airport: Security (hooks), air traffic control (orchestrator), flight log (context)
-   - Lego Set: Bricks (modules), instructions (profiles), built creation (session)
+   - Lego Set: Bricks (modules), instructions (bundles), built creation (session)
    - Assembly Line: Conveyor (context), stations (tools), quality control (hooks)
 
 4. SCENARIOS COVERED
@@ -68,13 +71,13 @@ KEY CONCEPTS COVERED
    - Multi-tool task
    - Hook blocking
    - Streaming response
-   - Profile inheritance
+   - Bundle composition
    - Error recovery
    - Session persistence
 
 5. UNDERSTANDING LAYERS
    - Layer 1: USE - Run commands, get work done
-   - Layer 2: CONFIGURE - Profiles, settings, module selection
+   - Layer 2: CONFIGURE - Bundles, settings, module selection
    - Layer 3: EXTEND - Write custom tools and hooks
    - Layer 4: EMBED - Use as a library in your app
    - Layer 5: UNDERSTAND - Internals, architecture, contribute
