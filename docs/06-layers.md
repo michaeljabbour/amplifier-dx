@@ -15,7 +15,7 @@ Not everyone needs the same depth. Here's the progressive path from "just use it
 │  ──────────────────────┼───────────────────────────────────────────│
 │  Layer 3: EXTEND       │  Write custom tools and hooks              │
 │  ──────────────────────┼───────────────────────────────────────────│
-│  Layer 2: CONFIGURE    │  Profiles, settings, module selection      │
+│  Layer 2: CONFIGURE    │  Bundles, settings, module selection      │
 │  ──────────────────────┼───────────────────────────────────────────│
 │  Layer 1: USE          │  Run commands, get work done               │
 │                                                                     │
@@ -33,20 +33,20 @@ Not everyone needs the same depth. Here's the progressive path from "just use it
 
 **You know:**
 - How to run prompts
-- How to choose profiles
+- How to choose bundles
 - What the output means
 
 **You need:**
 ```bash
 # Basic usage
 amplifier run "List Python files"
-amplifier run --profile coding "Help me fix this bug"
+amplifier run --bundle coding "Help me fix this bug"
 
 # Interactive mode
 amplifier chat
 
 # See what's available
-amplifier profile list
+amplifier bundle list
 amplifier module list
 ```
 
@@ -67,7 +67,7 @@ amplifier module list
 
 **You know:**
 - How settings cascade
-- How to write profiles
+- How to write bundles
 - How to select modules
 - How to share team configurations
 
@@ -76,15 +76,15 @@ amplifier module list
 ### Settings
 ```yaml
 # ~/.amplifier/settings.yaml
-default_profile: my-profile
+default_bundle: my-bundle
 default_model: claude-opus-4-5-20251101
 api_keys:
   provider-anthropic: sk-...
 ```
 
-### Profiles
+### Bundles
 ```yaml
-# .amplifier/profiles/team-coding.md
+# .amplifier/bundles/team-coding.md
 ---
 name: team-coding
 version: "1.0"
@@ -106,7 +106,7 @@ You are a senior software engineer helping the team write clean, tested code.
 Always explain your reasoning before making changes.
 ```
 
-### Profile Inheritance
+### Bundle Inheritance
 ```
 default
    └── coding-base
@@ -115,7 +115,7 @@ default
 ```
 
 **Docs for this layer:**
-- [Profiles](../index.html#profiles)
+- [Bundles](../index.html#bundles)
 - [Configuration](../index.html#configuration)
 - [Architecture Overview](../index.html#architecture)
 
@@ -180,7 +180,7 @@ my_custom_tool = "my_tool.tool:MyCustomTool"
 ```
 
 ```yaml
-# In your profile
+# In your bundle
 tools:
   - module: my_custom_tool
 ```
@@ -215,7 +215,7 @@ tools:
 from amplifier_core import Coordinator, Config
 
 # Create coordinator from config
-config = Config.from_profile("my-profile")
+config = Config.from_bundle("my-bundle")
 coordinator = Coordinator(config)
 
 # Run a prompt
@@ -272,7 +272,7 @@ async def with_custom_handling():
 **You need:**
 
 ### Key Concepts
-- **Mount Plans:** The compiled representation of a profile
+- **Mount Plans:** The compiled representation of a bundle
 - **Module Resolution:** How modules are found (entry points, cache, local)
 - **Event Bus:** Pub/sub for all system events
 - **Context Strategies:** Different approaches to managing conversation history
@@ -284,9 +284,9 @@ async def with_custom_handling():
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
 │  Config Layer                                                       │
-│  ├── amplifier-config      Three-tier YAML merging                  │
-│  ├── amplifier-profiles    Profile parsing, inheritance             │
-│  └── amplifier-collections Module discovery, dependency resolution  │
+│  ├── amplifier-foundation  Three-tier YAML merging, bundle parsing, │
+│  │                         inheritance, composition                 │
+│  └── amplifier-core        Module discovery, loader, source contracts │
 │                                                                     │
 │  Runtime Layer                                                      │
 │  ├── Coordinator           Session factory, lifecycle management    │
@@ -309,7 +309,7 @@ async def with_custom_handling():
 | Decision | Rationale |
 |----------|-----------|
 | Hooks observe, don't transform | Keeps data flow predictable |
-| Config cascades, profiles inherit | Flexibility without complexity |
+| Config cascades, bundles inherit | Flexibility without complexity |
 | Events are ordered | Enables reliable debugging and audit |
 | Modules are isolated | Composability without interference |
 | Context is append-only | Transparency, no hidden state |
