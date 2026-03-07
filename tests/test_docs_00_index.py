@@ -43,11 +43,18 @@ def test_docs_index_has_correct_entries_8_through_10():
     entry_10_line = None
 
     for i, line in enumerate(lines):
-        if "9. **[Ecosystem Quick Map]" in line:
+        if "9. **[Module Resolution](./09-module-resolution.md)**" in line:
             entry_9_line = i
         if "10. **[Working with AI]" in line:
             entry_10_line = i
 
-    assert entry_9_line is not None, "Entry 9 should exist"
+    assert entry_9_line is not None, "Entry 9 should remain Module Resolution"
     assert entry_10_line is not None, "Entry 10 (Working with AI) should exist"
     assert entry_9_line < entry_10_line, "Entry 10 should come after entry 9"
+
+    assert "[main docs profiles]" in content, (
+        "Reading path text should remain '[main docs profiles]'"
+    )
+    assert "[main docs bundles]" not in content, (
+        "Reading path text should not be changed to '[main docs bundles]'"
+    )

@@ -46,8 +46,8 @@ A progressive guide from "what is this?" to "I could build this."
 8. **[Architecture Boundaries](./08-architecture-boundaries.md)**
    What belongs where: app layer, kernel layer, and module layer.
 
-9. **[Ecosystem Quick Map](./09-ecosystem-quick-map.md)**
-   Which repo owns what, dependency direction, change placement guide, and bottom-up troubleshooting.
+9. **[Module Resolution](./09-module-resolution.md)**
+   How modules load across bundled, user, and project scopes; execution modes and plugin manifests.
 
 10. **[Working with AI](./13-working-with-ai.md)**
     Practical comparison of vibe coding and structured AI-assisted development.
@@ -63,7 +63,7 @@ A progressive guide from "what is this?" to "I could build this."
 
 ### "I need to configure it for my team"
 ```
-5-Minute Understanding → How Data Flows → [main docs bundles]
+5-Minute Understanding → How Data Flows → [main docs profiles]
 ```
 
 ### "I want to write a custom tool"
