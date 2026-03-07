@@ -65,7 +65,7 @@ Let's trace a prompt through the entire system. The flow is identical whether yo
 │ 1. CONFIGURATION RESOLVED                       │
 ├─────────────────────────────────────────────────┤
 │                                                 │
-│  Profile: "default"                             │
+│  Bundle: "default"                              │
 │     ↓                                           │
 │  Config merged:                                 │
 │     local > project > user                      │
@@ -82,7 +82,7 @@ Let's trace a prompt through the entire system. The flow is identical whether yo
 └─────────────────────────────────────────────────┘
 ```
 
-**What's happening:** Your profile (YAML file) gets compiled into a mount plan. This is the DNA of your session - it defines exactly what capabilities are available.
+**What's happening:** Your bundle (YAML/MD file) gets compiled into a mount plan. This is the DNA of your session - it defines exactly what capabilities are available.
 
 ### Step 2: Module Loading
 
@@ -267,7 +267,7 @@ Let's zoom in on what happens when a tool is called:
 Every step emits events. Here's a complete trace:
 
 ```
-14:32:01.001  session:start     {session_id: "abc123", profile: "default"}
+14:32:01.001  session:start     {session_id: "abc123", bundle: "default"}
 14:32:01.002  prompt:submit     {content: "List Python files"}
 14:32:01.003  provider:request  {model: "claude-sonnet-4", messages: 1}
 14:32:01.523  provider:response {tokens: 45, has_tool_calls: true}
@@ -298,8 +298,8 @@ These rules are **guaranteed** - you can build systems that depend on them:
 ```
 ~/.amplifier/
 ├── settings.yaml              # User-level config
-├── profiles/                  # User profiles
-│   └── my-profile.md
+├── bundles/                   # User bundles
+│   └── my-bundle.md
 ├── module-cache/              # Downloaded modules
 │   └── abc123.../
 └── projects/
@@ -313,8 +313,8 @@ These rules are **guaranteed** - you can build systems that depend on them:
 .amplifier/                    # Project-level (in your repo)
 ├── settings.yaml              # Project config
 ├── settings.local.yaml        # Local overrides (gitignored)
-└── profiles/                  # Project profiles
-    └── team-profile.md
+└── bundles/                   # Project bundles
+    └── team-bundle.md
 ```
 
 ## Interactive: Trace Your Own Request

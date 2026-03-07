@@ -217,7 +217,7 @@ Honesty builds trust. Here's what might change:
 | **Response format details** | LLM outputs evolve | Parse defensively, handle unknowns gracefully |
 | **Tool execution order** | When multiple tools are called, order may vary | Don't rely on tool A running before tool B |
 | **Timing** | Performance varies by load, model, network | Never depend on specific latencies |
-| **Default module versions** | Defaults improve over time | Pin versions in production profiles |
+| **Default module versions** | Defaults improve over time | Pin versions in production bundles |
 | **Internal data structures** | Implementation details change | Use the public APIs, not internal inspection |
 
 ---

@@ -221,25 +221,25 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 
 ---
 
-## Scenario 6: Profile Inheritance
+## Scenario 6: Bundle Inheritance
 
-**You run:** `amplifier run --profile team-coding "Fix the bug in auth.py"`
+**You run:** `amplifier run --bundle team-coding "Fix the bug in auth.py"`
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│  WHAT HAPPENS (profile resolution)                                  │
+│  WHAT HAPPENS (bundle resolution)                                   │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│  1. Profile "team-coding" requested                                 │
+│  1. Bundle "team-coding" requested                                  │
 │                                                                     │
-│  2. Profile chain resolved                                          │
+│  2. Bundle chain resolved                                           │
 │     └─ Load team-coding.md                                          │
 │     └─ See: extends: "coding-base"                                  │
 │     └─ Load coding-base.md                                          │
 │     └─ See: extends: "default"                                      │
 │     └─ Load default.md                                              │
 │                                                                     │
-│  3. Profiles merged (child overrides parent)                        │
+│  3. Bundles merged (child overrides parent)                         │
 │     └─ default       → base provider, basic tools                   │
 │     └─ + coding-base → adds code tools, system prompt for coding    │
 │     └─ + team-coding → adds team hooks, specific model              │
