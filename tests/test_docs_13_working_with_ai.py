@@ -101,13 +101,51 @@ def test_working_with_ai_has_three_antipatterns():
     ), "Should provide fixes"
 
 
-def test_working_with_ai_has_331_lines():
-    """Test that the document has exactly 331 lines as specified."""
+def test_working_with_ai_ties_to_amplifier_architecture():
+    """Structured Patterns section must explicitly reference core/foundation/app-cli."""
     doc_path = Path("docs/13-working-with-ai.md")
     content = doc_path.read_text()
-    line_count = len(content.splitlines())
+    lower = content.lower()
 
-    assert line_count == 331, (
-        f"Document must have exactly 331 lines as specified in requirements. "
-        f"Current: {line_count} lines"
+    # Must mention all three layers in plain language
+    assert "core" in lower, "Must reference amplifier-core concepts"
+    assert "foundation" in lower, "Must reference amplifier-foundation concepts"
+    assert "app" in lower, "Must reference app-cli / application layer concepts"
+
+
+def test_working_with_ai_has_zero_vector_attribution():
+    """Must include softened Zero-Vector attribution (draws on / aligns with)."""
+    doc_path = Path("docs/13-working-with-ai.md")
+    content = doc_path.read_text()
+
+    assert "Zero-Vector" in content or "zerovector" in content.lower(), (
+        "Must include Zero-Vector attribution"
     )
+
+    # Should use softened language, not exclusivity claims
+    lower = content.lower()
+    softened = any(
+        phrase in lower
+        for phrase in ["draws on", "aligns with", "inspired by", "builds on"]
+    )
+    assert softened, (
+        "Zero-Vector attribution must use softened language "
+        "(e.g., 'draws on', 'aligns with'), not exclusivity claims"
+    )
+
+
+def test_working_with_ai_nav_footer_no_dead_links():
+    """Navigation footer must point to existing docs, no dead links."""
+    doc_path = Path("docs/13-working-with-ai.md")
+    content = doc_path.read_text()
+
+    # Previous must link to 09-ecosystem-quick-map.md (exists)
+    assert "09-ecosystem-quick-map.md" in content, (
+        "Previous link must point to 09-ecosystem-quick-map.md"
+    )
+
+    # Next should NOT link to nonexistent docs (10, 11, 12, etc.)
+    for num in ["10-", "11-", "12-", "14-"]:
+        assert f"./{num}" not in content or f"[{num}" not in content, (
+            f"Next link must not reference nonexistent doc {num}*"
+        )

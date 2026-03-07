@@ -79,18 +79,25 @@ Write spec → Review spec → Implement from spec → Verify against spec
 
 ## Structured Patterns in Amplifier
 
-Amplifier's architecture supports structured development through clear separation of concerns. Here's the typical workflow:
+Amplifier's architecture draws on ideas from the Zero-Vector methodology and aligns with specification-first development practices. The result is a layered system that supports structured work through clear separation of concerns.
 
-### 5-Step Workflow
+Amplifier is split into three layers, each with a distinct role:
 
-**1. Specification (Design Phase)**
+- **amplifier-core** (the kernel) defines contracts and coordination mechanisms — session lifecycle, hook dispatch, module interfaces. It never changes based on what you're building.
+- **amplifier-foundation** (the factory) handles bundle composition, module resolution, and configuration merging. It assembles everything at startup, then steps aside.
+- **amplifier-app-cli** (the reference app) owns UX, transport, and policy decisions — what to load, how to display it, where settings live.
 
-Write the contract before touching code:
+When you follow a structured workflow in Amplifier, these layers map to specific steps:
+
+### Intent and Specification
+
+Write the contract before touching code. Decide which layer a change belongs in:
 
 ```markdown
 ## Module: Cache Service
 
 **Contract:** Store and retrieve objects with TTL support
+**Layer:** Module (depends only on amplifier-core contracts)
 
 **Public Interface:**
 - get(key: str) -> Optional[Any]
@@ -103,29 +110,30 @@ Write the contract before touching code:
 
 The specification is the source of truth. Implementation details can vary, but the contract is fixed.
 
-**2. Architecture Review**
+### Plan and Architecture Review
 
-Before implementing, verify:
-- Does this belong in app layer, kernel layer, or module layer?
+Before implementing, verify placement against the three-layer model:
+- Does this belong in the app layer, the core kernel, or as a module?
 - What are the boundaries? (See [Architecture Boundaries](./08-architecture-boundaries.md))
-- Are there existing contracts this must follow?
+- Are there existing core contracts this must follow?
 
-This step catches architectural problems before they become code.
+This step catches architectural problems before they become code. In Amplifier's world, modules depend only on core — never on foundation or app code. Getting this wrong early is expensive.
 
-**3. Implementation**
+### Specialist Agents and Implementation
 
-With the spec complete, implementation becomes mechanical:
+With the spec complete, implementation becomes mechanical. Amplifier's structured mode uses specialist agents — each focused on a narrow task (writing tests, implementing a module, reviewing boundaries). The goal is to make implementation boring. All the interesting decisions happened in the previous steps.
+
 ```python
 # Implement exactly what the spec says
 # No interpretation required
 # Contract is the source of truth
 ```
 
-The goal is to make implementation boring. All the interesting decisions happened in steps 1 and 2.
+### Verification Gates
 
-**4. Contract Validation**
+Every step includes a verification checkpoint:
 
-Write tests that verify the contract, not the implementation:
+- **Contract tests** verify the specification, not the implementation:
 ```python
 def test_cache_contract():
     """Cache must store and retrieve values."""
@@ -139,14 +147,12 @@ def test_cache_ttl():
     assert cache.get("key") is None
 ```
 
-These tests verify the specification, not the implementation.
+- **Integration checks** verify the module works within the broader system:
+  - Does it respect layer boundaries (module imports core, never foundation)?
+  - Are hooks firing correctly through core's hook registry?
+  - Does it handle session lifecycle events?
 
-**5. Integration Verification**
-
-Verify the module works within the broader system:
-- Does it respect boundaries?
-- Are hooks firing correctly?
-- Does it handle session lifecycle events?
+- **Boundary enforcement** confirms no layer violations crept in during implementation.
 
 ---
 
@@ -328,4 +334,4 @@ Neither approach is superior. They solve different problems. The best developers
 
 ---
 **Previous:** [Ecosystem Quick Map](./09-ecosystem-quick-map.md)
-**Next:** [Index](./00-index.md)
+**Next:** End of current documentation. Return to [Index](./00-index.md).
