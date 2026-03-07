@@ -298,13 +298,13 @@ broadcast = coordinator.get_capability("broadcast")
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                        APPLICATION LAYER                                     │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │  amplifier-app-cli          OR    your-custom-app                    │   │
+│  │  amplifier-app-cli (reference) OR your-custom-app                    │   │
 │  │  ────────────────                  ────────────────                  │   │
-│  │  • CLIApprovalSystem               • CustomApprovalUI                │   │
-│  │  • CLIDisplaySystem                • CustomDisplayLayer              │   │
-│  │  • ConsoleRenderer                 • CustomRenderer                  │   │
-│  │  • ProfileLoader                   • AppConfigLoader                 │   │
-│  │  • MentionResolver                 • AppMentionHandler               │   │
+│  │  • CLIApprovalSystem               • YourApprovalSystem              │   │
+│  │  • CLIDisplaySystem                • YourDisplaySystem               │   │
+│  │  • ConsoleRenderer                 • YourRenderer                    │   │
+│  │  • ProfileLoader                   • YourProfileLoader               │   │
+│  │  • MentionResolver                 • YourMentionResolver             │   │
 │  └─────────────────────────────────────────────────────────────────────┘   │
 │                                   │                                         │
 │                    register_capability("broadcast", ...)                    │
