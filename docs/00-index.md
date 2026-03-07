@@ -63,7 +63,7 @@ A progressive guide from "what is this?" to "I could build this."
 
 ### "I need to configure it for my team"
 ```
-5-Minute Understanding → How Data Flows → [main docs profiles]
+5-Minute Understanding → How Data Flows → [main docs bundles]
 ```
 
 ### "I want to write a custom tool"

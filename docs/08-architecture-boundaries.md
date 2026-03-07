@@ -69,7 +69,7 @@ The **application** owns everything user-facing and environment-specific:
 | **UX Systems** | CLIApprovalSystem, WebSocketDisplay | Apps decide how to show things |
 | **Module Resolution Policy** | CompositeModuleResolver | Apps decide where to find modules |
 | **Settings Persistence** | ~/.amplifier/settings.yaml | Apps decide where to store config |
-| **Profile/Bundle Loading** | ProfileLoader, load_bundle() | Apps decide what configurations exist |
+| **Bundle Loading** | BundleLoader, load_bundle() | Apps decide what configurations exist |
 | **@Mention Processing** | MentionResolver | Apps decide what @mentions mean |
 | **Capability Registration** | session.spawn, broadcast | Apps inject their behaviors |
 | **Transport** | WebSocket, REST, Console | Apps decide how to communicate |
@@ -303,7 +303,7 @@ broadcast = coordinator.get_capability("broadcast")
 │  │  • CLIApprovalSystem               • YourApprovalSystem              │   │
 │  │  • CLIDisplaySystem                • YourDisplaySystem               │   │
 │  │  • ConsoleRenderer                 • YourRenderer                    │   │
-│  │  • ProfileLoader                   • YourProfileLoader               │   │
+│  │  • BundleLoader                   • YourBundleLoader               │   │
 │  │  • MentionResolver                 • YourMentionResolver             │   │
 │  └─────────────────────────────────────────────────────────────────────┘   │
 │                                   │                                         │
@@ -353,7 +353,7 @@ broadcast = coordinator.get_capability("broadcast")
 ## Checklist: Is My Architecture Correct?
 
 - [ ] App layer handles all UX (display, approval, user input)
-- [ ] App layer loads bundles/profiles (kernel doesn't know where they come from)
+- [ ] App layer loads bundles (kernel doesn't know where they come from)
 - [ ] App layer registers capabilities (modules request them abstractly)
 - [ ] Kernel layer validates config structure (not content policy)
 - [ ] Kernel layer dispatches hooks (doesn't know what they do)
