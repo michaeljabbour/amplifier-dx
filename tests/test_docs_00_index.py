@@ -52,9 +52,9 @@ def test_docs_index_has_correct_entries_8_through_10():
     assert entry_10_line is not None, "Entry 10 (Working with AI) should exist"
     assert entry_9_line < entry_10_line, "Entry 10 should come after entry 9"
 
-    assert "[main docs profiles]" in content, (
-        "Reading path text should remain '[main docs profiles]'"
+    assert "[main docs bundles]" in content, (
+        "Reading path text should be '[main docs bundles]'"
     )
-    assert "[main docs bundles]" not in content, (
-        "Reading path text should not be changed to '[main docs bundles]'"
+    assert "[main docs profiles]" not in content, (
+        "Stale '[main docs profiles]' text should not remain in docs"
     )
