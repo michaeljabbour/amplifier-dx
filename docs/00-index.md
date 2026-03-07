@@ -46,8 +46,8 @@ A progressive guide from "what is this?" to "I could build this."
 8. **[Architecture Boundaries](./08-architecture-boundaries.md)**
    What belongs where: app layer, kernel layer, and module layer.
 
-9. **[Module Resolution](./09-module-resolution.md)**
-   How modules load across bundled, user, and project scopes; execution modes and plugin manifests.
+9. **[Ecosystem Quick Map](./09-ecosystem-quick-map.md)**
+   Three-repo architecture at a glance: core, foundation, and app-cli roles, dependency order, and troubleshooting by layer.
 
 10. **[Working with AI](./13-working-with-ai.md)**
     Practical comparison of vibe coding and structured AI-assisted development.
