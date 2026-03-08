@@ -18,7 +18,7 @@ export const CONFIG = {
 
   // Valid navigation sections
   sections: [
-    'home', 'quickstart', 'architecture', 'guides', 'reference',
+    'home', 'quickstart', 'architecture', 'philosophy', 'guides', 'reference',
     'cli', 'ecosystem', 'showcase', 'examples', 'contribute', 'updates'
   ],
 

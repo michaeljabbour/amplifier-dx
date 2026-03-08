@@ -2632,6 +2632,7 @@
           <button class="nav-link active" data-section="home">Overview</button>
           <button class="nav-link" data-section="quickstart">Quickstart</button>
           <button class="nav-link" data-section="architecture">Architecture</button>
+          <button class="nav-link" data-section="philosophy">Philosophy</button>
           <button class="nav-link" data-section="guides">Guides</button>
           <button class="nav-link" data-section="reference">Reference</button>
           <button class="nav-link" data-section="cli">CLI</button>
@@ -2812,6 +2813,25 @@
             <span class="sidebar-subitem" data-section="architecture" data-scroll="external-integration">External Integration</span>
             <span class="sidebar-subitem" data-section="architecture" data-scroll="production-config">Production Config</span>
             <span class="sidebar-subitem" data-section="architecture" data-scroll="troubleshooting">Troubleshooting</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-header open" onclick="toggleSidebarGroup(this)">
+        <svg class="sidebar-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        Philosophy
+      </div>
+      <div class="sidebar-items show">
+        <div class="sidebar-item-wrap">
+          <span class="sidebar-item has-children open" data-section="philosophy" onclick="toggleSidebarItem(this)">
+            Amplifier Philosophy
+            <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </span>
+          <div class="sidebar-subitems show">
+            <span class="sidebar-subitem" data-section="philosophy">Overview</span>
+            <span class="sidebar-subitem" data-section="philosophy" data-scroll="seven-pillars">The Seven Pillars</span>
+            <span class="sidebar-subitem" data-section="philosophy" data-scroll="vibe-vs-amplifier">Vibe Coder vs Amplifier Coder</span>
           </div>
         </div>
       </div>
@@ -5372,6 +5392,186 @@ Help me understand:
             </div>
           </div>
         </div>
+      </div>
+
+    </section>
+
+    <!-- PHILOSOPHY SECTION -->
+    <section id="section-philosophy" class="section">
+      <h1>Philosophy</h1>
+      <p class="section-desc">The design principles and mindset that separate deliberate AI-augmented engineering from unconstrained generation.</p>
+
+      <div class="info-box" style="border-left: 4px solid var(--purple); margin-bottom: 24px;">
+        <strong>🧭 Why Philosophy Matters</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">Amplifier is not just a tool — it is a way of thinking about software construction. Understanding <em>why</em> the system is designed this way turns every interaction from guesswork into intent.</p>
+      </div>
+
+      <!-- OVERVIEW -->
+      <h2>Overview</h2>
+      <p>Amplifier is built on a single foundational premise:</p>
+      <blockquote style="border-left: 4px solid var(--blue); padding: 12px 20px; margin: 16px 0; background: var(--bg-2); border-radius: 0 8px 8px 0; font-style: italic; color: var(--text-1);">
+        "The kernel provides mechanisms. Modules provide policy. The human provides intent."
+      </blockquote>
+      <p>This means the core runtime stays minimal and stable while all interesting behavior lives at the edges — in modules, bundles, and agent configurations that can evolve rapidly without destabilizing the foundation. Every architectural decision in Amplifier can be traced back to this principle.</p>
+
+      <p>The practical consequence: an Amplifier session is a composition of explicit, inspectable, swappable pieces. Nothing is hidden. Nothing is magic. If something behaves unexpectedly, you can read exactly why — in the YAML profile, the module code, or the hook chain.</p>
+
+      <!-- THE SEVEN PILLARS -->
+      <h2 id="seven-pillars">The Seven Pillars</h2>
+      <p>These are the first-principles from which all Amplifier design decisions follow. They are not marketing claims — they are constraints that have been held even when they made individual features harder to build.</p>
+
+      <div class="concepts" style="margin-bottom: 40px;">
+        <div class="concept">
+          <h3>1. Mechanism, Not Policy</h3>
+          <p>The kernel provides <em>capability</em>; modules decide <em>behavior</em>. If two teams might want something to work differently, it belongs in a module — not in the core. This is the single most important principle: it is why <code>amplifier-core</code> is ~2,600 lines and the ecosystem is unbounded.</p>
+          <p style="color: var(--text-2); font-size: 0.9em;">Ask yourself: "Could a different team legitimately want the opposite?" If yes → module.</p>
+        </div>
+        <div class="concept">
+          <h3>2. Ruthless Simplicity</h3>
+          <p>As simple as possible, but no simpler. Every abstraction must pay rent. Code you don't write has no bugs. When choosing between a clever solution and a boring one, choose boring. Complexity is a tax paid on every future modification.</p>
+          <p style="color: var(--text-2); font-size: 0.9em;">The test: could a new contributor understand this in under 60 seconds? If not, simplify.</p>
+        </div>
+        <div class="concept">
+          <h3>3. Bricks and Studs (Modular Design)</h3>
+          <p>Every module is a self-contained brick with a public contract (studs) and a private interior. The interior can be regenerated entirely — from spec alone — without breaking any connector. The contract is sacred; the implementation is disposable.</p>
+          <p style="color: var(--text-2); font-size: 0.9em;">Prefer regeneration over line-editing. If you're patching internals, the boundary is wrong.</p>
+        </div>
+        <div class="concept">
+          <h3>4. Text-First, Inspectable Surfaces</h3>
+          <p>All configuration, all context, all state is human-readable, diffable, and versionable. No hidden globals. No opaque binary state. If you can't <code>cat</code> it and <code>diff</code> it, the design needs revisiting. Observability is not a feature — it is a requirement.</p>
+          <p style="color: var(--text-2); font-size: 0.9em;">JSONL logs, YAML profiles, markdown agents — every surface is a text file you can read and version.</p>
+        </div>
+        <div class="concept">
+          <h3>5. Event-First Observability</h3>
+          <p>If it matters, it emits an event. Hooks observe without blocking (unless they deliberately deny). The event stream is the single canonical record of what happened in a session. Everything from security auditing to memory capture to UI streaming runs on this same bus.</p>
+          <p style="color: var(--text-2); font-size: 0.9em;">The event bus is not a side-channel — it is the primary communication surface between components.</p>
+        </div>
+        <div class="concept">
+          <h3>6. Composition Over Configuration</h3>
+          <p>New behavior comes from plugging in a different module, not from toggling flags in a massive config matrix. Amplifier avoids "configuration explosion" — the gradual accumulation of boolean toggles that each individually make sense but together create an incomprehensible state space.</p>
+          <p style="color: var(--text-2); font-size: 0.9em;">If you need a feature flag, consider whether a new module (or profile variant) would be cleaner.</p>
+        </div>
+        <div class="concept">
+          <h3>7. Don't Break the Edges</h3>
+          <p>Backward compatibility in kernel contracts is sacred. Modules depend on the kernel; the kernel does not depend on modules. Additive evolution only, with clear deprecation paths and long sunset periods. The cost of a breaking change is paid by every module author in the ecosystem.</p>
+          <p style="color: var(--text-2); font-size: 0.9em;">Add new APIs freely. Rename existing ones only with a long migration window and a compatibility shim.</p>
+        </div>
+      </div>
+
+      <!-- VIBE CODER VS AMPLIFIER CODER -->
+      <h2 id="vibe-vs-amplifier">Vibe Coder vs Amplifier Coder</h2>
+      <p>The term "vibe coding" describes a real and valid pattern: using an AI assistant to generate code through free-form conversation, accepting outputs that <em>feel right</em> without deeply inspecting them. It is fast, low-friction, and genuinely useful for throwaway scripts, prototypes, and exploration.</p>
+      <p>Amplifier is designed for a different mode — one that uses AI at the same level of leverage but with architectural intentionality. The distinction is not about effort or rigour for its own sake. It is about <strong>what kind of leverage compounds over time.</strong></p>
+
+      <table class="ref-table" style="margin-bottom: 32px;">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Vibe Coder</th>
+            <th>Amplifier Coder</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Orientation</strong></td>
+            <td>Output-oriented: "Does this run?"</td>
+            <td>Intent-oriented: "Does this reflect the right design?"</td>
+          </tr>
+          <tr>
+            <td><strong>Relationship with AI</strong></td>
+            <td>AI as author; human as acceptor</td>
+            <td>AI as crew; human as director</td>
+          </tr>
+          <tr>
+            <td><strong>Module boundaries</strong></td>
+            <td>Organic — emerge from generation</td>
+            <td>Deliberate — defined before implementation</td>
+          </tr>
+          <tr>
+            <td><strong>Context management</strong></td>
+            <td>One long conversation; hope the AI remembers</td>
+            <td>Explicit context injection; structured profiles and bundles</td>
+          </tr>
+          <tr>
+            <td><strong>Error handling</strong></td>
+            <td>"Ask AI to fix it" until it works</td>
+            <td>Systematic: hooks, observability, then targeted fix</td>
+          </tr>
+          <tr>
+            <td><strong>Spec discipline</strong></td>
+            <td>Spec emerges after code works</td>
+            <td>Spec drives code; code is the proof of spec</td>
+          </tr>
+          <tr>
+            <td><strong>Reuse model</strong></td>
+            <td>Copy-paste or re-generate</td>
+            <td>Composable modules with stable public contracts</td>
+          </tr>
+          <tr>
+            <td><strong>Observability</strong></td>
+            <td>Run it and see; print-debug</td>
+            <td>Event stream; structured hooks; JSONL logs</td>
+          </tr>
+          <tr>
+            <td><strong>Velocity profile</strong></td>
+            <td>Fast start, slows over time as system grows</td>
+            <td>Slower start, <em>accelerates</em> over time as modules compound</td>
+          </tr>
+          <tr>
+            <td><strong>Best for</strong></td>
+            <td>Throwaway scripts, exploration, demos</td>
+            <td>Production systems, long-lived codebases, teams</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="info-box" style="border-left: 4px solid var(--green); margin-bottom: 24px;">
+        <strong>✅ When vibe coding is the right choice</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">Vibe coding is not bad — it is misapplied when used for production systems. For a one-off script, a personal experiment, or a first-pass prototype you'll throw away, free-form generation is faster and entirely appropriate. The Amplifier mindset does not require ceremony for every task. Match the tool to the time horizon.</p>
+      </div>
+
+      <!-- THE AMPLIFIER CODER LOOP -->
+      <h2>The Amplifier Coder Loop</h2>
+      <p>In practice, the Amplifier development loop looks like this:</p>
+
+      <div class="arch-viz" style="margin-bottom: 32px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 24px; background: var(--bg-2); border-radius: 12px;">
+          <div style="text-align: center; padding: 16px; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border);">
+            <div style="font-size: 1.5em; margin-bottom: 8px;">🎯</div>
+            <strong>1. Declare Intent</strong>
+            <p style="font-size: 0.85em; color: var(--text-2); margin: 8px 0 0 0;">State what you want — in plain language. Use IDD decompose if the goal is complex.</p>
+          </div>
+          <div style="text-align: center; padding: 16px; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border);">
+            <div style="font-size: 1.5em; margin-bottom: 8px;">🏗️</div>
+            <strong>2. Spec the Boundary</strong>
+            <p style="font-size: 0.85em; color: var(--text-2); margin: 8px 0 0 0;">Define the module contract before generating code. What goes in, what comes out, what errors are possible.</p>
+          </div>
+          <div style="text-align: center; padding: 16px; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border);">
+            <div style="font-size: 1.5em; margin-bottom: 8px;">🔨</div>
+            <strong>3. Build in the Medium</strong>
+            <p style="font-size: 0.85em; color: var(--text-2); margin: 8px 0 0 0;">Generate the real artifact — not a sketch of it. Test-first. Code last.</p>
+          </div>
+          <div style="text-align: center; padding: 16px; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border);">
+            <div style="font-size: 1.5em; margin-bottom: 8px;">🔍</div>
+            <strong>4. Verify Against Intent</strong>
+            <p style="font-size: 0.85em; color: var(--text-2); margin: 8px 0 0 0;">Does the artifact match what you declared in step 1? Not just "does it run" — does it do the right thing.</p>
+          </div>
+          <div style="text-align: center; padding: 16px; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border);">
+            <div style="font-size: 1.5em; margin-bottom: 8px;">📦</div>
+            <strong>5. Seal and Compose</strong>
+            <p style="font-size: 0.85em; color: var(--text-2); margin: 8px 0 0 0;">Mark the module complete. It becomes a stable brick — referenced by others, never reached into.</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>The Compounding Advantage</h2>
+      <p>The core argument for the Amplifier approach over vibe coding is not that it is more correct on day one — it is that it <em>compounds</em>. Each module built with a clean contract becomes leverage for every future module. Each hook written with clear semantics becomes reusable in a new context. Each bundle composed from existing bricks takes minutes instead of days.</p>
+
+      <p>Vibe coding produces code. Amplifier coding produces <strong>a system that produces code</strong>.</p>
+
+      <div class="info-box" style="border-left: 4px solid var(--blue); margin-bottom: 24px;">
+        <strong>📖 Zero-Vector Design Connection</strong>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">This philosophy directly implements the <a href="https://zerovector.design/" target="_blank">Zero-Vector Design</a> thesis: eliminate translation loss between vision and product by using AI agents as a crew — not an author. The Amplifier Coder Loop is the Zero-Vector pipeline made concrete. See <code>amplifier-bundle-zerovector</code> for a ready-made crew bundle that operationalizes this approach with slash-command crews and an intent-to-artifact recipe.</p>
       </div>
 
     </section>
@@ -47109,7 +47309,11 @@ tools:
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-toml.min.js"></script>
 
-  <!-- ES Module App -->
+  <!-- ES Module App
+       NOTE: <script type="module"> uses ES module routing which does NOT work from file://
+       You must serve this over HTTP. Run: python3 -m http.server 8000
+       Then open: http://localhost:8000
+  -->
   <script type="module" src="js/app.js"></script>
 
   <!-- Chat Widget -->
