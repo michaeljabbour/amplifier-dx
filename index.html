@@ -3570,202 +3570,188 @@ module-cache/
       <h3>Architecture Overview</h3>
       <p>The following diagram shows how external applications integrate with amplifier-core:</p>
       <div style="background: #f8fafc; border-radius: 12px; padding: 20px; margin: 20px 0; overflow-x: auto;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 780" style="width: 100%; max-width: 1000px; display: block; margin: 0 auto;">
-          <defs>
-            <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
-            </linearGradient>
-            <linearGradient id="coreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
-            </linearGradient>
-            <linearGradient id="moduleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
-            </linearGradient>
-            <linearGradient id="orchestratorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#4338ca;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
-            </linearGradient>
-            <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
-              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.15"/>
-            </filter>
-            <filter id="softShadow" x="-5%" y="-5%" width="110%" height="115%">
-              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.1"/>
-            </filter>
-            <filter id="glowPurple" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#6366f1" flood-opacity="0.4"/>
-            </filter>
-            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
-            </marker>
-            <marker id="arrowheadBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7" fill="#0284c7"/>
-            </marker>
-            <marker id="arrowheadPurpleUp" markerWidth="8" markerHeight="6" refX="4" refY="6" orient="auto">
-              <polygon points="0 6, 4 0, 8 6" fill="#6366f1"/>
-            </marker>
-            <marker id="arrowheadGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7" fill="#059669"/>
-            </marker>
-          </defs>
-          <rect width="1100" height="780" fill="#f8fafc"/>
-          <text x="550" y="35" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="600" fill="#1e293b" text-anchor="middle">Amplifier External App Architecture</text>
-          <g filter="url(#shadow)">
-            <rect x="400" y="55" width="300" height="60" rx="12" fill="url(#headerGrad)"/>
-            <text x="550" y="82" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white" text-anchor="middle">Your App UI</text>
-            <text x="550" y="100" font-family="system-ui, sans-serif" font-size="11" fill="rgba(255,255,255,0.8)" text-anchor="middle">web - desktop - service</text>
-          </g>
-          <line x1="550" y1="115" x2="550" y2="145" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
-          <text x="620" y="135" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">session.execute("prompt")</text>
-          <g filter="url(#shadow)">
-            <rect x="375" y="150" width="350" height="55" rx="12" fill="url(#coreGrad)"/>
-            <text x="550" y="177" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="white" text-anchor="middle">AmplifierSession</text>
-            <text x="550" y="193" font-family="system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.8)" text-anchor="middle">amplifier-core kernel - config (mount plan)</text>
-          </g>
-          <text x="550" y="225" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">creates</text>
-          <g filter="url(#softShadow)">
-            <rect x="180" y="235" width="740" height="100" rx="12" fill="white" stroke="#cbd5e1" stroke-width="1"/>
-          </g>
-          <g>
-            <rect x="200" y="250" width="380" height="70" rx="10" fill="white" stroke="#94a3b8" stroke-width="1.5"/>
-            <text x="390" y="273" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#1e293b" text-anchor="middle">Coordinator</text>
-            <text x="390" y="291" font-family="system-ui, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">session_id - mount_points - get() - emit()</text>
-            <text x="390" y="308" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">infrastructure for module access and events</text>
-          </g>
-          <g>
-            <rect x="620" y="250" width="280" height="70" rx="10" fill="white" stroke="#0ea5e9" stroke-width="2"/>
-            <rect x="620" y="250" width="280" height="24" rx="10" fill="#e0f2fe"/>
-            <rect x="620" y="266" width="280" height="8" fill="#e0f2fe"/>
-            <text x="760" y="268" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#0369a1" text-anchor="middle">ModuleLoader</text>
-            <text x="760" y="293" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">entry points - filesystem - source resolver</text>
-            <text x="760" y="308" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">loader.load(id) - mount_fn(coordinator)</text>
-          </g>
-          <path d="M 580 285 L 620 285" fill="none" stroke="#0ea5e9" stroke-width="2" marker-end="url(#arrowheadBlue)"/>
-          <text x="600" y="278" font-family="system-ui, sans-serif" font-size="8" fill="#0284c7" text-anchor="middle">uses</text>
-          <text x="550" y="355" font-family="system-ui, sans-serif" font-size="10" font-weight="500" fill="#6366f1" text-anchor="middle">Mount Plan defines all modules</text>
-          <path d="M 760 320 L 760 365 L 140 365 L 140 400" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowheadBlue)"/>
-          <path d="M 760 320 L 760 365 L 360 365 L 360 400" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowheadBlue)"/>
-          <path d="M 760 320 L 760 365 L 580 365 L 580 400" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowheadBlue)"/>
-          <path d="M 760 320 L 760 365 L 800 365 L 800 400" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowheadBlue)"/>
-          <path d="M 760 320 L 760 365 L 1000 365 L 1000 400" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowheadBlue)"/>
-          <text x="550" y="378" font-family="system-ui, sans-serif" font-size="8" fill="#0284c7" text-anchor="middle">loads all modules at init time</text>
-          <g filter="url(#glowPurple)">
-            <rect x="55" y="405" width="170" height="140" rx="10" fill="url(#orchestratorGrad)"/>
-            <text x="140" y="430" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="white" text-anchor="middle">Orchestrator</text>
-            <text x="140" y="448" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.9)" text-anchor="middle">loop-*</text>
-            <line x1="75" y1="458" x2="205" y2="458" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-            <text x="140" y="475" font-family="system-ui, sans-serif" font-size="9" fill="rgba(255,255,255,0.85)" text-anchor="middle">DRIVES EXECUTION</text>
-            <text x="140" y="492" font-family="system-ui, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">- plan - act - refine loop</text>
-            <text x="140" y="506" font-family="system-ui, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">- calls providers</text>
-            <text x="140" y="520" font-family="system-ui, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">- executes tools</text>
-            <text x="140" y="534" font-family="system-ui, sans-serif" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">- returns to user</text>
-          </g>
-          <g filter="url(#softShadow)">
-            <rect x="275" y="405" width="170" height="105" rx="8" fill="url(#moduleGrad)" stroke="#cbd5e1" stroke-width="1"/>
-            <rect x="275" y="405" width="170" height="26" rx="8" fill="#dbeafe"/>
-            <rect x="275" y="423" width="170" height="8" fill="#dbeafe"/>
-            <text x="360" y="425" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#1d4ed8" text-anchor="middle">Context</text>
-            <text x="360" y="448" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">context-*</text>
-            <text x="360" y="465" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">conversation</text>
-            <text x="360" y="480" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">memory / history</text>
-            <text x="360" y="495" font-family="system-ui, sans-serif" font-size="8" fill="#94a3b8" text-anchor="middle">add - get - compact</text>
-          </g>
-          <g filter="url(#softShadow)">
-            <rect x="495" y="405" width="170" height="105" rx="8" fill="url(#moduleGrad)" stroke="#cbd5e1" stroke-width="1"/>
-            <rect x="495" y="405" width="170" height="26" rx="8" fill="#d1fae5"/>
-            <rect x="495" y="423" width="170" height="8" fill="#d1fae5"/>
-            <text x="580" y="425" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#047857" text-anchor="middle">Providers</text>
-            <text x="580" y="448" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">provider-*</text>
-            <text x="580" y="465" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Anthropic - OpenAI</text>
-            <text x="580" y="480" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Gemini - Local</text>
-            <text x="580" y="495" font-family="system-ui, sans-serif" font-size="8" fill="#94a3b8" text-anchor="middle">complete() - list_models()</text>
-          </g>
-          <g filter="url(#softShadow)">
-            <rect x="715" y="405" width="170" height="105" rx="8" fill="url(#moduleGrad)" stroke="#cbd5e1" stroke-width="1"/>
-            <rect x="715" y="405" width="170" height="26" rx="8" fill="#fef3c7"/>
-            <rect x="715" y="423" width="170" height="8" fill="#fef3c7"/>
-            <text x="800" y="425" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#b45309" text-anchor="middle">Tools</text>
-            <text x="800" y="448" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">tool-*</text>
-            <text x="800" y="465" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">filesystem - bash</text>
-            <text x="800" y="480" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">web - task - custom</text>
-            <text x="800" y="495" font-family="system-ui, sans-serif" font-size="8" fill="#94a3b8" text-anchor="middle">execute(input)</text>
-          </g>
-          <g filter="url(#softShadow)">
-            <rect x="915" y="405" width="170" height="105" rx="8" fill="url(#moduleGrad)" stroke="#cbd5e1" stroke-width="1"/>
-            <rect x="915" y="405" width="170" height="26" rx="8" fill="#fce7f3"/>
-            <rect x="915" y="423" width="170" height="8" fill="#fce7f3"/>
-            <text x="1000" y="425" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#be185d" text-anchor="middle">Hooks</text>
-            <text x="1000" y="448" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">hooks-*</text>
-            <text x="1000" y="465" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">logging - approval</text>
-            <text x="1000" y="480" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">redaction - tracking</text>
-            <text x="1000" y="495" font-family="system-ui, sans-serif" font-size="8" fill="#94a3b8" text-anchor="middle">observe - modify</text>
-          </g>
-          <line x1="225" y1="530" x2="1000" y2="530" stroke="#6366f1" stroke-width="2"/>
-          <line x1="225" y1="475" x2="250" y2="475" stroke="#6366f1" stroke-width="2"/>
-          <line x1="250" y1="475" x2="250" y2="530" stroke="#6366f1" stroke-width="2"/>
-          <circle cx="225" cy="475" r="4" fill="#6366f1"/>
-          <line x1="360" y1="530" x2="360" y2="515" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowheadPurpleUp)"/>
-          <line x1="580" y1="530" x2="580" y2="515" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowheadPurpleUp)"/>
-          <line x1="800" y1="530" x2="800" y2="515" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowheadPurpleUp)"/>
-          <line x1="1000" y1="530" x2="1000" y2="515" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowheadPurpleUp)"/>
-          <circle cx="360" cy="530" r="3" fill="#6366f1"/>
-          <circle cx="580" cy="530" r="3" fill="#6366f1"/>
-          <circle cx="800" cy="530" r="3" fill="#6366f1"/>
-          <circle cx="1000" cy="530" r="3" fill="#6366f1"/>
-          <text x="620" y="550" font-family="system-ui, sans-serif" font-size="9" font-weight="500" fill="#6366f1" text-anchor="middle">Orchestrator drives execution via coordinator.get()</text>
-          <path d="M 55 475 L 35 475 L 35 177 L 375 177" fill="none" stroke="#059669" stroke-width="2" marker-end="url(#arrowheadGreen)"/>
-          <text x="35" y="330" font-family="system-ui, sans-serif" font-size="8" fill="#059669" writing-mode="tb" text-anchor="middle">returns result</text>
-          <g filter="url(#softShadow)">
-            <rect x="940" y="150" width="140" height="165" rx="10" fill="white" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,2"/>
-            <text x="1010" y="173" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#b45309" text-anchor="middle">Policy Layer</text>
-            <text x="1010" y="190" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">(You own these)</text>
-            <rect x="955" y="203" width="110" height="24" rx="5" fill="#fef3c7"/>
-            <text x="1010" y="219" font-family="system-ui, sans-serif" font-size="10" fill="#92400e" text-anchor="middle">ModuleLoader</text>
-            <rect x="955" y="233" width="110" height="24" rx="5" fill="#fef3c7"/>
-            <text x="1010" y="249" font-family="system-ui, sans-serif" font-size="10" fill="#92400e" text-anchor="middle">ApprovalSystem</text>
-            <rect x="955" y="263" width="110" height="24" rx="5" fill="#fef3c7"/>
-            <text x="1010" y="279" font-family="system-ui, sans-serif" font-size="10" fill="#92400e" text-anchor="middle">DisplaySystem</text>
-            <rect x="955" y="293" width="110" height="15" rx="3" fill="#fef9c3"/>
-            <text x="1010" y="304" font-family="system-ui, sans-serif" font-size="8" fill="#a16207" text-anchor="middle">SourceResolver</text>
-          </g>
-          <path d="M 940 200 L 725 177" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrowhead)"/>
-          <g transform="translate(30, 55)">
-            <rect x="0" y="0" width="240" height="115" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
-            <text x="120" y="20" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#1d4ed8" text-anchor="middle">Execution Flow</text>
-            <text x="120" y="40" font-family="system-ui, sans-serif" font-size="9" fill="#3b82f6" text-anchor="middle">1. App calls session.execute(prompt)</text>
-            <text x="120" y="55" font-family="system-ui, sans-serif" font-size="9" fill="#3b82f6" text-anchor="middle">2. Session calls orchestrator.execute()</text>
-            <text x="120" y="70" font-family="system-ui, sans-serif" font-size="9" fill="#6366f1" font-weight="600" text-anchor="middle">3. Orchestrator takes control:</text>
-            <text x="120" y="85" font-family="system-ui, sans-serif" font-size="8" fill="#64748b" text-anchor="middle">- builds messages from context</text>
-            <text x="120" y="97" font-family="system-ui, sans-serif" font-size="8" fill="#64748b" text-anchor="middle">- calls provider.complete()</text>
-            <text x="120" y="109" font-family="system-ui, sans-serif" font-size="8" fill="#64748b" text-anchor="middle">- executes tools - emits hooks</text>
-          </g>
-          <g transform="translate(30, 620)">
-            <rect x="0" y="0" width="350" height="90" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#softShadow)"/>
-            <text x="175" y="18" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#64748b" text-anchor="middle">Legend</text>
-            <circle cx="20" cy="38" r="6" fill="url(#coreGrad)"/>
-            <text x="35" y="42" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Core / Session</text>
-            <rect x="14" y="50" width="12" height="12" rx="2" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="1"/>
-            <text x="35" y="60" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Loader</text>
-            <rect x="14" y="68" width="12" height="12" rx="2" fill="url(#orchestratorGrad)"/>
-            <text x="35" y="78" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Orchestrator (driver)</text>
-            <line x1="130" y1="38" x2="160" y2="38" stroke="#0ea5e9" stroke-width="2" stroke-dasharray="4,2"/>
-            <text x="170" y="42" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Load path (init)</text>
-            <line x1="130" y1="55" x2="160" y2="55" stroke="#6366f1" stroke-width="2"/>
-            <text x="170" y="59" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Execution (orchestrator drives)</text>
-            <line x1="130" y1="72" x2="160" y2="72" stroke="#059669" stroke-width="2"/>
-            <text x="170" y="76" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">Return to app</text>
-          </g>
-          <g transform="translate(400, 620)">
-            <rect x="0" y="0" width="300" height="90" rx="8" fill="#f5f3ff" stroke="#6366f1" stroke-width="1" filter="url(#softShadow)"/>
-            <text x="150" y="20" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#4338ca" text-anchor="middle">Orchestrator Owns the Transaction</text>
-            <text x="150" y="40" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">- Loaded as a module (like others)</text>
-            <text x="150" y="55" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">- But once execute() is called...</text>
-            <text x="150" y="70" font-family="system-ui, sans-serif" font-size="9" fill="#6366f1" font-weight="500" text-anchor="middle">- It decides: loops, exits, displays</text>
-            <text x="150" y="85" font-family="system-ui, sans-serif" font-size="9" fill="#6366f1" font-weight="500" text-anchor="middle">- Other modules serve the orchestrator</text>
-          </g>
-        </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<defs>
+  <marker id="ah-dark" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#333"/></marker>
+  <marker id="ah-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4A7BCE"/></marker>
+  <marker id="ah-green" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#3A9E60"/></marker>
+  <marker id="ah-orange" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#B07010"/></marker>
+  <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+    <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#00000025"/>
+  </filter>
+</defs>
+
+<!-- BACKGROUND + BORDER -->
+<rect width="1200" height="900" fill="#F0F2F8" rx="14"/>
+<rect x="12" y="12" width="1176" height="876" rx="11" fill="none" stroke="#C0C4D8" stroke-width="1.5"/>
+
+<!-- ══════════════════════════════════════════════
+     ZONE BANDS
+     App Layer:    y=58..278
+     Runtime:      y=290..550
+     Modules:      y=562..758
+     Bottom:       y=770..888
+     ══════════════════════════════════════════════ -->
+
+<rect x="13" y="58" width="1174" height="220" fill="#F2F4FF" opacity="0.7"/>
+<line x1="13" y1="278" x2="1187" y2="278" stroke="#C8CCDE" stroke-width="1" stroke-dasharray="4,4"/>
+
+<rect x="13" y="278" width="1174" height="272" fill="#EEF2FA" opacity="0.7"/>
+<line x1="13" y1="550" x2="1187" y2="550" stroke="#C8CCDE" stroke-width="1" stroke-dasharray="4,4"/>
+
+<rect x="13" y="550" width="1174" height="208" fill="#F4F6FC" opacity="0.7"/>
+<line x1="13" y1="758" x2="1187" y2="758" stroke="#C8CCDE" stroke-width="1" stroke-dasharray="4,4"/>
+
+<!-- Zone labels right-aligned -->
+<text x="1182" y="76" text-anchor="end" font-size="10" font-weight="600" fill="#9AA0C0" letter-spacing="0.05em">APPLICATION LAYER</text>
+<text x="1182" y="315" text-anchor="end" font-size="10" font-weight="600" fill="#9AA0C0" letter-spacing="0.05em">RUNTIME MODULES</text>
+<text x="1182" y="655" text-anchor="end" font-size="10" font-weight="600" fill="#9AA0C0" letter-spacing="0.05em">KERNEL COMPONENTS</text>
+
+<!-- ══════════════════════════════════════════════
+     APP LAYER
+     ══════════════════════════════════════════════ -->
+
+<!-- App Container -->
+<rect x="50" y="85" width="1100" height="170" rx="12" fill="white" stroke="#D4D9E8" stroke-width="2" filter="url(#shadow)"/>
+<text x="600" y="115" text-anchor="middle" font-size="20" font-weight="600" fill="#1F2E4D">Your External Application</text>
+<text x="600" y="140" text-anchor="middle" font-size="13" fill="#666B7D">web frontend · desktop client · backend service</text>
+
+<!-- Calls box -->
+<rect x="65" y="160" width="1070" height="75" rx="8" fill="#F8F9FB" stroke="#D4D9E8" stroke-width="1"/>
+<text x="85" y="185" font-size="13" font-weight="600" fill="#333">Entry Point:</text>
+<text x="85" y="207" font-size="12" fill="#666B7D">session.execute( prompt )</text>
+<text x="85" y="225" font-size="11" font-weight="500" fill="#999">↓ passes coordinator to orchestrator</text>
+
+<!-- ══════════════════════════════════════════════
+     RUNTIME MODULES
+     ══════════════════════════════════════════════ -->
+
+<!-- Left: Orchestrator highlight -->
+<rect x="50" y="305" width="190" height="225" rx="12" fill="#FDF7FF" stroke="#B896D4" stroke-width="2" filter="url(#shadow)"/>
+<rect x="55" y="310" width="180" height="35" rx="8" fill="#E8D5F2" stroke="#B896D4" stroke-width="1"/>
+<text x="145" y="335" text-anchor="middle" font-size="14" font-weight="700" fill="#3F2461">Orchestrator</text>
+
+<text x="70" y="365" font-size="12" font-weight="600" fill="#333">Responsibility:</text>
+<text x="70" y="385" font-size="11" fill="#666B7D">• Drives plan-act-refine loop</text>
+<text x="70" y="403" font-size="11" fill="#666B7D">• Calls provider.complete()</text>
+<text x="70" y="421" font-size="11" fill="#666B7D">• Executes tools via coordinator</text>
+<text x="70" y="439" font-size="11" fill="#666B7D">• Emits hooks for each event</text>
+<text x="70" y="470" font-size="10" font-weight="600" fill="#3F2461">Always stays LOCAL</text>
+
+<!-- Center modules: Context, Providers, Tools, Hooks -->
+<!-- Context -->
+<rect x="280" y="305" width="180" height="225" rx="12" fill="white" stroke="#4A7BCE" stroke-width="2" filter="url(#shadow)"/>
+<rect x="285" y="310" width="170" height="35" rx="8" fill="#E3F0FF" stroke="#4A7BCE" stroke-width="1"/>
+<text x="370" y="335" text-anchor="middle" font-size="14" font-weight="700" fill="#1F4788">Context</text>
+
+<text x="295" y="365" font-size="12" font-weight="600" fill="#333">Manages:</text>
+<text x="295" y="385" font-size="11" fill="#666B7D">• Conversation history</text>
+<text x="295" y="403" font-size="11" fill="#666B7D">• Memory / context</text>
+<text x="295" y="421" font-size="11" fill="#666B7D">• Compaction</text>
+<text x="295" y="455" font-size="11" fill="#666B7D">Local or remote</text>
+<text x="295" y="475" font-size="10" font-weight="600" fill="#1F4788">(e.g., context-simple)</text>
+
+<!-- Providers -->
+<rect x="510" y="305" width="180" height="225" rx="12" fill="white" stroke="#3A9E60" stroke-width="2" filter="url(#shadow)"/>
+<rect x="515" y="310" width="170" height="35" rx="8" fill="#E3F5ED" stroke="#3A9E60" stroke-width="1"/>
+<text x="600" y="335" text-anchor="middle" font-size="14" font-weight="700" fill="#1F5A3F">Providers</text>
+
+<text x="525" y="365" font-size="12" font-weight="600" fill="#333">LLM backends:</text>
+<text x="525" y="385" font-size="11" fill="#666B7D">• Anthropic</text>
+<text x="525" y="403" font-size="11" fill="#666B7D">• OpenAI</text>
+<text x="525" y="421" font-size="11" fill="#666B7D">• Gemini</text>
+<text x="525" y="439" font-size="11" fill="#666B7D">• Local LMs</text>
+<text x="525" y="475" font-size="10" font-weight="600" fill="#1F5A3F">(loadable from entry points)</text>
+
+<!-- Tools -->
+<rect x="740" y="305" width="180" height="225" rx="12" fill="white" stroke="#B07010" stroke-width="2" filter="url(#shadow)"/>
+<rect x="745" y="310" width="170" height="35" rx="8" fill="#FFF3E0" stroke="#B07010" stroke-width="1"/>
+<text x="830" y="335" text-anchor="middle" font-size="14" font-weight="700" fill="#5F3F0F">Tools</text>
+
+<text x="755" y="365" font-size="12" font-weight="600" fill="#333">Agent capabilities:</text>
+<text x="755" y="385" font-size="11" fill="#666B7D">• Filesystem</text>
+<text x="755" y="403" font-size="11" fill="#666B7D">• Bash</text>
+<text x="755" y="421" font-size="11" fill="#666B7D">• Web browser</text>
+<text x="755" y="439" font-size="11" fill="#666B7D">• Custom tools</text>
+<text x="755" y="475" font-size="10" font-weight="600" fill="#5F3F0F">(dynamically mounted)</text>
+
+<!-- Hooks -->
+<rect x="970" y="305" width="180" height="225" rx="12" fill="white" stroke="#666" stroke-width="2" filter="url(#shadow)"/>
+<rect x="975" y="310" width="170" height="35" rx="8" fill="#F5F5F5" stroke="#666" stroke-width="1"/>
+<text x="1060" y="335" text-anchor="middle" font-size="14" font-weight="700" fill="#333">Hooks</text>
+
+<text x="985" y="365" font-size="12" font-weight="600" fill="#333">Observe & modify:</text>
+<text x="985" y="385" font-size="11" fill="#666B7D">• continue</text>
+<text x="985" y="403" font-size="11" fill="#666B7D">• deny</text>
+<text x="985" y="421" font-size="11" fill="#666B7D">• modify</text>
+<text x="985" y="439" font-size="11" fill="#666B7D">• inject_context</text>
+<text x="985" y="457" font-size="11" fill="#666B7D">• ask_user</text>
+
+<!-- ══════════════════════════════════════════════
+     KERNEL COMPONENTS
+     ══════════════════════════════════════════════ -->
+
+<!-- AmplifierSession -->
+<rect x="50" y="775" width="340" height="105" rx="12" fill="white" stroke="#1F4788" stroke-width="2" filter="url(#shadow)"/>
+<rect x="55" y="780" width="330" height="35" rx="8" fill="#E3F0FF" stroke="#1F4788" stroke-width="1"/>
+<text x="220" y="805" text-anchor="middle" font-size="14" font-weight="700" fill="#1F4788">AmplifierSession</text>
+<text x="70" y="835" font-size="12" fill="#666B7D">• Initialization &amp; teardown</text>
+<text x="70" y="855" font-size="12" fill="#666B7D">• Mount plan evaluation</text>
+
+<!-- Coordinator -->
+<rect x="430" y="775" width="340" height="105" rx="12" fill="white" stroke="#1F5A3F" stroke-width="2" filter="url(#shadow)"/>
+<rect x="435" y="780" width="330" height="35" rx="8" fill="#E3F5ED" stroke="#1F5A3F" stroke-width="1"/>
+<text x="600" y="805" text-anchor="middle" font-size="14" font-weight="700" fill="#1F5A3F">Coordinator</text>
+<text x="450" y="835" font-size="12" fill="#666B7D">• Module access (get)</text>
+<text x="450" y="855" font-size="12" fill="#666B7D">• Event emission (emit)</text>
+
+<!-- ModuleLoader (Policy Layer) -->
+<rect x="810" y="775" width="340" height="105" rx="12" fill="#FFFAF0" stroke="#B07010" stroke-width="3" stroke-dasharray="5,3" filter="url(#shadow)"/>
+<rect x="815" y="780" width="330" height="35" rx="8" fill="#FFF3E0" stroke="#B07010" stroke-width="1"/>
+<text x="980" y="805" text-anchor="middle" font-size="14" font-weight="700" fill="#5F3F0F">ModuleLoader</text>
+<text x="825" y="835" font-size="12" fill="#666B7D" font-weight="500">(YOU OWN THIS)</text>
+<text x="825" y="855" font-size="12" fill="#666B7D">Resolves where modules load from</text>
+
+<!-- ══════════════════════════════════════════════
+     FLOW ARROWS
+     ══════════════════════════════════════════════ -->
+
+<!-- App to Orchestrator call -->
+<path d="M 600 235 L 145 305" fill="none" stroke="#4A7BCE" stroke-width="2" marker-end="url(#ah-blue)" stroke-dasharray="5,3"/>
+<text x="340" y="255" font-size="11" fill="#4A7BCE" font-weight="600">execute(coordinator)</text>
+
+<!-- Orchestrator polls modules -->
+<path d="M 240 360 L 280 360" fill="none" stroke="#333" stroke-width="2" marker-end="url(#ah-dark)"/>
+<path d="M 240 380 L 280 380" fill="none" stroke="#333" stroke-width="2" marker-end="url(#ah-dark)"/>
+<path d="M 240 400 L 280 400" fill="none" stroke="#333" stroke-width="2" marker-end="url(#ah-dark)"/>
+<path d="M 240 420 L 280 420" fill="none" stroke="#333" stroke-width="2" marker-end="url(#ah-dark)"/>
+
+<text x="250" y="445" text-anchor="middle" font-size="10" fill="#333" font-weight="600">via coordinator.get()</text>
+
+<!-- Result back to app -->
+<path d="M 145 530 L 600 235" fill="none" stroke="#3A9E60" stroke-width="2" marker-end="url(#ah-green)" stroke-dasharray="5,3"/>
+<text x="320" y="395" font-size="11" fill="#3A9E60" font-weight="600">returns result</text>
+
+<!-- Dashed lines from modules to ModuleLoader -->
+<path d="M 370 418 L 810 818" fill="none" stroke="#B07010" stroke-width="1.5" stroke-dasharray="3,2"/>
+<path d="M 600 418 L 850 825" fill="none" stroke="#B07010" stroke-width="1.5" stroke-dasharray="3,2"/>
+<path d="M 830 418 L 920 825" fill="none" stroke="#B07010" stroke-width="1.5" stroke-dasharray="3,2"/>
+<path d="M 1060 418 L 1000 825" fill="none" stroke="#B07010" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+<!-- Legend -->
+<text x="50" y="900" font-size="11" font-weight="600" fill="#333">Legend:  </text>
+<line x1="125" y1="895" x2="155" y2="895" stroke="#4A7BCE" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#ah-blue)"/>
+<text x="165" y="900" font-size="11" fill="#666B7D">execute() call</text>
+
+<line x1="345" y1="895" x2="375" y2="895" stroke="#333" stroke-width="2" marker-end="url(#ah-dark)"/>
+<text x="385" y="900" font-size="11" fill="#666B7D">orchestrator.get()</text>
+
+<line x1="600" y1="895" x2="630" y2="895" stroke="#3A9E60" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#ah-green)"/>
+<text x="640" y="900" font-size="11" fill="#666B7D">response</text>
+
+<line x1="805" y1="895" x2="835" y2="895" stroke="#B07010" stroke-width="1.5" stroke-dasharray="3,2"/>
+<text x="845" y="900" font-size="11" fill="#666B7D">policy binding</text>
+</svg>
       </div>
 
       <h3>Required Components</h3>
@@ -38054,17 +38040,23 @@ def test_lens_filter_excludes_low_relevance():
           <div class="spec-content">
             
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value)</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value)
+</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft
+</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-batch-processor</code></p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-batch-processor</code>
+</p>
         </div>
-        <h3>Overview</h3>
-        <p>An orchestrator for non-interactive batch processing. No chat interface - users provide structured input (files, configs, data), the system processes them according to a defined pipeline, and returns structured output. Demonstrates Amplifier as a processing engine, not just a chatbot.</p>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
+        <h3>Overview
+</h3>
+        <p>An orchestrator for non-interactive batch processing. No chat interface - users provide structured input (files, configs, data), the system processes them according to a defined pipeline, and returns structured output. Demonstrates Amplifier as a processing engine, not just a chatbot.
+</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition
+</h4>
         <table class="ref-table">
           <thead>
             <tr><th>Without</th><th>With</th></tr>
@@ -38076,21 +38068,36 @@ def test_lens_filter_excludes_low_relevance():
             <tr><td>Interactive waits</td><td>Background processing with notifications</td></tr>
           </tbody>
         </table>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
-        <li><strong>Code migration</strong>: Process all files in a directory, apply transformation</li>
-        <li><strong>Documentation generation</strong>: Generate docs from code across entire codebase</li>
-        <li><strong>Test generation</strong>: Batch generate tests for all functions/classes</li>
-        <li><strong>Data transformation</strong>: Convert formats, enrich data, extract patterns</li>
-        <li><strong>Report generation</strong>: Process multiple inputs, produce consolidated report</li>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
-        <p>This breaks the "chatbot" mental model by:</p>
-        <li><strong>No conversation</strong>: Input → Process → Output</li>
-        <li><strong>No interactive prompts</strong>: Pre-defined pipeline</li>
-        <li><strong>Structured input/output</strong>: Files, JSON, not natural language</li>
-        <li><strong>Batch semantics</strong>: Many items, one pipeline</li>
-        <p>---</p>
-        <h3>Contract</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases
+</h4>
+        <li><strong>Code migration</strong>: Process all files in a directory, apply transformation
+</li>
+        <li><strong>Documentation generation</strong>: Generate docs from code across entire codebase
+</li>
+        <li><strong>Test generation</strong>: Batch generate tests for all functions/classes
+</li>
+        <li><strong>Data transformation</strong>: Convert formats, enrich data, extract patterns
+</li>
+        <li><strong>Report generation</strong>: Process multiple inputs, produce consolidated report
+</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator
+</h4>
+        <p>This breaks the "chatbot" mental model by:
+</p>
+        <li><strong>No conversation</strong>: Input → Process → Output
+</li>
+        <li><strong>No interactive prompts</strong>: Pre-defined pipeline
+</li>
+        <li><strong>Structured input/output</strong>: Files, JSON, not natural language
+</li>
+        <li><strong>Batch semantics</strong>: Many items, one pipeline
+</li>
+        <p>---
+</p>
+        <h3>Contract
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38178,7 +38185,8 @@ class BatchProcessorOrchestrator:
             Aggregated batch results
         &quot;&quot;&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">toml</span>
@@ -38234,7 +38242,8 @@ config = {
   error_output = &quot;./errors/&quot;           # Where to write errors
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Pipeline Definition</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Pipeline Definition
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -38293,9 +38302,12 @@ aggregation:
     - Files modified: {modified}
     - Changes made: {changes}</code></pre>
         </div>
-        <p>---</p>
-        <h3>Architecture</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Processing Flow</h4>
+        <p>---
+</p>
+        <h3>Architecture
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Processing Flow
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">text</span>
@@ -38339,8 +38351,10 @@ aggregation:
 │  Files │ JSON │ Stdout │ Report                             │
 └─────────────────────────────────────────────────────────────┘</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Worker Execution</h4>
-        <p>Each worker processes one item through the pipeline:</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Worker Execution
+</h4>
+        <p>Each worker processes one item through the pipeline:
+</p>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38379,8 +38393,10 @@ aggregation:
         result=context.get(&quot;result&quot;),
     )</code></pre>
         </div>
-        <p>---</p>
-        <h3>Events</h3>
+        <p>---
+</p>
+        <h3>Events
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38397,9 +38413,12 @@ aggregation:
 &quot;batch:item:before&quot; # Before processing - can filter/modify
 &quot;batch:item:after&quot;  # After processing - can transform result</code></pre>
         </div>
-        <p>---</p>
-        <h3>Examples</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage</h4>
+        <p>---
+</p>
+        <h3>Examples
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">bash</span>
@@ -38418,7 +38437,8 @@ amplifier batch --manifest ./batch-job.yaml
 # Watch mode - process new files as they appear
 amplifier batch --pipeline analyze --input &quot;./uploads/&quot; --watch</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38439,7 +38459,8 @@ result = await session.batch_process(
 
 print(f&quot;Processed {result.succeeded}/{result.total}&quot;)</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Pipeline as Amplifier Recipe</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Pipeline as Amplifier Recipe
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -38462,8 +38483,10 @@ output:
   path: &quot;tests/&quot;
   naming: &quot;{basename}_test.py&quot;</code></pre>
         </div>
-        <p>---</p>
-        <h3>Integration with Hooks</h3>
+        <p>---
+</p>
+        <h3>Integration with Hooks
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38492,8 +38515,10 @@ async def transform_result(event, data):
     data[&quot;output&quot;].metrics = calculate_metrics(data[&quot;output&quot;].result)
     return HookResult(action=&quot;continue&quot;, data=data)</code></pre>
         </div>
-        <p>---</p>
-        <h3>Testing Strategy</h3>
+        <p>---
+</p>
+        <h3>Testing Strategy
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38518,13 +38543,20 @@ async def transform_result(event, data):
     async def test_progress_events(self):
         &quot;&quot;&quot;Progress hooks receive accurate counts.&quot;&quot;&quot;</code></pre>
         </div>
-        <p>---</p>
-        <h3>Open Questions</h3>
-        <li><strong>Checkpointing</strong>: Should batch progress be checkpointed for resume on failure?</li>
-        <li><strong>Dependency ordering</strong>: Should items be able to declare dependencies on other items?</li>
-        <li><strong>Dynamic batching</strong>: Should pipeline be able to split/merge items mid-processing?</li>
-        <li><strong>Resource limits</strong>: How to handle memory/API limits for large batches?</li>
-        <li><strong>Result streaming</strong>: Should results be streamed as they complete or only at end?</li>
+        <p>---
+</p>
+        <h3>Open Questions
+</h3>
+        <li><strong>Checkpointing</strong>: Should batch progress be checkpointed for resume on failure?
+</li>
+        <li><strong>Dependency ordering</strong>: Should items be able to declare dependencies on other items?
+</li>
+        <li><strong>Dynamic batching</strong>: Should pipeline be able to split/merge items mid-processing?
+</li>
+        <li><strong>Resource limits</strong>: How to handle memory/API limits for large batches?
+</li>
+        <li><strong>Result streaming</strong>: Should results be streamed as they complete or only at end?
+</li>
           </div>
         </div>
         <div class="spec-section" id="spec-orchestrator-loop-design-tool" data-category="orchestrators">
@@ -38538,17 +38570,23 @@ async def transform_result(event, data):
           <div class="spec-content">
             
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value - Alex's Domain)</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value - Alex's Domain)
+</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft
+</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-design-tool</code></p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-design-tool</code>
+</p>
         </div>
-        <h3>Overview</h3>
-        <p>An orchestrator optimized for design tool workflows where the interface is primarily visual/structured rather than conversational. The LLM operates on structured design data (components, layouts, styles) and returns structured modifications, enabling rich visual interfaces with AI-powered manipulation.</p>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
+        <h3>Overview
+</h3>
+        <p>An orchestrator optimized for design tool workflows where the interface is primarily visual/structured rather than conversational. The LLM operates on structured design data (components, layouts, styles) and returns structured modifications, enabling rich visual interfaces with AI-powered manipulation.
+</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition
+</h4>
         <table class="ref-table">
           <thead>
             <tr><th>Without</th><th>With</th></tr>
@@ -38560,21 +38598,36 @@ async def transform_result(event, data):
             <tr><td>Generic coding assistant</td><td>Design-aware operations and constraints</td></tr>
           </tbody>
         </table>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
-        <li><strong>Component generation</strong>: "Create a button component with these variants"</li>
-        <li><strong>Layout assistance</strong>: "Arrange these elements in a responsive grid"</li>
-        <li><strong>Style generation</strong>: "Generate a color palette for this brand"</li>
-        <li><strong>Design system expansion</strong>: "Create icon variants matching this style"</li>
-        <li><strong>Accessibility auditing</strong>: "Check this component for WCAG compliance"</li>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
-        <p>This breaks the "chatbot" mental model by:</p>
-        <li><strong>Structured I/O</strong>: Design tokens in, design tokens out</li>
-        <li><strong>Visual-first</strong>: Interface shows design, not chat</li>
-        <li><strong>Constrained domain</strong>: Design system aware</li>
-        <li><strong>Direct manipulation</strong>: Click/drag triggers AI, not typing</li>
-        <p>---</p>
-        <h3>Contract</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases
+</h4>
+        <li><strong>Component generation</strong>: "Create a button component with these variants"
+</li>
+        <li><strong>Layout assistance</strong>: "Arrange these elements in a responsive grid"
+</li>
+        <li><strong>Style generation</strong>: "Generate a color palette for this brand"
+</li>
+        <li><strong>Design system expansion</strong>: "Create icon variants matching this style"
+</li>
+        <li><strong>Accessibility auditing</strong>: "Check this component for WCAG compliance"
+</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator
+</h4>
+        <p>This breaks the "chatbot" mental model by:
+</p>
+        <li><strong>Structured I/O</strong>: Design tokens in, design tokens out
+</li>
+        <li><strong>Visual-first</strong>: Interface shows design, not chat
+</li>
+        <li><strong>Constrained domain</strong>: Design system aware
+</li>
+        <li><strong>Direct manipulation</strong>: Click/drag triggers AI, not typing
+</li>
+        <p>---
+</p>
+        <h3>Contract
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38660,7 +38713,8 @@ class DesignToolOrchestrator:
     ) -&gt; list[dict]:
         &quot;&quot;&quot;Validate output against design system constraints.&quot;&quot;&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">toml</span>
@@ -38697,9 +38751,12 @@ config = {
   validate_consistency = true
 }</code></pre>
         </div>
-        <p>---</p>
-        <h3>Architecture</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design Operation Flow</h4>
+        <p>---
+</p>
+        <h3>Architecture
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design Operation Flow
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">text</span>
@@ -38745,7 +38802,8 @@ config = {
 │  Structured output │ Design tokens │ Code │ Suggestions     │
 └─────────────────────────────────────────────────────────────┘</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design System Context</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design System Context
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">json</span>
@@ -38782,9 +38840,12 @@ config = {
   }
 }</code></pre>
         </div>
-        <p>---</p>
-        <h3>Operations</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">GENERATE - Create New Elements</h4>
+        <p>---
+</p>
+        <h3>Operations
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">GENERATE - Create New Elements
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38832,7 +38893,8 @@ config = {
     ]
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">MODIFY - Change Existing Elements</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">MODIFY - Change Existing Elements
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38865,7 +38927,8 @@ config = {
     ]
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">ANALYZE - Inspect Elements</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">ANALYZE - Inspect Elements
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38901,7 +38964,8 @@ config = {
     ]
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">SUGGEST - Propose Alternatives</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">SUGGEST - Propose Alternatives
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38932,9 +38996,12 @@ config = {
     ]
 }</code></pre>
         </div>
-        <p>---</p>
-        <h3>UI Integration Patterns</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">React Integration</h4>
+        <p>---
+</p>
+        <h3>UI Integration Patterns
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">React Integration
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">tsx</span>
@@ -38984,7 +39051,8 @@ function DesignCanvas({ designSystem }) {
   );
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Figma Plugin Integration</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Figma Plugin Integration
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">typescript</span>
@@ -39013,8 +39081,10 @@ figma.ui.onmessage = async (msg) =&gt; {
   }
 };</code></pre>
         </div>
-        <p>---</p>
-        <h3>Events</h3>
+        <p>---
+</p>
+        <h3>Events
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39036,9 +39106,12 @@ figma.ui.onmessage = async (msg) =&gt; {
 &quot;design:issue:found&quot;      # Validation issue found
 &quot;design:issue:fixed&quot;      # Issue resolved</code></pre>
         </div>
-        <p>---</p>
-        <h3>Examples</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage</h4>
+        <p>---
+</p>
+        <h3>Examples
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">bash</span>
@@ -39067,7 +39140,8 @@ amplifier design suggest \
   --input ./layouts/dashboard.json \
   --goal &quot;improve information hierarchy&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39097,8 +39171,10 @@ refined = await session.design(
     }
 )</code></pre>
         </div>
-        <p>---</p>
-        <h3>Design System Enforcement</h3>
+        <p>---
+</p>
+        <h3>Design System Enforcement
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39133,8 +39209,10 @@ refined = await session.design(
 
         return issues</code></pre>
         </div>
-        <p>---</p>
-        <h3>Testing Strategy</h3>
+        <p>---
+</p>
+        <h3>Testing Strategy
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39159,13 +39237,20 @@ refined = await session.design(
     async def test_validation_enforcement(self):
         &quot;&quot;&quot;Invalid designs are rejected or fixed.&quot;&quot;&quot;</code></pre>
         </div>
-        <p>---</p>
-        <h3>Open Questions</h3>
-        <li><strong>Design format standardization</strong>: What's the canonical format for design elements?</li>
-        <li><strong>Real-time collaboration</strong>: How to handle multiple designers editing?</li>
-        <li><strong>Version control</strong>: How to track design evolution?</li>
-        <li><strong>Brand learning</strong>: Can the system learn brand style from examples?</li>
-        <li><strong>Code generation</strong>: How tight is the design-to-code pipeline?</li>
+        <p>---
+</p>
+        <h3>Open Questions
+</h3>
+        <li><strong>Design format standardization</strong>: What's the canonical format for design elements?
+</li>
+        <li><strong>Real-time collaboration</strong>: How to handle multiple designers editing?
+</li>
+        <li><strong>Version control</strong>: How to track design evolution?
+</li>
+        <li><strong>Brand learning</strong>: Can the system learn brand style from examples?
+</li>
+        <li><strong>Code generation</strong>: How tight is the design-to-code pipeline?
+</li>
           </div>
         </div>
         <div class="spec-section" id="spec-orchestrator-loop-event-driven" data-category="orchestrators">
@@ -39179,17 +39264,23 @@ refined = await session.design(
           <div class="spec-content">
             
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value)</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value)
+</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft
+</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-event-driven</code></p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-event-driven</code>
+</p>
         </div>
-        <h3>Overview</h3>
-        <p>An orchestrator that responds to external events rather than user prompts. The agent runs continuously (or on-demand), watching for triggers like file changes, git pushes, webhooks, or scheduled times. Demonstrates Amplifier as an automation engine, not requiring interactive input.</p>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
+        <h3>Overview
+</h3>
+        <p>An orchestrator that responds to external events rather than user prompts. The agent runs continuously (or on-demand), watching for triggers like file changes, git pushes, webhooks, or scheduled times. Demonstrates Amplifier as an automation engine, not requiring interactive input.
+</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition
+</h4>
         <table class="ref-table">
           <thead>
             <tr><th>Without</th><th>With</th></tr>
@@ -39201,21 +39292,36 @@ refined = await session.design(
             <tr><td>Scheduled tasks require separate tooling</td><td>Built-in cron-like scheduling</td></tr>
           </tbody>
         </table>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
-        <li><strong>PR auto-review</strong>: New PR triggers security/quality analysis</li>
-        <li><strong>File watcher</strong>: Code changes trigger test generation or docs update</li>
-        <li><strong>Webhook handler</strong>: External service events trigger processing</li>
-        <li><strong>Scheduled jobs</strong>: Daily report generation, weekly summaries</li>
-        <li><strong>Alert responder</strong>: Monitoring alerts trigger incident investigation</li>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
-        <p>This breaks the "chatbot" mental model by:</p>
-        <li><strong>No user prompt</strong>: Events trigger actions</li>
-        <li><strong>Continuous operation</strong>: Runs in background</li>
-        <li><strong>External integration</strong>: Responds to real-world triggers</li>
-        <li><strong>Automation-first</strong>: Set up once, runs forever</li>
-        <p>---</p>
-        <h3>Contract</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases
+</h4>
+        <li><strong>PR auto-review</strong>: New PR triggers security/quality analysis
+</li>
+        <li><strong>File watcher</strong>: Code changes trigger test generation or docs update
+</li>
+        <li><strong>Webhook handler</strong>: External service events trigger processing
+</li>
+        <li><strong>Scheduled jobs</strong>: Daily report generation, weekly summaries
+</li>
+        <li><strong>Alert responder</strong>: Monitoring alerts trigger incident investigation
+</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator
+</h4>
+        <p>This breaks the "chatbot" mental model by:
+</p>
+        <li><strong>No user prompt</strong>: Events trigger actions
+</li>
+        <li><strong>Continuous operation</strong>: Runs in background
+</li>
+        <li><strong>External integration</strong>: Responds to real-world triggers
+</li>
+        <li><strong>Automation-first</strong>: Set up once, runs forever
+</li>
+        <p>---
+</p>
+        <h3>Contract
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39306,7 +39412,8 @@ class EventDrivenOrchestrator:
     async def stop(self) -&gt; None:
         &quot;&quot;&quot;Stop listening and cleanup.&quot;&quot;&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">toml</span>
@@ -39392,9 +39499,12 @@ config = {
   persist_last_run = true              # Remember last run times for schedules
 }</code></pre>
         </div>
-        <p>---</p>
-        <h3>Architecture</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Event Flow</h4>
+        <p>---
+</p>
+        <h3>Architecture
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Event Flow
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">text</span>
@@ -39437,7 +39547,8 @@ config = {
 │  Log │ Notify │ Store │ Update Status                       │
 └─────────────────────────────────────────────────────────────┘</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Event Source Implementations</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Event Source Implementations
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39504,8 +39615,10 @@ class ScheduleSource:
         )
         await scheduler.start()</code></pre>
         </div>
-        <p>---</p>
-        <h3>Events</h3>
+        <p>---
+</p>
+        <h3>Events
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39523,9 +39636,12 @@ class ScheduleSource:
 &quot;source:stopped&quot;       # Event source stopped
 &quot;source:error&quot;         # Event source error</code></pre>
         </div>
-        <p>---</p>
-        <h3>Examples</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">PR Auto-Review Setup</h4>
+        <p>---
+</p>
+        <h3>Examples
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">PR Auto-Review Setup
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -39570,7 +39686,8 @@ amplifier daemon --profile pr-reviewer-daemon
 # Or as a service
 amplifier daemon --profile pr-reviewer-daemon --background --pid-file /var/run/amplifier-pr.pid</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">File Watcher for Docs</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">File Watcher for Docs
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -39601,7 +39718,8 @@ handlers:
       - tool: tool-filesystem
         action: write</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Webhook Integration</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Webhook Integration
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39624,7 +39742,8 @@ handlers:
 
           Generate release notes and update changelog.</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Scheduled Reports</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Scheduled Reports
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -39657,8 +39776,10 @@ handlers:
         channel: &quot;#team-updates&quot;
         message: &quot;{summary}&quot;</code></pre>
         </div>
-        <p>---</p>
-        <h3>CLI Integration</h3>
+        <p>---
+</p>
+        <h3>CLI Integration
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">bash</span>
@@ -39682,8 +39803,10 @@ amplifier daemon trigger --handler weekly-summary
 # View event history
 amplifier daemon history --limit 50</code></pre>
         </div>
-        <p>---</p>
-        <h3>Integration with Hooks</h3>
+        <p>---
+</p>
+        <h3>Integration with Hooks
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39706,8 +39829,10 @@ async def notify_completion(event, data):
     else:
         await send_pagerduty(f&quot;Handler {data[&#039;handler&#039;]} failed: {data[&#039;result&#039;].error}&quot;)</code></pre>
         </div>
-        <p>---</p>
-        <h3>State Management</h3>
+        <p>---
+</p>
+        <h3>State Management
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39729,8 +39854,10 @@ class EventState:
     # Handler state (for long-running handlers)
     handler_state: dict[str, Any]</code></pre>
         </div>
-        <p>---</p>
-        <h3>Testing Strategy</h3>
+        <p>---
+</p>
+        <h3>Testing Strategy
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39758,13 +39885,20 @@ class EventState:
     async def test_state_persistence(self):
         &quot;&quot;&quot;State survives restart.&quot;&quot;&quot;</code></pre>
         </div>
-        <p>---</p>
-        <h3>Open Questions</h3>
-        <li><strong>Exactly-once semantics</strong>: How to guarantee an event is processed exactly once across restarts?</li>
-        <li><strong>Dead letter queue</strong>: Where do failed events go for retry/inspection?</li>
-        <li><strong>Event sourcing</strong>: Should all events be logged for replay/audit?</li>
-        <li><strong>Multi-node</strong>: How to distribute event processing across multiple Amplifier instances?</li>
-        <li><strong>Backpressure</strong>: How to handle event flood without losing events?</li>
+        <p>---
+</p>
+        <h3>Open Questions
+</h3>
+        <li><strong>Exactly-once semantics</strong>: How to guarantee an event is processed exactly once across restarts?
+</li>
+        <li><strong>Dead letter queue</strong>: Where do failed events go for retry/inspection?
+</li>
+        <li><strong>Event sourcing</strong>: Should all events be logged for replay/audit?
+</li>
+        <li><strong>Multi-node</strong>: How to distribute event processing across multiple Amplifier instances?
+</li>
+        <li><strong>Backpressure</strong>: How to handle event flood without losing events?
+</li>
           </div>
         </div>
         <div class="spec-section" id="spec-orchestrator-loop-iterative-refinement" data-category="orchestrators">
@@ -40693,17 +40827,23 @@ def test_feedback_correlator_links_changes():
           <div class="spec-content">
             
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P2 (Medium Value)</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P2 (Medium Value)
+</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft
+</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-observer-swarm</code></p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-observer-swarm</code>
+</p>
         </div>
-        <h3>Overview</h3>
-        <p>An orchestrator where multiple specialized agents observe a shared work queue or artifact, each contributing from their expertise without direct user interaction. Agents work semi-autonomously, coordinating through a shared context rather than explicit delegation.</p>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
+        <h3>Overview
+</h3>
+        <p>An orchestrator where multiple specialized agents observe a shared work queue or artifact, each contributing from their expertise without direct user interaction. Agents work semi-autonomously, coordinating through a shared context rather than explicit delegation.
+</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition
+</h4>
         <table class="ref-table">
           <thead>
             <tr><th>Without</th><th>With</th></tr>
@@ -40715,21 +40855,36 @@ def test_feedback_correlator_links_changes():
             <tr><td>Explicit handoffs required</td><td>Emergent collaboration through observation</td></tr>
           </tbody>
         </table>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
-        <li><strong>Code review swarm</strong>: Security, performance, style experts all observe PR</li>
-        <li><strong>Design review</strong>: UX, accessibility, brand experts observe design artifacts</li>
-        <li><strong>Document review</strong>: Technical accuracy, style, completeness experts observe docs</li>
-        <li><strong>Architecture review</strong>: Multiple stakeholders observe design proposal</li>
-        <li><strong>Incident investigation</strong>: Multiple specialists observe logs/metrics simultaneously</li>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
-        <p>This breaks the "chatbot" mental model by:</p>
-        <li><strong>Multiple agents</strong>: Not one assistant, but a team</li>
-        <li><strong>Observation-based</strong>: Agents watch and contribute, not prompted</li>
-        <li><strong>Emergent coordination</strong>: No explicit task assignment</li>
-        <li><strong>Shared context</strong>: All agents see the same evolving work</li>
-        <p>---</p>
-        <h3>Contract</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases
+</h4>
+        <li><strong>Code review swarm</strong>: Security, performance, style experts all observe PR
+</li>
+        <li><strong>Design review</strong>: UX, accessibility, brand experts observe design artifacts
+</li>
+        <li><strong>Document review</strong>: Technical accuracy, style, completeness experts observe docs
+</li>
+        <li><strong>Architecture review</strong>: Multiple stakeholders observe design proposal
+</li>
+        <li><strong>Incident investigation</strong>: Multiple specialists observe logs/metrics simultaneously
+</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator
+</h4>
+        <p>This breaks the "chatbot" mental model by:
+</p>
+        <li><strong>Multiple agents</strong>: Not one assistant, but a team
+</li>
+        <li><strong>Observation-based</strong>: Agents watch and contribute, not prompted
+</li>
+        <li><strong>Emergent coordination</strong>: No explicit task assignment
+</li>
+        <li><strong>Shared context</strong>: All agents see the same evolving work
+</li>
+        <p>---
+</p>
+        <h3>Contract
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -40822,7 +40977,8 @@ class ObserverSwarmOrchestrator:
     ) -&gt; SwarmResult:
         &quot;&quot;&quot;Combine observations into final result.&quot;&quot;&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">toml</span>
@@ -40879,9 +41035,12 @@ config = {
   synthesis_style = &quot;executive&quot;       # &quot;executive&quot; | &quot;detailed&quot; | &quot;action-items&quot;
 }</code></pre>
         </div>
-        <p>---</p>
-        <h3>Architecture</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Swarm Execution Flow</h4>
+        <p>---
+</p>
+        <h3>Architecture
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Swarm Execution Flow
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">text</span>
@@ -40933,8 +41092,10 @@ config = {
 │  All observations │ Consensus │ Conflicts │ Recommendations │
 └─────────────────────────────────────────────────────────────┘</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Observer Agents</h4>
-        <p>Each observer is a specialized agent with:</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Observer Agents
+</h4>
+        <p>Each observer is a specialized agent with:
+</p>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -40994,9 +41155,12 @@ config = {
         response = await self.providers[&quot;default&quot;].complete(...)
         return parse_reactions(response, observer=self.config.name)</code></pre>
         </div>
-        <p>---</p>
-        <h3>Observer Patterns</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Code Review Swarm</h4>
+        <p>---
+</p>
+        <h3>Observer Patterns
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Code Review Swarm
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -41047,7 +41211,8 @@ config = {
       Prioritize: security &gt; correctness &gt; performance &gt; style.
       Identify which feedback is essential vs nice-to-have.</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design Review Swarm</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design Review Swarm
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -41074,8 +41239,10 @@ config = {
     expertise: Implementation feasibility, component reuse
     system_prompt: Flag implementation challenges early</code></pre>
         </div>
-        <p>---</p>
-        <h3>Events</h3>
+        <p>---
+</p>
+        <h3>Events
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -41095,9 +41262,12 @@ config = {
 &quot;observation:consensus&quot;    # Observers agree on point
 &quot;observation:escalate&quot;     # High-priority observation</code></pre>
         </div>
-        <p>---</p>
-        <h3>Examples</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage</h4>
+        <p>---
+</p>
+        <h3>Examples
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">bash</span>
@@ -41118,7 +41288,8 @@ amplifier swarm review \
   --config ./swarm-config.yaml \
   --artifact ./proposal.md</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -41140,7 +41311,8 @@ print(f&quot;\nRecommendations:&quot;)
 for rec in result.recommendations:
     print(f&quot;  - {rec}&quot;)</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Integration with PR Review</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Integration with PR Review
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -41165,8 +41337,10 @@ handlers:
       action: comment
       body: &quot;{synthesis}&quot;</code></pre>
         </div>
-        <p>---</p>
-        <h3>Conflict Resolution</h3>
+        <p>---
+</p>
+        <h3>Conflict Resolution
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -41205,8 +41379,10 @@ handlers:
         4. Notes trade-offs
         &quot;&quot;&quot;</code></pre>
         </div>
-        <p>---</p>
-        <h3>Testing Strategy</h3>
+        <p>---
+</p>
+        <h3>Testing Strategy
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -41231,13 +41407,20 @@ handlers:
     async def test_consensus_tracking(self):
         &quot;&quot;&quot;Agreement between observers is tracked.&quot;&quot;&quot;</code></pre>
         </div>
-        <p>---</p>
-        <h3>Open Questions</h3>
-        <li><strong>Observer weighting</strong>: Should some observers have more influence than others?</li>
-        <li><strong>Dynamic spawning</strong>: Can observers request additional specialists?</li>
-        <li><strong>Iterative refinement</strong>: Can swarm re-observe after artifact is modified?</li>
-        <li><strong>Cost control</strong>: How to limit tokens when many observers are active?</li>
-        <li><strong>Observer memory</strong>: Should observers remember previous reviews?</li>
+        <p>---
+</p>
+        <h3>Open Questions
+</h3>
+        <li><strong>Observer weighting</strong>: Should some observers have more influence than others?
+</li>
+        <li><strong>Dynamic spawning</strong>: Can observers request additional specialists?
+</li>
+        <li><strong>Iterative refinement</strong>: Can swarm re-observe after artifact is modified?
+</li>
+        <li><strong>Cost control</strong>: How to limit tokens when many observers are active?
+</li>
+        <li><strong>Observer memory</strong>: Should observers remember previous reviews?
+</li>
           </div>
         </div>
         <div class="spec-section" id="spec-orchestrator-loop-parallel-exploration" data-category="orchestrators">
@@ -42925,17 +43108,23 @@ def test_weighted_synthesis_respects_weights():
           <div class="spec-content">
             
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value - Internal Tooling)</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value - Internal Tooling)
+</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft
+</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-profile-comparison</code></p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-profile-comparison</code>
+</p>
         </div>
-        <h3>Overview</h3>
-        <p>An orchestrator specifically designed for testing and comparing Amplifier profiles. No chat interface - users provide profiles and test prompts, the system runs both profiles against the same inputs, and returns structured comparison data. This is a <strong>meta-tool</strong> for Amplifier development.</p>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
+        <h3>Overview
+</h3>
+        <p>An orchestrator specifically designed for testing and comparing Amplifier profiles. No chat interface - users provide profiles and test prompts, the system runs both profiles against the same inputs, and returns structured comparison data. This is a <strong>meta-tool</strong> for Amplifier development.
+</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition
+</h4>
         <table class="ref-table">
           <thead>
             <tr><th>Without</th><th>With</th></tr>
@@ -42947,21 +43136,36 @@ def test_weighted_synthesis_respects_weights():
             <tr><td>No baseline regression testing</td><td>Profile changes validated against baseline</td></tr>
           </tbody>
         </table>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
-        <li><strong>Profile development</strong>: Compare new profile against baseline</li>
-        <li><strong>Prompt engineering</strong>: Test system prompt variations</li>
-        <li><strong>Provider comparison</strong>: Same profile, different LLM backends</li>
-        <li><strong>Regression testing</strong>: Ensure profile changes don't break expected behavior</li>
-        <li><strong>Collection validation</strong>: Verify collection profiles work as expected</li>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
-        <p>This breaks the "chatbot" mental model by:</p>
-        <li><strong>No user conversation</strong>: Input profiles + test cases → structured comparison</li>
-        <li><strong>Quantitative output</strong>: Metrics, not prose</li>
-        <li><strong>Internal tooling</strong>: For Amplifier developers, not end users</li>
-        <li><strong>Automated testing</strong>: CI/CD integration</li>
-        <p>---</p>
-        <h3>Contract</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases
+</h4>
+        <li><strong>Profile development</strong>: Compare new profile against baseline
+</li>
+        <li><strong>Prompt engineering</strong>: Test system prompt variations
+</li>
+        <li><strong>Provider comparison</strong>: Same profile, different LLM backends
+</li>
+        <li><strong>Regression testing</strong>: Ensure profile changes don't break expected behavior
+</li>
+        <li><strong>Collection validation</strong>: Verify collection profiles work as expected
+</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator
+</h4>
+        <p>This breaks the "chatbot" mental model by:
+</p>
+        <li><strong>No user conversation</strong>: Input profiles + test cases → structured comparison
+</li>
+        <li><strong>Quantitative output</strong>: Metrics, not prose
+</li>
+        <li><strong>Internal tooling</strong>: For Amplifier developers, not end users
+</li>
+        <li><strong>Automated testing</strong>: CI/CD integration
+</li>
+        <p>---
+</p>
+        <h3>Contract
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -43064,7 +43268,8 @@ class ProfileComparisonOrchestrator:
     ) -&gt; Comparison:
         &quot;&quot;&quot;Compare two results.&quot;&quot;&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">toml</span>
@@ -43122,7 +43327,8 @@ config = {
   include_raw_responses = true
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Test Suite Format</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Test Suite Format
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -43186,9 +43392,12 @@ test_cases:
     context:
       has_amplifier_docs: true</code></pre>
         </div>
-        <p>---</p>
-        <h3>Architecture</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Comparison Flow</h4>
+        <p>---
+</p>
+        <h3>Architecture
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Comparison Flow
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">text</span>
@@ -43234,7 +43443,8 @@ test_cases:
 │  JSON │ Markdown │ HTML │ Dashboard data                    │
 └─────────────────────────────────────────────────────────────┘</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Metrics Collection</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Metrics Collection
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -43259,7 +43469,8 @@ class MetricsCollector:
             &quot;errors&quot;: session.metrics.errors,
         }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">LLM-as-Judge Evaluation</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">LLM-as-Judge Evaluation
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -43308,9 +43519,12 @@ class MetricsCollector:
         response = await self.provider.complete(judge_prompt)
         return parse_json(response)</code></pre>
         </div>
-        <p>---</p>
-        <h3>Output Formats</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">JSON Report</h4>
+        <p>---
+</p>
+        <h3>Output Formats
+</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">JSON Report
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">json</span>
@@ -43363,7 +43577,8 @@ class MetricsCollector:
   ]
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Markdown Report</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Markdown Report
+</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">markdown</span>
@@ -43414,8 +43629,10 @@ Profile B shows improved efficiency with comparable quality.
 
 ⚠️ **code-help**: Profile B response significantly shorter (medium severity)</code></pre>
         </div>
-        <p>---</p>
-        <h3>CLI Integration</h3>
+        <p>---
+</p>
+        <h3>CLI Integration
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">bash</span>
@@ -43453,8 +43670,10 @@ amplifier compare \
   --provider-a provider-anthropic \
   --provider-b provider-openai</code></pre>
         </div>
-        <p>---</p>
-        <h3>CI/CD Integration</h3>
+        <p>---
+</p>
+        <h3>CI/CD Integration
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -43500,8 +43719,10 @@ jobs:
               body: formatReport(report)
             });</code></pre>
         </div>
-        <p>---</p>
-        <h3>Events</h3>
+        <p>---
+</p>
+        <h3>Events
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -43519,8 +43740,10 @@ jobs:
 &quot;comparison:metric&quot;       # Individual metric collected
 &quot;comparison:regression&quot;   # Regression detected</code></pre>
         </div>
-        <p>---</p>
-        <h3>Testing Strategy</h3>
+        <p>---
+</p>
+        <h3>Testing Strategy
+</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -43545,13 +43768,20 @@ jobs:
     async def test_parallel_execution(self):
         &quot;&quot;&quot;Profiles run in parallel when configured.&quot;&quot;&quot;</code></pre>
         </div>
-        <p>---</p>
-        <h3>Open Questions</h3>
-        <li><strong>Statistical significance</strong>: How many runs needed for reliable comparison?</li>
-        <li><strong>Cost tracking</strong>: Should token costs be part of the comparison?</li>
-        <li><strong>Reproducibility</strong>: How to handle non-deterministic responses?</li>
-        <li><strong>Golden responses</strong>: Should tests have "correct" answers for comparison?</li>
-        <li><strong>Incremental comparison</strong>: Compare only changed test cases?</li>
+        <p>---
+</p>
+        <h3>Open Questions
+</h3>
+        <li><strong>Statistical significance</strong>: How many runs needed for reliable comparison?
+</li>
+        <li><strong>Cost tracking</strong>: Should token costs be part of the comparison?
+</li>
+        <li><strong>Reproducibility</strong>: How to handle non-deterministic responses?
+</li>
+        <li><strong>Golden responses</strong>: Should tests have "correct" answers for comparison?
+</li>
+        <li><strong>Incremental comparison</strong>: Compare only changed test cases?
+</li>
           </div>
         </div>
         <div class="spec-section" id="spec-codebase-onboarder" data-category="scenario-tools">
