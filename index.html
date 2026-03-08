@@ -2766,7 +2766,7 @@
             <svg class="item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </span>
           <div class="sidebar-subitems show">
-            <span class="sidebar-subitem" data-section="quickstart" data-tab="consumer">Use a Profile</span>
+            <span class="sidebar-subitem" data-section="quickstart" data-tab="consumer">Use a Bundle</span>
             <span class="sidebar-subitem" data-section="quickstart" data-tab="extender">Write a Tool</span>
             <span class="sidebar-subitem" data-section="quickstart" data-tab="architect">Embed in App</span>
           </div>
@@ -2939,7 +2939,7 @@
         <div class="feature-card">
           <div class="feature-gradient blue"></div>
           <span class="feature-label">Use it</span>
-          <p>Run AI agents with pre-built providers and tools. Configure via profiles.</p>
+          <p>Run AI agents with pre-built providers and tools. Configure via bundles.</p>
         </div>
         <div class="feature-card">
           <div class="feature-gradient purple"></div>
@@ -2980,7 +2980,7 @@ amplifier run "List all Python files in this directory"</code></pre>
             <div class="start-icon">▶</div>
             <div>
               <strong>Use existing modules</strong>
-              <span>Configure profiles and run agents</span>
+              <span>Configure bundles and run agents</span>
             </div>
           </button>
           <button class="start-item" onclick="showSection('quickstart'); setQuickstartTab('extender');">
@@ -3015,18 +3015,18 @@ amplifier run "List all Python files in this directory"</code></pre>
 
       <div class="info-box" style="border-left: 4px solid var(--accent); margin-bottom: 24px;">
         <strong>📚 Getting Started Guide</strong>
-        <p style="margin: 8px 0 0 0; color: var(--text-1);">For the complete getting started experience including provider setup, see the <a href="https://microsoft.github.io/amplifier-docs/getting-started/installation/" target="_blank">official installation guide</a>.</p>
+        <p style="margin: 8px 0 0 0; color: var(--text-1);">For the complete getting started experience including provider setup, see the <a href="https://microsoft.github.io/amplifier-docs/" target="_blank">official installation guide</a>.</p>
       </div>
 
       <div class="tabs" id="quickstart-tabs">
-        <button class="tab active" data-tab="consumer">Use a profile</button>
+        <button class="tab active" data-tab="consumer">Use a Bundle</button>
         <button class="tab" data-tab="extender">Write a tool</button>
         <button class="tab" data-tab="architect">Embed in app</button>
       </div>
 
       <!-- Consumer Tab -->
       <div id="qs-consumer" class="tab-content active">
-        <p>Run AI agents using pre-built modules and profiles.</p>
+        <p>Run AI agents using pre-built modules and bundles.</p>
 
         <h3>1. Install</h3>
         <div class="code-block">
@@ -3059,18 +3059,18 @@ amplifier
 # Single command
 amplifier run "Explain this codebase"
 
-# With profile
-amplifier run --profile dev "Review for security issues"</code></pre>
+# With bundle
+amplifier run --bundle dev "Review for security issues"</code></pre>
         </div>
 
-        <h3>4. Customize your profile</h3>
+        <h3>4. Customize your bundle</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
           </div>
-          <pre><code class="language-yaml"># ~/.amplifier/profiles/my-profile.yaml
-name: my-profile
+          <pre><code class="language-yaml"># ~/.amplifier/bundles/my-bundle.md
+name: my-bundle
 session:
   orchestrator: loop-streaming
   context: context-persistent
@@ -3089,8 +3089,8 @@ tools:
             <span class="code-lang">bash</span>
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
           </div>
-          <pre><code class="language-bash"># Reset profile to defaults
-amplifier profile reset
+          <pre><code class="language-bash"># Switch back to foundation bundle
+amplifier bundle use foundation
 
 # Clear module cache (fixes stale module issues)
 rm -rf ~/.amplifier/module-cache
