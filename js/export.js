@@ -427,6 +427,7 @@ function generateFullGuideMarkdown() {
     { id: 'home', title: 'Overview' },
     { id: 'quickstart', title: 'Quickstart' },
     { id: 'architecture', title: 'Architecture' },
+    { id: 'philosophy', title: 'Philosophy' },
     { id: 'guides', title: 'Guides' },
     { id: 'reference', title: 'Reference' },
     { id: 'cli', title: 'CLI Commands' },
