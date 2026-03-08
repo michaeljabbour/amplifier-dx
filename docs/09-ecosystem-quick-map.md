@@ -86,7 +86,7 @@ Three repos run everything. Here's what each one does, how they depend on each o
 | UX systems | Approval prompts, display rendering |
 | Transport | Console I/O, terminal UI |
 | Module resolution policy | Where to find modules for this app |
-| Profile/bundle loading | Which bundles ship with the CLI |
+| Bundle loading | Which bundles ship with the CLI |
 | @mention processing | What `@file` means in this app |
 | Capability registration | Injecting `broadcast`, `approval` into sessions |
 | Settings persistence | `~/.amplifier/settings.yaml` location decisions |
