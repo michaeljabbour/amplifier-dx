@@ -126,6 +126,28 @@ Amplifier is designed for a different mode — one that uses AI at the same leve
 | **Velocity profile** | Fast start, slows over time as system grows | Slower start, *accelerates* over time as modules compound |
 | **Best for** | Throwaway scripts, exploration, demos | Production systems, long-lived codebases, teams |
 
+### The Emotional Arc
+
+The table above describes the cognitive difference. But there is another dimension that documentation rarely addresses: what it *feels like*.
+
+**The vibe coding emotional arc:**
+
+1. **Start:** Excitement. Zero friction between thought and output. You say "add auth" and code appears. Dopamine.
+2. **Middle:** Growing unease. The system is bigger now. Changes have side effects you didn't expect. "Just one more fix" becomes the refrain.
+3. **End:** Fatigue. You're patching patches. Every change might break something else. The definition of "done" keeps shifting. What felt like flying now feels like treading water.
+
+**The Amplifier emotional arc:**
+
+1. **Start:** Slower. Deliberate. You're writing specs when you want to be writing code. It feels like overhead. This is the honest cost — there is a discipline tax on day one.
+2. **Middle:** Calm. Boundaries are clear. When you delegate to the builder, you know what "correct" looks like because you defined it. There is less adrenaline, but also less anxiety.
+3. **End:** Confidence. The artifact matches the intent because verification is explicit, not hopeful. You can point to evidence, not just a feeling, when someone asks "is this done?"
+
+**The tradeoff, stated plainly:** less adrenaline, more control. Less chaos, more composure. The excitement of vibe coding is real — but it is the excitement of improvisation, and improvisation does not compound.
+
+The emotional difference matters because developers do not switch tools for architectural reasons. They switch because something *feels wrong* about their current workflow. If your "just one more fix" cycles are getting longer, if "done" keeps moving, if you feel less confident the more code you write — that is not a tooling problem. That is what it feels like when improvisational development hits scale.
+
+---
+
 ### When vibe coding is the right choice
 
 Vibe coding is not bad — it is misapplied when used for production systems. For a one-off script, a personal experiment, or a first-pass prototype you'll throw away, free-form generation is faster and entirely appropriate.

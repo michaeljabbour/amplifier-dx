@@ -49,7 +49,13 @@ A progressive guide from "what is this?" to "I could build this."
 9. **[Ecosystem Quick Map](./09-ecosystem-quick-map.md)**
    Three-repo architecture at a glance: core, foundation, and app-cli roles, dependency order, and troubleshooting by layer.
 
-10. **[Working with AI](./13-working-with-ai.md)**
+10. **[Amplifier Philosophy](./10-philosophy.md)**
+    Seven Pillars, the Vibe Coder vs Amplifier Coder framework, and the emotional arc of each approach.
+
+11. **[Developing Judgment](./11-developing-judgment.md)**
+    Trust calibration, intuition, and the skill of working with AI agents over time.
+
+12. **[Working with AI](./13-working-with-ai.md)**
     Practical comparison of vibe coding and structured AI-assisted development.
 
 ---

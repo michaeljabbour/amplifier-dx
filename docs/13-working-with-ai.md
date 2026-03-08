@@ -215,6 +215,38 @@ Move from discovery to structure when:
 
 ---
 
+## Why Vibe Coding Pulls You In
+
+Before discussing the pitfalls, it is worth understanding why vibe coding is so compelling — because if you do not understand the attraction, you cannot make a clear-eyed choice about when to resist it.
+
+**Vibe coding feels good because:**
+
+- **Zero gap between thought and output.** You think "add a login form" and code appears. The distance between intention and artifact feels like nothing. That is a genuinely powerful experience.
+- **Immediate feedback.** Every iteration gives you something to look at, click, run. The feedback loop is measured in seconds, not hours.
+- **Creative flow.** Without specs, contracts, or verification gates, there is nothing interrupting the conversation between you and the machine. It feels like pair-programming with someone who never pushes back.
+- **No upfront obligation.** You do not have to decide what you are building before you start. The design can emerge from the conversation.
+
+This is not superficial — these are real cognitive benefits. Vibe coding removes friction, and friction is genuinely costly during exploration.
+
+**The trap is when exploration never ends.**
+
+The same qualities that make vibe coding feel fast — no boundaries, no contracts, no verification — are what make it slow when the system grows. The low friction that made iteration easy at 200 lines becomes the absence of guardrails at 2,000 lines. The "no upfront obligation" that felt liberating becomes "no definition of done" that feels exhausting.
+
+The dopamine of "it works!" gradually becomes the anxiety of "why did it break?" Not because vibe coding is bad, but because unstructured systems accumulate decisions that nobody explicitly made. Those implicit decisions interact in ways no one predicted, and debugging implicit decisions is the hardest kind of debugging there is.
+
+**The honest comparison:**
+
+| Phase | Vibe Coding Feels Like | Structured Feels Like |
+|-------|----------------------|----------------------|
+| First hour | Flying | Paperwork |
+| First day | Productive | Still setting up |
+| First week | Patching | Building momentum |
+| First month | Firefighting | Compounding |
+
+The crossover point is real. Vibe coding wins the first day. Structured development wins the first month. Knowing *which game you are playing* is the judgment call.
+
+---
+
 ## Common Pitfalls
 
 ### Antipattern 1: Vibe-Coding Production Features
