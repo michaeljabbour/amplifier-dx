@@ -6279,7 +6279,7 @@ async def my_hook(event: str, data: dict):
       
 
 <!-- AUTO-GENERATED: External Specifications from amplifier-next-specs -->
-        <!-- Last synced: 2026-03-08T04:41:32.601Z -->
+        <!-- Last synced: 2026-04-19T03:11:17.247Z -->
 
         <hr style="border: none; border-top: 1px solid var(--border); margin: 32px 0;">
 
@@ -37859,23 +37859,17 @@ def test_lens_filter_excludes_low_relevance():
           <div class="spec-content">
             
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value)
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value)</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-batch-processor</code>
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-batch-processor</code></p>
         </div>
-        <h3>Overview
-</h3>
-        <p>An orchestrator for non-interactive batch processing. No chat interface - users provide structured input (files, configs, data), the system processes them according to a defined pipeline, and returns structured output. Demonstrates Amplifier as a processing engine, not just a chatbot.
-</p>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition
-</h4>
+        <h3>Overview</h3>
+        <p>An orchestrator for non-interactive batch processing. No chat interface - users provide structured input (files, configs, data), the system processes them according to a defined pipeline, and returns structured output. Demonstrates Amplifier as a processing engine, not just a chatbot.</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
         <table class="ref-table">
           <thead>
             <tr><th>Without</th><th>With</th></tr>
@@ -37887,36 +37881,21 @@ def test_lens_filter_excludes_low_relevance():
             <tr><td>Interactive waits</td><td>Background processing with notifications</td></tr>
           </tbody>
         </table>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases
-</h4>
-        <li><strong>Code migration</strong>: Process all files in a directory, apply transformation
-</li>
-        <li><strong>Documentation generation</strong>: Generate docs from code across entire codebase
-</li>
-        <li><strong>Test generation</strong>: Batch generate tests for all functions/classes
-</li>
-        <li><strong>Data transformation</strong>: Convert formats, enrich data, extract patterns
-</li>
-        <li><strong>Report generation</strong>: Process multiple inputs, produce consolidated report
-</li>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator
-</h4>
-        <p>This breaks the "chatbot" mental model by:
-</p>
-        <li><strong>No conversation</strong>: Input → Process → Output
-</li>
-        <li><strong>No interactive prompts</strong>: Pre-defined pipeline
-</li>
-        <li><strong>Structured input/output</strong>: Files, JSON, not natural language
-</li>
-        <li><strong>Batch semantics</strong>: Many items, one pipeline
-</li>
-        <p>---
-</p>
-        <h3>Contract
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
+        <li><strong>Code migration</strong>: Process all files in a directory, apply transformation</li>
+        <li><strong>Documentation generation</strong>: Generate docs from code across entire codebase</li>
+        <li><strong>Test generation</strong>: Batch generate tests for all functions/classes</li>
+        <li><strong>Data transformation</strong>: Convert formats, enrich data, extract patterns</li>
+        <li><strong>Report generation</strong>: Process multiple inputs, produce consolidated report</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
+        <p>This breaks the "chatbot" mental model by:</p>
+        <li><strong>No conversation</strong>: Input → Process → Output</li>
+        <li><strong>No interactive prompts</strong>: Pre-defined pipeline</li>
+        <li><strong>Structured input/output</strong>: Files, JSON, not natural language</li>
+        <li><strong>Batch semantics</strong>: Many items, one pipeline</li>
+        <p>---</p>
+        <h3>Contract</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38004,8 +37983,7 @@ class BatchProcessorOrchestrator:
             Aggregated batch results
         &quot;&quot;&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">toml</span>
@@ -38061,8 +38039,7 @@ config = {
   error_output = &quot;./errors/&quot;           # Where to write errors
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Pipeline Definition
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Pipeline Definition</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -38121,12 +38098,9 @@ aggregation:
     - Files modified: {modified}
     - Changes made: {changes}</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Architecture
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Processing Flow
-</h4>
+        <p>---</p>
+        <h3>Architecture</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Processing Flow</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">text</span>
@@ -38170,10 +38144,8 @@ aggregation:
 │  Files │ JSON │ Stdout │ Report                             │
 └─────────────────────────────────────────────────────────────┘</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Worker Execution
-</h4>
-        <p>Each worker processes one item through the pipeline:
-</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Worker Execution</h4>
+        <p>Each worker processes one item through the pipeline:</p>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38212,10 +38184,8 @@ aggregation:
         result=context.get(&quot;result&quot;),
     )</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Events
-</h3>
+        <p>---</p>
+        <h3>Events</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38232,12 +38202,9 @@ aggregation:
 &quot;batch:item:before&quot; # Before processing - can filter/modify
 &quot;batch:item:after&quot;  # After processing - can transform result</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Examples
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage
-</h4>
+        <p>---</p>
+        <h3>Examples</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">bash</span>
@@ -38256,8 +38223,7 @@ amplifier batch --manifest ./batch-job.yaml
 # Watch mode - process new files as they appear
 amplifier batch --pipeline analyze --input &quot;./uploads/&quot; --watch</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38278,8 +38244,7 @@ result = await session.batch_process(
 
 print(f&quot;Processed {result.succeeded}/{result.total}&quot;)</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Pipeline as Amplifier Recipe
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Pipeline as Amplifier Recipe</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -38302,10 +38267,8 @@ output:
   path: &quot;tests/&quot;
   naming: &quot;{basename}_test.py&quot;</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Integration with Hooks
-</h3>
+        <p>---</p>
+        <h3>Integration with Hooks</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38334,10 +38297,8 @@ async def transform_result(event, data):
     data[&quot;output&quot;].metrics = calculate_metrics(data[&quot;output&quot;].result)
     return HookResult(action=&quot;continue&quot;, data=data)</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Testing Strategy
-</h3>
+        <p>---</p>
+        <h3>Testing Strategy</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38362,20 +38323,13 @@ async def transform_result(event, data):
     async def test_progress_events(self):
         &quot;&quot;&quot;Progress hooks receive accurate counts.&quot;&quot;&quot;</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Open Questions
-</h3>
-        <li><strong>Checkpointing</strong>: Should batch progress be checkpointed for resume on failure?
-</li>
-        <li><strong>Dependency ordering</strong>: Should items be able to declare dependencies on other items?
-</li>
-        <li><strong>Dynamic batching</strong>: Should pipeline be able to split/merge items mid-processing?
-</li>
-        <li><strong>Resource limits</strong>: How to handle memory/API limits for large batches?
-</li>
-        <li><strong>Result streaming</strong>: Should results be streamed as they complete or only at end?
-</li>
+        <p>---</p>
+        <h3>Open Questions</h3>
+        <li><strong>Checkpointing</strong>: Should batch progress be checkpointed for resume on failure?</li>
+        <li><strong>Dependency ordering</strong>: Should items be able to declare dependencies on other items?</li>
+        <li><strong>Dynamic batching</strong>: Should pipeline be able to split/merge items mid-processing?</li>
+        <li><strong>Resource limits</strong>: How to handle memory/API limits for large batches?</li>
+        <li><strong>Result streaming</strong>: Should results be streamed as they complete or only at end?</li>
           </div>
         </div>
         <div class="spec-section" id="spec-orchestrator-loop-design-tool" data-category="orchestrators">
@@ -38389,23 +38343,17 @@ async def transform_result(event, data):
           <div class="spec-content">
             
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value - Alex's Domain)
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value - Alex's Domain)</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-design-tool</code>
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-design-tool</code></p>
         </div>
-        <h3>Overview
-</h3>
-        <p>An orchestrator optimized for design tool workflows where the interface is primarily visual/structured rather than conversational. The LLM operates on structured design data (components, layouts, styles) and returns structured modifications, enabling rich visual interfaces with AI-powered manipulation.
-</p>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition
-</h4>
+        <h3>Overview</h3>
+        <p>An orchestrator optimized for design tool workflows where the interface is primarily visual/structured rather than conversational. The LLM operates on structured design data (components, layouts, styles) and returns structured modifications, enabling rich visual interfaces with AI-powered manipulation.</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
         <table class="ref-table">
           <thead>
             <tr><th>Without</th><th>With</th></tr>
@@ -38417,36 +38365,21 @@ async def transform_result(event, data):
             <tr><td>Generic coding assistant</td><td>Design-aware operations and constraints</td></tr>
           </tbody>
         </table>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases
-</h4>
-        <li><strong>Component generation</strong>: "Create a button component with these variants"
-</li>
-        <li><strong>Layout assistance</strong>: "Arrange these elements in a responsive grid"
-</li>
-        <li><strong>Style generation</strong>: "Generate a color palette for this brand"
-</li>
-        <li><strong>Design system expansion</strong>: "Create icon variants matching this style"
-</li>
-        <li><strong>Accessibility auditing</strong>: "Check this component for WCAG compliance"
-</li>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator
-</h4>
-        <p>This breaks the "chatbot" mental model by:
-</p>
-        <li><strong>Structured I/O</strong>: Design tokens in, design tokens out
-</li>
-        <li><strong>Visual-first</strong>: Interface shows design, not chat
-</li>
-        <li><strong>Constrained domain</strong>: Design system aware
-</li>
-        <li><strong>Direct manipulation</strong>: Click/drag triggers AI, not typing
-</li>
-        <p>---
-</p>
-        <h3>Contract
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
+        <li><strong>Component generation</strong>: "Create a button component with these variants"</li>
+        <li><strong>Layout assistance</strong>: "Arrange these elements in a responsive grid"</li>
+        <li><strong>Style generation</strong>: "Generate a color palette for this brand"</li>
+        <li><strong>Design system expansion</strong>: "Create icon variants matching this style"</li>
+        <li><strong>Accessibility auditing</strong>: "Check this component for WCAG compliance"</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
+        <p>This breaks the "chatbot" mental model by:</p>
+        <li><strong>Structured I/O</strong>: Design tokens in, design tokens out</li>
+        <li><strong>Visual-first</strong>: Interface shows design, not chat</li>
+        <li><strong>Constrained domain</strong>: Design system aware</li>
+        <li><strong>Direct manipulation</strong>: Click/drag triggers AI, not typing</li>
+        <p>---</p>
+        <h3>Contract</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38532,8 +38465,7 @@ class DesignToolOrchestrator:
     ) -&gt; list[dict]:
         &quot;&quot;&quot;Validate output against design system constraints.&quot;&quot;&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">toml</span>
@@ -38570,12 +38502,9 @@ config = {
   validate_consistency = true
 }</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Architecture
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design Operation Flow
-</h4>
+        <p>---</p>
+        <h3>Architecture</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design Operation Flow</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">text</span>
@@ -38621,8 +38550,7 @@ config = {
 │  Structured output │ Design tokens │ Code │ Suggestions     │
 └─────────────────────────────────────────────────────────────┘</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design System Context
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design System Context</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">json</span>
@@ -38659,12 +38587,9 @@ config = {
   }
 }</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Operations
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">GENERATE - Create New Elements
-</h4>
+        <p>---</p>
+        <h3>Operations</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">GENERATE - Create New Elements</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38712,8 +38637,7 @@ config = {
     ]
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">MODIFY - Change Existing Elements
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">MODIFY - Change Existing Elements</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38746,8 +38670,7 @@ config = {
     ]
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">ANALYZE - Inspect Elements
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">ANALYZE - Inspect Elements</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38783,8 +38706,7 @@ config = {
     ]
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">SUGGEST - Propose Alternatives
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">SUGGEST - Propose Alternatives</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38815,12 +38737,9 @@ config = {
     ]
 }</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>UI Integration Patterns
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">React Integration
-</h4>
+        <p>---</p>
+        <h3>UI Integration Patterns</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">React Integration</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">tsx</span>
@@ -38870,8 +38789,7 @@ function DesignCanvas({ designSystem }) {
   );
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Figma Plugin Integration
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Figma Plugin Integration</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">typescript</span>
@@ -38900,10 +38818,8 @@ figma.ui.onmessage = async (msg) =&gt; {
   }
 };</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Events
-</h3>
+        <p>---</p>
+        <h3>Events</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38925,12 +38841,9 @@ figma.ui.onmessage = async (msg) =&gt; {
 &quot;design:issue:found&quot;      # Validation issue found
 &quot;design:issue:fixed&quot;      # Issue resolved</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Examples
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage
-</h4>
+        <p>---</p>
+        <h3>Examples</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">bash</span>
@@ -38959,8 +38872,7 @@ amplifier design suggest \
   --input ./layouts/dashboard.json \
   --goal &quot;improve information hierarchy&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -38990,10 +38902,8 @@ refined = await session.design(
     }
 )</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Design System Enforcement
-</h3>
+        <p>---</p>
+        <h3>Design System Enforcement</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39028,10 +38938,8 @@ refined = await session.design(
 
         return issues</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Testing Strategy
-</h3>
+        <p>---</p>
+        <h3>Testing Strategy</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39056,20 +38964,13 @@ refined = await session.design(
     async def test_validation_enforcement(self):
         &quot;&quot;&quot;Invalid designs are rejected or fixed.&quot;&quot;&quot;</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Open Questions
-</h3>
-        <li><strong>Design format standardization</strong>: What's the canonical format for design elements?
-</li>
-        <li><strong>Real-time collaboration</strong>: How to handle multiple designers editing?
-</li>
-        <li><strong>Version control</strong>: How to track design evolution?
-</li>
-        <li><strong>Brand learning</strong>: Can the system learn brand style from examples?
-</li>
-        <li><strong>Code generation</strong>: How tight is the design-to-code pipeline?
-</li>
+        <p>---</p>
+        <h3>Open Questions</h3>
+        <li><strong>Design format standardization</strong>: What's the canonical format for design elements?</li>
+        <li><strong>Real-time collaboration</strong>: How to handle multiple designers editing?</li>
+        <li><strong>Version control</strong>: How to track design evolution?</li>
+        <li><strong>Brand learning</strong>: Can the system learn brand style from examples?</li>
+        <li><strong>Code generation</strong>: How tight is the design-to-code pipeline?</li>
           </div>
         </div>
         <div class="spec-section" id="spec-orchestrator-loop-event-driven" data-category="orchestrators">
@@ -39083,23 +38984,17 @@ refined = await session.design(
           <div class="spec-content">
             
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value)
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value)</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-event-driven</code>
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-event-driven</code></p>
         </div>
-        <h3>Overview
-</h3>
-        <p>An orchestrator that responds to external events rather than user prompts. The agent runs continuously (or on-demand), watching for triggers like file changes, git pushes, webhooks, or scheduled times. Demonstrates Amplifier as an automation engine, not requiring interactive input.
-</p>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition
-</h4>
+        <h3>Overview</h3>
+        <p>An orchestrator that responds to external events rather than user prompts. The agent runs continuously (or on-demand), watching for triggers like file changes, git pushes, webhooks, or scheduled times. Demonstrates Amplifier as an automation engine, not requiring interactive input.</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
         <table class="ref-table">
           <thead>
             <tr><th>Without</th><th>With</th></tr>
@@ -39111,36 +39006,21 @@ refined = await session.design(
             <tr><td>Scheduled tasks require separate tooling</td><td>Built-in cron-like scheduling</td></tr>
           </tbody>
         </table>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases
-</h4>
-        <li><strong>PR auto-review</strong>: New PR triggers security/quality analysis
-</li>
-        <li><strong>File watcher</strong>: Code changes trigger test generation or docs update
-</li>
-        <li><strong>Webhook handler</strong>: External service events trigger processing
-</li>
-        <li><strong>Scheduled jobs</strong>: Daily report generation, weekly summaries
-</li>
-        <li><strong>Alert responder</strong>: Monitoring alerts trigger incident investigation
-</li>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator
-</h4>
-        <p>This breaks the "chatbot" mental model by:
-</p>
-        <li><strong>No user prompt</strong>: Events trigger actions
-</li>
-        <li><strong>Continuous operation</strong>: Runs in background
-</li>
-        <li><strong>External integration</strong>: Responds to real-world triggers
-</li>
-        <li><strong>Automation-first</strong>: Set up once, runs forever
-</li>
-        <p>---
-</p>
-        <h3>Contract
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
+        <li><strong>PR auto-review</strong>: New PR triggers security/quality analysis</li>
+        <li><strong>File watcher</strong>: Code changes trigger test generation or docs update</li>
+        <li><strong>Webhook handler</strong>: External service events trigger processing</li>
+        <li><strong>Scheduled jobs</strong>: Daily report generation, weekly summaries</li>
+        <li><strong>Alert responder</strong>: Monitoring alerts trigger incident investigation</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
+        <p>This breaks the "chatbot" mental model by:</p>
+        <li><strong>No user prompt</strong>: Events trigger actions</li>
+        <li><strong>Continuous operation</strong>: Runs in background</li>
+        <li><strong>External integration</strong>: Responds to real-world triggers</li>
+        <li><strong>Automation-first</strong>: Set up once, runs forever</li>
+        <p>---</p>
+        <h3>Contract</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39231,8 +39111,7 @@ class EventDrivenOrchestrator:
     async def stop(self) -&gt; None:
         &quot;&quot;&quot;Stop listening and cleanup.&quot;&quot;&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">toml</span>
@@ -39318,12 +39197,9 @@ config = {
   persist_last_run = true              # Remember last run times for schedules
 }</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Architecture
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Event Flow
-</h4>
+        <p>---</p>
+        <h3>Architecture</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Event Flow</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">text</span>
@@ -39366,8 +39242,7 @@ config = {
 │  Log │ Notify │ Store │ Update Status                       │
 └─────────────────────────────────────────────────────────────┘</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Event Source Implementations
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Event Source Implementations</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39434,10 +39309,8 @@ class ScheduleSource:
         )
         await scheduler.start()</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Events
-</h3>
+        <p>---</p>
+        <h3>Events</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39455,12 +39328,9 @@ class ScheduleSource:
 &quot;source:stopped&quot;       # Event source stopped
 &quot;source:error&quot;         # Event source error</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Examples
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">PR Auto-Review Setup
-</h4>
+        <p>---</p>
+        <h3>Examples</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">PR Auto-Review Setup</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -39505,8 +39375,7 @@ amplifier daemon --profile pr-reviewer-daemon
 # Or as a service
 amplifier daemon --profile pr-reviewer-daemon --background --pid-file /var/run/amplifier-pr.pid</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">File Watcher for Docs
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">File Watcher for Docs</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -39537,8 +39406,7 @@ handlers:
       - tool: tool-filesystem
         action: write</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Webhook Integration
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Webhook Integration</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39561,8 +39429,7 @@ handlers:
 
           Generate release notes and update changelog.</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Scheduled Reports
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Scheduled Reports</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -39595,10 +39462,8 @@ handlers:
         channel: &quot;#team-updates&quot;
         message: &quot;{summary}&quot;</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>CLI Integration
-</h3>
+        <p>---</p>
+        <h3>CLI Integration</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">bash</span>
@@ -39622,10 +39487,8 @@ amplifier daemon trigger --handler weekly-summary
 # View event history
 amplifier daemon history --limit 50</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Integration with Hooks
-</h3>
+        <p>---</p>
+        <h3>Integration with Hooks</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39648,10 +39511,8 @@ async def notify_completion(event, data):
     else:
         await send_pagerduty(f&quot;Handler {data[&#039;handler&#039;]} failed: {data[&#039;result&#039;].error}&quot;)</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>State Management
-</h3>
+        <p>---</p>
+        <h3>State Management</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39673,10 +39534,8 @@ class EventState:
     # Handler state (for long-running handlers)
     handler_state: dict[str, Any]</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Testing Strategy
-</h3>
+        <p>---</p>
+        <h3>Testing Strategy</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -39704,20 +39563,13 @@ class EventState:
     async def test_state_persistence(self):
         &quot;&quot;&quot;State survives restart.&quot;&quot;&quot;</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Open Questions
-</h3>
-        <li><strong>Exactly-once semantics</strong>: How to guarantee an event is processed exactly once across restarts?
-</li>
-        <li><strong>Dead letter queue</strong>: Where do failed events go for retry/inspection?
-</li>
-        <li><strong>Event sourcing</strong>: Should all events be logged for replay/audit?
-</li>
-        <li><strong>Multi-node</strong>: How to distribute event processing across multiple Amplifier instances?
-</li>
-        <li><strong>Backpressure</strong>: How to handle event flood without losing events?
-</li>
+        <p>---</p>
+        <h3>Open Questions</h3>
+        <li><strong>Exactly-once semantics</strong>: How to guarantee an event is processed exactly once across restarts?</li>
+        <li><strong>Dead letter queue</strong>: Where do failed events go for retry/inspection?</li>
+        <li><strong>Event sourcing</strong>: Should all events be logged for replay/audit?</li>
+        <li><strong>Multi-node</strong>: How to distribute event processing across multiple Amplifier instances?</li>
+        <li><strong>Backpressure</strong>: How to handle event flood without losing events?</li>
           </div>
         </div>
         <div class="spec-section" id="spec-orchestrator-loop-iterative-refinement" data-category="orchestrators">
@@ -40646,23 +40498,17 @@ def test_feedback_correlator_links_changes():
           <div class="spec-content">
             
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P2 (Medium Value)
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P2 (Medium Value)</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-observer-swarm</code>
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-observer-swarm</code></p>
         </div>
-        <h3>Overview
-</h3>
-        <p>An orchestrator where multiple specialized agents observe a shared work queue or artifact, each contributing from their expertise without direct user interaction. Agents work semi-autonomously, coordinating through a shared context rather than explicit delegation.
-</p>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition
-</h4>
+        <h3>Overview</h3>
+        <p>An orchestrator where multiple specialized agents observe a shared work queue or artifact, each contributing from their expertise without direct user interaction. Agents work semi-autonomously, coordinating through a shared context rather than explicit delegation.</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
         <table class="ref-table">
           <thead>
             <tr><th>Without</th><th>With</th></tr>
@@ -40674,36 +40520,21 @@ def test_feedback_correlator_links_changes():
             <tr><td>Explicit handoffs required</td><td>Emergent collaboration through observation</td></tr>
           </tbody>
         </table>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases
-</h4>
-        <li><strong>Code review swarm</strong>: Security, performance, style experts all observe PR
-</li>
-        <li><strong>Design review</strong>: UX, accessibility, brand experts observe design artifacts
-</li>
-        <li><strong>Document review</strong>: Technical accuracy, style, completeness experts observe docs
-</li>
-        <li><strong>Architecture review</strong>: Multiple stakeholders observe design proposal
-</li>
-        <li><strong>Incident investigation</strong>: Multiple specialists observe logs/metrics simultaneously
-</li>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator
-</h4>
-        <p>This breaks the "chatbot" mental model by:
-</p>
-        <li><strong>Multiple agents</strong>: Not one assistant, but a team
-</li>
-        <li><strong>Observation-based</strong>: Agents watch and contribute, not prompted
-</li>
-        <li><strong>Emergent coordination</strong>: No explicit task assignment
-</li>
-        <li><strong>Shared context</strong>: All agents see the same evolving work
-</li>
-        <p>---
-</p>
-        <h3>Contract
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
+        <li><strong>Code review swarm</strong>: Security, performance, style experts all observe PR</li>
+        <li><strong>Design review</strong>: UX, accessibility, brand experts observe design artifacts</li>
+        <li><strong>Document review</strong>: Technical accuracy, style, completeness experts observe docs</li>
+        <li><strong>Architecture review</strong>: Multiple stakeholders observe design proposal</li>
+        <li><strong>Incident investigation</strong>: Multiple specialists observe logs/metrics simultaneously</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
+        <p>This breaks the "chatbot" mental model by:</p>
+        <li><strong>Multiple agents</strong>: Not one assistant, but a team</li>
+        <li><strong>Observation-based</strong>: Agents watch and contribute, not prompted</li>
+        <li><strong>Emergent coordination</strong>: No explicit task assignment</li>
+        <li><strong>Shared context</strong>: All agents see the same evolving work</li>
+        <p>---</p>
+        <h3>Contract</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -40796,8 +40627,7 @@ class ObserverSwarmOrchestrator:
     ) -&gt; SwarmResult:
         &quot;&quot;&quot;Combine observations into final result.&quot;&quot;&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">toml</span>
@@ -40854,12 +40684,9 @@ config = {
   synthesis_style = &quot;executive&quot;       # &quot;executive&quot; | &quot;detailed&quot; | &quot;action-items&quot;
 }</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Architecture
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Swarm Execution Flow
-</h4>
+        <p>---</p>
+        <h3>Architecture</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Swarm Execution Flow</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">text</span>
@@ -40911,10 +40738,8 @@ config = {
 │  All observations │ Consensus │ Conflicts │ Recommendations │
 └─────────────────────────────────────────────────────────────┘</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Observer Agents
-</h4>
-        <p>Each observer is a specialized agent with:
-</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Observer Agents</h4>
+        <p>Each observer is a specialized agent with:</p>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -40974,12 +40799,9 @@ config = {
         response = await self.providers[&quot;default&quot;].complete(...)
         return parse_reactions(response, observer=self.config.name)</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Observer Patterns
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Code Review Swarm
-</h4>
+        <p>---</p>
+        <h3>Observer Patterns</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Code Review Swarm</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -41030,8 +40852,7 @@ config = {
       Prioritize: security &gt; correctness &gt; performance &gt; style.
       Identify which feedback is essential vs nice-to-have.</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design Review Swarm
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Design Review Swarm</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -41058,10 +40879,8 @@ config = {
     expertise: Implementation feasibility, component reuse
     system_prompt: Flag implementation challenges early</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Events
-</h3>
+        <p>---</p>
+        <h3>Events</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -41081,12 +40900,9 @@ config = {
 &quot;observation:consensus&quot;    # Observers agree on point
 &quot;observation:escalate&quot;     # High-priority observation</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Examples
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage
-</h4>
+        <p>---</p>
+        <h3>Examples</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">CLI Usage</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">bash</span>
@@ -41107,8 +40923,7 @@ amplifier swarm review \
   --config ./swarm-config.yaml \
   --artifact ./proposal.md</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Programmatic Usage</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -41130,8 +40945,7 @@ print(f&quot;\nRecommendations:&quot;)
 for rec in result.recommendations:
     print(f&quot;  - {rec}&quot;)</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Integration with PR Review
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Integration with PR Review</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -41156,10 +40970,8 @@ handlers:
       action: comment
       body: &quot;{synthesis}&quot;</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Conflict Resolution
-</h3>
+        <p>---</p>
+        <h3>Conflict Resolution</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -41198,10 +41010,8 @@ handlers:
         4. Notes trade-offs
         &quot;&quot;&quot;</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Testing Strategy
-</h3>
+        <p>---</p>
+        <h3>Testing Strategy</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -41226,20 +41036,13 @@ handlers:
     async def test_consensus_tracking(self):
         &quot;&quot;&quot;Agreement between observers is tracked.&quot;&quot;&quot;</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Open Questions
-</h3>
-        <li><strong>Observer weighting</strong>: Should some observers have more influence than others?
-</li>
-        <li><strong>Dynamic spawning</strong>: Can observers request additional specialists?
-</li>
-        <li><strong>Iterative refinement</strong>: Can swarm re-observe after artifact is modified?
-</li>
-        <li><strong>Cost control</strong>: How to limit tokens when many observers are active?
-</li>
-        <li><strong>Observer memory</strong>: Should observers remember previous reviews?
-</li>
+        <p>---</p>
+        <h3>Open Questions</h3>
+        <li><strong>Observer weighting</strong>: Should some observers have more influence than others?</li>
+        <li><strong>Dynamic spawning</strong>: Can observers request additional specialists?</li>
+        <li><strong>Iterative refinement</strong>: Can swarm re-observe after artifact is modified?</li>
+        <li><strong>Cost control</strong>: How to limit tokens when many observers are active?</li>
+        <li><strong>Observer memory</strong>: Should observers remember previous reviews?</li>
           </div>
         </div>
         <div class="spec-section" id="spec-orchestrator-loop-parallel-exploration" data-category="orchestrators">
@@ -42927,23 +42730,17 @@ def test_weighted_synthesis_respects_weights():
           <div class="spec-content">
             
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value - Internal Tooling)
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Priority</strong>: P1 (High Value - Internal Tooling)</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Status</strong>: Draft</p>
         </div>
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-profile-comparison</code>
-</p>
+          <p style="margin: 0; color: var(--text-1);"><strong>Module</strong>: <code>amplifier-module-loop-profile-comparison</code></p>
         </div>
-        <h3>Overview
-</h3>
-        <p>An orchestrator specifically designed for testing and comparing Amplifier profiles. No chat interface - users provide profiles and test prompts, the system runs both profiles against the same inputs, and returns structured comparison data. This is a <strong>meta-tool</strong> for Amplifier development.
-</p>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition
-</h4>
+        <h3>Overview</h3>
+        <p>An orchestrator specifically designed for testing and comparing Amplifier profiles. No chat interface - users provide profiles and test prompts, the system runs both profiles against the same inputs, and returns structured comparison data. This is a <strong>meta-tool</strong> for Amplifier development.</p>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Value Proposition</h4>
         <table class="ref-table">
           <thead>
             <tr><th>Without</th><th>With</th></tr>
@@ -42955,36 +42752,21 @@ def test_weighted_synthesis_respects_weights():
             <tr><td>No baseline regression testing</td><td>Profile changes validated against baseline</td></tr>
           </tbody>
         </table>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases
-</h4>
-        <li><strong>Profile development</strong>: Compare new profile against baseline
-</li>
-        <li><strong>Prompt engineering</strong>: Test system prompt variations
-</li>
-        <li><strong>Provider comparison</strong>: Same profile, different LLM backends
-</li>
-        <li><strong>Regression testing</strong>: Ensure profile changes don't break expected behavior
-</li>
-        <li><strong>Collection validation</strong>: Verify collection profiles work as expected
-</li>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator
-</h4>
-        <p>This breaks the "chatbot" mental model by:
-</p>
-        <li><strong>No user conversation</strong>: Input profiles + test cases → structured comparison
-</li>
-        <li><strong>Quantitative output</strong>: Metrics, not prose
-</li>
-        <li><strong>Internal tooling</strong>: For Amplifier developers, not end users
-</li>
-        <li><strong>Automated testing</strong>: CI/CD integration
-</li>
-        <p>---
-</p>
-        <h3>Contract
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Use Cases</h4>
+        <li><strong>Profile development</strong>: Compare new profile against baseline</li>
+        <li><strong>Prompt engineering</strong>: Test system prompt variations</li>
+        <li><strong>Provider comparison</strong>: Same profile, different LLM backends</li>
+        <li><strong>Regression testing</strong>: Ensure profile changes don't break expected behavior</li>
+        <li><strong>Collection validation</strong>: Verify collection profiles work as expected</li>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Modality Differentiator</h4>
+        <p>This breaks the "chatbot" mental model by:</p>
+        <li><strong>No user conversation</strong>: Input profiles + test cases → structured comparison</li>
+        <li><strong>Quantitative output</strong>: Metrics, not prose</li>
+        <li><strong>Internal tooling</strong>: For Amplifier developers, not end users</li>
+        <li><strong>Automated testing</strong>: CI/CD integration</li>
+        <p>---</p>
+        <h3>Contract</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Orchestrator Interface</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -43087,8 +42869,7 @@ class ProfileComparisonOrchestrator:
     ) -&gt; Comparison:
         &quot;&quot;&quot;Compare two results.&quot;&quot;&quot;</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Configuration Schema</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">toml</span>
@@ -43146,8 +42927,7 @@ config = {
   include_raw_responses = true
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Test Suite Format
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Test Suite Format</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -43211,12 +42991,9 @@ test_cases:
     context:
       has_amplifier_docs: true</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Architecture
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Comparison Flow
-</h4>
+        <p>---</p>
+        <h3>Architecture</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Comparison Flow</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">text</span>
@@ -43262,8 +43039,7 @@ test_cases:
 │  JSON │ Markdown │ HTML │ Dashboard data                    │
 └─────────────────────────────────────────────────────────────┘</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Metrics Collection
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Metrics Collection</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -43288,8 +43064,7 @@ class MetricsCollector:
             &quot;errors&quot;: session.metrics.errors,
         }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">LLM-as-Judge Evaluation
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">LLM-as-Judge Evaluation</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -43338,12 +43113,9 @@ class MetricsCollector:
         response = await self.provider.complete(judge_prompt)
         return parse_json(response)</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Output Formats
-</h3>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">JSON Report
-</h4>
+        <p>---</p>
+        <h3>Output Formats</h3>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">JSON Report</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">json</span>
@@ -43396,8 +43168,7 @@ class MetricsCollector:
   ]
 }</code></pre>
         </div>
-        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Markdown Report
-</h4>
+        <h4 style="color: var(--text-1); font-size: 14px; margin: 16px 0 8px;">Markdown Report</h4>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">markdown</span>
@@ -43448,10 +43219,8 @@ Profile B shows improved efficiency with comparable quality.
 
 ⚠️ **code-help**: Profile B response significantly shorter (medium severity)</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>CLI Integration
-</h3>
+        <p>---</p>
+        <h3>CLI Integration</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">bash</span>
@@ -43489,10 +43258,8 @@ amplifier compare \
   --provider-a provider-anthropic \
   --provider-b provider-openai</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>CI/CD Integration
-</h3>
+        <p>---</p>
+        <h3>CI/CD Integration</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">yaml</span>
@@ -43538,10 +43305,8 @@ jobs:
               body: formatReport(report)
             });</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Events
-</h3>
+        <p>---</p>
+        <h3>Events</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -43559,10 +43324,8 @@ jobs:
 &quot;comparison:metric&quot;       # Individual metric collected
 &quot;comparison:regression&quot;   # Regression detected</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Testing Strategy
-</h3>
+        <p>---</p>
+        <h3>Testing Strategy</h3>
         <div class="code-block">
           <div class="code-header">
             <span class="code-lang">python</span>
@@ -43587,20 +43350,13 @@ jobs:
     async def test_parallel_execution(self):
         &quot;&quot;&quot;Profiles run in parallel when configured.&quot;&quot;&quot;</code></pre>
         </div>
-        <p>---
-</p>
-        <h3>Open Questions
-</h3>
-        <li><strong>Statistical significance</strong>: How many runs needed for reliable comparison?
-</li>
-        <li><strong>Cost tracking</strong>: Should token costs be part of the comparison?
-</li>
-        <li><strong>Reproducibility</strong>: How to handle non-deterministic responses?
-</li>
-        <li><strong>Golden responses</strong>: Should tests have "correct" answers for comparison?
-</li>
-        <li><strong>Incremental comparison</strong>: Compare only changed test cases?
-</li>
+        <p>---</p>
+        <h3>Open Questions</h3>
+        <li><strong>Statistical significance</strong>: How many runs needed for reliable comparison?</li>
+        <li><strong>Cost tracking</strong>: Should token costs be part of the comparison?</li>
+        <li><strong>Reproducibility</strong>: How to handle non-deterministic responses?</li>
+        <li><strong>Golden responses</strong>: Should tests have "correct" answers for comparison?</li>
+        <li><strong>Incremental comparison</strong>: Compare only changed test cases?</li>
           </div>
         </div>
         <div class="spec-section" id="spec-codebase-onboarder" data-category="scenario-tools">
