@@ -1,0 +1,118 @@
+/*
+ * Amplifier Module Types
+ *
+ * Six module types are recognized by the kernel's ModuleType literal.
+ * Five ship with public contract docs; "resolver" is recognized internally
+ * but does not yet have a public contract doc.
+ *
+ * Sources:
+ *   amplifier-core/CONTRACTS.md line 55 (ModuleType literal)
+ *   amplifier-core/CONTRACTS.md lines 28–38 (Trait↔Protocol mapping)
+ *   amplifier-core/context/kernel-overview.md lines 99–158
+ *   amplifier-core/docs/DESIGN_PHILOSOPHY.md line 204 (six gRPC bridges)
+ *
+ * Verified 2026-05-02 by core:core-expert (cross-checked against
+ * amplifier-app-learn/docs/state-of-amplifier-2026-05/dot/03-module-types.dot).
+ */
+digraph ModuleTypes {
+    rankdir=LR;
+    bgcolor="white";
+    pad=0.3;
+    nodesep=0.4;
+    ranksep=0.6;
+
+    node [
+        shape=box,
+        style="filled,rounded",
+        fontname="Helvetica",
+        fontsize=10,
+        margin="0.2,0.12",
+        penwidth=1.3
+    ];
+
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#999999",
+        arrowhead=none
+    ];
+
+    // === KERNEL ===
+    kernel [
+        label=<<B>amplifier-core</B><BR/><FONT POINT-SIZE="9">Defines protocols.<BR/>Loads modules.<BR/>Dispatches events.</FONT>>,
+        fillcolor="#3a3a3a",
+        fontcolor="white",
+        shape=box3d,
+        width=2.2
+    ];
+
+    // === FIVE CONTRACT-DOCUMENTED TYPES ===
+    provider [
+        label=<<B>Provider</B><BR/><FONT POINT-SIZE="9" COLOR="#444">LLM backend<BR/>complete(req)&rarr;resp<BR/><I>anthropic, openai, gemini,<BR/>azure, ollama, vllm, &#8230;</I></FONT>>,
+        fillcolor="#dceefc",
+        color="#3a86c8"
+    ];
+
+    tool [
+        label=<<B>Tool</B><BR/><FONT POINT-SIZE="9" COLOR="#444">LLM-decided capability<BR/>execute(input)&rarr;result<BR/><I>filesystem, bash, web,<BR/>search, task, todo, &#8230;</I></FONT>>,
+        fillcolor="#dcf2dc",
+        color="#3a8c3a"
+    ];
+
+    orchestrator [
+        label=<<B>Orchestrator</B><BR/><FONT POINT-SIZE="9" COLOR="#444">Execution loop strategy<BR/>execute(prompt)&rarr;str<BR/><I>loop-basic<BR/>loop-streaming<BR/>loop-events</I></FONT>>,
+        fillcolor="#fce8d2",
+        color="#c87a3a"
+    ];
+
+    context [
+        label=<<B>Context Manager</B><BR/><FONT POINT-SIZE="9" COLOR="#444">Conversation memory<BR/>add/get/set messages<BR/><I>context-simple<BR/>context-persistent</I></FONT>>,
+        fillcolor="#fcdedc",
+        color="#c8503a"
+    ];
+
+    hook [
+        label=<<B>Hook</B><BR/><FONT POINT-SIZE="9" COLOR="#444">Code-decided observer<BR/>__call__(event,data)<BR/><I>logging, redaction,<BR/>approval, streaming-ui, &#8230;</I></FONT>>,
+        fillcolor="#e2dcfc",
+        color="#7059c8"
+    ];
+
+    // === SIXTH TYPE — RECOGNIZED BUT UNDOCUMENTED ===
+    resolver [
+        label=<<B>Resolver</B>  <FONT POINT-SIZE="8">⚠ advanced / internal</FONT><BR/><FONT POINT-SIZE="9" COLOR="#444">Declared in <I>ModuleType</I> literal.<BR/>Public contract doc not yet<BR/>published. Treat as internal<BR/>extension surface.</FONT>>,
+        fillcolor="#f3f4f6",
+        color="#6b7280",
+        style="rounded,filled,dashed",
+        fontcolor="#374151"
+    ];
+
+    // === EDGES ===
+    kernel -> provider     [label=" implements "];
+    kernel -> tool         [label=" implements "];
+    kernel -> orchestrator [label=" implements "];
+    kernel -> context      [label=" implements "];
+    kernel -> hook         [label=" implements "];
+    kernel -> resolver     [label=" recognizes ", style=dashed, color="#9ca3af", fontcolor="#6b7280"];
+
+    // === DISTINCTION CALLOUT ===
+    distinction [
+        shape=plaintext,
+        label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
+            <TR>
+                <TD BGCOLOR="#f8f8f8" COLSPAN="2" ALIGN="LEFT"><B>Tool vs Hook: triggering difference</B></TD>
+            </TR>
+            <TR>
+                <TD ALIGN="LEFT"><B>Tool</B></TD>
+                <TD ALIGN="LEFT">LLM-decided. Agent calls it.</TD>
+            </TR>
+            <TR>
+                <TD ALIGN="LEFT"><B>Hook</B></TD>
+                <TD ALIGN="LEFT">Code-decided. Fires on lifecycle event.</TD>
+            </TR>
+            <TR>
+                <TD ALIGN="LEFT"><B>Orchestrator</B></TD>
+                <TD ALIGN="LEFT">The main engine. Drives the loop.</TD>
+            </TR>
+        </TABLE>>
+    ];
+}

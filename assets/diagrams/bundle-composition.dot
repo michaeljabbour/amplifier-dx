@@ -1,0 +1,113 @@
+/*
+ * Amplifier Bundle Composition
+ *
+ * Source: github.com/microsoft/amplifier-foundation/docs/BUNDLE_GUIDE.md
+ *
+ * Shows the "thin bundle" pattern with the foundation library as the base
+ * and a behavior overlay adding capabilities on top.
+ */
+digraph BundleComposition {
+    rankdir=LR;
+    bgcolor="white";
+    pad=0.3;
+    nodesep=0.4;
+    ranksep=0.6;
+    compound=true;
+
+    node [
+        shape=box,
+        style="filled,rounded",
+        fontname="Helvetica",
+        fontsize=10,
+        margin="0.2,0.12",
+        penwidth=1.3
+    ];
+
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#666666",
+        penwidth=1.2
+    ];
+
+    // === BASE BUNDLE (foundation) ===
+    subgraph cluster_base {
+        label=<<B>Base bundle</B><BR/><FONT POINT-SIZE="9">amplifier-foundation</FONT>>;
+        labeljust=l;
+        fontsize=11;
+        color="#c87a3a";
+        style="rounded,filled";
+        fillcolor="#fff5e8";
+
+        base_orch [label=<<B>orchestrator</B><BR/><FONT POINT-SIZE="9">loop-streaming</FONT>>, fillcolor="#fce8d2"];
+        base_prov [label=<<B>provider</B><BR/><FONT POINT-SIZE="9">anthropic</FONT>>, fillcolor="#dceefc"];
+        base_tool [label=<<B>tools</B><BR/><FONT POINT-SIZE="9">filesystem, bash</FONT>>, fillcolor="#dcf2dc"];
+        base_hook [label=<<B>hooks</B><BR/><FONT POINT-SIZE="9">logging, streaming-ui</FONT>>, fillcolor="#e2dcfc"];
+        base_agents [label=<<B>agents</B><BR/><FONT POINT-SIZE="9">explorer, bug-hunter,<BR/>zen-architect, &#8230;</FONT>>, fillcolor="#fcdedc"];
+    }
+
+    // === BEHAVIOR OVERLAY ===
+    subgraph cluster_behavior {
+        label=<<B>Behavior overlay</B><BR/><FONT POINT-SIZE="9">recipes:behaviors/recipes</FONT>>;
+        labeljust=l;
+        fontsize=11;
+        color="#7059c8";
+        style="rounded,filled";
+        fillcolor="#f7f3ff";
+
+        beh_tool [label=<<B>tool</B><BR/><FONT POINT-SIZE="9">tool-recipes</FONT>>, fillcolor="#dcf2dc"];
+        beh_agent [label=<<B>agent</B><BR/><FONT POINT-SIZE="9">recipe-author</FONT>>, fillcolor="#fcdedc"];
+        beh_ctx  [label=<<B>context</B><BR/><FONT POINT-SIZE="9">recipe-awareness.md</FONT>>, fillcolor="#f0e8ff"];
+    }
+
+    // === MOUNT PLAN ===
+    plan [
+        label=<<B>Mount Plan</B><BR/><FONT POINT-SIZE="9">merged config<BR/>passed to AmplifierSession</FONT>>,
+        fillcolor="#3a3a3a",
+        fontcolor="white",
+        shape=box3d,
+        width=2.0
+    ];
+
+    // === SESSION ===
+    session [
+        label=<<B>AmplifierSession</B><BR/><FONT POINT-SIZE="9">running instance</FONT>>,
+        fillcolor="#dceefc",
+        shape=cds,
+        width=2.0
+    ];
+
+    // === ROOT BUNDLE ===
+    root [
+        label=<<B>Your bundle</B><BR/><FONT POINT-SIZE="9">includes:<BR/>&nbsp;&nbsp;- bundle: foundation<BR/>&nbsp;&nbsp;- bundle: recipes:behaviors/recipes</FONT>>,
+        fillcolor="#fffae0",
+        shape=note
+    ];
+
+    // === EDGES ===
+    root -> base_orch [lhead=cluster_base, label=" includes "];
+    root -> beh_tool  [lhead=cluster_behavior, label=" includes "];
+
+    base_orch -> plan;
+    base_prov -> plan;
+    base_tool -> plan;
+    base_hook -> plan;
+    base_agents -> plan;
+    beh_tool -> plan;
+    beh_agent -> plan;
+    beh_ctx -> plan;
+
+    plan -> session [label=" creates "];
+
+    // === MERGE RULES NOTE ===
+    rules [
+        shape=plaintext,
+        label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#fffaf0">
+            <TR><TD COLSPAN="2" BGCOLOR="#f0e8d8" ALIGN="LEFT"><B>Merge rules</B></TD></TR>
+            <TR><TD ALIGN="LEFT">tools, hooks</TD><TD ALIGN="LEFT">merged by module ID</TD></TR>
+            <TR><TD ALIGN="LEFT">orchestrator, provider</TD><TD ALIGN="LEFT">last writer wins</TD></TR>
+            <TR><TD ALIGN="LEFT">context</TD><TD ALIGN="LEFT">accumulated</TD></TR>
+            <TR><TD ALIGN="LEFT">instructions</TD><TD ALIGN="LEFT">replaced</TD></TR>
+        </TABLE>>
+    ];
+}

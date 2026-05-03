@@ -1,0 +1,137 @@
+name: Render Diagrams
+
+# Verifies that the committed PNG and SVG renders in assets/diagrams/ match what
+# `dot` would produce from the .dot source files. Fails CI if they're out of sync,
+# so contributors must regenerate locally before pushing.
+#
+# Manual `workflow_dispatch` re-renders and commits to main if anyone needs to
+# refresh the renders without doing it locally.
+
+on:
+  pull_request:
+    paths:
+      - "assets/diagrams/**"
+      - ".github/workflows/render-diagrams.yml"
+  push:
+    branches: [main]
+    paths:
+      - "assets/diagrams/**"
+      - ".github/workflows/render-diagrams.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-renders:
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+          dot -V
+
+      - name: Render all diagrams to a tmp dir
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/rendered
+          shopt -s nullglob
+          for f in assets/diagrams/*.dot; do
+            name="$(basename "${f%.dot}")"
+            dot -Tpng -Gdpi=144 "$f" -o "/tmp/rendered/${name}.png"
+            dot -Tsvg "$f" -o "/tmp/rendered/${name}.svg"
+          done
+
+      - name: Compare SVGs (deterministic) against committed renders
+        run: |
+          set -euo pipefail
+          stale=()
+          for src in assets/diagrams/*.dot; do
+            name="$(basename "${src%.dot}")"
+            committed="assets/diagrams/${name}.svg"
+            if [ ! -f "$committed" ]; then
+              echo "::error file=${committed}::Missing rendered SVG for ${src}. Run: dot -Tsvg ${src} -o ${committed}"
+              stale+=("$committed")
+              continue
+            fi
+            if ! diff -q "$committed" "/tmp/rendered/${name}.svg" >/dev/null; then
+              echo "::error file=${committed}::Rendered SVG out of sync with ${src}."
+              echo "  Run locally: dot -Tsvg ${src} -o ${committed}"
+              stale+=("$committed")
+            fi
+          done
+          if [ "${#stale[@]}" -gt 0 ]; then
+            echo ""
+            echo "One or more rendered diagrams are stale:"
+            for f in "${stale[@]}"; do echo "  - $f"; done
+            echo ""
+            echo "Re-render and commit:"
+            echo "  cd assets/diagrams"
+            echo "  for f in *.dot; do dot -Tpng -Gdpi=144 \"\$f\" -o \"\${f%.dot}.png\"; dot -Tsvg \"\$f\" -o \"\${f%.dot}.svg\"; done"
+            exit 1
+          fi
+          echo "All committed SVG renders are up to date with their .dot sources."
+
+      - name: Soft-check PNGs exist
+        # PNGs are not byte-stable across Graphviz versions, so we only check
+        # that a render exists for every .dot source rather than comparing bytes.
+        run: |
+          set -euo pipefail
+          missing=()
+          for src in assets/diagrams/*.dot; do
+            name="$(basename "${src%.dot}")"
+            png="assets/diagrams/${name}.png"
+            if [ ! -f "$png" ]; then
+              missing+=("$png")
+              echo "::error file=${png}::Missing PNG render for ${src}."
+            fi
+          done
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "Re-render PNGs locally and commit:"
+            echo "  cd assets/diagrams"
+            echo "  for f in *.dot; do dot -Tpng -Gdpi=144 \"\$f\" -o \"\${f%.dot}.png\"; done"
+            exit 1
+          fi
+
+  refresh-renders:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+          dot -V
+
+      - name: Re-render all diagrams in place
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for f in assets/diagrams/*.dot; do
+            name="${f%.dot}"
+            dot -Tpng -Gdpi=144 "$f" -o "${name}.png"
+            dot -Tsvg "$f" -o "${name}.svg"
+          done
+
+      - name: Commit refreshed renders if changed
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain assets/diagrams)" ]; then
+            git add assets/diagrams
+            git commit -m "chore(diagrams): re-render PNG/SVG from DOT sources"
+            git push
+          else
+            echo "No changes to commit."
+          fi

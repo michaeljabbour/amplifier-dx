@@ -1,0 +1,111 @@
+/*
+ * Amplifier Hook Event Flow
+ *
+ * Source: github.com/microsoft/amplifier-core/docs/HOOKS_API.md
+ *
+ * Shows how a single event fans out to multiple hook handlers, and the
+ * action precedence that determines what happens to the operation.
+ */
+digraph HookFlow {
+    rankdir=LR;
+    bgcolor="white";
+    pad=0.3;
+    nodesep=0.3;
+    ranksep=0.5;
+
+    node [
+        shape=box,
+        style="filled,rounded",
+        fontname="Helvetica",
+        fontsize=10,
+        margin="0.18,0.1",
+        penwidth=1.2
+    ];
+
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#666666",
+        penwidth=1.1
+    ];
+
+    // === EMITTER ===
+    emitter [
+        label=<<B>Orchestrator</B><BR/><FONT POINT-SIZE="9">about to call a tool</FONT>>,
+        fillcolor="#fce8d2"
+    ];
+
+    event [
+        label=<<B>event:</B> tool:pre<BR/><FONT POINT-SIZE="9">data: { tool, input }</FONT>>,
+        fillcolor="#fff8d2",
+        shape=cds,
+        width=2.4
+    ];
+
+    // === HOOKS (run in priority order) ===
+    subgraph cluster_hooks {
+        label=<<B>Registered hooks (priority order)</B>>;
+        labeljust=l;
+        fontsize=11;
+        color="#cccccc";
+        style="rounded,filled";
+        fillcolor="#fafafa";
+
+        h_log    [label="hooks-logging\\n(priority 0)", fillcolor="#e2dcfc"];
+        h_redact [label="hooks-redaction\\n(priority 10)", fillcolor="#e2dcfc"];
+        h_approval [label="hooks-approval\\n(priority 20)", fillcolor="#e2dcfc"];
+    }
+
+    // === HOOK ACTIONS ===
+    subgraph cluster_actions {
+        label=<<B>Possible HookResult actions</B>>;
+        labeljust=l;
+        fontsize=11;
+        color="#cccccc";
+        style="rounded,filled";
+        fillcolor="#fafafa";
+
+        a_continue [label="continue\\nproceed normally", fillcolor="#dcf2dc"];
+        a_modify   [label="modify\\ntransform data", fillcolor="#dceefc"];
+        a_inject   [label="inject_context\\nadd msg to agent", fillcolor="#fce8d2"];
+        a_ask      [label="ask_user\\napproval gate", fillcolor="#fff8d2"];
+        a_deny     [label="deny\\nblock the op", fillcolor="#fcdedc"];
+    }
+
+    // === RESULT NODE ===
+    result [
+        label=<<B>Tool executes</B><BR/><FONT POINT-SIZE="9">(or is blocked)</FONT>>,
+        fillcolor="#dcf2dc",
+        shape=cds,
+        width=2.0
+    ];
+
+    // === EDGES ===
+    emitter -> event [label=" emits "];
+    event -> h_log    [label=" 1 "];
+    h_log -> h_redact [label=" 2 "];
+    h_redact -> h_approval [label=" 3 "];
+
+    h_log -> a_continue [style=dotted];
+    h_redact -> a_modify [style=dotted];
+    h_approval -> a_ask [style=dotted];
+    h_approval -> a_deny [style=dotted];
+
+    a_continue -> result;
+    a_modify -> result;
+    a_inject -> result;
+    a_ask -> result [label=" if approved "];
+    a_deny -> result [label=" \u2717 blocked ", color="#c8323a", fontcolor="#c8323a"];
+
+    // === PRECEDENCE NOTE ===
+    precedence [
+        shape=plaintext,
+        label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#fffaf0">
+            <TR><TD BGCOLOR="#f0e8d8" ALIGN="LEFT"><B>Action precedence</B></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">deny &gt; ask_user &gt; inject_context</FONT></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">&nbsp;&nbsp;&nbsp;&nbsp;&gt; modify &gt; continue</FONT></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">If any hook returns deny, the</FONT></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">operation is blocked.</FONT></TD></TR>
+        </TABLE>>
+    ];
+}

@@ -1,0 +1,73 @@
+/*
+ * Amplifier Repository Dependency Rules
+ *
+ * Source: github.com/microsoft/amplifier/docs/REPOSITORY_RULES.md
+ *
+ * Green = allowed. Red = forbidden.
+ * Modules depend ONLY on the kernel; never on peers or higher layers.
+ */
+digraph DependencyRules {
+    rankdir=BT;
+    bgcolor="white";
+    pad=0.3;
+    nodesep=0.5;
+    ranksep=0.7;
+
+    node [
+        shape=box,
+        style="filled,rounded",
+        fontname="Helvetica",
+        fontsize=10,
+        margin="0.2,0.12",
+        penwidth=1.3
+    ];
+
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        penwidth=1.5
+    ];
+
+    // === REPO TYPES ===
+    kernel [label=<<B>amplifier-core</B><BR/><FONT POINT-SIZE="8">Kernel</FONT>>, fillcolor="#3a3a3a", fontcolor="white"];
+    entry  [label=<<B>amplifier</B><BR/><FONT POINT-SIZE="8">Entry point / docs</FONT>>, fillcolor="#f0f0f0"];
+    foundation [label=<<B>amplifier-foundation</B><BR/><FONT POINT-SIZE="8">Library</FONT>>, fillcolor="#fce8d2"];
+
+    module_a [label=<<B>amplifier-module-tool-bash</B><BR/><FONT POINT-SIZE="8">Module</FONT>>, fillcolor="#dcf2dc"];
+    module_b [label=<<B>amplifier-module-tool-filesystem</B><BR/><FONT POINT-SIZE="8">Module</FONT>>, fillcolor="#dcf2dc"];
+
+    bundle [label=<<B>amplifier-bundle-recipes</B><BR/><FONT POINT-SIZE="8">Bundle</FONT>>, fillcolor="#e2dcfc"];
+    app    [label=<<B>amplifier-app-cli</B><BR/><FONT POINT-SIZE="8">Application</FONT>>, fillcolor="#dceefc"];
+
+    // === ALLOWED EDGES (green) ===
+    foundation -> kernel [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+    foundation -> entry  [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+
+    module_a -> kernel [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+    module_b -> kernel [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+
+    bundle -> foundation [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+    bundle -> module_a   [color="#2e8b2e", label=" \u2713 references ", fontcolor="#2e8b2e"];
+
+    app -> foundation [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+    app -> bundle     [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+    app -> module_a   [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+    app -> kernel     [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+
+    // === FORBIDDEN EDGES (red, dashed) ===
+    module_a -> module_b   [color="#c8323a", style=dashed, label=" \u2717 modules\\ncannot reference\\npeers ", fontcolor="#c8323a"];
+    module_a -> foundation [color="#c8323a", style=dashed, label=" \u2717 ", fontcolor="#c8323a"];
+    module_a -> app        [color="#c8323a", style=dashed, label=" \u2717 ", fontcolor="#c8323a"];
+    kernel   -> foundation [color="#c8323a", style=dashed, label=" \u2717 kernel knows nothing\\nbelow entry point ", fontcolor="#c8323a"];
+
+    // === CALLOUT ===
+    note [
+        shape=plaintext,
+        label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#fffaf0">
+            <TR><TD ALIGN="LEFT"><B>The Import Rule</B></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">When a module needs something from</FONT></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">an app or library, it uses the kernel's</FONT></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">capability registry instead of importing.</FONT></TD></TR>
+        </TABLE>>
+    ];
+}

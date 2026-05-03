@@ -1,0 +1,103 @@
+/*
+ * Amplifier Architecture Stack
+ *
+ * Source-of-truth reference: github.com/microsoft/amplifier/docs/REPOSITORY_RULES.md
+ *
+ * Shows the 5-tier dependency hierarchy. Arrows point from consumer to dependency.
+ * Strict rule: dependencies flow strictly downward. Modules can only know the kernel.
+ */
+digraph AmplifierStack {
+    rankdir=TB;
+    bgcolor="white";
+    pad=0.3;
+    nodesep=0.4;
+    ranksep=0.5;
+    fontname="Helvetica";
+
+    node [
+        shape=box,
+        style="filled,rounded",
+        fontname="Helvetica",
+        fontsize=11,
+        margin="0.25,0.15",
+        penwidth=1.5
+    ];
+
+    edge [
+        fontname="Helvetica",
+        fontsize=9,
+        color="#7a7a7a",
+        penwidth=1.2
+    ];
+
+    // === LAYERS ===
+    apps [
+        label=<<B>Applications</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-app-cli &#8226; amplifierd<BR/>amplifier-chat &#8226; amplifier-voice<BR/>amplifier-app-log-viewer</FONT>>,
+        fillcolor="#dceefc",
+        color="#3a86c8"
+    ];
+
+    bundles [
+        label=<<B>Bundles</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-bundle-* (28+ Microsoft + community)<BR/>recipes &#8226; superpowers &#8226; python-dev<BR/>browser-tester &#8226; design-intelligence &#8230;</FONT>>,
+        fillcolor="#e2dcfc",
+        color="#7059c8"
+    ];
+
+    foundation [
+        label=<<B>Foundation Library</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-foundation<BR/>bundle parsing, composition,<BR/>session factory</FONT>>,
+        fillcolor="#fce8d2",
+        color="#c87a3a"
+    ];
+
+    modules [
+        label=<<B>Runtime Modules</B><BR/><FONT POINT-SIZE="9" COLOR="#444">providers &#8226; tools &#8226; orchestrators<BR/>context managers &#8226; hooks<BR/>(amplifier-module-*)</FONT>>,
+        fillcolor="#dcf2dc",
+        color="#3a8c3a"
+    ];
+
+    kernel [
+        label=<<B>Kernel</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-core<BR/>Rust + PyO3 bindings<BR/>session lifecycle, hooks, contracts</FONT>>,
+        fillcolor="#3a3a3a",
+        fontcolor="white",
+        color="#000000"
+    ];
+
+    // === EDGES (consumer -> dependency) ===
+    apps   -> bundles    [label=" loads "];
+    apps   -> foundation [label=" composes "];
+    apps   -> modules    [style=dashed, label=" mounts "];
+    apps   -> kernel     [label=" calls "];
+
+    bundles    -> foundation [label=" defines for "];
+    bundles    -> modules    [style=dashed, label=" references "];
+
+    foundation -> kernel [label=" uses "];
+
+    modules    -> kernel [label=" implements\\nprotocols "];
+
+    // === RANKING ===
+    { rank=same; apps; }
+    { rank=same; bundles; foundation; }
+    { rank=same; modules; }
+    { rank=same; kernel; }
+
+    // === LEGEND ===
+    subgraph cluster_legend {
+        label="Rule of dependency";
+        labelloc=b;
+        labeljust=r;
+        fontsize=9;
+        color="#cccccc";
+        style=dashed;
+
+        rule [
+            shape=plaintext,
+            label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2">
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">Apps may depend on anything below.</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">Modules depend ONLY on kernel.</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">Modules NEVER depend on peers, foundation, or apps.</FONT></TD></TR>
+                <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">Kernel depends on nothing.</FONT></TD></TR>
+            </TABLE>>
+        ];
+    }
+}
