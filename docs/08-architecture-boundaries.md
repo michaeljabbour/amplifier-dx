@@ -2,7 +2,18 @@
 
 The single most important concept for Amplifier developers: **what belongs where**.
 
-**Foundation Layer Note:** This document groups Application + Foundation as "Application Layer." In practice, **amplifier-foundation** sits between your app and amplifier-core, acting as a factory that loads bundles, composes configuration, and creates sessions. See [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli) for a working example showing the three-layer architecture: Application → Foundation → Core.
+**For the visual:** see the
+[architecture stack diagram](../assets/diagrams/architecture-stack.png) and the
+[dependency rules diagram](../assets/diagrams/dependency-rules.png) for a
+verified, current picture of the layers and allowed dependency directions.
+
+**Foundation Layer Note:** This document groups Application + Foundation as "Application Layer." In practice, **amplifier-foundation** sits between your app and amplifier-core, acting as a factory that loads bundles, composes configuration, and creates sessions. The reference application
+[`amplifier-app-cli`](https://github.com/microsoft/amplifier-app-cli) shows the three-layer
+architecture in action: Application → Foundation → Core.
+
+**Kernel implementation note:** `amplifier-core` is implemented in Rust with PyO3
+Python bindings. Top-level imports (`from amplifier_core import ...`) resolve to
+Rust-backed types by default; the public API and contracts described here are unchanged.
 
 ---
 

@@ -1,6 +1,11 @@
 # Ecosystem Quick Map
 
-Three repos run everything. Here's what each one does, how they depend on each other, and where to look when something breaks.
+Three repos sit at the heart of the dependency stack. Around them is a wider ecosystem of
+applications, bundles, and runtime modules. This document focuses on the heart -- the
+three repos every Amplifier user touches -- and points to the rest at the end.
+
+> **See also:** [Current Ecosystem](./12-current-ecosystem.md) for the full inventory of
+> applications, bundles, and runtime modules with verified GitHub links.
 
 ---
 
@@ -31,9 +36,12 @@ Three repos run everything. Here's what each one does, how they depend on each o
 ### amplifier-core — The Kernel
 
 ```
-  Role:       Mechanism — HOW things coordinate
-  Stability:  Highest. Changes here ripple everywhere.
-  Depends on: Nothing in the Amplifier ecosystem
+  Role:           Mechanism — HOW things coordinate
+  Stability:      Highest. Changes here ripple everywhere.
+  Implementation: Rust core with PyO3 Python bindings.
+                  Top-level imports (from amplifier_core import ...)
+                  resolve to the Rust-backed types by default.
+  Depends on:     Nothing in the Amplifier ecosystem
 ```
 
 | Owns | Example |
@@ -291,5 +299,22 @@ if broadcast:
 
 ---
 
+## Beyond the Three Repos
+
+The three repos above are the dependency stack. The wider ecosystem builds on top:
+
+| Layer | What lives there |
+|-------|------------------|
+| **Applications** | `amplifier-app-cli` (reference CLI), `amplifierd` (HTTP daemon), `amplifier-chat`, `amplifier-voice`, `amplifier-app-log-viewer`, `amplifier-app-benchmarks` |
+| **Bundles** | `amplifier-bundle-*` (30+ Microsoft-maintained: recipes, superpowers, python-dev, browser-tester, design-intelligence, stories, dot-graph, gitea, digital-twin-universe, ...) |
+| **Runtime modules** | `amplifier-module-*` (providers: anthropic, openai, gemini, azure-openai, ollama, vllm, github-copilot, ...; tools: filesystem, bash, web, search, task, todo, mcp, skills, slash-command; orchestrators: loop-basic, loop-streaming, loop-events; context managers: simple, persistent; hooks: logging, redaction, approval, streaming-ui, ...) |
+
+For the full current list of components with GitHub links, see
+[12-current-ecosystem.md](./12-current-ecosystem.md). The authoritative source-of-truth
+is `microsoft/amplifier/docs/MODULES.md` -- always re-verify counts and names there before
+quoting them anywhere durable.
+
+---
+
 **Previous:** [Architecture Boundaries](./08-architecture-boundaries.md)
-**Next:** End of current documentation. Return to [Index](./00-index.md).
+**Next:** [Current Ecosystem](./12-current-ecosystem.md)

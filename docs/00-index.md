@@ -40,8 +40,8 @@ A progressive guide from "what is this?" to "I could build this."
 
 ### Real-World
 
-7. **[Amplifier Desktop Case Study](./07-desktop-case-study.md)**
-   How a production desktop app embeds Amplifier.
+7. **[Embedding Amplifier: A Case Study](./07-desktop-case-study.md)**
+   How real apps (amplifierd, amplifier-chat, amplifier-voice) embed Amplifier in a non-CLI host process.
 
 8. **[Architecture Boundaries](./08-architecture-boundaries.md)**
    What belongs where: app layer, kernel layer, and module layer.
@@ -55,8 +55,14 @@ A progressive guide from "what is this?" to "I could build this."
 11. **[Developing Judgment](./11-developing-judgment.md)**
     Trust calibration, intuition, and the skill of working with AI agents over time.
 
-12. **[Working with AI](./13-working-with-ai.md)**
+12. **[Current Ecosystem](./12-current-ecosystem.md)**
+    Verified inventory of applications, bundles, and runtime modules with GitHub links and the diagrams that visualize how they fit together.
+
+13. **[Working with AI](./13-working-with-ai.md)**
     Practical comparison of vibe coding and structured AI-assisted development.
+
+14. **[Built With Amplifier: A Case Study](./14-built-with-amplifier.md)**
+    The recursive loop of `amplifier-app-learn` — a curriculum that teaches Amplifier, audited and maintained by Amplifier expert agents, with diagrams from validated DOT sources and an update plan structured as a staged recipe.
 
 ---
 
@@ -79,7 +85,7 @@ Layers of Understanding (Layer 3) → amplifier-modulebuilder-skill → [main do
 
 ### "I'm building a product on Amplifier"
 ```
-How Data Flows → The Certainties → amplifier-simplecli source → Desktop Case Study → [API docs]
+How Data Flows → The Certainties → Embedding Amplifier Case Study → [API docs]
 ```
 
 ### "I want to understand everything"
