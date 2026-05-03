@@ -1,367 +1,184 @@
-# Case Study: Amplifier Desktop
+# Embedding Amplifier: A Case Study
 
-This is a real-world example of embedding Amplifier in a desktop application. It demonstrates Layer 4 (Embed) patterns in production.
+How real applications embed `amplifier-core` in a non-CLI host process. The pattern below
+is taken from the apps that actually ship today — primarily
+[`amplifierd`](https://github.com/microsoft/amplifierd), the official localhost daemon
+that exposes Amplifier sessions over HTTP+SSE — with `session.execute()` and the Foundation
+factory pattern as the canonical API surface.
 
----
-
-## What Is Amplifier Desktop?
-
-A native desktop AI coding assistant built on:
-- **React** frontend for the UI
-- **Tauri** (Rust) for the native shell
-- **Python sidecar** running amplifier-core
-- **WebSocket** for real-time communication
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                      AMPLIFIER DESKTOP                              │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │                     REACT FRONTEND                            │  │
-│  │                                                               │  │
-│  │   ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐        │  │
-│  │   │ Sidebar │  │  Chat   │  │ Bundle  │  │Settings │        │  │
-│  │   │         │  │Container│  │ Selector│  │  Modal  │        │  │
-│  │   └─────────┘  └─────────┘  └─────────┘  └─────────┘        │  │
-│  │                      │                                        │  │
-│  │                      │ WebSocket                              │  │
-│  │                      ▼                                        │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                         │                                           │
-│                         │ Port 9876                                 │
-│                         ▼                                           │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │                   PYTHON SIDECAR                              │  │
-│  │                                                               │  │
-│  │   ┌─────────────────────────────────────────────────────┐    │  │
-│  │   │              AMPLIFIER-CORE                          │    │  │
-│  │   │                                                      │    │  │
-│  │   │  Coordinator → Session → Provider/Tools/Hooks        │    │  │
-│  │   │                                                      │    │  │
-│  │   └─────────────────────────────────────────────────────┘    │  │
-│  │                                                               │  │
-│  │   + Bundle Manager (CRUD for bundles)                       │  │
-│  │   + Config Manager (three-tier settings)                      │  │
-│  │   + Custom Tools (filesystem, bash, grep, etc.)               │  │
-│  │                                                               │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                         │                                           │
-│                         │ Managed by                                │
-│                         ▼                                           │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │                    TAURI (RUST)                               │  │
-│  │                                                               │  │
-│  │   - Starts/stops sidecar                                      │  │
-│  │   - SQLite database (conversations, projects, settings)       │  │
-│  │   - Native window management                                   │  │
-│  │   - IPC bridge                                                 │  │
-│  │                                                               │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+> **Note on the predecessor of this doc.** An earlier version of this file described
+> "Amplifier Desktop," a Tauri/React/Python-sidecar app that does not exist in any
+> repository, official or community. That doc was aspirational fiction and has been
+> replaced. The apps and code patterns below are real, current, and verifiable.
 
 ---
 
-## Key Design Decisions
+## The Embedded Amplifier Pattern
 
-### 1. Why a Sidecar?
+When you embed Amplifier in a host process — daemon, web app, voice agent, IDE plugin —
+the pattern is always the same:
 
-**Decision:** Run amplifier-core in a separate Python process instead of embedding directly.
-
-**Rationale:**
-- Python ecosystem has best LLM library support
-- Tauri is Rust-native; FFI to Python is complex
-- Sidecar can be updated independently
-- Crash isolation (sidecar crash doesn't kill app)
-
-**Trade-off:** Extra process overhead (~100MB RAM), but worth it for ecosystem access.
-
-### 2. Why WebSocket?
-
-**Decision:** Frontend communicates with sidecar via WebSocket, not HTTP.
-
-**Rationale:**
-- Streaming is natural with WebSocket
-- Bidirectional (sidecar can push events)
-- Single connection, no per-request overhead
-- Real-time token-by-token updates
-
-**Implementation:**
-```typescript
-// Frontend: hooks/useWebSocket.ts
-const ws = new WebSocket('ws://localhost:9876/ws');
-
-ws.onmessage = (event) => {
-  const msg = JSON.parse(event.data);
-  switch (msg.type) {
-    case 'delta':
-      appendToCurrentMessage(msg.content);
-      break;
-    case 'tool_start':
-      showToolIndicator(msg.tool_name);
-      break;
-    case 'done':
-      finalizeMessage();
-      break;
-  }
-};
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                            Host process                                   │
+│                                                                           │
+│   ┌─────────────────────┐                                                │
+│   │  Transport surface  │   HTTP / SSE / WebSocket / WebRTC / RPC         │
+│   └──────────┬──────────┘                                                │
+│              │                                                            │
+│   ┌──────────▼──────────┐                                                │
+│   │  Session manager    │   Maintains live sessions, routes prompts      │
+│   └──────────┬──────────┘                                                │
+│              │                                                            │
+│   ┌──────────▼──────────────────────────────────────────────────────┐   │
+│   │  Foundation factory                                                │   │
+│   │  load_bundle() → compose() → prepare() → create_session()         │   │
+│   └──────────┬──────────────────────────────────────────────────────┘   │
+│              │                                                            │
+│   ┌──────────▼──────────┐                                                │
+│   │  AmplifierSession   │   Rust-backed kernel + mounted modules        │
+│   │  .execute(prompt)   │                                                │
+│   └─────────────────────┘                                                │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 3. Why Three-Tier Config?
+The host process owns transport. Amplifier owns the agent loop. They communicate through
+a thin Foundation factory that turns a Mount Plan into a live `AmplifierSession`.
 
-**Decision:** Implement full amplifier config hierarchy (user/project/local).
+---
 
-**Rationale:**
-- Users expect their global settings to work
-- Teams can share project configs via git
-- Local overrides stay out of version control
-- Matches CLI behavior exactly
+## Reference Apps That Implement This Pattern
 
-**Implementation:**
+| App | Repo | Transport | What it demonstrates |
+|-----|------|-----------|----------------------|
+| **amplifierd** | [microsoft/amplifierd](https://github.com/microsoft/amplifierd) | REST + SSE | The canonical daemon: any language can drive sessions over HTTP |
+| **amplifier-chat** | [microsoft/amplifier-chat](https://github.com/microsoft/amplifier-chat) | Browser ↔ amplifierd | Browser-based chat UI as a plugin to amplifierd |
+| **amplifier-voice** | [microsoft/amplifier-voice](https://github.com/microsoft/amplifier-voice) | WebRTC + OpenAI Realtime | Voice interface as a plugin to amplifierd |
+| **amplifier-app-log-viewer** | [microsoft/amplifier-app-log-viewer](https://github.com/microsoft/amplifier-app-log-viewer) | Web (real-time log streaming) | Reads session JSONL event logs, renders interactive JSON |
+| **amplifier-app-voice** (community) | [robotdad/amplifier-app-voice](https://github.com/robotdad/amplifier-app-voice) | Native desktop, OpenAI Realtime | The closest thing to a desktop voice assistant in the ecosystem |
+
+The first three together — `amplifierd` plus its `amplifier-chat` and `amplifier-voice`
+plugins — are the most complete worked example of the pattern.
+
+---
+
+## The Code Pattern (Foundation Factory)
+
+The authoritative reference is [Foundation Example 08 / 20](https://github.com/microsoft/amplifier-foundation/tree/main/examples).
+Here is the shape:
+
 ```python
-# sidecar/config_manager.py
-def get_merged_config(project_dir: Path) -> dict:
-    user_config = load_yaml(USER_CONFIG_PATH)
-    project_config = load_yaml(project_dir / ".amplifier/settings.yaml")
-    local_config = load_yaml(project_dir / ".amplifier/settings.local.yaml")
+# host_app.py — runs inside your daemon, web app, voice agent, IDE plugin, ...
+from amplifier_foundation import load_bundle
 
-    return deep_merge(user_config, project_config, local_config)
+
+class HostApp:
+    """A long-lived host process that creates Amplifier sessions on demand."""
+
+    async def start(self) -> None:
+        # 1. Load the bundle once at startup
+        bundle = await load_bundle("./bundles/myapp.md")
+
+        # 2. Compose with runtime overrides (provider keys, model selection, etc.)
+        composed = bundle.compose({
+            "providers": [{
+                "module": "provider-anthropic",
+                "model": "claude-sonnet-4-5",
+            }],
+        })
+
+        # 3. Prepare — resolves modules, validates the mount plan, downloads cache
+        self.prepared = await composed.prepare()
+
+    async def handle_request(self, prompt: str) -> str:
+        # 4. Create a fresh session per request (or hold one for a conversation)
+        session = await self.prepared.create_session()
+        try:
+            # 5. The current API: session.execute()
+            return await session.execute(prompt)
+        finally:
+            await session.close()
 ```
+
+**API to use today:** `session.execute(prompt)` returns the final response. The pre-Foundation
+streaming patterns (`session.run()`, `session.stream()`) shown in older material are no longer
+the recommended surface. For streaming UIs, see the streaming hooks pattern in
+`amplifier-foundation/examples/`.
 
 ---
 
-## Message Flow
+## Transport Choices
 
-### User Sends a Prompt
+Pick the transport that matches your host:
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│  PROMPT: "Help me fix the bug in auth.py"                           │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  1. Frontend                                                        │
-│     └─ User clicks send                                             │
-│     └─ ChatMessage created: {type: "prompt", content: "..."}        │
-│     └─ Sent over WebSocket                                          │
-│                                                                     │
-│  2. Sidecar receives                                                │
-│     └─ server.py handles WebSocket message                          │
-│     └─ Creates or retrieves Session                                 │
-│     └─ Calls session.run(prompt)                                    │
-│                                                                     │
-│  3. Amplifier-core processes                                        │
-│     └─ Orchestrator loop starts                                     │
-│     └─ Provider.complete() called                                   │
-│     └─ Streaming response begins                                    │
-│                                                                     │
-│  4. Sidecar streams back                                            │
-│     └─ Each token: {type: "delta", content: "I"}                    │
-│     └─ Tool use: {type: "tool_start", tool_name: "read_file"}       │
-│     └─ Tool done: {type: "tool_end", result: "..."}                 │
-│     └─ Final: {type: "done"}                                        │
-│                                                                     │
-│  5. Frontend updates                                                │
-│     └─ delta → append to message                                    │
-│     └─ tool_start → show indicator                                  │
-│     └─ done → finalize, enable input                                │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+| Transport | When to use | Reference |
+|-----------|-------------|-----------|
+| **HTTP REST + SSE** | Service-to-service, browser SPA, CLI clients | `amplifierd` |
+| **WebSocket** | Bidirectional realtime UIs needing tight tool-call feedback | (custom) |
+| **WebRTC** | Voice / video / low-latency interactive | `amplifier-voice` |
+| **In-process / library** | Embedding directly in a Python app | Foundation Example 08 |
 
-### Message Types
-
-| Type | Direction | Purpose |
-|------|-----------|---------|
-| `prompt` | Frontend → Sidecar | User's input |
-| `cancel` | Frontend → Sidecar | Stop current generation |
-| `delta` | Sidecar → Frontend | Streaming token |
-| `thinking` | Sidecar → Frontend | Model is thinking |
-| `tool_start` | Sidecar → Frontend | Tool execution beginning |
-| `tool_end` | Sidecar → Frontend | Tool execution complete |
-| `done` | Sidecar → Frontend | Response complete |
-| `error` | Sidecar → Frontend | Error occurred |
+The kernel does not care which one you choose — your host process maps the transport's
+events onto `session.execute()` calls and forwards events emitted by hooks back over the wire.
 
 ---
 
-## Bundle Integration
+## Capability Injection: How Hosts Extend Sessions
 
-Amplifier Desktop exposes bundle management in the UI:
+A common embedding need: the host wants modules to push events back through its transport
+(e.g. SSE, WebSocket). Modules cannot import from the host (that would violate the
+[dependency rules](./09-ecosystem-quick-map.md)). Instead, the host registers a
+**capability** on the coordinator and modules look it up:
 
-### BundleSelector Component
-```typescript
-// Shows dropdown of available bundles
-// Groups by scope (user vs project)
-// Allows activation/deactivation
-
-<BundleSelector
-  bundles={bundles}
-  activeBundle={activeBundle}
-  onSelect={handleBundleSelect}
-  onCreateNew={openBundleEditor}
-/>
-```
-
-### Bundle API (REST)
-```
-GET    /api/bundles               # List all bundles
-GET    /api/bundles/{name}        # Get bundle details
-POST   /api/bundles               # Create new bundle
-PUT    /api/bundles/{name}        # Update bundle
-DELETE /api/bundles/{name}        # Delete bundle
-POST   /api/bundles/{name}/activate    # Set as active
-```
-
-### Inheritance Visualization
-```
-┌─────────────────────────────────────────┐
-│  Bundle: team-coding                    │
-├─────────────────────────────────────────┤
-│  extends: coding-base                   │
-│                                         │
-│  Inheritance chain:                     │
-│    default                              │
-│       └── coding-base                   │
-│              └── team-coding ← active   │
-│                                         │
-│  Effective config:                      │
-│    model: claude-opus-4-5-20251101 (from team-coding)       │
-│    tools: [filesystem, bash, grep]      │
-│           (merged from all levels)      │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
----
-
-## Custom Tools
-
-Amplifier Desktop ships with custom tools beyond the defaults:
-
-### tool-filesystem
-Extended file operations with safety checks:
 ```python
-class FilesystemTool(Tool):
-    # read_file, write_file, list_files
-    # Built-in path validation
-    # Respects .gitignore patterns
+# Host registers a capability
+async def my_broadcast(event: str, data: dict) -> None:
+    await sse_stream.publish({"type": event, **data})
+
+session.coordinator.register_capability("broadcast", my_broadcast)
+
+# A hook module looks it up — no import of host code
+class MyHook:
+    async def __call__(self, event: str, data: dict):
+        broadcast = self.coordinator.get_capability("broadcast")
+        if broadcast:
+            await broadcast(event, data)
 ```
 
-### tool-bash
-Shell execution with streaming output:
-```python
-class BashTool(Tool):
-    # Executes shell commands
-    # Streams stdout/stderr in real-time
-    # Configurable timeout
-    # Working directory awareness
-```
+Same module works in `amplifierd` (SSE), in a hypothetical desktop app (WebSocket), in a
+voice agent (WebRTC data channel) — only the capability implementation changes.
 
-### tool-grep
-Code search optimized for development:
-```python
-class GrepTool(Tool):
-    # Regex search across files
-    # Respects .gitignore
-    # Context lines
-    # File type filtering
-```
+See [Architecture Boundaries](./08-architecture-boundaries.md) for the boundary tests.
 
 ---
 
-## Lessons Learned
+## What This Pattern Buys You
 
-### What Worked Well
-
-1. **Sidecar architecture** - Clean separation, easy updates
-2. **WebSocket streaming** - Great UX, natural for LLMs
-3. **Full config hierarchy** - Users trust it works like CLI
-4. **Bundle inheritance** - Teams love shared base bundles
-
-### What Was Challenging
-
-1. **Sidecar lifecycle** - Starting/stopping reliably on all platforms
-2. **Error propagation** - Getting meaningful errors to the UI
-3. **State sync** - Keeping frontend and sidecar in sync
-4. **Cross-platform builds** - PyInstaller on macOS/Windows/Linux
-
-### Advice for Embedders
-
-1. **Start with the message protocol** - Define your wire format early
-2. **Stream everything** - Don't wait for complete responses
-3. **Handle disconnects** - WebSocket drops happen; reconnect gracefully
-4. **Test with slow models** - UX breaks become obvious
-5. **Log everything** - You'll need it for debugging
+- **Swappable transport.** SSE today, WebSocket tomorrow, WebRTC the day after — your
+  modules don't change.
+- **Swappable bundle.** The same host can serve different bundles for different users
+  or different purposes; just `compose()` differently per request.
+- **Real session lifecycle.** Hooks fire on `session:start`, `tool:pre`, `tool:post`,
+  `llm:request`, `llm:response`, `session:end` regardless of transport.
+- **Observability built in.** `hooks-logging` produces the same JSONL event log that
+  `amplifier-app-log-viewer` reads — debugging tools work across all hosts.
 
 ---
 
-## Code Samples
+## Read Next
 
-### Starting the Sidecar (Tauri/Rust)
-```rust
-// Simplified - actual code handles more edge cases
-fn start_sidecar() -> Result<Child> {
-    let sidecar_path = get_sidecar_path();
-
-    Command::new(&sidecar_path)
-        .arg("--port")
-        .arg("9876")
-        .spawn()
-}
-```
-
-### WebSocket Hook (React)
-```typescript
-// hooks/useWebSocket.ts
-export function useWebSocket() {
-  const [isConnected, setIsConnected] = useState(false);
-  const wsRef = useRef<WebSocket | null>(null);
-
-  useEffect(() => {
-    const ws = new WebSocket('ws://localhost:9876/ws');
-
-    ws.onopen = () => setIsConnected(true);
-    ws.onclose = () => {
-      setIsConnected(false);
-      // Reconnect logic here
-    };
-
-    wsRef.current = ws;
-    return () => ws.close();
-  }, []);
-
-  const sendMessage = useCallback((msg: ChatMessage) => {
-    wsRef.current?.send(JSON.stringify(msg));
-  }, []);
-
-  return { isConnected, sendMessage };
-}
-```
-
-### Session Handler (Python)
-```python
-# sidecar/server.py
-@app.websocket("/ws")
-async def websocket_handler(websocket: WebSocket):
-    await websocket.accept()
-    session = create_session_from_config()
-
-    async for message in websocket.iter_json():
-        if message["type"] == "prompt":
-            async for event in session.stream(message["content"]):
-                await websocket.send_json(event.to_dict())
-```
+- **[microsoft/amplifierd](https://github.com/microsoft/amplifierd)** — read the daemon's
+  README and source for the most complete worked example of this pattern.
+- **[Foundation Example 08](https://github.com/microsoft/amplifier-foundation/tree/main/examples)** —
+  minimal embedded session in a Python host.
+- **[Architecture Boundaries](./08-architecture-boundaries.md)** — the boundary tests that
+  keep modules portable across host transports.
+- **[Ecosystem Quick Map](./09-ecosystem-quick-map.md)** — how the three core repos
+  (`amplifier-core`, `amplifier-foundation`, `amplifier-app-cli`) compose.
+- **[Current Ecosystem](./12-current-ecosystem.md)** — verified inventory of every app,
+  bundle, and module with GitHub links.
 
 ---
 
-## Resources
-
-- [Amplifier Desktop Repository](https://github.com/your-org/amplifier-desktop)
-- [Tauri Documentation](https://tauri.app/docs/)
-- [Layer 4: Embed Guide](./06-layers.md#layer-4-embed)
-
----
-
-**Previous:** [Layers of Understanding](./06-layers.md)
-**Next:** [Back to Index →](./00-index.md)
+**Previous:** [Layers of Understanding](./06-layers.md)  
+**Next:** [Architecture Boundaries](./08-architecture-boundaries.md)

@@ -253,7 +253,7 @@ async def with_custom_handling():
 **Docs for this layer:**
 - [Python API](../index.html#python-api)
 - [Embedding Guide](../index.html#embedding)
-- [Amplifier Desktop Case Study](./07-desktop-case-study.md)
+- [Embedding Amplifier: A Case Study](./07-desktop-case-study.md)
 
 **Time to master:** Days to weeks, depending on complexity
 
@@ -367,4 +367,4 @@ Most people oscillate between Layers 1-2. That's the design goal - you shouldn't
 ---
 
 **Previous:** [5-Minute Understanding](./05-quick-start.md)
-**Next:** [Amplifier Desktop Case Study →](./07-desktop-case-study.md) - A real-world embedding example
+**Next:** [Embedding Amplifier: A Case Study →](./07-desktop-case-study.md) - Real apps embedding the kernel via the Foundation factory
