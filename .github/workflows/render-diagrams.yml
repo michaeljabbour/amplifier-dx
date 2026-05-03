@@ -4,8 +4,23 @@ name: Render Diagrams
 # `dot` would produce from the .dot source files. Fails CI if they're out of sync,
 # so contributors must regenerate locally before pushing.
 #
-# Manual `workflow_dispatch` re-renders and commits to main if anyone needs to
-# refresh the renders without doing it locally.
+# IMPORTANT — Graphviz version sensitivity:
+# Graphviz SVG output is NOT byte-stable across major versions. CI runs ubuntu's
+# apt-get graphviz (currently 2.43.x). If you render locally with a different
+# version (e.g. macOS Homebrew is on 14.x as of mid-2026) your committed SVG
+# will not match CI's render and verify-renders will fail.
+#
+# RECOVERY — easiest first:
+#   1. Push your DOT changes with whatever SVG your local `dot` produced.
+#      verify-renders will fail. Then trigger this workflow's workflow_dispatch
+#      from the Actions UI — refresh-renders re-renders all DOTs on
+#      ubuntu-latest's Graphviz and auto-commits the canonical SVGs back to
+#      main. Subsequent verify-renders runs pass.
+#   2. Or render locally with a matching Graphviz version (`apt install graphviz`
+#      on Debian/Ubuntu, or use a devcontainer / Docker image with 2.43).
+#
+# Sibling repo amplifier-app-learn uses the same workflow with the same recovery
+# pattern.
 
 on:
   pull_request:
