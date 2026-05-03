@@ -3362,10 +3362,10 @@ response = await session.execute(prompt)</code></pre>
               <div class="stack-arrow">↓</div>
               <div class="stack-layer purple">
                 <div class="stack-header">
-                  <span class="stack-title">Helpers</span>
-                  <span class="stack-pkg">amplifier-helpers</span>
+                  <span class="stack-title">Foundation</span>
+                  <span class="stack-pkg">amplifier-foundation</span>
                 </div>
-                <div class="stack-desc">@tool decorator, testing utilities</div>
+                <div class="stack-desc">Bundle primitives, composition, session factory</div>
               </div>
               <div class="stack-arrow">↓</div>
               <div class="stack-layer green">
@@ -3482,7 +3482,7 @@ response = await session.execute(prompt)</code></pre>
         </div>
         <div class="concept">
           <h3>Event System</h3>
-          <p>30+ hookable events covering the agent lifecycle.</p>
+          <p>40+ hookable events covering the agent lifecycle (43 canonical events as of May 2026, verified against <code>amplifier-core/events.rs</code>).</p>
           <div class="event-tags">
             <span>session:*</span>
             <span>provider:*</span>
@@ -3558,6 +3558,81 @@ module-cache/
         <li><strong>Entry points</strong> — Python package metadata (<code>amplifier.modules</code>)</li>
         <li><strong>Module cache</strong> — If <code>amplifier_module_resolution</code> is available</li>
       </ol>
+
+      <h2 id="diagrams">Architecture Diagrams</h2>
+      <p>Each diagram below is generated from a DOT source file committed alongside the rendered output. Sources live in <code>assets/diagrams/</code>; every claim is verified against the upstream source listed in the diagram's caption.</p>
+
+      <div class="diagram-gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 24px; margin: 24px 0;">
+
+        <figure class="card" style="margin: 0; padding: 16px;">
+          <a href="assets/diagrams/architecture-stack.svg" target="_blank" rel="noopener">
+            <img src="assets/diagrams/architecture-stack.png" alt="Amplifier architecture stack: kernel, runtime modules, foundation, bundles, applications" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          </a>
+          <figcaption style="margin-top: 12px;">
+            <strong>Architecture stack</strong>
+            <p style="margin: 4px 0 0; color: var(--text-2); font-size: 14px;">The five tiers and the strict dependency direction. Apps depend on bundles, foundation, modules, and the kernel; modules depend only on the kernel.</p>
+            <p style="margin: 6px 0 0; color: var(--text-2); font-size: 12px;">Source: <code>microsoft/amplifier/docs/REPOSITORY_RULES.md</code></p>
+          </figcaption>
+        </figure>
+
+        <figure class="card" style="margin: 0; padding: 16px;">
+          <a href="assets/diagrams/module-types.svg" target="_blank" rel="noopener">
+            <img src="assets/diagrams/module-types.png" alt="The five primary kernel module types: Provider, Tool, Orchestrator, Context Manager, Hook" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          </a>
+          <figcaption style="margin-top: 12px;">
+            <strong>Module types</strong>
+            <p style="margin: 4px 0 0; color: var(--text-2); font-size: 14px;">The five primary kernel module protocols. Tools are LLM-decided; hooks are code-decided; the orchestrator is the main engine driving the loop.</p>
+            <p style="margin: 6px 0 0; color: var(--text-2); font-size: 12px;">Source: <code>microsoft/amplifier-core/CONTRACTS.md</code></p>
+          </figcaption>
+        </figure>
+
+        <figure class="card" style="margin: 0; padding: 16px;">
+          <a href="assets/diagrams/dependency-rules.svg" target="_blank" rel="noopener">
+            <img src="assets/diagrams/dependency-rules.png" alt="Allowed and forbidden import directions across Amplifier repository types" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          </a>
+          <figcaption style="margin-top: 12px;">
+            <strong>Dependency rules</strong>
+            <p style="margin: 4px 0 0; color: var(--text-2); font-size: 14px;">Allowed (green) and forbidden (red) imports across repo types. Modules cannot reference peers, foundation, or apps — they use the kernel's capability registry instead.</p>
+            <p style="margin: 6px 0 0; color: var(--text-2); font-size: 12px;">Source: <code>microsoft/amplifier/docs/REPOSITORY_RULES.md</code></p>
+          </figcaption>
+        </figure>
+
+        <figure class="card" style="margin: 0; padding: 16px;">
+          <a href="assets/diagrams/session-lifecycle.svg" target="_blank" rel="noopener">
+            <img src="assets/diagrams/session-lifecycle.png" alt="Session lifecycle: startup, execution, teardown" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          </a>
+          <figcaption style="margin-top: 12px;">
+            <strong>Session lifecycle</strong>
+            <p style="margin: 4px 0 0; color: var(--text-2); font-size: 14px;">Bundle load &rarr; mount &rarr; <code>on_session_ready</code> &rarr; execute loop &rarr; teardown. Hooks observe lifecycle events at every step.</p>
+            <p style="margin: 6px 0 0; color: var(--text-2); font-size: 12px;">Source: <code>microsoft/amplifier-core/CONTRACTS.md</code></p>
+          </figcaption>
+        </figure>
+
+        <figure class="card" style="margin: 0; padding: 16px;">
+          <a href="assets/diagrams/bundle-composition.svg" target="_blank" rel="noopener">
+            <img src="assets/diagrams/bundle-composition.png" alt="Bundle composition: foundation base + behavior overlay producing a Mount Plan" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          </a>
+          <figcaption style="margin-top: 12px;">
+            <strong>Bundle composition</strong>
+            <p style="margin: 4px 0 0; color: var(--text-2); font-size: 14px;">The thin-bundle pattern: a base bundle (foundation) plus a behavior overlay produces a Mount Plan that <code>AmplifierSession</code> consumes.</p>
+            <p style="margin: 6px 0 0; color: var(--text-2); font-size: 12px;">Source: <code>microsoft/amplifier-foundation/docs/BUNDLE_GUIDE.md</code></p>
+          </figcaption>
+        </figure>
+
+        <figure class="card" style="margin: 0; padding: 16px;">
+          <a href="assets/diagrams/hook-event-flow.svg" target="_blank" rel="noopener">
+            <img src="assets/diagrams/hook-event-flow.png" alt="Hook event flow: event fan-out to handlers and HookResult action precedence" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          </a>
+          <figcaption style="margin-top: 12px;">
+            <strong>Hook event flow</strong>
+            <p style="margin: 4px 0 0; color: var(--text-2); font-size: 14px;">An event fans out to multiple hook handlers in priority order. <code>HookResult</code> action precedence: <code>deny &gt; ask_user &gt; inject_context &gt; modify &gt; continue</code>.</p>
+            <p style="margin: 6px 0 0; color: var(--text-2); font-size: 12px;">Source: <code>microsoft/amplifier-core/docs/HOOKS_API.md</code></p>
+          </figcaption>
+        </figure>
+
+      </div>
+
+      <p style="color: var(--text-2); font-size: 14px;">Click any diagram to open the SVG. To regenerate after editing the source DOT files, see <code>assets/diagrams/README.md</code>.</p>
 
       <h2 id="external-integration">External App Integration Guide</h2>
       <p>Building applications with amplifier-core follows the kernel design principle: your app provides policy, amplifier provides mechanism.</p>
@@ -3950,7 +4025,7 @@ amplifier update</code></pre>
 
       <!-- Events Tab -->
       <div id="ref-events" class="tab-content">
-        <p>30+ hookable events covering the entire agent lifecycle. Events are logged as JSONL for debugging and observability.</p>
+        <p>40+ hookable events covering the entire agent lifecycle (43 canonical events verified against <code>amplifier-core/events.rs</code> as of May 2026). Events are logged as JSONL for debugging and observability.</p>
 
         <h3>Session Lifecycle</h3>
         <table class="ref-table">
@@ -6055,7 +6130,7 @@ flowchart TD
           <tbody>
             <tr><td>Protocol contracts</td><td>Kernel (core)</td><td class="done">✓ Done</td></tr>
             <tr><td>AmplifierSession</td><td>Kernel (core)</td><td class="done">✓ Done</td></tr>
-            <tr><td>Event system (30+ events)</td><td>Kernel (core)</td><td class="done">✓ Done</td></tr>
+            <tr><td>Event system (40+ events)</td><td>Kernel (core)</td><td class="done">✓ Done</td></tr>
             <tr><td>Testing utilities (TestCoordinator, etc.)</td><td>Kernel (core)</td><td class="done">✓ Done</td></tr>
             <tr><td>Protocol validation utility</td><td>Kernel (core)</td><td class="needed">Needed</td></tr>
             <tr><td>@tool / @hook decorators</td><td>Helpers</td><td class="needed">Needed</td></tr>
@@ -6119,7 +6194,7 @@ async def test_my_tool():
         <div class="task">
           <div class="task-header">
             <span class="task-title">@tool Decorator</span>
-            <span class="task-layer">amplifier-helpers</span>
+            <span class="task-layer">amplifier-foundation</span>
           </div>
           <p>2-minute time-to-first-tool. Reduces boilerplate dramatically.</p>
           <div class="code-block">
@@ -6127,7 +6202,11 @@ async def test_my_tool():
               <span class="code-lang">python</span>
               <button class="copy-btn" onclick="copyCode(this)">Copy</button>
             </div>
-            <pre><code class="language-python"># amplifier_helpers/decorators.py
+            <pre><code class="language-python"># PROPOSED — not yet implemented.
+# Today, tools are plain classes wired via mount(); see "Testing Utilities" above
+# for the current pattern. This decorator would live in amplifier_foundation.
+
+# amplifier_foundation/decorators.py
 def tool(name: str, description: str):
     def decorator(func):
         class GeneratedTool:
@@ -6141,7 +6220,7 @@ def tool(name: str, description: str):
     return decorator
 
 # Usage
-from amplifier_helpers import tool
+from amplifier_foundation.decorators import tool
 
 @tool(name="greet", description="Says hello")
 async def greet(name: str) -> str:
@@ -6206,7 +6285,10 @@ $ amplifier scaffold hook --pattern approval
             <span class="code-lang">python</span>
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
           </div>
-          <pre><code class="language-python"># amplifier_helpers/decorators.py
+          <pre><code class="language-python"># PROPOSED — specification for a future @hook decorator in amplifier_foundation.
+# Today, hooks are plain classes implementing the HookHandler protocol.
+
+# amplifier_foundation/decorators.py
 from functools import wraps
 from amplifier_core.models import HookResult
 
@@ -6232,6 +6314,8 @@ def hook(events: list[str], priority: int = 100):
     return decorator
 
 # Usage
+from amplifier_foundation.decorators import hook
+
 @hook(events=["tool:pre", "tool:post"], priority=10)
 async def my_hook(event: str, data: dict):
     print(f"{event}: {data}")
@@ -6255,9 +6339,10 @@ async def my_hook(event: str, data: dict):
 │   │   └── validation.py     # check_protocol() (NEW)
 │   └── pyproject.toml
 │
-├── amplifier-helpers/        # Convenience utilities (NEW)
-│   ├── amplifier_helpers/
-│   │   ├── decorators.py     # @tool, @hook
+├── amplifier-foundation/     # Bundle primitives + dev helpers
+│   ├── amplifier_foundation/
+│   │   ├── bundles/          # load_bundle(), composition, merge logic
+│   │   ├── decorators.py     # @tool, @hook (developer ergonomics)
 │   │   └── testing.py        # ToolTestHarness
 │   └── pyproject.toml
 │
