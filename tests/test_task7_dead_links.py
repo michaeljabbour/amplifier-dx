@@ -61,15 +61,13 @@ class TestReplacementLinks:
             "docs/05-quick-start.md: recipe/bundle reference should use ./06-layers.md"
         )
 
-    def test_ecosystem_quick_map_next_footer_is_index(self):
+    def test_ecosystem_quick_map_next_footer_is_current_ecosystem(self):
         content = Path("docs/09-ecosystem-quick-map.md").read_text()
         assert "./10-transport-contracts.md" not in content, (
             "docs/09-ecosystem-quick-map.md: dead next-link still present"
         )
-        assert "./00-index.md" in content, (
-            "docs/09-ecosystem-quick-map.md: Next footer should return to Index"
+        # 09 is no longer the last document; it hands off to the full inventory.
+        assert "**Next:** [Current Ecosystem](./12-current-ecosystem.md)" in content, (
+            "docs/09-ecosystem-quick-map.md: Next footer should point to Current Ecosystem"
         )
-        # The footer line should contain the end-of-docs note
-        assert "End of current documentation" in content, (
-            "docs/09-ecosystem-quick-map.md: footer should say 'End of current documentation'"
-        )
+        assert Path("docs/12-current-ecosystem.md").exists()
