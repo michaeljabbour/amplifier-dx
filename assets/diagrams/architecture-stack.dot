@@ -32,13 +32,13 @@ digraph AmplifierStack {
 
     // === LAYERS ===
     apps [
-        label=<<B>Applications</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-app-cli &#8226; amplifierd<BR/>amplifier-chat &#8226; amplifier-voice<BR/>amplifier-app-log-viewer</FONT>>,
+        label=<<B>Applications</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-app-cli &#8226; amplifierd<BR/>amplifier-chat &#8226; amplifier-voice<BR/>amplifier-app-log-viewer &#8226; amplifier-app-tui<BR/>amplifier-unified &#8226; amplifier-distro</FONT>>,
         fillcolor="#dceefc",
         color="#3a86c8"
     ];
 
     bundles [
-        label=<<B>Bundles</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-bundle-* (28+ Microsoft + community)<BR/>recipes &#8226; superpowers &#8226; python-dev<BR/>browser-tester &#8226; design-intelligence &#8230;</FONT>>,
+        label=<<B>Bundles</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-bundle-* (50+ Microsoft + community)<BR/>recipes &#8226; superpowers &#8226; python-dev<BR/>browser-tester &#8226; design-intelligence &#8230;</FONT>>,
         fillcolor="#e2dcfc",
         color="#7059c8"
     ];
@@ -56,10 +56,17 @@ digraph AmplifierStack {
     ];
 
     kernel [
-        label=<<B>Kernel</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-core<BR/>Rust + PyO3 bindings<BR/>session lifecycle, hooks, contracts</FONT>>,
+        label=<<B>Kernel</B><BR/><FONT POINT-SIZE="9" COLOR="#dddddd">amplifier-core<BR/>Rust kernel, Python bindings<BR/>session lifecycle, hooks, contracts</FONT>>,
         fillcolor="#3a3a3a",
         fontcolor="white",
         color="#000000"
+    ];
+
+    devtools [
+        label=<<B>Development Tools &amp; Skills</B><BR/><FONT POINT-SIZE="9" COLOR="#444">Smart Tools (amplifier-smart-tool-*)<BR/>Skills (SKILL.md)<BR/>host-independent: usable from any agent host</FONT>>,
+        fillcolor="#f4f4f4",
+        color="#8a8a8a",
+        style="filled,rounded,dashed"
     ];
 
     // === EDGES (consumer -> dependency) ===
@@ -73,12 +80,12 @@ digraph AmplifierStack {
 
     foundation -> kernel [label=" uses "];
 
-    modules    -> kernel [label=" implements\\nprotocols "];
+    modules    -> kernel [label=" implements\nprotocols "];
 
     // === RANKING ===
     { rank=same; apps; }
     { rank=same; bundles; foundation; }
-    { rank=same; modules; }
+    { rank=same; modules; devtools; }
     { rank=same; kernel; }
 
     // === LEGEND ===

@@ -1,8 +1,8 @@
 # Diagram Sources & Cross-Repo Provenance
 
 This file is the authoritative cross-reference between this DX site's diagrams and the
-sister curriculum site at
-[`amplifier-app-learn`](https://github.com/michaeljabbour/amplifier-app-learn). Both
+sister curriculum site,
+`amplifier-app-learn` (a private repository, so its files are named here but not linked). Both
 projects rely on the same upstream source-of-truth files; this index keeps them honest.
 
 ## The Two Diagram Sets

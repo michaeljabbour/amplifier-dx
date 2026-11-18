@@ -3,8 +3,9 @@
  *
  * Source: github.com/microsoft/amplifier-foundation/docs/BUNDLE_GUIDE.md
  *
- * Shows the "thin bundle" pattern with the foundation library as the base
- * and a behavior overlay adding capabilities on top.
+ * Behavior-first composition: a complete root (Anchors, the recommended base
+ * for a new host; "foundation" remains a selectable legacy root) plus a
+ * behavior, with app bundles and settings providers composed afterwards.
  */
 digraph BundleComposition {
     rankdir=LR;
@@ -30,34 +31,46 @@ digraph BundleComposition {
         penwidth=1.2
     ];
 
-    // === BASE BUNDLE (foundation) ===
+    // === BASE ROOT (Anchors) ===
     subgraph cluster_base {
-        label=<<B>Base bundle</B><BR/><FONT POINT-SIZE="9">amplifier-foundation</FONT>>;
+        label=<<B>Complete root: Anchors</B><BR/><FONT POINT-SIZE="9">amplifier-foundation: bundles/anchors/bundle.md<BR/>(foundation is the selectable legacy root)</FONT>>;
         labeljust=l;
         fontsize=11;
         color="#c87a3a";
         style="rounded,filled";
         fillcolor="#fff5e8";
 
-        base_orch [label=<<B>orchestrator</B><BR/><FONT POINT-SIZE="9">loop-streaming</FONT>>, fillcolor="#fce8d2"];
-        base_prov [label=<<B>provider</B><BR/><FONT POINT-SIZE="9">anthropic</FONT>>, fillcolor="#dceefc"];
-        base_tool [label=<<B>tools</B><BR/><FONT POINT-SIZE="9">filesystem, bash</FONT>>, fillcolor="#dcf2dc"];
-        base_hook [label=<<B>hooks</B><BR/><FONT POINT-SIZE="9">logging, streaming-ui</FONT>>, fillcolor="#e2dcfc"];
-        base_agents [label=<<B>agents</B><BR/><FONT POINT-SIZE="9">explorer, bug-hunter,<BR/>zen-architect, &#8230;</FONT>>, fillcolor="#fcdedc"];
+        base_orch [label=<<B>session</B><BR/><FONT POINT-SIZE="9">orchestrator +<BR/>context manager</FONT>>, fillcolor="#fce8d2"];
+        base_tool [label=<<B>tools</B><BR/><FONT POINT-SIZE="9">tool-recipes, tool-mode, &#8230;</FONT>>, fillcolor="#dcf2dc"];
+        base_hook [label=<<B>hooks</B><BR/><FONT POINT-SIZE="9">hooks-mode, hooks-approval,<BR/>hooks-routing, &#8230;</FONT>>, fillcolor="#e2dcfc"];
+        base_agents [label=<<B>agents</B><BR/><FONT POINT-SIZE="9">anchors:explorer, architect,<BR/>builder, debugger,<BR/>git-ops, researcher</FONT>>, fillcolor="#fcdedc"];
     }
 
-    // === BEHAVIOR OVERLAY ===
+    // === BEHAVIOR ===
     subgraph cluster_behavior {
-        label=<<B>Behavior overlay</B><BR/><FONT POINT-SIZE="9">recipes:behaviors/recipes</FONT>>;
+        label=<<B>Behavior</B><BR/><FONT POINT-SIZE="9">amplifier-bundle-browser-tester<BR/>behaviors/browser-tester.yaml</FONT>>;
         labeljust=l;
         fontsize=11;
         color="#7059c8";
         style="rounded,filled";
         fillcolor="#f7f3ff";
 
-        beh_tool [label=<<B>tool</B><BR/><FONT POINT-SIZE="9">tool-recipes</FONT>>, fillcolor="#dcf2dc"];
-        beh_agent [label=<<B>agent</B><BR/><FONT POINT-SIZE="9">recipe-author</FONT>>, fillcolor="#fcdedc"];
-        beh_ctx  [label=<<B>context</B><BR/><FONT POINT-SIZE="9">recipe-awareness.md</FONT>>, fillcolor="#f0e8ff"];
+        beh_tool [label=<<B>tools / hooks</B><BR/><FONT POINT-SIZE="9">optional</FONT>>, fillcolor="#dcf2dc"];
+        beh_agent [label=<<B>agents</B><BR/><FONT POINT-SIZE="9">agents.include</FONT>>, fillcolor="#fcdedc"];
+        beh_ctx  [label=<<B>context</B><BR/><FONT POINT-SIZE="9">context.include</FONT>>, fillcolor="#f0e8ff"];
+    }
+
+    // === COMPOSED BY THE APP, AFTER THE SELECTED BUNDLE ===
+    subgraph cluster_app {
+        label=<<B>Added by the app</B><BR/><FONT POINT-SIZE="9">composed after the selected bundle</FONT>>;
+        labeljust=l;
+        fontsize=11;
+        color="#3a86c8";
+        style="rounded,filled";
+        fillcolor="#f2f8fe";
+
+        app_beh  [label=<<B>app bundles</B><BR/><FONT POINT-SIZE="9">settings: bundle.app<BR/>amplifier bundle add &#8230; --app</FONT>>, fillcolor="#f0e8ff"];
+        app_prov [label=<<B>providers</B><BR/><FONT POINT-SIZE="9">settings: config.providers,<BR/>or a provider bundle<BR/>(foundation:providers/anthropic-sonnet)</FONT>>, fillcolor="#dceefc"];
     }
 
     // === MOUNT PLAN ===
@@ -79,7 +92,7 @@ digraph BundleComposition {
 
     // === ROOT BUNDLE ===
     root [
-        label=<<B>Your bundle</B><BR/><FONT POINT-SIZE="9">includes:<BR/>&nbsp;&nbsp;- bundle: foundation<BR/>&nbsp;&nbsp;- bundle: recipes:behaviors/recipes</FONT>>,
+        label=<<B>Your bundle</B><BR/><FONT POINT-SIZE="9">(optional supporting root)<BR ALIGN="LEFT"/>includes:<BR ALIGN="LEFT"/>&nbsp;&nbsp;- bundle: git+https://github.com/microsoft/amplifier-foundation@main<BR ALIGN="LEFT"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#subdirectory=bundles/anchors/bundle.md<BR ALIGN="LEFT"/>&nbsp;&nbsp;- bundle: git+https://github.com/microsoft/amplifier-bundle-browser-tester@main<BR ALIGN="LEFT"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#subdirectory=behaviors/browser-tester.yaml<BR ALIGN="LEFT"/></FONT>>,
         fillcolor="#fffae0",
         shape=note
     ];
@@ -89,13 +102,14 @@ digraph BundleComposition {
     root -> beh_tool  [lhead=cluster_behavior, label=" includes "];
 
     base_orch -> plan;
-    base_prov -> plan;
     base_tool -> plan;
     base_hook -> plan;
     base_agents -> plan;
     beh_tool -> plan;
     beh_agent -> plan;
     beh_ctx -> plan;
+    app_beh -> plan [style=dashed];
+    app_prov -> plan [style=dashed];
 
     plan -> session [label=" creates "];
 
@@ -104,10 +118,12 @@ digraph BundleComposition {
         shape=plaintext,
         label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#fffaf0">
             <TR><TD COLSPAN="2" BGCOLOR="#f0e8d8" ALIGN="LEFT"><B>Merge rules</B></TD></TR>
-            <TR><TD ALIGN="LEFT">tools, hooks</TD><TD ALIGN="LEFT">merged by module ID</TD></TR>
-            <TR><TD ALIGN="LEFT">orchestrator, provider</TD><TD ALIGN="LEFT">last writer wins</TD></TR>
+            <TR><TD ALIGN="LEFT">providers, tools, hooks</TD><TD ALIGN="LEFT">merged by module ID</TD></TR>
+            <TR><TD ALIGN="LEFT">session (orchestrator, context)</TD><TD ALIGN="LEFT">deep merge, later wins</TD></TR>
+            <TR><TD ALIGN="LEFT">spawn</TD><TD ALIGN="LEFT">deep merge</TD></TR>
+            <TR><TD ALIGN="LEFT">agents</TD><TD ALIGN="LEFT">merged by name, later wins</TD></TR>
             <TR><TD ALIGN="LEFT">context</TD><TD ALIGN="LEFT">accumulated</TD></TR>
-            <TR><TD ALIGN="LEFT">instructions</TD><TD ALIGN="LEFT">replaced</TD></TR>
+            <TR><TD ALIGN="LEFT">instructions</TD><TD ALIGN="LEFT">replaced, later wins</TD></TR>
         </TABLE>>
     ];
 }

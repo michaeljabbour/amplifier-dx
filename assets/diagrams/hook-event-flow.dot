@@ -36,7 +36,7 @@ digraph HookFlow {
     ];
 
     event [
-        label=<<B>event:</B> tool:pre<BR/><FONT POINT-SIZE="9">data: { tool, input }</FONT>>,
+        label=<<B>event:</B> tool:pre<BR/><FONT POINT-SIZE="9">data: { tool_name, tool_input }</FONT>>,
         fillcolor="#fff8d2",
         shape=cds,
         width=2.4
@@ -51,9 +51,9 @@ digraph HookFlow {
         style="rounded,filled";
         fillcolor="#fafafa";
 
-        h_log    [label="hooks-logging\\n(priority 0)", fillcolor="#e2dcfc"];
-        h_redact [label="hooks-redaction\\n(priority 10)", fillcolor="#e2dcfc"];
-        h_approval [label="hooks-approval\\n(priority 20)", fillcolor="#e2dcfc"];
+        h_log    [label="hooks-logging\n(priority 0)", fillcolor="#e2dcfc"];
+        h_redact [label="hooks-redaction\n(priority 10)", fillcolor="#e2dcfc"];
+        h_approval [label="hooks-approval\n(priority 20)", fillcolor="#e2dcfc"];
     }
 
     // === HOOK ACTIONS ===
@@ -65,11 +65,11 @@ digraph HookFlow {
         style="rounded,filled";
         fillcolor="#fafafa";
 
-        a_continue [label="continue\\nproceed normally", fillcolor="#dcf2dc"];
-        a_modify   [label="modify\\ntransform data", fillcolor="#dceefc"];
-        a_inject   [label="inject_context\\nadd msg to agent", fillcolor="#fce8d2"];
-        a_ask      [label="ask_user\\napproval gate", fillcolor="#fff8d2"];
-        a_deny     [label="deny\\nblock the op", fillcolor="#fcdedc"];
+        a_continue [label="continue\nproceed normally", fillcolor="#dcf2dc"];
+        a_modify   [label="modify\ntransform data", fillcolor="#dceefc"];
+        a_inject   [label="inject_context\nadd msg to agent", fillcolor="#fce8d2"];
+        a_ask      [label="ask_user\napproval gate", fillcolor="#fff8d2"];
+        a_deny     [label="deny\nblock the op", fillcolor="#fcdedc"];
     }
 
     // === RESULT NODE ===
@@ -95,7 +95,7 @@ digraph HookFlow {
     a_modify -> result;
     a_inject -> result;
     a_ask -> result [label=" if approved "];
-    a_deny -> result [label=" \u2717 blocked ", color="#c8323a", fontcolor="#c8323a"];
+    a_deny -> result [label=" ✗ blocked ", color="#c8323a", fontcolor="#c8323a"];
 
     // === PRECEDENCE NOTE ===
     precedence [

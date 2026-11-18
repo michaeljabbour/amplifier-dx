@@ -40,25 +40,25 @@ digraph DependencyRules {
     app    [label=<<B>amplifier-app-cli</B><BR/><FONT POINT-SIZE="8">Application</FONT>>, fillcolor="#dceefc"];
 
     // === ALLOWED EDGES (green) ===
-    foundation -> kernel [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
-    foundation -> entry  [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+    foundation -> kernel [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
+    foundation -> entry  [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
 
-    module_a -> kernel [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
-    module_b -> kernel [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+    module_a -> kernel [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
+    module_b -> kernel [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
 
-    bundle -> foundation [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
-    bundle -> module_a   [color="#2e8b2e", label=" \u2713 references ", fontcolor="#2e8b2e"];
+    bundle -> foundation [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
+    bundle -> module_a   [color="#2e8b2e", label=" ✓ references ", fontcolor="#2e8b2e"];
 
-    app -> foundation [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
-    app -> bundle     [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
-    app -> module_a   [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
-    app -> kernel     [color="#2e8b2e", label=" \u2713 ", fontcolor="#2e8b2e"];
+    app -> foundation [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
+    app -> bundle     [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
+    app -> module_a   [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
+    app -> kernel     [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
 
     // === FORBIDDEN EDGES (red, dashed) ===
-    module_a -> module_b   [color="#c8323a", style=dashed, label=" \u2717 modules\\ncannot reference\\npeers ", fontcolor="#c8323a"];
-    module_a -> foundation [color="#c8323a", style=dashed, label=" \u2717 ", fontcolor="#c8323a"];
-    module_a -> app        [color="#c8323a", style=dashed, label=" \u2717 ", fontcolor="#c8323a"];
-    kernel   -> foundation [color="#c8323a", style=dashed, label=" \u2717 kernel knows nothing\\nbelow entry point ", fontcolor="#c8323a"];
+    module_a -> module_b   [color="#c8323a", style=dashed, label=" ✗ modules\ncannot reference\npeers ", fontcolor="#c8323a"];
+    module_a -> foundation [color="#c8323a", style=dashed, label=" ✗ ", fontcolor="#c8323a"];
+    module_a -> app        [color="#c8323a", style=dashed, label=" ✗ ", fontcolor="#c8323a"];
+    kernel   -> foundation [color="#c8323a", style=dashed, label=" ✗ kernel knows nothing\nbelow entry point ", fontcolor="#c8323a"];
 
     // === CALLOUT ===
     note [

@@ -13,6 +13,7 @@
  *
  * Verified 2026-05-02 by core:core-expert (cross-checked against
  * amplifier-app-learn/docs/state-of-amplifier-2026-05/dot/03-module-types.dot).
+ * Re-verified 2026-11-18 against amplifier-core 2.0.2.
  */
 digraph ModuleTypes {
     rankdir=LR;
