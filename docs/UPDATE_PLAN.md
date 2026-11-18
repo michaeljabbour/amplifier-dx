@@ -1,3 +1,5 @@
+> **Historical record.** This plan is dated December 21, 2024 in its header (committed 2025-12-21). The commands and APIs in it predate the bundle system and are not current; for current reference see [12-current-ecosystem.md](./12-current-ecosystem.md) and the CLI section of the site.
+
 # Amplifier DX Update Plan
 ## Based on amplifier-simplecli Implementation & Skills Development
 

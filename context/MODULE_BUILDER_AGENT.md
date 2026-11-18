@@ -25,7 +25,7 @@ CLI is optional.
 
 ```
 ┌────────────────────────────────────────────────────────────┐
-│ APPLICATION LAYER (amplifier-app-cli, amplifier-desktop)   │
+│ APPLICATION LAYER (amplifier-app-cli, amplifierd)          │
 │ • UX systems, settings, bundle loading, @mentions         │
 ├────────────────────────────────────────────────────────────┤
 │ KERNEL LAYER (amplifier-core)                              │
@@ -737,14 +737,14 @@ The Amplifier ecosystem follows strict rules about where content lives. See [REP
 ✅ CORRECT: Bundle in your app repo, optionally share separately
 ```
 
-### Real-World Example: Desktop App Bundle
+### Example: An Application Bundle
 
-Here's how the Amplifier Desktop bundle is structured:
+Here's how an application bundle can be structured (illustrative):
 
 ```yaml
-# amplifier-desktop/sidecar/bundle.yaml
+# my-app/bundle.yaml
 bundle:
-  name: amplifier-desktop
+  name: my-app
   version: 1.0.0
   description: Desktop application bundle
 

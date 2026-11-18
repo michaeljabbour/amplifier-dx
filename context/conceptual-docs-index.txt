@@ -15,10 +15,15 @@ DOCUMENT INDEX
 04-what-happens-when.md - Concrete scenarios traced step by step
 05-quick-start.md - 5-minute understanding for busy people
 06-layers.md      - Progressive depth: Use → Configure → Extend → Embed → Understand
-07-desktop-case-study.md - Real-world embedding example (Amplifier Desktop)
+07-desktop-case-study.md - Real-world embedding example (amplifierd)
 08-architecture-boundaries.md - What belongs where: app, kernel, and module layers
 09-ecosystem-quick-map.md - Which repo owns what, dependency direction, change placement
+10-philosophy.md  - Deliberate AI-augmented engineering: the principles behind the design
+11-developing-judgment.md - Trust, intuition, and calibrated confidence when working with AI agents
+12-current-ecosystem.md - Verified inventory: applications, bundles, runtime modules, Smart Tools, community
 13-working-with-ai.md - Practical guide: vibe coding vs structured AI-assisted development
+14-built-with-amplifier.md - Case study: a curriculum that teaches Amplifier, maintained by Amplifier agents
+15-a-working-setup.md - What one real install composes: root, behaviors, community capabilities, misleading names
 
 
 READING PATHS BY GOAL
@@ -53,8 +58,8 @@ KEY CONCEPTS COVERED
    - Hooks always fire
    - Events are ordered
    - Context is append-only
-   - Tools are isolated
-   - Provider responses are immutable
+   - Tools are isolated (a design rule, not a sandbox)
+   - Provider responses are treated as immutable (a convention, not a kernel guarantee)
    - Configuration hierarchy is deterministic
    - Hooks can block, tools cannot
 

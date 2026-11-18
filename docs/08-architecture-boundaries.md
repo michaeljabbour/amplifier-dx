@@ -11,9 +11,12 @@ verified, current picture of the layers and allowed dependency directions.
 [`amplifier-app-cli`](https://github.com/microsoft/amplifier-app-cli) shows the three-layer
 architecture in action: Application → Foundation → Core.
 
-**Kernel implementation note:** `amplifier-core` is implemented in Rust with PyO3
+**Kernel implementation note:** `amplifier-core` 2.0 is implemented in Rust with PyO3
 Python bindings. Top-level imports (`from amplifier_core import ...`) resolve to
-Rust-backed types by default; the public API and contracts described here are unchanged.
+Rust-backed types. The Python protocols and event names are unchanged from 1.x; 2.0
+added optional fields and changed Rust construction APIs. Two behaviours differ from
+the old pure-Python session: `execute()` requires `initialize()` first, and the
+`loader=` constructor argument is ignored.
 
 ---
 
@@ -77,11 +80,11 @@ The **application** owns everything user-facing and environment-specific:
 
 | Responsibility | Example | Why App Layer |
 |----------------|---------|---------------|
-| **UX Systems** | CLIApprovalSystem, WebSocketDisplay | Apps decide how to show things |
-| **Module Resolution Policy** | CompositeModuleResolver | Apps decide where to find modules |
+| **UX Systems** | CLIApprovalSystem, CLIDisplaySystem | Apps decide how to show things |
+| **Module Resolution Policy** | AppModuleResolver | Apps decide where to find modules |
 | **Settings Persistence** | ~/.amplifier/settings.yaml | Apps decide where to store config |
-| **Bundle Loading** | BundleLoader, load_bundle() | Apps decide what configurations exist |
-| **@Mention Processing** | MentionResolver | Apps decide what @mentions mean |
+| **Bundle Loading** | load_bundle(), BundleRegistry (amplifier-foundation) | Apps decide what configurations exist |
+| **@Mention Processing** | AppMentionResolver | Apps decide what @mentions mean |
 | **Capability Registration** | session.spawn, broadcast | Apps inject their behaviors |
 | **Transport** | WebSocket, REST, Console | Apps decide how to communicate |
 
@@ -97,7 +100,7 @@ The **kernel** owns coordination and contracts:
 | **Module Coordination** | ModuleCoordinator.mount() | Standard way to compose modules |
 | **Hook Dispatch** | HookRegistry.emit() | Standard event ordering |
 | **Capability Registry** | coordinator.register_capability() | Standard extension point |
-| **Config Validation** | Validate mount plan structure | Standard contract enforcement |
+| **Config Validation** | Requires `session.orchestrator` and `session.context`; full structural checks via `amplifier_core.validation.MountPlanValidator` | Standard contract enforcement |
 
 **Key principle**: If it's about coordinating modules, it's kernel-layer.
 
@@ -107,9 +110,9 @@ The **kernel** owns coordination and contracts:
 
 | Responsibility | Example | Why Module Layer |
 |----------------|---------|------------------|
-| **Tool Execution** | tool-filesystem, tool-memory | Reusable actions |
+| **Tool Execution** | tool-filesystem, tool-bash | Reusable actions |
 | **Provider Communication** | provider-anthropic | LLM API abstraction |
-| **Hook Behavior** | hooks-logging, hooks-event-broadcast | Reusable event handling |
+| **Hook Behavior** | hooks-logging, hooks-approval | Reusable event handling |
 | **Orchestration Logic** | loop-streaming | Execution patterns |
 | **Context Management** | context-simple | Message storage strategies |
 
@@ -128,20 +131,38 @@ Ask these questions to determine where code belongs:
 ```python
 # App layer - knows about console
 class CLIApprovalSystem:
-    def request_approval(self, tool_call):
-        console.print(f"Allow {tool_call.name}? [y/n]")
-        return input() == 'y'
+    async def request_approval(self, prompt, options, timeout, default):
+        console.print(f"{prompt} {options}")
+        choice = input()
+        return choice if choice in options else default
 ```
 
 **No → Kernel or Module Layer**
 
 ```python
-# Kernel layer - just coordinates
-def emit(self, event: str, data: dict):
-    for hook in self.hooks[event]:
-        result = await hook.handler(event, data)
+# Kernel layer - just coordinates (sketch of HookRegistry.emit)
+# A Python paraphrase of the Rust dispatch logic, not real kernel code.
+async def emit(self, event: str, data: dict) -> HookResult:
+    ask_user = None
+    injections = []
+    for handler in self.handlers_for(event):        # sorted by priority, lowest first
+        try:
+            result = await handler(event, data)
+        except Exception:
+            continue                                 # logged and skipped
         if result.action == "deny":
-            return result
+            return result                            # short-circuit
+        if result.action == "modify" and result.data is not None:
+            data = result.data                       # chained to the next handler
+        if result.action == "inject_context":
+            injections.append(result)
+        if result.action == "ask_user" and ask_user is None:
+            ask_user = result                        # first one wins
+    if ask_user:
+        return ask_user
+    if injections:
+        return merge(injections)
+    return HookResult(action="continue", data=data)
 ```
 
 ### "Does this define HOW to do something vs WHAT to do?"
@@ -149,10 +170,11 @@ def emit(self, event: str, data: dict):
 **HOW (mechanism) → Kernel Layer**
 
 ```python
-# Kernel - how hooks dispatch
-async def dispatch_hooks(self, event, data):
-    for hook in sorted(self.hooks, key=lambda h: h.priority):
-        await hook.handler(event, data)
+# Kernel - how hooks dispatch (same sketch as above, abridged)
+async def emit(self, event, data):
+    for handler in self.handlers_for(event):   # this event's handlers, lowest priority number first
+        result = await handler(event, data)
+        ...                                    # deny / ask_user / inject_context / modify handling
 ```
 
 **WHAT (policy) → Application Layer**
@@ -214,13 +236,16 @@ Apps load bundles; foundation resolves modules.
 
 ```python
 # APP LAYER - decides what bundle to load
-bundle = await load_bundle("foundation:bundles/desktop")
+bundle = await load_bundle(
+    "git+https://github.com/microsoft/amplifier-foundation@main"
+    "#subdirectory=bundles/anchors/bundle.md"
+)
 
-# FOUNDATION LAYER - resolves module sources
-# (internal to foundation)
+# FOUNDATION LAYER - resolves module sources, downloads and activates modules
+prepared = await bundle.prepare()
 
-# KERNEL LAYER - mounts modules to coordinator
-session = await bundle.prepare().create_session()
+# KERNEL LAYER - the session mounts the modules on its coordinator
+session = await prepared.create_session()
 ```
 
 ### Pattern 3: Event Handling
@@ -228,16 +253,16 @@ session = await bundle.prepare().create_session()
 Kernel dispatches; modules react; apps display.
 
 ```python
-# KERNEL LAYER - dispatches events
-await hooks.emit("tool:post", {"tool": "bash", "result": output})
+# ORCHESTRATOR MODULE emits; KERNEL LAYER dispatches
+await hooks.emit("tool:post", {"tool_name": "bash", "tool_input": tool_input, "tool_result": result})
 
 # MODULE LAYER - logs the event
 async def on_tool_post(event, data):
-    logger.info(f"Tool {data['tool']} completed")
+    logger.info(f"Tool {data['tool_name']} completed")
 
 # APP LAYER - displays to user
 async def on_tool_post(event, data):
-    console.print(f"✓ {data['tool']}")  # CLI-specific display
+    console.print(f"✓ {data['tool_name']}")  # CLI-specific display
 ```
 
 ---
@@ -313,13 +338,13 @@ broadcast = coordinator.get_capability("broadcast")
 │  │  ────────────────                  ────────────────                  │   │
 │  │  • CLIApprovalSystem               • YourApprovalSystem              │   │
 │  │  • CLIDisplaySystem                • YourDisplaySystem               │   │
-│  │  • ConsoleRenderer                 • YourRenderer                    │   │
-│  │  • BundleLoader                   • YourBundleLoader               │   │
-│  │  • MentionResolver                 • YourMentionResolver             │   │
+│  │  • AppSettings                     • YourSettings                    │   │
+│  │  • AppModuleResolver               • YourModuleResolver              │   │
+│  │  • AppMentionResolver              • YourMentionResolver             │   │
 │  └─────────────────────────────────────────────────────────────────────┘   │
 │                                   │                                         │
 │                    register_capability("broadcast", ...)                    │
-│                    register_capability("approval", ...)                     │
+│       AmplifierSession(config, approval_system=..., display_system=...)     │
 │                                   │                                         │
 └───────────────────────────────────┼─────────────────────────────────────────┘
                                     │
@@ -332,11 +357,12 @@ broadcast = coordinator.get_capability("broadcast")
 │  │  • AmplifierSession.execute()                                        │   │
 │  │  • ModuleCoordinator.mount() / .get()                                │   │
 │  │  • HookRegistry.emit() / .register()                                 │   │
-│  │  • CapabilityRegistry                                                │   │
+│  │  • ModuleCoordinator.register_capability() / .get_capability()       │   │
 │  │  • Config validation                                                 │   │
 │  └─────────────────────────────────────────────────────────────────────┘   │
 │                                   │                                         │
-│              Mount Plan: {orchestrator, providers, tools, hooks}            │
+│  Mount Plan: {session: {orchestrator, context}, providers, tools, hooks,    │
+│               agents}                                                       │
 │                                   │                                         │
 └───────────────────────────────────┼─────────────────────────────────────────┘
                                     │
@@ -353,7 +379,8 @@ broadcast = coordinator.get_capability("broadcast")
 │  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘    │
 │                                                                             │
 │  All modules follow protocols defined by amplifier-core                     │
-│  All modules are loaded via mount() function                                │
+│  Python modules are loaded via their mount() function (modules declaring    │
+│  a wasm, grpc or rust transport in amplifier.toml use the matching loader)  │
 │  All modules are transport-agnostic                                         │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -369,7 +396,7 @@ broadcast = coordinator.get_capability("broadcast")
 - [ ] Kernel layer validates config structure (not content policy)
 - [ ] Kernel layer dispatches hooks (doesn't know what they do)
 - [ ] Kernel layer coordinates modules (doesn't implement capabilities)
-- [ ] Modules implement protocols (Tool, Hook, Provider, etc.)
+- [ ] Modules implement protocols (Tool, HookHandler, Provider, etc.)
 - [ ] Modules use capabilities, not imports from apps
 - [ ] Modules are transport-agnostic (no WebSocket/console/HTTP knowledge)
 

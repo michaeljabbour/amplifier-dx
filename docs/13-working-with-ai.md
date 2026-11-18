@@ -121,7 +121,7 @@ This step catches architectural problems before they become code. In Amplifier's
 
 ### Specialist Agents and Implementation
 
-With the spec complete, implementation becomes mechanical. Amplifier's structured mode uses specialist agents — each focused on a narrow task (writing tests, implementing a module, reviewing boundaries). The goal is to make implementation boring. All the interesting decisions happened in the previous steps.
+With the spec complete, implementation becomes mechanical. Amplifier delegates to specialist agents through the `delegate` tool (for example `foundation:zen-architect`, `foundation:modular-builder`, `foundation:bug-hunter`) — each focused on a narrow task (writing tests, implementing a module, reviewing boundaries). The modes bundle adds `/plan`, `/careful` and `/explore` for changing how a session behaves. The goal is to make implementation boring. All the interesting decisions happened in the previous steps.
 
 ```python
 # Implement exactly what the spec says
@@ -232,7 +232,7 @@ This is not superficial — these are real cognitive benefits. Vibe coding remov
 
 The same qualities that make vibe coding feel fast — no boundaries, no contracts, no verification — are what make it slow when the system grows. The low friction that made iteration easy at 200 lines becomes the absence of guardrails at 2,000 lines. The "no upfront obligation" that felt liberating becomes "no definition of done" that feels exhausting.
 
-The dopamine of "it works!" gradually becomes the anxiety of "why did it break?" Not because vibe coding is bad, but because unstructured systems accumulate decisions that nobody explicitly made. Those implicit decisions interact in ways no one predicted, and debugging implicit decisions is the hardest kind of debugging there is.
+The dopamine of "it works!" gradually becomes the anxiety of "why did it break?" The cause is not the style itself: unstructured systems accumulate decisions that nobody explicitly made. Those implicit decisions interact in ways no one predicted, and debugging implicit decisions is the hardest kind of debugging there is.
 
 **The honest comparison:**
 

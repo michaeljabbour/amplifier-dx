@@ -2,7 +2,7 @@
 
 Learn by example. Here are real scenarios traced through the system, step by step.
 
-**Validated in practice:** All scenarios below match the behavior observed in [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli), which implements these exact patterns with 14 modules.
+**Verified against:** the scenarios below were checked against the amplifier-core 2.0.2 source and the installed amplifier-app-cli 2026.09.06.
 
 ---
 
@@ -15,19 +15,20 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │  WHAT HAPPENS                                                       │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│  1. prompt:submit                                                   │
+│  1. execution:start, then prompt:submit                             │
+│     └─ (session:start first, on the first prompt of a session)      │
 │     └─ Message added to Context: {role: "user", content: "2+2?"}    │
 │                                                                     │
 │  2. Orchestrator calls Provider                                     │
-│     └─ provider:request fired                                       │
+│     └─ provider:request fired, then llm:request                     │
 │     └─ Messages sent to LLM API                                     │
 │                                                                     │
 │  3. LLM responds (no tool calls)                                    │
-│     └─ provider:response fired                                      │
+│     └─ llm:response fired                                           │
 │     └─ Response: "2+2 equals 4."                                    │
 │                                                                     │
 │  4. Orchestrator sees no tool calls → exit loop                     │
-│     └─ prompt:complete fired                                        │
+│     └─ orchestrator:complete fired, then execution:end              │
 │                                                                     │
 │  5. Response returned                                               │
 │     └─ "2+2 equals 4."                                              │
@@ -40,6 +41,8 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 
 **Key insight:** Simple questions that don't need tools are fast. One LLM call, done.
 
+**About the event names:** the LLM call is bracketed by `provider:request` (from the orchestrator) and `llm:request` / `llm:response` (from the provider). `provider:response` is a canonical name listed in the orchestrator contract, but the current `loop-streaming` orchestrator does not emit it, so these scenarios don't show it.
+
 ---
 
 ## Scenario 2: File Operation
@@ -51,14 +54,15 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │  WHAT HAPPENS                                                       │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│  1. prompt:submit                                                   │
+│  1. execution:start, then prompt:submit                             │
 │     └─ Message added to Context                                     │
 │                                                                     │
 │  2. Orchestrator calls Provider (1st call)                          │
-│     └─ provider:request                                             │
+│     └─ provider:request, then llm:request                           │
 │     └─ LLM thinks: "I need to list files"                           │
-│     └─ provider:response (with tool_calls)                          │
-│        └─ tool_calls: [{name: "list_files", input: {pattern:"*.py"}}] │
+│     └─ llm:response (with tool_calls)                               │
+│        └─ tool_calls: [{id, name: "list_files",                     │
+│                         arguments: {pattern: "*.py"}}]              │
 │                                                                     │
 │  3. Orchestrator executes tool                                      │
 │     └─ tool:pre fired (hooks see this)                              │
@@ -68,16 +72,18 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │     └─ tool:post fired (hooks see result)                           │
 │                                                                     │
 │  4. Result added to Context                                         │
-│     └─ {role: "tool", content: "main.py, utils.py, config.py"}      │
+│     └─ {role: "tool", tool_call_id: "...",                          │
+│         content: "main.py, utils.py, config.py"}                    │
 │                                                                     │
 │  5. Orchestrator calls Provider (2nd call)                          │
 │     └─ provider:request (now with tool result in context)           │
+│     └─ llm:request                                                  │
 │     └─ LLM: "I found the files, let me format the answer"           │
-│     └─ provider:response (no tool_calls)                            │
+│     └─ llm:response (no tool_calls)                                 │
 │        └─ "Found 3 Python files: main.py, utils.py, config.py"      │
 │                                                                     │
 │  6. No more tool calls → exit loop                                  │
-│     └─ prompt:complete                                              │
+│     └─ orchestrator:complete, then execution:end                    │
 │                                                                     │
 │  TOTAL TOOL CALLS: 1                                                │
 │  TOTAL LLM CALLS: 2                                                 │
@@ -98,11 +104,12 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │  WHAT HAPPENS                                                       │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│  1. prompt:submit                                                   │
+│  1. execution:start, then prompt:submit                             │
 │                                                                     │
 │  2. Provider call #1                                                │
 │     └─ LLM thinks: "I need to read the file first"                  │
-│     └─ tool_calls: [{name: "read_file", input: {path: "config.py"}}]│
+│     └─ tool_calls: [{id, name: "read_file",                         │
+│                      arguments: {path: "config.py"}}]               │
 │                                                                     │
 │  3. Tool: read_file                                                 │
 │     └─ tool:pre → (hooks approve)                                   │
@@ -112,7 +119,8 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │  4. Provider call #2                                                │
 │     └─ LLM analyzes file contents                                   │
 │     └─ LLM thinks: "I see os.getenv() calls, let me grep for more"  │
-│     └─ tool_calls: [{name: "bash", input: {command: "grep -n 'getenv' config.py"}}] │
+│     └─ tool_calls: [{id, name: "bash",                              │
+│          arguments: {command: "grep -n 'getenv' config.py"}}]       │
 │                                                                     │
 │  5. Tool: bash                                                      │
 │     └─ tool:pre → (hooks check command safety)                      │
@@ -146,11 +154,12 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │  WHAT HAPPENS (with a safety hook)                                  │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│  1. prompt:submit                                                   │
+│  1. execution:start, then prompt:submit                             │
 │                                                                     │
 │  2. Provider call #1                                                │
 │     └─ LLM: "I'll use bash to delete files"                         │
-│     └─ tool_calls: [{name: "bash", input: {command: "rm -rf /tmp/*"}}] │
+│     └─ tool_calls: [{id, name: "bash",                              │
+│                      arguments: {command: "rm -rf /tmp/*"}}]        │
 │                                                                     │
 │  3. Tool execution BLOCKED                                          │
 │     └─ tool:pre fired                                               │
@@ -185,10 +194,10 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │  WHAT HAPPENS (streaming)                                           │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│  1. prompt:submit                                                   │
+│  1. execution:start, then prompt:submit                             │
 │                                                                     │
 │  2. Provider call with streaming                                    │
-│     └─ provider:request                                             │
+│     └─ provider:request, then llm:request                           │
 │     └─ Connection opened to LLM API                                 │
 │                                                                     │
 │  3. Tokens stream in                                                │
@@ -206,9 +215,9 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │     └─ User sees text appearing                                     │
 │                                                                     │
 │  5. Stream completes                                                │
-│     └─ provider:response (full message assembled)                   │
+│     └─ llm:response (full message assembled)                        │
 │     └─ No tool_calls → exit loop                                    │
-│     └─ prompt:complete                                              │
+│     └─ orchestrator:complete, then execution:end                    │
 │                                                                     │
 │  USER EXPERIENCE: Text appears word by word                         │
 │  LATENCY TO FIRST TOKEN: ~200-500ms                                 │
@@ -221,7 +230,7 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 
 ---
 
-## Scenario 6: Bundle Inheritance
+## Scenario 6: Bundle Composition
 
 **You run:** `amplifier run --bundle team-coding "Fix the bug in auth.py"`
 
@@ -232,34 +241,38 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │                                                                     │
 │  1. Bundle "team-coding" requested                                  │
 │                                                                     │
-│  2. Bundle chain resolved                                           │
+│  2. Includes resolved (there is no "extends:" key)                  │
 │     └─ Load team-coding.md                                          │
-│     └─ See: extends: "coding-base"                                  │
-│     └─ Load coding-base.md                                          │
-│     └─ See: extends: "default"                                      │
-│     └─ Load default.md                                              │
+│     └─ See: includes: [coding-base, a behavior]                     │
+│     └─ Load coding-base.md and the behavior                         │
+│     └─ Load whatever they include in turn                           │
 │                                                                     │
-│  3. Bundles merged (child overrides parent)                         │
-│     └─ default       → base provider, basic tools                   │
-│     └─ + coding-base → adds code tools, system prompt for coding    │
-│     └─ + team-coding → adds team hooks, specific model              │
+│  3. Bundles composed (includes first, the includer wins)            │
+│     └─ coding-base   → orchestrator, context, code tools            │
+│     └─ + behavior    → its tools, agents and context                │
+│     └─ + team-coding → adds team hooks and the instruction          │
+│     └─ + app bundles and providers from settings (app layer)        │
 │                                                                     │
 │  4. Final mount plan                                                │
 │     {                                                               │
-│       provider: "provider-anthropic" (from team-coding),            │
-│       model: "claude-opus-4-5-20251101" (from team-coding),                     │
+│       session: {orchestrator: ..., context: ...},                   │
+│       providers: [                                                  │
+│         {module: "provider-anthropic",       (from settings)        │
+│          config: {default_model: "<model>"}}                        │
+│       ],                                                            │
 │       tools: [                                                      │
-│         "tool-filesystem",   (from coding-base)                     │
-│         "tool-bash",         (from coding-base)                     │
-│         "tool-grep",         (from coding-base)                     │
-│         "tool-code-review"   (from team-coding)                     │
+│         {module: "tool-filesystem"},   (from coding-base)           │
+│         {module: "tool-bash"},         (from coding-base)           │
+│         {module: "tool-search"},       (from coding-base)           │
+│         {module: "tool-code-review"}   (from team-coding)           │
 │       ],                                                            │
 │       hooks: [                                                      │
-│         "hooks-logging",     (from default)                         │
-│         "hooks-team-audit"   (from team-coding)                     │
-│       ],                                                            │
-│       system_prompt: "You are a senior developer..." (merged)       │
+│         {module: "hooks-logging"},     (from coding-base)           │
+│         {module: "hooks-team-audit"}   (from team-coding)           │
+│       ]                                                             │
 │     }                                                               │
+│     (the mount plan has no top-level model or system_prompt         │
+│      key; the model is part of the provider's config)               │
 │                                                                     │
 │  5. Session created with merged configuration                       │
 │     └─ All modules loaded and mounted                               │
@@ -268,7 +281,7 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-**Key insight:** Inheritance lets you layer configurations. Teams can share a base while customizing their own needs.
+**Key insight:** Composition lets you layer configurations. Teams can share a base and a set of behaviors while customizing their own needs. Merge rules: `session` deep-merges, `providers`/`tools`/`hooks` merge by module ID, `agents` merge by name, `context` accumulates, and the instruction (markdown body) of the includer replaces the others.
 
 ---
 
@@ -281,10 +294,11 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │  WHAT HAPPENS (error case)                                          │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│  1. prompt:submit                                                   │
+│  1. execution:start, then prompt:submit                             │
 │                                                                     │
 │  2. Provider call #1                                                │
-│     └─ tool_calls: [{name: "bash", input: {command: "npm test"}}]   │
+│     └─ tool_calls: [{id, name: "bash",                              │
+│                      arguments: {command: "npm test"}}]             │
 │                                                                     │
 │  3. Tool: bash                                                      │
 │     └─ tool:pre → approved                                          │
@@ -294,7 +308,8 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │     └─ tool:post → result includes error info                       │
 │                                                                     │
 │  4. Error result added to Context                                   │
-│     └─ {role: "tool", content: "Exit code 1: 3 tests failed..."}    │
+│     └─ {role: "tool", tool_call_id: "...",                          │
+│         content: "Exit code 1: 3 tests failed..."}                  │
 │                                                                     │
 │  5. Provider call #2                                                │
 │     └─ LLM sees the failure                                         │
@@ -324,12 +339,13 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
 │  ON CLOSE:                                                          │
-│  1. session:end event fires                                         │
-│  2. Transcript saved to disk                                        │
+│  1. App calls session.cleanup()                                     │
+│  2. session:end event fires (once)                                  │
+│  3. Module cleanup callables run in reverse order                   │
+│                                                                     │
+│  Saving is done by the app and hook modules, not the kernel:        │
 │     └─ ~/.amplifier/projects/xyz/sessions/abc/transcript.jsonl      │
-│  3. Events saved                                                    │
 │     └─ ~/.amplifier/projects/xyz/sessions/abc/events.jsonl          │
-│  4. Metadata saved                                                  │
 │     └─ ~/.amplifier/projects/xyz/sessions/abc/metadata.json         │
 │                                                                     │
 │  ON REOPEN:                                                         │
@@ -339,9 +355,10 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 │  3. Session restored                                                │
 │     └─ Load transcript.jsonl into Context                           │
 │     └─ Recreate message history                                     │
-│  4. New session:start event                                         │
-│     └─ Fresh session ID                                             │
-│     └─ But with existing context loaded                             │
+│  4. session:resume event (not session:start)                        │
+│     └─ Same session ID: the app creates the session with            │
+│        is_resumed=True and the stored session_id                    │
+│     └─ Fires on the first execute() after reopening                 │
 │  5. Ready to continue conversation                                  │
 │                                                                     │
 │  PRESERVED: All messages, tool results, context                     │
@@ -356,13 +373,15 @@ Learn by example. Here are real scenarios traced through the system, step by ste
 
 ## Quick Reference: Event Counts by Scenario
 
-| Scenario | LLM Calls | Tool Calls | Hook Events |
-|----------|-----------|------------|-------------|
+| Scenario | LLM Calls | Tool Calls | tool:* events |
+|----------|-----------|------------|---------------|
 | Simple question | 1 | 0 | 0 |
 | Single tool use | 2 | 1 | 2 (pre+post) |
 | Multi-tool task | 3+ | 2+ | 2 per tool |
 | Blocked command | 2 | 0 | 1 (pre only) |
 | Streaming output | 1 | 0 | 0 |
+
+Every turn emits hookable events even with no tool calls: `execution:start`, `prompt:submit`, `provider:request`, `llm:request`, `llm:response`, `orchestrator:complete` and `execution:end` (plus `session:start` on a session's first prompt).
 
 ---
 

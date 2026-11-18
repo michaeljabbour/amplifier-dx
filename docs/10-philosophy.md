@@ -53,7 +53,7 @@ This is the "LEGO principle" applied to software: bricks snap together via stand
 
 All configuration, all context, all state is human-readable, diffable, and versionable. No hidden globals. No opaque binary state. If you can't `cat` it and `diff` it, the design needs revisiting.
 
-- YAML profiles → readable, versionable configuration
+- Markdown and YAML bundles → readable, versionable configuration
 - Markdown agents → readable, composable behavior definition  
 - JSONL logs → readable, grep-able event stream
 - `@mention` context → readable, traceable context injection
@@ -118,7 +118,7 @@ Amplifier is designed for a different mode — one that uses AI at the same leve
 | **Orientation** | Output-oriented: "Does this run?" | Intent-oriented: "Does this reflect the right design?" |
 | **Relationship with AI** | AI as author; human as acceptor | AI as crew; human as director |
 | **Module boundaries** | Organic — emerge from generation | Deliberate — defined before implementation |
-| **Context management** | One long conversation; hope the AI remembers | Explicit context injection; structured profiles and bundles |
+| **Context management** | One long conversation; hope the AI remembers | Explicit context injection; structured bundles and behaviors |
 | **Error handling** | "Ask AI to fix it" until it works | Systematic: hooks, observability, then targeted fix |
 | **Spec discipline** | Spec emerges after code works | Spec drives code; code is the proof of spec |
 | **Reuse model** | Copy-paste or re-generate | Composable modules with stable public contracts |
@@ -230,7 +230,7 @@ Amplifier makes this concrete:
 | Intentional impermanence | Regeneratable modules from spec |
 | Work in the medium | Build the real artifact, not a representation of it |
 
-**See also:** `~/dev/amplifier-bundle-zerovector` — a ready-made bundle that operationalizes this approach with:
+**See also:** [`amplifier-bundle-zerovector`](https://github.com/michaeljabbour/amplifier-bundle-zerovector) — a ready-made bundle that operationalizes this approach with:
 - `/crew`, `/crew-build`, `/crew-product`, `/crew-platform`, `/crew-research`, `/crew-content` slash modes
 - Automated `intent-to-artifact` recipe with staged approval gates
 - Full research dossier in `research/` directory
