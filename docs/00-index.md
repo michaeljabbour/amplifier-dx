@@ -62,7 +62,10 @@ A progressive guide from "what is this?" to "I could build this."
     Practical comparison of vibe coding and structured AI-assisted development.
 
 14. **[Built With Amplifier: A Case Study](./14-built-with-amplifier.md)**
-    The recursive loop of `amplifier-app-learn` — a curriculum that teaches Amplifier, audited and maintained by Amplifier expert agents, with diagrams from validated DOT sources and an update plan structured as a staged recipe.
+    The recursive loop of `amplifier-app-learn` (a private repository) — a curriculum that teaches Amplifier, audited and maintained by Amplifier expert agents, with diagrams from validated DOT sources and an update plan structured as a staged recipe.
+
+15. **[A Working Setup](./15-a-working-setup.md)**
+    What one real install composes: the root, the behaviors layered on it, community capabilities, and the names that mislead.
 
 ---
 
@@ -70,7 +73,7 @@ A progressive guide from "what is this?" to "I could build this."
 
 ### "I just want to use it"
 ```
-5-Minute Understanding → amplifier-simplecli → [main docs quickstart]
+5-Minute Understanding → [main docs quickstart]
 ```
 
 ### "I need to configure it for my team"
@@ -99,14 +102,16 @@ All documents in order → source code
 
 ### Agent Skills
 
-These skills teach Amplifier patterns through AI-assisted learning:
+These skills teach Amplifier patterns through AI-assisted learning. They are community
+repositories, not part of the Microsoft catalog, and have not been re-checked against the
+current bundle format (see [Current Ecosystem](./12-current-ecosystem.md) for what is verified):
 
-- **[amplifier-cli-skill](https://github.com/michaeljabbour/amplifier-cli-skill)** - Build CLI applications with amplifier-foundation
+- **[amplifier-cli-skill](https://github.com/michaeljabbour/amplifier-cli-skill)** (archived, read-only) - Build CLI applications with amplifier-foundation
   - Bundle composition and session orchestration
   - Module usage patterns and production best practices
   - Memory systems, hooks, and terminal UI
 
-- **[amplifier-modulebuilder-skill](https://github.com/michaeljabbour/amplifier-modulebuilder-skill)** - Build amplifier-foundation modules
+- **[amplifier-modulebuilder-skill](https://github.com/michaeljabbour/amplifier-modulebuilder-skill)** (last updated December 2025; predates the current bundle format) - Build amplifier-foundation modules
   - Create custom tools, hooks, providers, contexts, orchestrators
   - "Bricks and studs" architecture patterns
   - Testing strategies (60/30/10 pyramid)
@@ -115,22 +120,21 @@ These skills teach Amplifier patterns through AI-assisted learning:
 
 See these patterns in action:
 
-- **[amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli)** - Production CLI application
-  - 14 pre-configured modules working together
-  - Memory system (tool-memory, hooks-memory-capture, context-memory)
-  - Bundle composition (base.md + opus.yaml)
-  - Interactive terminal UI with Rich
+- **[amplifier-foundation examples](https://github.com/microsoft/amplifier-foundation/tree/main/examples)** - Runnable scripts maintained with the library
+  - `examples/01_hello_world.py`: load a bundle, compose a provider, execute a prompt
+  - `examples/08_cli_application.py`: CLI application architecture
+  - `examples/13_event_debugging.py`: observe the event flow with hooks
 
 ### Suggested Learning Path
 
 **For CLI application builders:**
 ```
-5-Minute Understanding → amplifier-simplecli (see it working) → amplifier-cli-skill (learn patterns) → build your CLI
+5-Minute Understanding → amplifier-foundation examples (see it working) → build your CLI
 ```
 
 **For module developers:**
 ```
-amplifier-modulebuilder-skill → build a module → test in amplifier-simplecli
+amplifier-modulebuilder-skill → build a module → list it in a bundle and run it with the official CLI
 ```
 
 ---
@@ -141,17 +145,23 @@ amplifier-modulebuilder-skill → build a module → test in amplifier-simplecli
 
 | Component | Role | Interface |
 |-----------|------|-----------|
-| **Provider** | Talks to LLMs | `complete(messages) → response` |
-| **Tool** | Executes actions | `execute(input) → result` |
+| **Provider** | Talks to LLMs | `complete(request: ChatRequest) → ChatResponse` |
+| **Tool** | Executes actions | `execute(input: dict) → ToolResult` |
 | **Context** | Remembers history | `get_messages()`, `add_message()` |
 | **Orchestrator** | Runs the loop | `execute() → final_response` |
-| **Hook** | Observes events | `on_event(event) → action` |
+| **Hook** | Observes events, can intervene | `async __call__(event: str, data: dict) → HookResult` |
+
+These five are the kernel's module types. Bundles also carry agents, context files and
+behaviors, and modes, skills, recipes and model routing are configuration layered on top
+of them.
 
 ### Config Hierarchy
 
 ```
-defaults < ~/.amplifier/ < .amplifier/ < .amplifier/*.local.yaml < runtime
+~/.amplifier/settings.yaml < .amplifier/settings.yaml < .amplifier/settings.local.yaml < session settings.yaml < CLI flags
 ```
+
+Project and local files are read from the exact working directory; there is no upward search.
 
 ### Key Events
 
@@ -165,6 +175,8 @@ defaults < ~/.amplifier/ < .amplifier/ < .amplifier/*.local.yaml < runtime
 | `provider:response` | After LLM responds | No |
 | `prompt:complete` | Response ready | No |
 | `session:end` | Session closes | No |
+
+Note: `provider:response` and `prompt:complete` are canonical event names, but the installed `loop-streaming` orchestrator emits neither. Providers emit `llm:request` / `llm:response`, and the end of a turn is marked by `orchestrator:complete`.
 
 ---
 

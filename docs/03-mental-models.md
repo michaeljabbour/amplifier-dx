@@ -2,7 +2,7 @@
 
 The right mental model turns complexity into intuition. Here are several ways to think about Amplifier - use whichever clicks for you.
 
-**Reference implementation:** [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli) demonstrates all models below in a working CLI application.
+**Runnable examples:** the [amplifier-foundation examples](https://github.com/microsoft/amplifier-foundation/tree/main/examples) show these pieces working together in code, starting with `examples/01_hello_world.py`.
 
 ---
 
@@ -135,7 +135,7 @@ The right mental model turns complexity into intuition. Here are several ways to
 │  ┌─────────────────────────────────────────────────────────────┐   │
 │  │                    FLIGHT LOG                                │   │
 │  │                    (Context)                                 │   │
-│  │  Complete record of all flights and passengers               │   │
+│  │  Working record of flights (long logs get compacted)         │   │
 │  └─────────────────────────────────────────────────────────────┘   │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
@@ -143,7 +143,7 @@ The right mental model turns complexity into intuition. Here are several ways to
 
 **Use this model when:** You're thinking about security and audit trails.
 
-**Key insight:** Everyone goes through security. The flight log is complete and immutable. Air traffic control coordinates but doesn't fly the planes.
+**Key insight:** Everyone goes through security. The event log records every flight; the working context may be compacted. Air traffic control coordinates but doesn't fly the planes.
 
 ---
 
@@ -215,7 +215,7 @@ The right mental model turns complexity into intuition. Here are several ways to
 │  └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘                   │
 │                                                                     │
 │  Each station adds to the item on the conveyor.                     │
-│  Nothing is removed - only added.                                   │
+│  When the conveyor fills up, older work is compacted.               │
 │                                                                     │
 │  ┌──────────────────────────────────────────┐                       │
 │  │ QUALITY CONTROL                          │ ← Hooks               │
@@ -265,8 +265,9 @@ what happens next based on what the LLM wants to do.
 ```
 ❌  Core app + plugins that extend it
 
-Modules aren't "extending" a core app. They're equal citizens
-that get composed together. There's no privileged "core".
+Modules aren't "extending" a core app. There is a small kernel
+(amplifier-core) that owns contracts and dispatch but no behaviour;
+modules are peers that depend only on it.
 ```
 
 ### Not Request/Response
@@ -281,8 +282,9 @@ producing a final response. It's interactive, not transactional.
 ```
 ❌  Request → middleware1 → middleware2 → handler
 
-Hooks don't form a chain that processes data through.
-They observe events. Big difference.
+Hooks aren't a required pipeline that every request flows through.
+They run in priority order on events and can continue, deny,
+modify, inject context or ask the user.
 ```
 
 ---

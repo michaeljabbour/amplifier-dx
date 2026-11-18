@@ -9,7 +9,7 @@ def test_document_index_includes_08_09_13_once_without_duplicates():
     document_index = lines[start:end]
 
     entry_07 = (
-        "07-desktop-case-study.md - Real-world embedding example (Amplifier Desktop)"
+        "07-desktop-case-study.md - Real-world embedding example (amplifierd)"
     )
     entry_08 = "08-architecture-boundaries.md - What belongs where: app, kernel, and module layers"
     entry_09 = "09-ecosystem-quick-map.md - Which repo owns what, dependency direction, change placement"

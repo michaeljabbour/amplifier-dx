@@ -64,8 +64,9 @@ plugins — are the most complete worked example of the pattern.
 
 ## The Code Pattern (Foundation Factory)
 
-The authoritative reference is [Foundation Example 08 / 20](https://github.com/microsoft/amplifier-foundation/tree/main/examples).
-Here is the shape:
+The authoritative references are the [Foundation examples](https://github.com/microsoft/amplifier-foundation/tree/main/examples)
+(`01_hello_world.py` for the minimal embed, `07_full_workflow.py` for the full flow) and
+`docs/APPLICATION_INTEGRATION_GUIDE.md` in the same repository. Here is the shape:
 
 ```python
 # host_app.py — runs inside your daemon, web app, voice agent, IDE plugin, ...
@@ -79,13 +80,13 @@ class HostApp:
         # 1. Load the bundle once at startup
         bundle = await load_bundle("./bundles/myapp.md")
 
-        # 2. Compose with runtime overrides (provider keys, model selection, etc.)
-        composed = bundle.compose({
-            "providers": [{
-                "module": "provider-anthropic",
-                "model": "claude-sonnet-4-5",
-            }],
-        })
+        # 2. Compose with a provider bundle. compose() takes Bundle objects, not dicts;
+        #    the model is set by config.default_model inside the provider bundle.
+        provider = await load_bundle(
+            "git+https://github.com/microsoft/amplifier-foundation@main"
+            "#subdirectory=providers/anthropic-sonnet.yaml"
+        )
+        composed = bundle.compose(provider)
 
         # 3. Prepare — resolves modules, validates the mount plan, downloads cache
         self.prepared = await composed.prepare()
@@ -93,17 +94,16 @@ class HostApp:
     async def handle_request(self, prompt: str) -> str:
         # 4. Create a fresh session per request (or hold one for a conversation)
         session = await self.prepared.create_session()
-        try:
+        async with session:  # cleans up on exit; there is no session.close()
             # 5. The current API: session.execute()
             return await session.execute(prompt)
-        finally:
-            await session.close()
 ```
 
-**API to use today:** `session.execute(prompt)` returns the final response. The pre-Foundation
-streaming patterns (`session.run()`, `session.stream()`) shown in older material are no longer
-the recommended surface. For streaming UIs, see the streaming hooks pattern in
-`amplifier-foundation/examples/`.
+**API to use today:** `session.execute(prompt)` returns the final response as a string. The
+`session.run()` and `session.stream()` calls shown in older material do not exist on the
+session; outside `async with`, call `await session.cleanup()` when you are done. For
+streaming UIs, register a handler for hook events such as `content_block:delta` with
+`session.coordinator.hooks.register(...)` and forward them over your transport.
 
 ---
 
@@ -116,7 +116,7 @@ Pick the transport that matches your host:
 | **HTTP REST + SSE** | Service-to-service, browser SPA, CLI clients | `amplifierd` |
 | **WebSocket** | Bidirectional realtime UIs needing tight tool-call feedback | (custom) |
 | **WebRTC** | Voice / video / low-latency interactive | `amplifier-voice` |
-| **In-process / library** | Embedding directly in a Python app | Foundation Example 08 |
+| **In-process / library** | Embedding directly in a Python app | Foundation example `01_hello_world.py` |
 
 The kernel does not care which one you choose — your host process maps the transport's
 events onto `session.execute()` calls and forwards events emitted by hooks back over the wire.
@@ -148,6 +148,12 @@ class MyHook:
 Same module works in `amplifierd` (SSE), in a hypothetical desktop app (WebSocket), in a
 voice agent (WebRTC data channel) — only the capability implementation changes.
 
+Sub-agent delegation relies on the same mechanism. The `delegate` tool needs the host to
+register a `session.spawn` capability after `create_session()` and before `execute()`;
+without it, delegation silently degrades. The library call behind it is
+`PreparedBundle.spawn(child_bundle, instruction, ...)`, and the reference implementation
+is `session_spawner.py` in `amplifier-app-cli`.
+
 See [Architecture Boundaries](./08-architecture-boundaries.md) for the boundary tests.
 
 ---
@@ -169,8 +175,9 @@ See [Architecture Boundaries](./08-architecture-boundaries.md) for the boundary 
 
 - **[microsoft/amplifierd](https://github.com/microsoft/amplifierd)** — read the daemon's
   README and source for the most complete worked example of this pattern.
-- **[Foundation Example 08](https://github.com/microsoft/amplifier-foundation/tree/main/examples)** —
-  minimal embedded session in a Python host.
+- **[Foundation examples](https://github.com/microsoft/amplifier-foundation/tree/main/examples)** —
+  `01_hello_world.py` is the minimal embedded session in a Python host; `07_full_workflow.py`
+  is the full flow.
 - **[Architecture Boundaries](./08-architecture-boundaries.md)** — the boundary tests that
   keep modules portable across host transports.
 - **[Ecosystem Quick Map](./09-ecosystem-quick-map.md)** — how the three core repos

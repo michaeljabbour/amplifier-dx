@@ -70,9 +70,9 @@ three repos every Amplifier user touches -- and points to the rest at the end.
 | Owns | Example |
 |------|---------|
 | Bundle parsing | `load_bundle("./bundles/base.md")` |
-| Bundle composition | `base.compose(provider_config)` |
+| Bundle composition | `base.compose(provider_bundle)` (takes `Bundle` objects) |
 | Module resolution | Download, cache, and locate modules |
-| Configuration merging | Three-tier YAML merge (user > project > local) |
+| Composition merge rules | `includes` merged section by section (modules by ID, agents by name, context accumulates) |
 | Session factory | `prepared.create_session()` returns Core's `AmplifierSession` |
 
 **The rule:** Foundation configures Core **once during startup**, then your app calls Core directly at runtime. It's a factory, not a proxy.
@@ -97,7 +97,7 @@ three repos every Amplifier user touches -- and points to the rest at the end.
 | Bundle loading | Which bundles ship with the CLI |
 | @mention processing | What `@file` means in this app |
 | Capability registration | Injecting `broadcast`, `approval` into sessions |
-| Settings persistence | `~/.amplifier/settings.yaml` location decisions |
+| Settings persistence and scope merging | `~/.amplifier/settings.yaml` location decisions; global < project < local < session |
 
 **The rule:** If it touches the user or the filesystem, it belongs here (or in your custom app).
 
@@ -111,7 +111,7 @@ Use this table when you're about to write code and aren't sure which repo to ope
 |--------------|------------------|-----|
 | Add a new module interface (e.g., new component type) | **amplifier-core** | Contracts are kernel |
 | Change how hooks dispatch | **amplifier-core** | Mechanism is kernel |
-| Change how bundles compose or inherit | **amplifier-foundation** | Bundle primitives are foundation |
+| Change how bundles compose | **amplifier-foundation** | Bundle primitives are foundation |
 | Change how modules are downloaded/cached | **amplifier-foundation** | Module resolution is foundation |
 | Change what the CLI displays | **amplifier-app-cli** | UX is app-layer |
 | Add a new CLI command | **amplifier-app-cli** | Commands are app-layer |
@@ -170,7 +170,7 @@ Check first — this is where 80% of issues live.
     - "Module not found"
     - "No provider configured"
     - Wrong model, wrong tools loaded
-    - Bundle doesn't inherit as expected
+    - Bundle doesn't compose as expected
 
   Inspect:
     .amplifier/settings.yaml          (project config)
@@ -178,12 +178,18 @@ Check first — this is where 80% of issues live.
     Your bundle file (YAML frontmatter)
 
   Remember the hierarchy:
-    defaults < user < project < local < runtime
+    global < project < local < session < CLI flags
     More specific always wins.
 
   Quick fix:
-    amplifier config show              (see resolved config)
-    AMPLIFIER_DEBUG=1 amplifier run    (see what's loading)
+    amplifier bundle current           (active bundle)
+    amplifier provider list            (configured providers)
+    amplifier routing show             (model routing)
+    amplifier bundle show <name>       (the include chain)
+    amplifier run -v "test"            (see what's loading)
+
+    Inside a session, /config shows the live configuration.
+    Upstream main only (not in 2026.09.06): amplifier doctor
 ```
 
 ### Step 2: Is it a module problem?
@@ -227,8 +233,8 @@ Check third — session setup failed.
     Foundation is the factory. If the session never starts,
     the factory broke.
 
-    Run with debug:
-      AMPLIFIER_DEBUG=1 amplifier run "test"
+    Run verbosely:
+      amplifier run -v "test"
 
     Look for:
       - Bundle parsing errors
@@ -263,7 +269,7 @@ Check last — the kernel itself is misbehaving.
 | "Module not found" | Foundation | Check module name, source, network |
 | Tool error during execution | Module | Check event log (`tool:pre` / `tool:post`) |
 | Hook not blocking/allowing | Module (hook) | Check hook config in bundle |
-| Session won't start | Foundation | Run with `AMPLIFIER_DEBUG=1` |
+| Session won't start | Foundation | Run with `amplifier run -v`; check `amplifier provider test` and `amplifier bundle current` |
 | Provider returns garbage | Module (provider) | Check `provider:request` in event log |
 | Events out of order | Core (rare) | Reproduce minimal, file bug |
 | Orchestrator infinite loop | Core (rare) | Check tool results in event log |
@@ -306,8 +312,8 @@ The three repos above are the dependency stack. The wider ecosystem builds on to
 | Layer | What lives there |
 |-------|------------------|
 | **Applications** | `amplifier-app-cli` (reference CLI), `amplifierd` (HTTP daemon), `amplifier-chat`, `amplifier-voice`, `amplifier-app-log-viewer`, `amplifier-app-benchmarks` |
-| **Bundles** | `amplifier-bundle-*` (30+ Microsoft-maintained: recipes, superpowers, python-dev, browser-tester, design-intelligence, stories, dot-graph, gitea, digital-twin-universe, ...) |
-| **Runtime modules** | `amplifier-module-*` (providers: anthropic, openai, gemini, azure-openai, ollama, vllm, github-copilot, ...; tools: filesystem, bash, web, search, task, todo, mcp, skills, slash-command; orchestrators: loop-basic, loop-streaming, loop-events; context managers: simple, persistent; hooks: logging, redaction, approval, streaming-ui, ...) |
+| **Bundles** | `amplifier-bundle-*` (50+ Microsoft-maintained: recipes, superpowers, python-dev, browser-tester, design-intelligence, stories, dot-graph, gitea, digital-twin-universe, ...) |
+| **Runtime modules** | `amplifier-module-*` (providers: anthropic, openai, gemini, azure-openai, ollama, vllm, github-copilot, ...; tools: filesystem, bash, web, search, todo, mcp, skills, slash-command, plus `delegate` for sub-agents (it lives in the foundation repo; `tool-task` is the legacy delegation tool); orchestrators: loop-basic, loop-streaming, loop-events; context managers: simple, persistent; hooks: logging, redaction, approval, streaming-ui, ...) |
 
 For the full current list of components with GitHub links, see
 [12-current-ecosystem.md](./12-current-ecosystem.md). The authoritative source-of-truth

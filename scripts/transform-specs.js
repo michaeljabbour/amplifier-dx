@@ -288,6 +288,10 @@ function main() {
           </p>
         </div>
 
+        <div class="callout callout-danger">
+          <p><strong>Historical proposals, not current reference.</strong> These specifications were written in December 2025, before bundles replaced profiles and collections. Commands, flags, keys and model names in them (<code>amplifier profile</code>, <code>amplifier collection</code>, <code>--profile</code>, <code>extends:</code>) do not exist in current Amplifier. Read "profile" and "collection" as "bundle", and use the CLI, Reference and Ecosystem sections of this site for what works today.</p>
+        </div>
+
         <div class="spec-filter" style="margin-bottom: 20px;">
           <span style="font-size: 13px; color: var(--text-2); margin-right: 12px;">Filter:</span>
           <button class="spec-filter-btn active" data-filter="all">All</button>

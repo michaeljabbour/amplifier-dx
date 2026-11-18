@@ -295,6 +295,23 @@ function initTabs() {
       }
     });
   });
+
+  // Examples section uses its own tab markup: .examples-tab[data-tab] -> #ex-<tab>
+  document.querySelectorAll('.examples-tabs').forEach(tabsContainer => {
+    tabsContainer.addEventListener('click', (e) => {
+      const tab = e.target.closest('.examples-tab[data-tab]');
+      if (!tab) return;
+      e.preventDefault();
+      const section = tabsContainer.closest('.section');
+      if (!section) return;
+      tabsContainer.querySelectorAll('.examples-tab').forEach(t => {
+        t.classList.toggle('active', t === tab);
+      });
+      section.querySelectorAll('.examples-content').forEach(content => {
+        content.classList.toggle('active', content.id === 'ex-' + tab.dataset.tab);
+      });
+    });
+  });
 }
 
 /**
@@ -320,3 +337,4 @@ window.toggleSidebarItem = toggleSidebarItem;
 window.toggleAllSidebar = toggleAllSidebar;
 window.showSection = showSection;
 window.showSectionWithTab = showSectionWithTab;
+window.setLayout = setLayout; // used by the layout toggle buttons in the top nav

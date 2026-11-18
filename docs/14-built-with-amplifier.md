@@ -1,17 +1,17 @@
 # Built With Amplifier: A Case Study
 
 The most credible demonstration of Amplifier we have isn't a feature list. It's the
-[`amplifier-app-learn`](https://github.com/michaeljabbour/amplifier-app-learn)
+`amplifier-app-learn`
 learning platform — a curriculum that teaches Amplifier, audited and extended **by
 Amplifier agents**, with diagrams generated from validated DOT sources, and an update
 plan structured as a staged recipe.
 
 This is Amplifier teaching Amplifier, then teaching itself how to teach better.
 
-> **About this doc.** It's a case study, not a marketing piece. Every claim below points
-> at a specific file or commit you can verify. The site we're describing exists; the work
-> is recent (May 2026); some of it is uncommitted in the maintainer's working tree as of
-> this writing.
+> **About this doc.** It's a case study, not a marketing piece. The `amplifier-app-learn`
+> repository is private, so the files named below are given as plain names rather than
+> links and you cannot open them yourself. The site we're describing exists; the work
+> dates from May 2026.
 
 ---
 
@@ -77,7 +77,7 @@ site as new lessons.
 
 ## What the Audit Did
 
-[`docs/state-of-amplifier-2026-05/`](https://github.com/michaeljabbour/amplifier-app-learn/tree/main/docs/state-of-amplifier-2026-05)
+`docs/state-of-amplifier-2026-05/`
 in the LMS contains the artifact set:
 
 | File | What it is |
@@ -197,12 +197,12 @@ LMS is a React + Vite SPA. It uses Amplifier as a development partner, not a run
 
 ## How to Try It
 
+The audit files and the site's source are in the private repository, so they are not
+linked here. What you can use from this repo:
+
 | Want to | Do this |
 |---------|---------|
-| Read the audit | [`OVERVIEW.md`](https://github.com/michaeljabbour/amplifier-app-learn/blob/main/docs/state-of-amplifier-2026-05/OVERVIEW.md) — every claim is cited |
-| See the maintenance recipe | [`UPDATE-PLAN.md`](https://github.com/michaeljabbour/amplifier-app-learn/blob/main/docs/state-of-amplifier-2026-05/UPDATE-PLAN.md) — read the `🛑 Gate` markers |
 | Use the learning companion | Load [`skills/learning-companion/SKILL.md`](../skills/learning-companion/SKILL.md) into any Amplifier session |
-| Run the site locally | Clone `amplifier-app-learn`, `npm install && npm run dev`, visit `localhost:5175` |
 | Replicate the pattern in your own docs | Use named expert agents to compile a citable ground-truth doc for your own ecosystem; structure the resulting maintenance work as a staged recipe |
 
 ---
@@ -211,7 +211,7 @@ LMS is a React + Vite SPA. It uses Amplifier as a development partner, not a run
 
 This case study tells the meta-story from the docs-site side. The curriculum tells
 the same story from the inside, in the
-[**How This Site Was Built**](https://github.com/michaeljabbour/amplifier-app-learn/blob/main/src/content/learn/05-full-stack/how-this-was-built.js)
+**How This Site Was Built**
 lesson at the end of Level 5 (`05-full-stack/how-this-was-built`). Same recursive loop, learner-facing voice,
 embedded diagram, four-question knowledge check. Either entry point lands you in the
 same place.
@@ -243,4 +243,4 @@ the same prompt. One source, two surfaces.
 ---
 
 **Previous:** [Current Ecosystem](./12-current-ecosystem.md)  
-**Next:** [Working with AI](./13-working-with-ai.md)
+**Next:** [A Working Setup](./15-a-working-setup.md)

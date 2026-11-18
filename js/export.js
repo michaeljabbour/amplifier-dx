@@ -26,6 +26,8 @@ document.addEventListener('click', (e) => {
 
 /**
  * Quick reference markdown content (legacy - kept for backward compatibility)
+ *
+ * Verified against amplifier-app-cli 2026.09.06 and amplifier-core 2.0.2.
  */
 const MARKDOWN_CONTENT = `# Amplifier Quick Reference
 
@@ -33,26 +35,28 @@ const MARKDOWN_CONTENT = `# Amplifier Quick Reference
 
 ## Installation
 \`\`\`bash
-uv tool install git+https://github.com/microsoft/amplifier@main
-amplifier update && amplifier init
-export ANTHROPIC_API_KEY="your-key-here"
+uv tool install git+https://github.com/microsoft/amplifier
+amplifier init                     # first-run wizard: providers and routing
 \`\`\`
 
 ## CLI Commands
 \`\`\`bash
 amplifier                          # Interactive chat
 amplifier run "prompt"             # Single command
-amplifier run --profile dev "..."  # With profile
-amplifier continue                 # Resume session
+amplifier run -B foundation "..."  # With a specific bundle
+amplifier continue                 # Resume the most recent session
 amplifier session list             # List sessions
-amplifier profile list             # List profiles
+amplifier bundle list              # List bundles
 \`\`\`
 
-## Profiles
-- \`foundation\` - LLM only | \`base\` - + filesystem/bash | \`dev\` - Full tools | \`full\` - Everything
+## Bundles
+- \`anchors\` is the default root. \`foundation\` is a selectable complete root.
+- Add a capability to the existing host as a behavior:
+  \`amplifier bundle add '<git-uri>#subdirectory=behaviors/<name>.yaml' --app\`
 
 ## Agents
-Use \`@agent-name\` in chat: \`explorer\`, \`bug-hunter\`, \`zen-architect\`, \`researcher\`, \`modular-builder\`
+List with \`amplifier agents list\` or \`/agents\` in chat. The model delegates to them
+with the \`delegate\` tool; agents are addressed as \`bundle:agent\` (for example \`anchors:explorer\`).
 
 ---
 *See AGENTS.md export for comprehensive documentation*
@@ -60,16 +64,29 @@ Use \`@agent-name\` in chat: \`explorer\`, \`bug-hunter\`, \`zen-architect\`, \`
 
 /**
  * Comprehensive AGENTS.md / CLAUDE.md content for AI assistants
+ *
+ * Every command, key and signature here was checked against the installed
+ * amplifier-app-cli 2026.09.06 (commit 569c9b8), amplifier-core 2.0.2 and
+ * amplifier-foundation main as of 2026-11-17. Re-verify before changing.
  */
 const AGENTS_CONTENT = `# AGENTS.md - Amplifier Framework Guide
 
-> For AI assistants working with Amplifier codebases
+> For AI assistants working with Amplifier codebases.
+> Verified against amplifier-app-cli 2026.09.06, amplifier-core 2.0.2 and
+> amplifier-foundation main (2026-11-17). Amplifier moves quickly: when a command
+> or key here disagrees with \`amplifier <command> --help\` or the source, trust those.
 
 ## What is Amplifier?
 
-Amplifier is Microsoft's open-source **AI agent orchestration framework** that composes modular pieces through configuration files called **profiles**. Think of it as Linux for AI agents: a tiny kernel (~2,600 lines) provides mechanisms, while policies live as swappable modules.
+Amplifier is Microsoft's open-source **AI agent orchestration system**. A small kernel
+(\`amplifier-core\`, a Rust kernel with Python bindings) provides mechanisms; policy lives
+in swappable modules at the edges. Sessions are configured by composing **bundles**.
 
-**One-sentence definition:** *"A framework for building AI coding assistants by composing providers, tools, and hooks through YAML profiles."*
+**One-sentence definition:** *"A kernel plus modules for building AI agents, composed through bundles: markdown files with YAML frontmatter that compile to a mount plan."*
+
+**Profiles and collections no longer exist.** They were replaced by bundles. There is no
+\`amplifier profile\` or \`amplifier collection\` command and no \`--profile\` flag. If you see
+them in older material, translate to \`amplifier bundle ...\` and \`--bundle\`.
 
 ---
 
@@ -77,289 +94,353 @@ Amplifier is Microsoft's open-source **AI agent orchestration framework** that c
 
 \`\`\`bash
 # Installation
-uv tool install git+https://github.com/microsoft/amplifier@main
-amplifier update
-amplifier init
-export ANTHROPIC_API_KEY="your-key-here"
+uv tool install git+https://github.com/microsoft/amplifier
+amplifier init                      # first-run wizard: providers and routing
 
 # Running
 amplifier                           # Interactive mode
 amplifier run "Your prompt"         # Single command
-amplifier run --profile dev "..."   # With specific profile
-amplifier continue                  # Resume last session
+amplifier run -B foundation "..."   # With a specific bundle
+amplifier run -p anthropic -m <model> "..."   # Pin provider and model for this run
+amplifier continue                  # Resume the most recent session
+amplifier resume                    # Pick a session to resume
 
-# Management
-amplifier session list              # View all sessions
-amplifier profile list              # View available profiles
-amplifier agents list               # View available agents
+# Bundles
+amplifier bundle current            # Active bundle
+amplifier bundle list               # Available bundles
+amplifier bundle use <name>         # Select a root bundle
+amplifier bundle add '<uri>' --app  # Compose a behavior onto every session
+
+# Inspection
+amplifier session list              # Sessions for this project (--all-projects for all)
+amplifier agents list               # Agents available from bundles
+amplifier tool list                 # Tools mounted by the active bundle
+amplifier module list               # Installed modules
+amplifier provider list             # Configured providers
+amplifier routing show              # Effective model routing per role
 \`\`\`
 
 ---
 
-## Architecture: Three Layers
+## Architecture: Layers
 
 Understanding where code belongs is critical:
 
 \`\`\`
-APPLICATION LAYER (amplifier-app-cli, amplifier-desktop)
+APPLICATION LAYER (amplifier-app-cli, amplifierd, your app)
 ├── Policy decisions (what to do)
-├── UX systems (how to present)
+├── UX: approval prompts, display, transport
 ├── Settings persistence
-└── Module resolution policy
+└── Which bundles and modules to load
 
-KERNEL LAYER (amplifier-core - single implementation)
-├── Session lifecycle management
-├── Module coordination
-├── Hook dispatch
-├── Config validation
-└── ~2,600 lines, stable API
+LIBRARY LAYER (amplifier-foundation)
+├── Bundle parsing and composition
+├── Module resolution, download and cache
+└── PreparedBundle: builds a session, then gets out of the way
 
-MODULE LAYER (amplifier-module-* - many implementations)
+KERNEL LAYER (amplifier-core)
+├── Session lifecycle
+├── Module coordination and mount points
+├── Hook registry and event dispatch
+├── Cancellation
+└── Module contracts
+
+MODULE LAYER (amplifier-module-*, or modules/ inside a bundle)
 ├── Providers (talk to LLMs)
 ├── Tools (execute actions)
-├── Hooks (observe/intercept events)
-├── Orchestrators (control flow)
-└── Contexts (manage conversation state)
+├── Hooks (observe and intercept events)
+├── Orchestrators (the agent loop)
+└── Context managers (conversation state)
 \`\`\`
 
-### Key Insight: Core vs Foundation vs CLI
+### The Import Rule
 
-| Package | Purpose | When to Modify |
+- Apps import foundation and core.
+- Foundation imports core.
+- Modules import **only** core. Never foundation, never app code.
+- A module that needs something from the app asks the coordinator for a capability.
+
+| Package | Purpose | When to modify |
 |---------|---------|----------------|
-| \`amplifier-core\` | Kernel mechanisms | Rarely - stable contracts |
-| \`amplifier-foundation\` | Profiles, bundles, best practices | For team customizations |
-| \`amplifier-app-cli\` | CLI application | UI/UX changes only |
-| \`amplifier-module-*\` | Individual capabilities | Most extension work here |
+| \`amplifier-core\` | Kernel mechanisms and contracts | Rarely |
+| \`amplifier-foundation\` | Bundle primitives, module resolution, root bundles | To change how bundles compose |
+| \`amplifier-app-cli\` | Reference CLI | UX and CLI commands |
+| \`amplifier-module-*\` | Individual capabilities | Most extension work |
+| \`amplifier-bundle-*\` | Composition: behaviors, agents, context, modes, recipes, skills | To package a capability |
 
 ---
 
-## The Five Components
+## The Five Module Protocols
 
-Every Amplifier session uses exactly five component types:
+Protocols are structural (duck typed). No inheritance is required.
 
-| Component | Protocol Method | Purpose | Example |
-|-----------|-----------------|---------|---------|
-| **Provider** | \`complete(messages)\` | Call LLMs | \`provider-anthropic\` |
-| **Tool** | \`execute(input) -> ToolResult\` | Run actions | \`tool-filesystem\`, \`tool-bash\` |
-| **Context** | \`get_messages()\`, \`add_message()\` | Store conversation | \`context-simple\` |
-| **Orchestrator** | \`execute()\` | Run think/act loop | \`loop-streaming\` |
-| **Hook** | \`on_event(event, data) -> HookResult\` | Observe/block | \`hooks-approval\` |
+| Module | Key method | Purpose | Example |
+|--------|-----------|---------|---------|
+| **Provider** | \`async complete(request: ChatRequest, **kwargs) -> ChatResponse\` | Call an LLM | \`provider-anthropic\` |
+| **Tool** | \`async execute(input: dict) -> ToolResult\` | Run an action | \`tool-filesystem\`, \`tool-bash\` |
+| **ContextManager** | \`add_message\`, \`get_messages_for_request\`, \`get_messages\`, \`set_messages\`, \`clear\` | Conversation state | \`context-simple\` |
+| **Orchestrator** | \`async execute(prompt, context, providers, tools, hooks, **kwargs) -> str\` | The agent loop | \`loop-streaming\` |
+| **Hook handler** | \`async __call__(event: str, data: dict) -> HookResult\` | Observe or intercept | \`hooks-approval\` |
+
+A Provider also exposes \`name\`, \`get_info()\`, \`list_models()\` and \`parse_tool_calls()\`.
+A Tool also exposes \`name\`, \`description\` and \`input_schema\`.
+ContextManager has no \`compact()\` method: compaction happens inside
+\`get_messages_for_request()\` and must be non-destructive.
 
 ### HookResult Actions
 
-Hooks are the security boundary. They can return:
-
-- \`continue\` - Proceed normally (default)
-- \`deny\` - Block operation with reason message
-- \`modify\` - Alter event data before processing
-- \`inject_context\` - Add message to context
+- \`continue\` - Proceed (default)
+- \`deny\` - Block the operation, with a \`reason\`
+- \`modify\` - Replace the event data passed to later handlers
+- \`inject_context\` - Add a message to the conversation
 - \`ask_user\` - Pause for user approval
+
+Precedence when several handlers respond: \`deny > ask_user > inject_context > modify > continue\`.
+Handlers run in priority order (lower number first). \`deny\` stops dispatch immediately.
+There is no \`allow\` action.
+
+**Dispatch is fail-open:** a handler that raises is logged and skipped. A security hook
+must return \`deny\` explicitly; it must not rely on an exception to block.
+
+---
+
+## Bundles
+
+A bundle is a markdown file with YAML frontmatter (or a plain \`.yaml\` file). The
+frontmatter compiles to a mount plan; the markdown body of the **root** bundle becomes
+the system instruction.
+
+\`\`\`yaml
+---
+bundle:
+  name: my-host
+  version: 1.0.0
+  description: Example host
+
+includes:
+  - bundle: git+https://github.com/microsoft/amplifier-foundation@main#subdirectory=bundles/anchors/bundle.md
+
+tools:
+  - module: tool-web
+    source: git+https://github.com/microsoft/amplifier-module-tool-web@main
+---
+
+You are a senior engineer working on this repository.
+\`\`\`
+
+Frontmatter keys that are read: \`bundle\` (\`name\`, \`version\`, \`description\`, \`display_name\`),
+\`includes\`, \`session\` (\`orchestrator\`, \`context\`), \`providers\`, \`tools\`, \`hooks\`, \`agents\`,
+\`context\`, \`spawn\`. There is no top-level \`name:\`, \`version:\` or \`extends:\`; use \`bundle:\`
+and \`includes:\`.
+
+### Behaviors
+
+A behavior is a partial bundle, by convention at \`behaviors/<name>.yaml\`. It adds agents,
+context, tools or hooks, and deliberately does not choose a provider, an orchestrator or a
+root instruction. Behaviors are the unit you add to an existing host:
+
+\`\`\`bash
+amplifier bundle add 'git+https://github.com/microsoft/amplifier-bundle-recipes@main#subdirectory=behaviors/recipes.yaml' --app
+\`\`\`
+
+Single-quote the URI so the shell does not expand the \`#\` fragment.
+
+### Composition Rules
+
+| Section | Rule |
+|---------|------|
+| \`session\`, \`spawn\` | Deep merge; later wins |
+| \`providers\`, \`tools\`, \`hooks\` | Merge by module ID; same ID deep-merges config |
+| \`agents\` | Merge by name; later wins |
+| \`context\` | Accumulates |
+| Markdown body | Replaced; later wins |
+
+Includes are composed first, then the including bundle, so the includer wins.
+
+### References
+
+- In the markdown body: \`@namespace:path\` (for example \`@anchors:context/system.md\`).
+- In YAML (\`includes\`, \`agents.include\`, \`context.include\`): \`namespace:path\` with **no** \`@\`.
+
+### Root Bundles
+
+- \`anchors\` - the default root. A lean host: \`loop-streaming\`, \`context-simple\`, a standard
+  tool roster, and six agents. Lives in \`amplifier-foundation\` under \`bundles/anchors\`.
+- \`foundation\` - a selectable complete root with a larger set of included behaviors.
 
 ---
 
 ## Configuration System
 
-Settings merge deterministically (more specific wins):
+Settings merge in this order (later wins):
 
 \`\`\`
-defaults
+~/.amplifier/settings.yaml                         (global)
   ↓
-~/.amplifier/settings.yaml         (user-level)
+.amplifier/settings.yaml                           (project: the exact working directory)
   ↓
-.amplifier/settings.yaml           (project-level)
+.amplifier/settings.local.yaml                     (local, gitignored)
   ↓
-.amplifier/settings.local.yaml     (local/gitignored)
-  ↓
-runtime arguments
+~/.amplifier/projects/<slug>/sessions/<id>/settings.yaml   (session)
 \`\`\`
 
-### Profile Structure
+Project scope is the exact current directory. There is no upward walk.
 
 \`\`\`yaml
----
-name: my-profile
-version: "1.0"
-extends: coding-base          # Optional inheritance
-providers:
-  - module: provider-anthropic
-tools:
-  - module: tool-filesystem
-  - module: tool-bash
-hooks:
-  - module: hooks-logging
----
-
-You are a senior software engineer working on...
-(System prompt in markdown body)
+bundle:
+  active: anchors              # selected root (amplifier bundle use)
+  added:                       # name -> URI registrations (amplifier bundle add)
+    recipes: git+https://github.com/microsoft/amplifier-bundle-recipes@main
+  app:                         # composed onto every session (amplifier bundle add --app)
+    - git+https://github.com/microsoft/amplifier-bundle-recipes@main#subdirectory=behaviors/recipes.yaml
+config:
+  providers:
+    - id: anthropic-primary
+      module: provider-anthropic
+      source: git+https://github.com/microsoft/amplifier-module-provider-anthropic@main
+      config:
+        api_key: \${ANTHROPIC_API_KEY}
+        default_model: <model>
+        priority: 1            # lower number = preferred
 \`\`\`
 
-### Built-in Profiles
-
-| Profile | Capabilities |
-|---------|-------------|
-| \`foundation\` | LLM access only, no tools |
-| \`base\` | + filesystem and bash |
-| \`dev\` | Full development tools |
-| \`test\` | Testing-focused configuration |
-| \`full\` | All features enabled |
+A provider **module** can back several configured **instances**, told apart by \`id\`.
+Keep secrets in environment variables and reference them as \`\${VAR}\`.
 
 ---
 
-## Module System
+## Writing a Module
 
-### Two-Tier Distribution
-
-| Tier | Module Types | Location | Loading |
-|------|-------------|----------|---------|
-| **Bundled** | Providers | Python entry points | Direct import |
-| **Cached** | All types | \`~/.amplifier/module-cache/\` | Via resolution package |
-
-### Module Loading Priority
-
-1. Local modules (custom \`LocalLoader\`)
-2. Module cache (\`amplifier_module_resolution\`)
-3. Entry points (bundled providers)
-
-### Writing Custom Modules
+Every module is a Python package with a module-level \`mount()\` function, registered under
+the \`amplifier.modules\` entry-point group.
 
 \`\`\`python
-# Custom Tool Example
-from amplifier_core import Tool, ToolResult
+from typing import Any
 
-class MyTool(Tool):
-    name = "my-tool"
-    description = "Does something useful"
+from amplifier_core import ToolResult
 
-    async def execute(self, input: dict) -> ToolResult:
-        # Your implementation
-        return ToolResult(output="Success")
+
+class WordCountTool:
+    name = "word_count"
+    description = "Count the words in a piece of text"
+    input_schema = {
+        "type": "object",
+        "properties": {"text": {"type": "string"}},
+        "required": ["text"],
+    }
+
+    async def execute(self, input: dict[str, Any]) -> ToolResult:
+        return ToolResult(success=True, output={"words": len(input["text"].split())})
+
+
+async def mount(coordinator, config: dict[str, Any] | None = None):
+    await coordinator.mount("tools", WordCountTool(), name="word_count")
 \`\`\`
+
+\`\`\`toml
+[project.entry-points."amplifier.modules"]
+tool-word-count = "amplifier_module_tool_word_count:mount"
+\`\`\`
+
+- Mount points: \`orchestrator\`, \`context\` (single slot); \`providers\`, \`tools\` (named).
+- Hooks do not use \`coordinator.mount()\`. Register them with
+  \`coordinator.hooks.register(event, handler, priority=0, name=None)\`.
+- If \`mount()\` returns a callable it is called at teardown as cleanup.
+- Modules may also live inside a bundle under \`modules/<name>\` and be referenced with
+  \`#subdirectory=modules/<name>\`.
+- Validate with \`amplifier module validate\`.
 
 ---
 
-## Event Stream (Guaranteed Order)
+## Events
 
-Every operation emits ordered events:
+The kernel defines 43 canonical events (\`amplifier_core.events\`). The kernel itself emits
+only the session and module lifecycle events; everything else is emitted by modules,
+mostly the orchestrator.
 
-\`\`\`
-session:start
-├── prompt:submit
-│   ├── provider:request
-│   ├── provider:response
-│   ├── tool:pre          ← Hooks can DENY here
-│   ├── [tool executes]
-│   ├── tool:post
-│   └── [loop or exit]
-├── prompt:complete
-└── session:end
-\`\`\`
+| Emitted by | Events |
+|------------|--------|
+| Kernel | \`session:start\` or \`session:resume\` (on the first \`execute()\`), \`session:fork\`, \`session:end\`, \`cancel:completed\`, \`module:load_failed\` |
+| Orchestrator (contract) | \`execution:start\`, \`execution:end\`, \`orchestrator:complete\`, \`provider:request\`, \`tool:pre\`, \`tool:post\` |
+| Provider (typical) | \`llm:request\`, \`llm:response\` |
 
----
+\`tool:pre\` carries \`tool_name\` and \`tool_input\`; \`tool:post\` adds \`tool_result\`. Event
+matching is by exact name. There is no wildcard subscription.
 
-## Guarantees (Build On These)
-
-1. **Hooks Always Fire** - No tool bypasses hooks
-2. **Events Are Ordered** - Deterministic sequence
-3. **Context Is Append-Only** - Messages never silently dropped
-4. **Tools Are Isolated** - Can't see other tools' state
-5. **Provider Responses Immutable** - What LLM says, stays
-6. **Config Hierarchy Deterministic** - Specific always wins
-7. **Hooks Can Block, Tools Cannot** - Security in hooks
+Emitting \`tool:pre\` and \`tool:post\` is an orchestrator obligation, not something the
+kernel enforces. A custom orchestrator that skips them bypasses approval hooks.
 
 ---
 
-## Development Tips
+## Guarantees and Their Limits
 
-### Finding Things
-\`\`\`bash
-# Jump to a module
-amplifier module show <name>
+1. **Hook precedence is fixed** - \`deny > ask_user > inject_context > modify > continue\`.
+2. **Handlers run in priority order** - Sequentially, lower number first.
+3. **Hooks can block; tools cannot** - Put security in hooks, and return \`deny\` explicitly.
+4. **Modules are isolated** - A module depends only on the kernel.
+5. **Teardown order** - \`session:end\` fires before module cleanup callables run.
+6. **Orchestrator or context failure aborts the session; provider, tool or hook load
+   failure does not** - It logs, emits \`module:load_failed\`, and the session continues.
+   Check for it rather than assuming everything mounted.
 
-# Find profile location
-amplifier profile show <name> --path
-
-# Check loaded modules
-amplifier debug modules
-\`\`\`
-
-### Testing
-\`\`\`bash
-# Run with verbose logging
-amplifier run --verbose "..."
-
-# Test specific profile
-amplifier run --profile test "..."
-
-# Debug hooks
-AMPLIFIER_DEBUG=hooks amplifier run "..."
-\`\`\`
-
-### Common Patterns
-
-**Adding a tool to a profile:**
-\`\`\`yaml
-tools:
-  - module: tool-filesystem
-  - module: tool-bash
-  - module: my-custom-tool    # Add here
-\`\`\`
-
-**Creating a project profile:**
-\`\`\`bash
-mkdir -p .amplifier/profiles
-# Create .amplifier/profiles/team.yaml
-\`\`\`
-
-**Blocking dangerous operations:**
-\`\`\`yaml
-hooks:
-  - module: hooks-approval
-    config:
-      require_approval: ["tool-bash"]
-\`\`\`
+Not guaranteed by the kernel: that every tool call passes through hooks (orchestrator
+obligation), or that context is never summarized (context managers compact automatically).
 
 ---
 
-## Extension System
+## Agents, Modes, Recipes, Skills
 
-### Skills (Model-Invoked)
-- Location: \`~/.amplifier/skills/\` or \`.amplifier/skills/\`
-- Format: \`SKILL.md\` with YAML frontmatter
-- Claude decides when to invoke them
-
-### Agents (User-Invoked)
-- Activated via \`@agent-name\` in chat
-- Can override model, temperature, tools
-- Built-in: \`explorer\`, \`bug-hunter\`, \`zen-architect\`, \`researcher\`, \`modular-builder\`
-
-### Plugins
-- MCP servers (Model Context Protocol)
-- API integrations
-- Custom tool implementations
+- **Agents** are bundles whose frontmatter uses \`meta:\` (\`name\`, \`description\`,
+  optional \`model_role\`) instead of \`bundle:\`. They live in a bundle's \`agents/\` directory
+  and are addressed as \`bundle:agent\`. The model reaches them through the \`delegate\` tool.
+  The older \`task\` tool is legacy.
+- **Modes** are runtime behavior overlays, switched with \`/mode\` in chat (\`/modes\` lists them).
+- **Recipes** are multi-step workflows declared in YAML, run by the recipes tool.
+- **Skills** are \`SKILL.md\` files loaded on demand by the skills tool (\`/skills\` lists them).
+- **Routing** maps an agent's \`model_role\` to a model through a routing matrix
+  (\`amplifier routing list\`, \`amplifier routing use <matrix>\`). It applies only when the
+  composed bundle mounts a routing hook.
+- **MCP** servers are reached through the \`tool-mcp\` module.
 
 ---
 
 ## Programmatic Usage (Embedding)
 
 \`\`\`python
-from amplifier_core import Coordinator, Config
+import asyncio
+from pathlib import Path
 
-# From profile
-config = Config.from_profile("my-profile")
+from amplifier_foundation import load_bundle
 
-# Or manual configuration
-config = Config(
-    providers=[{"module": "provider-anthropic"}],
-    tools=[{"module": "tool-filesystem"}],
-    hooks=[{"module": "hooks-logging"}]
-)
 
-coordinator = Coordinator(config)
+async def main():
+    anchors = await load_bundle(
+        "git+https://github.com/microsoft/amplifier-foundation@main"
+        "#subdirectory=bundles/anchors/bundle.md"
+    )
+    provider = await load_bundle(
+        "git+https://github.com/microsoft/amplifier-foundation@main"
+        "#subdirectory=providers/anthropic-sonnet.yaml"
+    )
 
-async with coordinator.session() as session:
-    response = await session.run("Your prompt here")
-    print(response.content)
+    composed = anchors.compose(provider)      # takes Bundle objects; later wins
+    prepared = await composed.prepare()       # do once: resolves and activates modules
+
+    session = await prepared.create_session(session_cwd=Path.cwd())
+    async with session:
+        print(await session.execute("Hello! What can you help me with?"))
+
+
+asyncio.run(main())   # requires ANTHROPIC_API_KEY
 \`\`\`
+
+\`AmplifierSession\` has \`initialize()\`, \`execute(prompt) -> str\` and \`cleanup()\`, and is an
+async context manager. There is no \`run()\`, \`stream()\`, \`close()\`, \`on()\` or \`fork()\`.
+\`create_session()\` returns an already-initialized session. Register hooks with
+\`session.coordinator.hooks.register(event, handler)\`.
+
+To drive sessions from another language, use \`amplifierd\` (REST and SSE) or
+\`amplifier-agent\` (Python/TypeScript bindings, HTTP and ACP).
 
 ---
 
@@ -367,50 +448,56 @@ async with coordinator.session() as session:
 
 | Repository | Purpose |
 |------------|---------|
-| \`amplifier-core\` | Kernel - session coordination, protocols |
-| \`amplifier-profiles\` | Profile loading with inheritance |
-| \`amplifier-module-resolution\` | Module source resolution |
-| \`amplifier-collections\` | Collection discovery |
-| \`amplifier-app-cli\` | CLI application |
-| \`amplifier-foundation\` | Bundles and best practices |
+| \`microsoft/amplifier\` | Entry point, installer, component catalog (\`docs/MODULES.md\`) |
+| \`microsoft/amplifier-core\` | Kernel: sessions, contracts, hooks, events |
+| \`microsoft/amplifier-foundation\` | Bundle library; ships the \`anchors\` and \`foundation\` roots |
+| \`microsoft/amplifier-app-cli\` | Reference CLI |
+| \`microsoft/amplifierd\` | Localhost HTTP daemon over core and foundation |
+| \`microsoft/amplifier-agent\` | Embeddable engine with Python/TypeScript bindings |
+| \`microsoft/amplifier-bundle-*\` | Bundles: recipes, superpowers, modes, skills, routing-matrix, ... |
+| \`microsoft/amplifier-module-*\` | Runtime modules |
 
 ---
 
 ## Documentation Navigation
 
-This documentation site has these sections:
-
 | Section | Content |
 |---------|---------|
 | **Home** | Overview and quick links |
 | **Quickstart** | Installation and first steps |
-| **Architecture** | Three-layer design, data flow, protocols |
+| **Architecture** | Layers, data flow, protocols |
+| **Philosophy** | Design principles |
 | **Guides** | Architecture boundaries, module development |
-| **Reference** | API details, configuration options |
+| **Reference** | Contracts, hooks, events, sessions, agents |
 | **CLI** | Command reference |
-| **Ecosystem** | Skills, agents, plugins |
+| **Ecosystem** | Applications, bundles, modules, Smart Tools |
+| **Showcase** | Community work |
 | **Examples** | Code samples and patterns |
 
 ---
 
 ## Rules for Working with Amplifier Code
 
-1. **Check the layer** - Know if you're in app/kernel/module before editing
-2. **Respect boundaries** - Kernel doesn't make policy decisions
-3. **Hooks for security** - Never bypass hook dispatch
-4. **Profiles for config** - Don't hardcode what should be configurable
-5. **Test with profiles** - Use \`--profile test\` for CI
-6. **Inherit, don't duplicate** - Use \`extends:\` in profiles
+1. **Check the layer** - Know whether you are in app, foundation, kernel or module code before editing
+2. **Respect the import rule** - Modules import only \`amplifier-core\`
+3. **Keep policy out of the kernel** - The kernel provides mechanism
+4. **Security lives in hooks** - Return \`deny\`; never rely on an exception
+5. **Package capabilities as behaviors** - So they compose onto any host
+6. **Compose, don't copy** - Use \`includes:\` rather than duplicating a bundle
+7. **Verify against the installed build** - \`amplifier <command> --help\` is the authority for commands
 
 ---
 
 ## Common Mistakes to Avoid
 
-- Adding policy logic to \`amplifier-core\` (belongs in app layer)
-- Bypassing hooks in custom tools (security violation)
-- Hardcoding provider/model in tools (use config)
-- Creating new orchestrators when a hook would suffice
-- Putting secrets in profiles (use environment variables)
+- Using \`amplifier profile\`, \`amplifier collection\`, \`--profile\`, or \`extends:\` (all gone)
+- Calling \`session.run()\` or \`Config.from_profile()\` (they do not exist)
+- Writing \`@namespace:path\` inside YAML (the \`@\` form is for the markdown body only)
+- Returning \`HookResult(action="allow")\` (the action is \`continue\`)
+- Mounting hooks with \`coordinator.mount("hooks", ...)\` (it raises; use \`coordinator.hooks.register\`)
+- Adding policy logic to \`amplifier-core\`
+- Hardcoding a provider or model in a tool
+- Putting secrets in bundles or settings (reference environment variables)
 
 ---
 
@@ -432,6 +519,7 @@ function generateFullGuideMarkdown() {
     { id: 'reference', title: 'Reference' },
     { id: 'cli', title: 'CLI Commands' },
     { id: 'ecosystem', title: 'Ecosystem' },
+    { id: 'showcase', title: 'Showcase' },
     { id: 'examples', title: 'Examples' },
     { id: 'contribute', title: 'Contributing' }
   ];
@@ -601,10 +689,49 @@ function downloadFile(filename, content) {
   URL.revokeObjectURL(url);
 }
 
+/**
+ * Copy the code block that a "Copy" button belongs to.
+ * Works for .code-block (button in the header) and .example-card layouts.
+ */
+function copyCode(button) {
+  const container = button.closest('.code-block, .example-card') || button.parentElement?.parentElement;
+  const code = container ? container.querySelector('pre code, pre') : null;
+  if (!code) return;
+  navigator.clipboard.writeText(code.textContent).then(() => {
+    const original = button.textContent;
+    button.textContent = 'Copied';
+    setTimeout(() => { button.textContent = original; }, 1500);
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+    showToast('Failed to copy', 2000);
+  });
+}
+
+/**
+ * Show the answer for the kernel-vs-module litmus question ('yes' | 'no')
+ */
+function showLitmusResult(choice) {
+  document.querySelectorAll('.litmus-result').forEach(el => el.classList.remove('show'));
+  const result = document.getElementById('litmus-result-' + choice);
+  if (result) result.classList.add('show');
+}
+
+/**
+ * Expand or collapse a specification entry
+ */
+function toggleSpec(header) {
+  const section = header.closest('.spec-section');
+  if (section) section.classList.toggle('open');
+}
+
 // Expose functions globally for onclick handlers
 window.toggleExportMenu = toggleExportMenu;
 window.copyMarkdown = copyMarkdown;
 window.downloadMarkdown = downloadMarkdown;
 window.downloadFullGuide = downloadFullGuide;
+window.copyCode = copyCode;
+window.copyExampleCode = copyCode;
+window.showLitmusResult = showLitmusResult;
+window.toggleSpec = toggleSpec;
 
 console.log('Export module loaded');

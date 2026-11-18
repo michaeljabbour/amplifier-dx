@@ -180,7 +180,8 @@ blocks alongside markdown text. The host extracts and renders those blocks.
 
 ## Provenance
 
-Originally extracted from `amplifier-app-learn/src/contexts/ChatContext.jsx` and
+Originally extracted from `amplifier-app-learn/src/contexts/ChatContext.jsx` (a private
+repository) and
 re-packaged here as a portable Amplifier skill so any session — or any host that
 loads skills via `tool-skills` — can use the same companion behavior.
 
@@ -188,7 +189,7 @@ loads skills via `tool-skills` — can use the same companion behavior.
 `?raw` import. The canonical artifact lives in this repo
 (`skills/learning-companion/SKILL.md`); the LMS mirrors the body to
 `src/content/learning-companion-skill.md` and consumes it in
-[`ChatContext.jsx`](https://github.com/michaeljabbour/amplifier-app-learn/blob/main/src/contexts/ChatContext.jsx)
+`ChatContext.jsx`
 via:
 
 ```js

@@ -1,8 +1,8 @@
 from pathlib import Path
 
 
-def test_docs_index_has_correct_entries_8_through_10():
-    """Test that docs/00-index.md has correct entries 8-10 without dead links."""
+def test_docs_index_has_correct_entries_8_through_13():
+    """Test that docs/00-index.md has correct entries 8-13 without dead links."""
     content = Path("docs/00-index.md").read_text()
 
     # Entry 8 should be Architecture Boundaries, not Asset Model
@@ -28,29 +28,34 @@ def test_docs_index_has_correct_entries_8_through_10():
         "Dead link 12-testing-matrix.md should be removed"
     )
 
-    # Entry 10 should be Working with AI (pointing to 13-working-with-ai.md)
+    # Entry 13 should be Working with AI (pointing to 13-working-with-ai.md)
     assert "13-working-with-ai.md" in content, (
-        "Entry 10 should link to 13-working-with-ai.md"
+        "Entry 13 should link to 13-working-with-ai.md"
     )
     assert "Working with AI" in content, "Entry should mention Working with AI"
     assert (
         "vibe coding" in content or "structured AI-assisted development" in content
-    ), "Entry 10 should describe AI development comparison"
+    ), "Entry 13 should describe AI development comparison"
 
-    # Verify entry 10 comes after entry 9 in the document structure
+    # Verify entries 9, 12, 13 appear in order (docs 10-12 were added between
+    # Ecosystem Quick Map and Working with AI, which is why it is entry 13).
     lines = content.splitlines()
     entry_9_line = None
-    entry_10_line = None
+    entry_12_line = None
+    entry_13_line = None
 
     for i, line in enumerate(lines):
-        if "9. **[Ecosystem Quick Map](./09-ecosystem-quick-map.md)**" in line:
+        if line.startswith("9. **[Ecosystem Quick Map](./09-ecosystem-quick-map.md)**"):
             entry_9_line = i
-        if "10. **[Working with AI]" in line:
-            entry_10_line = i
+        if line.startswith("12. **[Current Ecosystem](./12-current-ecosystem.md)**"):
+            entry_12_line = i
+        if line.startswith("13. **[Working with AI]"):
+            entry_13_line = i
 
     assert entry_9_line is not None, "Entry 9 should be Ecosystem Quick Map"
-    assert entry_10_line is not None, "Entry 10 (Working with AI) should exist"
-    assert entry_9_line < entry_10_line, "Entry 10 should come after entry 9"
+    assert entry_12_line is not None, "Entry 12 (Current Ecosystem) should exist"
+    assert entry_13_line is not None, "Entry 13 (Working with AI) should exist"
+    assert entry_9_line < entry_12_line < entry_13_line, "Entries should be in order"
 
     assert "[main docs bundles]" in content, (
         "Reading path text should be '[main docs bundles]'"

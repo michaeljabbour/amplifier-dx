@@ -1,3 +1,5 @@
+> **Historical record.** This review is dated December 17, 2024 in its header (committed 2025-12-17). The commands and APIs in it predate the bundle system and are not current; for current reference see [12-current-ecosystem.md](./12-current-ecosystem.md) and the CLI section of the site.
+
 # Amplifier DX Review: Comprehensive Analysis & Improvement Plan
 
 **Reviewer**: Claude (AI Agent with deep Amplifier ecosystem knowledge)  

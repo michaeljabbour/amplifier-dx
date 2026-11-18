@@ -12,22 +12,17 @@ You're busy. Here's Amplifier in 5 minutes.
 
 ## See It Working
 
-Want to see this in action right now? Clone and run **[amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli)**:
+Want to see this in action right now? Install the official CLI and run a prompt:
 
 ```bash
-git clone https://github.com/michaeljabbour/amplifier-simplecli
-cd amplifier-simplecli
-python simple_cli.py --init
-python simple_cli.py
+uv tool install git+https://github.com/microsoft/amplifier
+amplifier init
+amplifier run "List the Python files in this directory"
 ```
 
-This is a complete working CLI with:
-- 14 pre-configured modules (orchestrator, providers, tools, hooks)
-- Memory system that learns across sessions
-- Interactive terminal UI with Rich
-- Bundle composition (base.md + opus.yaml)
-
-Study the source to see exactly how it all fits together.
+Prefer to read code? The [amplifier-foundation examples](https://github.com/microsoft/amplifier-foundation/tree/main/examples) are runnable
+scripts. `examples/01_hello_world.py` is the shortest: load a bundle, compose it with a
+provider, execute a prompt.
 
 ---
 
@@ -62,7 +57,7 @@ Study the source to see exactly how it all fits together.
 
 ### Five Things, That's All
 
-Amplifier has exactly five types of components:
+Amplifier has exactly five types of runtime module:
 
 | Type | What It Does | Example |
 |------|--------------|---------|
@@ -72,43 +67,63 @@ Amplifier has exactly five types of components:
 | **Orchestrator** | Runs the loop | `loop-streaming` (think → act → repeat) |
 | **Hook** | Watches everything | `hooks-logging` (logs all events) |
 
-### Configuration in Three Tiers
+Agents, behaviors, modes, skills and recipes are configuration layered on those five.
 
-Settings come from three places, merged in order:
+### Configuration in Four Scopes
+
+Settings come from four places, merged in order:
 
 ```
-~/.amplifier/settings.yaml       → User defaults
+~/.amplifier/settings.yaml       → Global (user defaults)
 .amplifier/settings.yaml         → Project settings
 .amplifier/settings.local.yaml   → Local overrides (gitignored)
+~/.amplifier/projects/<slug>/sessions/<id>/settings.yaml
+                                 → Session overrides
 ```
 
 More specific wins.
 
 ### Bundles Define Sessions
 
-Bundles configure sessions (modules, providers, hooks). Recipes are separate declarative workflows referenced by or packaged inside bundles.
+Bundles configure sessions (modules, agents, context, hooks). Recipes are separate declarative workflows run by the `recipes` tool and often packaged inside bundles.
 
 ```yaml
 ---
-name: my-assistant
-version: "1.0"
-providers:
-  - module: provider-anthropic
+bundle:
+  name: my-assistant
+  version: 1.0.0
+
+session:
+  orchestrator:
+    module: loop-basic
+    source: git+https://github.com/microsoft/amplifier-module-loop-basic@main
+  context:
+    module: context-simple
+    source: git+https://github.com/microsoft/amplifier-module-context-simple@main
+
 tools:
   - module: tool-filesystem
+    source: git+https://github.com/microsoft/amplifier-module-tool-filesystem@main
   - module: tool-bash
+    source: git+https://github.com/microsoft/amplifier-module-tool-bash@main
+
 hooks:
   - module: hooks-logging
+    source: git+https://github.com/microsoft/amplifier-module-hooks-logging@main
 ---
 
 You are a helpful coding assistant.
 ```
 
-**Run it:**
-- Official CLI: `amplifier run --bundle my-assistant "Help me refactor this"`
-- Working example: See [amplifier-simplecli](https://github.com/michaeljabbour/amplifier-simplecli) for bundle-based approach
+Every module names its `source`. The provider is left out on purpose: it comes from your
+settings (`amplifier init`). A bundle that does not choose its own `session.orchestrator`
+and `session.context` has to include a complete root that does, such as Anchors.
 
-Need a multi-step workflow? Create a **recipe** (`recipes/*.yaml`), package it inside a bundle, and reference it from a bundle or invoke it as a tool. See [Layers of Understanding](./06-layers.md).
+**Run it:**
+- Official CLI: `amplifier run --bundle ./my-assistant.md "Help me refactor this"` (or register it first with `amplifier bundle add file:///path/to/bundle`)
+- From Python: see `examples/01_hello_world.py` in the [amplifier-foundation examples](https://github.com/microsoft/amplifier-foundation/tree/main/examples)
+
+Need a multi-step workflow? Write a **recipe** (a YAML file, conventionally `recipes/*.yaml` inside a bundle) and run it with the `recipes` tool, for example `amplifier tool invoke recipes operation=execute recipe_path=<path or namespace:recipes/x.yaml>`. New recipes with `agent:` steps carry a `schema_version: 2` header. See [Layers of Understanding](./06-layers.md).
 
 ---
 
@@ -174,13 +189,15 @@ Hooks observe everything. They fire on events:
 | `provider:request` | Before LLM API call |
 | `provider:response` | After LLM responds |
 
+Note: `provider:response` is a canonical event name (as is `prompt:complete`), but the installed `loop-streaming` orchestrator emits neither. Providers emit `llm:request` / `llm:response`.
+
 A hook can return `{action: "deny"}` on `tool:pre` to block execution.
 
 ### Why Bundles Matter
 
 Bundles let you:
 - **Share configurations** - Team uses same setup
-- **Inherit** - `extends: base-bundle` builds on another
+- **Compose** - `includes:` layers other bundles and behaviors
 - **Customize** - Different bundles for different tasks
 - **Version** - Track bundle changes over time
 
@@ -213,7 +230,7 @@ Bundles let you:
 │    Hook        = Event observer                                     │
 │                                                                     │
 │  CONFIG HIERARCHY (more specific wins)                              │
-│    defaults < user < project < local < runtime                      │
+│    global < project < local < session < CLI flags                   │
 │                                                                     │
 │  KEY EVENTS                                                         │
 │    tool:pre    Before tool runs (can block)                         │
@@ -221,11 +238,12 @@ Bundles let you:
 │                                                                     │
 │  BUNDLE STRUCTURE                                                  │
 │    ---                                                              │
-│    name: string                                                     │
-│    extends: optional-parent                                         │
-│    providers: [{module: string}]                                    │
-│    tools: [{module: string}]                                        │
-│    hooks: [{module: string}]                                        │
+│    bundle: {name, version}                                          │
+│    includes: [{bundle: uri}]                                        │
+│    session: {orchestrator, context}                                 │
+│    providers / tools / hooks: [{module, source, config}]            │
+│    agents: {include: [...]}                                         │
+│    context: {include: [...]}                                        │
 │    ---                                                              │
 │    System prompt in markdown body                                   │
 │                                                                     │
@@ -236,8 +254,8 @@ Bundles let you:
 │    amplifier bundle list                                           │
 │                                                                     │
 │  WORKING EXAMPLE                                                    │
-│    github.com/michaeljabbour/amplifier-simplecli                    │
-│    python simple_cli.py   (bundle-based approach)                   │
+│    github.com/microsoft/amplifier-foundation                        │
+│    examples/01_hello_world.py                                       │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
 ```
