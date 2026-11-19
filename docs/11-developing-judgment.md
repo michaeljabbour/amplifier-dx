@@ -64,13 +64,13 @@ The counterintuitive truth: **verification is not the opposite of trust — it i
 
 When you verify an agent's output and it passes, your trust is now *earned*, not assumed. When it fails verification, you learn where the agent needs oversight. Over time, this builds a calibration model that is specific to your codebase, your agents, and your domain.
 
-This is why Amplifier's architecture includes explicit verification gates:
+This is why Amplifier lets you put explicit verification gates in the loop (hooks, approval gates, and recipe stages that you configure; none is automatic):
 
 | Mechanism | What It Catches | Trust It Enables |
 |-----------|-----------------|-----------------|
 | **Contract tests** | Interface violations | "The module does what the spec says" |
 | **Lint and type checks** | Structural issues | "The code is well-formed" |
-| **Critic assessment** | Spec drift and scope creep | "The artifact matches the intent" |
+| **Independent review (a reviewer agent or mode you add)** | Spec drift and scope creep | "The artifact matches the intent" |
 | **Event stream logs** | What actually happened | "I can see every decision the agent made" |
 
 Each verification mechanism lets you trust a specific dimension of the output without trusting blindly.
@@ -83,7 +83,7 @@ Multi-step agentic loops (intent -> spec -> build -> verify -> ship) sometimes g
 
 **Let the loop work when:**
 
-- A single quality score drops slightly after an iteration (the system will re-route)
+- A single quality score drops slightly after an iteration (a loop built with a retry or review step will re-route)
 - The agent asks a clarifying question (answer it and let the loop continue)
 - The first draft is not perfect (that is what iteration is for)
 

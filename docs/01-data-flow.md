@@ -55,7 +55,7 @@ Every Amplifier session is built from five documented module types. (The kernel'
 ## Step-by-Step: What Happens When You Run a Prompt
 
 Let's trace a prompt through the entire system. The flow is identical whether you use:
-- Official CLI: `amplifier run "List Python files"` (from amplifier monorepo)
+- Official CLI: `amplifier run "List Python files"` (the reference CLI, `amplifier-app-cli`, installed by `uv tool install git+https://github.com/microsoft/amplifier`)
 - Your own Python: the scripts in the [amplifier-foundation examples](https://github.com/microsoft/amplifier-foundation/tree/main/examples), starting with `examples/01_hello_world.py`
 
 ### Step 1: Session Creation
