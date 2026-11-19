@@ -1,6 +1,6 @@
 /**
  * Document Assistant - Chat Widget
- * Uses GPT-5.1 with site context for documentation assistance
+ * Uses GPT-6.2 Sol with site context for documentation assistance
  */
 
 (function() {
@@ -8,11 +8,9 @@
 
   // Configuration
   const CONFIG = {
-    defaultModel: 'gpt-5.1',
+    defaultModel: 'gpt-6.2-sol',
     models: [
-      { id: 'gpt-5.1', name: 'GPT-5.1 (Best)', contextWindow: 400000 },
-      { id: 'gpt-4.1', name: 'GPT-4.1', contextWindow: 1000000 },
-      { id: 'o4-mini', name: 'o4-mini (Fast)', contextWindow: 200000 }
+      { id: 'gpt-6.2-sol', name: 'GPT-6.2 Sol' }
     ],
     apiEndpoint: 'https://api.openai.com/v1/chat/completions',
     contextPath: 'context/site-context.txt',
@@ -29,6 +27,12 @@
     rememberKey: false
   };
 
+  // Map any missing, retired or unknown stored model id to a supported one
+  function normalizeModel(id) {
+    const wanted = typeof id === 'string' ? id.trim() : '';
+    return CONFIG.models.some(function(m) { return m.id === wanted; }) ? wanted : CONFIG.defaultModel;
+  }
+
   // Load settings from storage
   function loadSettings() {
     try {
@@ -36,6 +40,7 @@
       if (saved) {
         const parsed = JSON.parse(saved);
         settings = { ...settings, ...parsed };
+        settings.model = normalizeModel(settings.model);
         if (!settings.rememberKey) {
           settings.apiKey = '';
         }
@@ -91,10 +96,9 @@
       '- Prefer compact node labels (abbreviate if needed)\n' +
       '- If a diagram would be too wide, describe it textually instead\n\n' +
       'KEY FACTS:\n' +
-      '- Core: ~2,600 lines, mechanisms not policies\n' +
-      '- Modules: providers, orchestrators, contexts, tools, hooks\n' +
-      '- Only providers use entry points; orchestrators/contexts use local implementations\n' +
-      '- Production: Use max_tokens 8192+ to prevent truncated tool calls\n\n' +
+      '- Installed facts come from the documentation below; verify versions and entry points against the installed build, not memory\n' +
+      '- Items marked PROPOSED, roadmap, or in the Specifications tab are not installed; never present them as current\n' +
+      '- Module wiring and token limits depend on the host and provider; cite the docs and say when host-specific\n\n' +
       'User is viewing: ' + currentSection + '\n\n' +
       'DOCUMENTATION:\n' +
       (siteContext ? siteContext : 'Context not loaded.');
@@ -257,7 +261,7 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: settings.model,
+          model: normalizeModel(settings.model),
           messages: messages,
           stream: true
         })
@@ -465,7 +469,7 @@
 
     const headerText = document.createElement('div');
     const headerTitle = createElement('div', 'chat-header-title', 'Document Assistant');
-    const headerSubtitle = createElement('div', 'chat-header-subtitle', 'Powered by GPT-5.1');
+    const headerSubtitle = createElement('div', 'chat-header-subtitle', 'Powered by ' + CONFIG.models.find(function(m) { return m.id === normalizeModel(settings.model); }).name);
     headerText.appendChild(headerTitle);
     headerText.appendChild(headerSubtitle);
     headerLeft.appendChild(headerText);

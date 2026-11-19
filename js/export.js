@@ -354,15 +354,28 @@ tool-word-count = "amplifier_module_tool_word_count:mount"
 
 ## Events
 
-The kernel defines 43 canonical events (\`amplifier_core.events\`). The kernel itself emits
-only the session and module lifecycle events; everything else is emitted by modules,
-mostly the orchestrator.
+The kernel defines a fixed list of 43 canonical events (\`amplifier_core.events.ALL_EVENTS\`).
+The kernel itself emits only a small subset of them (session, cancellation and module-load
+events, below). Everything else is emitted by modules, mostly the orchestrator. The redacted
+config is not a separate event in practice: when \`session.raw\` is true it rides on the
+\`raw\` field of the start, resume and fork payloads. \`session:config\` is not canonical;
+core 2.0.2 contains a helper for it, but no emission was verified, so do not rely on it.
 
 | Emitted by | Events |
 |------------|--------|
-| Kernel | \`session:start\` or \`session:resume\` (on the first \`execute()\`), \`session:fork\`, \`session:end\`, \`cancel:completed\`, \`module:load_failed\` |
+| Kernel | \`session:start\` or \`session:resume\` (on the first \`execute()\`), \`session:fork\` (child sessions, at init), \`session:end\` (at cleanup), \`cancel:completed\`, \`module:load_failed\`, \`module:on_session_ready_failed\` |
 | Orchestrator (contract) | \`execution:start\`, \`execution:end\`, \`orchestrator:complete\`, \`provider:request\`, \`tool:pre\`, \`tool:post\` |
 | Provider (typical) | \`llm:request\`, \`llm:response\` |
+
+Payload fields (amplifier-core 2.0.2):
+
+- \`session:start\` / \`session:resume\`: \`session_id\`, \`parent_id\`, plus \`metadata\` when set and \`raw\` when \`session.raw\` is true.
+- \`session:fork\`: \`parent\`, \`session_id\`, plus \`metadata\` and \`raw\` under the same conditions.
+- \`session:end\`: \`session_id\` and \`status\` (the final session status, such as \`completed\`, \`failed\` or \`cancelled\`).
+- \`session:config\` (noncanonical; helper present in core 2.0.2, no verified emission): would carry \`session_id\` and \`raw\`. Do not depend on it.
+- \`cancel:completed\`: \`was_immediate\`, plus \`error\` when execution raised while cancelled.
+- \`module:load_failed\` (a provider, tool or hook failed to load): \`module_type\`, \`module_id\`, \`error\`, \`reason_code\`, plus \`instance_id\` when present.
+- \`module:on_session_ready_failed\` (a module's \`on_session_ready\` callback raised; the session continues): \`module_id\`, \`error\`.
 
 \`tool:pre\` carries \`tool_name\` and \`tool_input\`; \`tool:post\` adds \`tool_result\`. Event
 matching is by exact name. There is no wildcard subscription.
