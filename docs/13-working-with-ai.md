@@ -366,4 +366,4 @@ Neither approach is superior. They solve different problems. The best developers
 
 ---
 **Previous:** [Ecosystem Quick Map](./09-ecosystem-quick-map.md)
-**Next:** End of current documentation. Return to [Index](./00-index.md).
+**Next:** [Built with Amplifier](./14-built-with-amplifier.md)

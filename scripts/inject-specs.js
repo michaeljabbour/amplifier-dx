@@ -25,13 +25,23 @@ function main() {
   const indexContent = fs.readFileSync(INDEX_FILE, 'utf-8');
   const generatedContent = fs.readFileSync(GENERATED_FILE, 'utf-8');
 
+  if (!generatedContent.includes(START_MARKER) || !generatedContent.includes(END_MARKER)) {
+    console.error(`Error: ${GENERATED_FILE} lacks the AUTO-GENERATED markers; refusing to inject`);
+    process.exit(1);
+  }
+
   let updatedContent;
 
   // Check if auto-generated content already exists
   if (indexContent.includes(START_MARKER)) {
     // Replace existing auto-generated content
     const startIndex = indexContent.indexOf(START_MARKER);
-    const endIndex = indexContent.indexOf(END_MARKER) + END_MARKER.length;
+    const endMarkerIndex = indexContent.indexOf(END_MARKER, startIndex);
+    if (endMarkerIndex === -1) {
+      console.error(`Error: ${END_MARKER} not found after start marker; refusing to overwrite ${INDEX_FILE}`);
+      process.exit(1);
+    }
+    const endIndex = endMarkerIndex + END_MARKER.length;
 
     updatedContent =
       indexContent.slice(0, startIndex) +

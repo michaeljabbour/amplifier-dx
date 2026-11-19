@@ -8,14 +8,18 @@
  */
 digraph AmplifierStack {
     rankdir=TB;
-    bgcolor="white";
+    bgcolor="#151618";
+    fontname="Helvetica";
+    fontcolor="#cdc8bc";
     pad=0.3;
     nodesep=0.4;
     ranksep=0.5;
-    fontname="Helvetica";
 
     node [
         shape=box,
+        fontcolor="#efeadf",
+        color="#4a4d51",
+        fillcolor="#232527",
         style="filled,rounded",
         fontname="Helvetica",
         fontsize=11,
@@ -25,47 +29,48 @@ digraph AmplifierStack {
 
     edge [
         fontname="Helvetica",
+        fontcolor="#9b968b",
         fontsize=9,
-        color="#7a7a7a",
+        color="#75716a",
         penwidth=1.2
     ];
 
     // === LAYERS ===
     apps [
-        label=<<B>Applications</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-app-cli &#8226; amplifierd<BR/>amplifier-chat &#8226; amplifier-voice<BR/>amplifier-app-log-viewer &#8226; amplifier-app-tui<BR/>amplifier-unified &#8226; amplifier-distro</FONT>>,
-        fillcolor="#dceefc",
-        color="#3a86c8"
+        label=<<B>Applications</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">amplifier-app-cli &#8226; amplifierd<BR/>amplifier-chat &#8226; amplifier-voice<BR/>amplifier-app-log-viewer &#8226; amplifier-app-tui<BR/>amplifier-unified &#8226; amplifier-distro</FONT>>,
+        fillcolor="#1f2a35",
+        color="#7fb0dd"
     ];
 
     bundles [
-        label=<<B>Bundles</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-bundle-* (50+ Microsoft + community)<BR/>recipes &#8226; superpowers &#8226; python-dev<BR/>browser-tester &#8226; design-intelligence &#8230;</FONT>>,
-        fillcolor="#e2dcfc",
-        color="#7059c8"
+        label=<<B>Bundles</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">amplifier-bundle-* (50+ Microsoft + community)<BR/>recipes &#8226; superpowers &#8226; python-dev<BR/>browser-tester &#8226; design-intelligence &#8230;</FONT>>,
+        fillcolor="#2a2535",
+        color="#b9a2dc"
     ];
 
     foundation [
-        label=<<B>Foundation Library</B><BR/><FONT POINT-SIZE="9" COLOR="#444">amplifier-foundation<BR/>bundle parsing, composition,<BR/>session factory</FONT>>,
-        fillcolor="#fce8d2",
-        color="#c87a3a"
+        label=<<B>Foundation Library</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">amplifier-foundation<BR/>bundle parsing, composition,<BR/>session factory</FONT>>,
+        fillcolor="#33271d",
+        color="#ea9a62"
     ];
 
     modules [
-        label=<<B>Runtime Modules</B><BR/><FONT POINT-SIZE="9" COLOR="#444">providers &#8226; tools &#8226; orchestrators<BR/>context managers &#8226; hooks<BR/>(amplifier-module-*)</FONT>>,
-        fillcolor="#dcf2dc",
-        color="#3a8c3a"
+        label=<<B>Runtime Modules</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">providers &#8226; tools &#8226; orchestrators<BR/>context managers &#8226; hooks<BR/>(amplifier-module-*)</FONT>>,
+        fillcolor="#1f2d25",
+        color="#86c49a"
     ];
 
     kernel [
-        label=<<B>Kernel</B><BR/><FONT POINT-SIZE="9" COLOR="#dddddd">amplifier-core<BR/>Rust kernel, Python bindings<BR/>session lifecycle, hooks, contracts</FONT>>,
-        fillcolor="#3a3a3a",
-        fontcolor="white",
-        color="#000000"
+        label=<<B>Kernel</B><BR/><FONT POINT-SIZE="9" COLOR="#3a2a0c">amplifier-core<BR/>Rust kernel, Python bindings<BR/>session lifecycle, hooks, contracts</FONT>>,
+        fillcolor="#f2a93b",
+        fontcolor="#1a1b1d",
+        color="#f2a93b"
     ];
 
     devtools [
-        label=<<B>Development Tools &amp; Skills</B><BR/><FONT POINT-SIZE="9" COLOR="#444">Smart Tools (amplifier-smart-tool-*)<BR/>Skills (SKILL.md)<BR/>host-independent: usable from any agent host</FONT>>,
-        fillcolor="#f4f4f4",
-        color="#8a8a8a",
+        label=<<B>Development Tools &amp; Skills</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">Smart Tools (amplifier-smart-tool-*)<BR/>Skills (SKILL.md)<BR/>host-independent: usable from any agent host</FONT>>,
+        fillcolor="#232527",
+        color="#75716a",
         style="filled,rounded,dashed"
     ];
 
@@ -94,11 +99,12 @@ digraph AmplifierStack {
         labelloc=b;
         labeljust=r;
         fontsize=9;
-        color="#cccccc";
+        color="#323437";
         style=dashed;
 
         rule [
             shape=plaintext,
+        style="",
             label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2">
                 <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">Apps may depend on anything below.</FONT></TD></TR>
                 <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">Modules depend ONLY on kernel.</FONT></TD></TR>

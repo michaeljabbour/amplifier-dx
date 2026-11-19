@@ -38,7 +38,7 @@ The shape of the growth matters more than the count:
 
 | Change | What it means |
 |--------|---------------|
-| **Anchors is the default root bundle** | The upstream README now says Anchors is the default and calls `foundation` "a selectable complete root". Anchors lives inside `amplifier-foundation` (`bundles/anchors`), not in its own repo. CLI build `2026.09.06` reports `anchors (default)`; upstream `main` has since moved the default to `anchors-amp-dev`, a thin root that includes Anchors. |
+| **Default root bundle (version-sensitive: `anchors` or `anchors-amp-dev`)** | The upstream README now says Anchors is the default and calls `foundation` "a selectable complete root". Anchors lives inside `amplifier-foundation` (`bundles/anchors`), not in its own repo. The default depends on the CLI version. CLI build `2026.09.06` reports `anchors (default)`; upstream `main` has since moved the default to `anchors-amp-dev`, a thin root that includes Anchors. Sources, both verified in `microsoft/amplifier-app-cli`: [`anchors` at 569c9b8, `amplifier_app_cli/commands/run.py#L335-L337`](https://github.com/microsoft/amplifier-app-cli/blob/569c9b8/amplifier_app_cli/commands/run.py#L335-L337); [`anchors-amp-dev` at 9a053f5, `amplifier_app_cli/lib/bundle_loader/discovery.py#L31`](https://github.com/microsoft/amplifier-app-cli/blob/9a053f5/amplifier_app_cli/lib/bundle_loader/discovery.py#L31). No switch date is established. |
 | **Behaviors are the unit you add** | The quick start now adds a *behavior* to the existing host (`amplifier bundle add '...#subdirectory=behaviors/recipes.yaml' --app`) instead of switching root bundles. |
 | **The kernel has more than Python bindings** | `amplifier-core` is described upstream as a native Rust kernel with Python bindings and Node/C-ABI interfaces in the same repository. Upstream notes that binding source being present does not establish released artifacts. |
 | **Unified** | A local, authenticated web workspace for chat, voice, and work, with terminal and macOS clients. |
@@ -245,7 +245,7 @@ your existing host, alongside a root `bundle.md` you can select on its own.
 | [`memory`](https://github.com/microsoft/amplifier-bundle-memory) | Local, Git-backed standing preferences with session integration. Distinct from the community memory capability. |
 | [`llm-wiki`](https://github.com/microsoft/amplifier-bundle-llm-wiki) | The LLM Wiki pattern as workflow modes: init, ingest, lint, publish, query |
 | [`team-pulse`](https://github.com/microsoft/amplifier-bundle-team-pulse) | Read-only lens over a team's shared knowledge via the Team Pulse API, with a mode and expert agent |
-| [`redaction`](https://github.com/microsoft/amplifier-bundle-redaction) | Redaction library and redaction hook |
+| [`redaction`](https://github.com/microsoft/amplifier-bundle-redaction) | Redaction library and the `hook-redaction` module; replaces the retired `hooks-redaction` |
 
 ### Routing, content, design, and UX
 
@@ -347,7 +347,7 @@ back several configured instances, distinguished by `id`. See upstream
 | Module | Description |
 |--------|-------------|
 | [`hooks-logging`](https://github.com/microsoft/amplifier-module-hooks-logging) | Unified JSONL event logging per session |
-| [`hooks-redaction`](https://github.com/microsoft/amplifier-module-hooks-redaction) | Privacy redaction for secrets / PII |
+| [`hooks-redaction`](https://github.com/microsoft/amplifier-module-hooks-redaction) | *Retired; historical.* Listed in the upstream catalog, but Foundation's `redaction` behavior now flags it as retired (sunset date 2026-10-01) and points to the `hook-redaction` module in the [`redaction`](https://github.com/microsoft/amplifier-bundle-redaction) bundle. Use that for new work. |
 | [`hooks-approval`](https://github.com/microsoft/amplifier-module-hooks-approval) | Interactive approval gates for sensitive operations |
 | [`hooks-backup`](https://github.com/microsoft/amplifier-module-hooks-backup) | Automatic session transcript backup |
 | [`hooks-streaming-ui`](https://github.com/microsoft/amplifier-module-hooks-streaming-ui) | Real-time console UI for streaming responses |

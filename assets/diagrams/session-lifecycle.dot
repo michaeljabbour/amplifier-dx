@@ -7,13 +7,18 @@
  */
 digraph SessionLifecycle {
     rankdir=TB;
-    bgcolor="white";
+    bgcolor="#151618";
+    fontname="Helvetica";
+    fontcolor="#cdc8bc";
     pad=0.3;
     nodesep=0.3;
     ranksep=0.4;
 
     node [
         shape=box,
+        fontcolor="#efeadf",
+        color="#4a4d51",
+        fillcolor="#232527",
         style="filled,rounded",
         fontname="Helvetica",
         fontsize=10,
@@ -23,8 +28,9 @@ digraph SessionLifecycle {
 
     edge [
         fontname="Helvetica",
+        fontcolor="#9b968b",
         fontsize=9,
-        color="#666666",
+        color="#75716a",
         penwidth=1.1
     ];
 
@@ -33,14 +39,14 @@ digraph SessionLifecycle {
         label=<<B>1. Startup</B>>;
         labeljust=l;
         fontsize=11;
-        color="#cccccc";
+        color="#323437";
         style="rounded,filled";
-        fillcolor="#fafafa";
+        fillcolor="#1a1b1d";
 
-        load    [label="Bundle loaded\n(YAML + markdown)", fillcolor="#e2dcfc"];
-        compose [label="Mount Plan composed\n(merged config)", fillcolor="#e2dcfc"];
-        mount   [label="Modules mounted\nin phase order\n(mount() called per module)", fillcolor="#dcf2dc"];
-        ready   [label="on_session_ready()\nfires for each module\n(coordinator fully composed)", fillcolor="#dcf2dc"];
+        load    [label="Bundle loaded\n(YAML + markdown)", fillcolor="#2a2535", color="#b9a2dc"];
+        compose [label="Mount Plan composed\n(merged config)", fillcolor="#2a2535", color="#b9a2dc"];
+        mount   [label="Modules mounted\nin phase order\n(mount() called per module)", fillcolor="#1f2d25", color="#86c49a"];
+        ready   [label="on_session_ready()\nfires for each module\n(coordinator fully composed)", fillcolor="#1f2d25", color="#86c49a"];
 
         load -> compose -> mount -> ready;
     }
@@ -50,26 +56,26 @@ digraph SessionLifecycle {
         label=<<B>2. Execute (per turn)</B>>;
         labeljust=l;
         fontsize=11;
-        color="#cccccc";
+        color="#323437";
         style="rounded,filled";
-        fillcolor="#fafafa";
+        fillcolor="#1a1b1d";
 
-        prompt   [label="session.execute(prompt)", fillcolor="#dceefc", shape=cds, width=2.5];
-        start    [label="[event: session:start / session:resume]\nfirst execute() call only", fillcolor="#fff8d2"];
-        loop_in  [label="Orchestrator runs\nthe loop\n[event: execution:start]", fillcolor="#fce8d2"];
-        llm_req  [label="LLM request\n[event: llm:request]", fillcolor="#fff8d2"];
-        provider [label="Provider.complete()", fillcolor="#dceefc"];
-        llm_res  [label="LLM response\n[event: llm:response]", fillcolor="#fff8d2"];
-        tool_dec [label="Tool calls?", shape=diamond, fillcolor="#ffffff"];
-        tool_pre [label="[event: tool:pre]\nhooks may deny / ask_user / modify", fillcolor="#fff8d2"];
-        tool_run [label="Tool.execute()", fillcolor="#dcf2dc"];
-        tool_post [label="[event: tool:post]\nhooks observe", fillcolor="#fff8d2"];
-        finish   [label="Final response", fillcolor="#dceefc", shape=cds, width=2.0];
+        prompt   [label="session.execute(prompt)", fillcolor="#1f2a35", color="#7fb0dd", shape=cds, width=2.5];
+        start    [label="[event: session:start / session:resume]\nfirst execute() call only", fillcolor="#2d2a1f", color="#e3c58c"];
+        loop_in  [label="Orchestrator runs\nthe loop\n[event: execution:start, once]", fillcolor="#33271d", color="#ea9a62"];
+        llm_req  [label="LLM request\n[event: llm:request]", fillcolor="#2d2a1f", color="#e3c58c"];
+        provider [label="Provider.complete()", fillcolor="#1f2a35", color="#7fb0dd"];
+        llm_res  [label="LLM response\n[event: llm:response]", fillcolor="#2d2a1f", color="#e3c58c"];
+        tool_dec [label="Tool calls?", shape=diamond, fillcolor="#232527", color="#75716a"];
+        tool_pre [label="[event: tool:pre]\nhooks may deny / ask_user / modify", fillcolor="#2d2a1f", color="#e3c58c"];
+        tool_run [label="Tool.execute()", fillcolor="#1f2d25", color="#86c49a"];
+        tool_post [label="[event: tool:post]\nhooks observe", fillcolor="#2d2a1f", color="#e3c58c"];
+        finish   [label="Final response", fillcolor="#1f2a35", color="#7fb0dd", shape=cds, width=2.0];
 
         prompt -> start -> loop_in -> llm_req -> provider -> llm_res -> tool_dec;
         tool_dec -> tool_pre [label=" yes "];
         tool_pre -> tool_run -> tool_post;
-        tool_post -> loop_in [label=" next iteration "];
+        tool_post -> llm_req [label=" next request "];
         tool_dec -> finish [label=" no "];
     }
 
@@ -78,12 +84,12 @@ digraph SessionLifecycle {
         label=<<B>3. Teardown</B>>;
         labeljust=l;
         fontsize=11;
-        color="#cccccc";
+        color="#323437";
         style="rounded,filled";
-        fillcolor="#fafafa";
+        fillcolor="#1a1b1d";
 
-        end     [label="[event: session:end]\n(emitted first, once)", fillcolor="#fff8d2"];
-        cleanup [label="Cleanup callables\n(reverse registration order)", fillcolor="#fcdedc"];
+        end     [label="[event: session:end]\n(emitted first, once)", fillcolor="#2d2a1f", color="#e3c58c"];
+        cleanup [label="Cleanup callables\n(reverse registration order)", fillcolor="#33211f", color="#e2776b"];
         end -> cleanup;
     }
 

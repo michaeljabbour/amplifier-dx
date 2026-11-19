@@ -8,132 +8,131 @@
  viewBox="0.00 0.00 820.00 501.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 479.25)">
 <title>AmplifierStack</title>
-<polygon fill="white" stroke="none" points="-21.6,21.6 -21.6,-479.25 798.73,-479.25 798.73,21.6 -21.6,21.6"/>
+<polygon fill="#151618" stroke="none" points="-21.6,21.6 -21.6,-479.25 798.73,-479.25 798.73,21.6 -21.6,21.6"/>
 <g id="clust5" class="cluster">
 <title>cluster_legend</title>
-<polygon fill="white" stroke="#cccccc" stroke-dasharray="5,2" points="250.75,-321.8 250.75,-449.65 558.75,-449.65 558.75,-321.8 250.75,-321.8"/>
-<text xml:space="preserve" text-anchor="middle" x="505.75" y="-328.5" font-family="Helvetica,sans-Serif" font-size="9.00">Rule of dependency</text>
+<polygon fill="#151618" stroke="#323437" stroke-dasharray="5,2" points="250.75,-321.8 250.75,-449.65 558.75,-449.65 558.75,-321.8 250.75,-321.8"/>
+<text xml:space="preserve" text-anchor="middle" x="505.75" y="-328.5" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#cdc8bc">Rule of dependency</text>
 </g>
 <!-- apps -->
 <g id="node1" class="node">
 <title>apps</title>
-<path fill="#dceefc" stroke="#3a86c8" stroke-width="1.5" d="M217.5,-429.65C217.5,-429.65 12,-429.65 12,-429.65 6,-429.65 0,-423.65 0,-417.65 0,-417.65 0,-373.05 0,-373.05 0,-367.05 6,-361.05 12,-361.05 12,-361.05 217.5,-361.05 217.5,-361.05 223.5,-361.05 229.5,-367.05 229.5,-373.05 229.5,-373.05 229.5,-417.65 229.5,-417.65 229.5,-423.65 223.5,-429.65 217.5,-429.65"/>
-<text xml:space="preserve" text-anchor="start" x="76.88" y="-409.4" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Applications</text>
-<text xml:space="preserve" text-anchor="start" x="50.25" y="-400.3" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">amplifier&#45;app&#45;cli • amplifierd</text>
-<text xml:space="preserve" text-anchor="start" x="45.38" y="-391.3" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">amplifier&#45;chat • amplifier&#45;voice</text>
-<text xml:space="preserve" text-anchor="start" x="18" y="-382.3" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">amplifier&#45;app&#45;log&#45;viewer • amplifier&#45;app&#45;tui</text>
-<text xml:space="preserve" text-anchor="start" x="38.62" y="-373.3" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">amplifier&#45;unified • amplifier&#45;distro</text>
+<path fill="#1f2a35" stroke="#7fb0dd" stroke-width="1.5" d="M217.5,-429.65C217.5,-429.65 12,-429.65 12,-429.65 6,-429.65 0,-423.65 0,-417.65 0,-417.65 0,-373.05 0,-373.05 0,-367.05 6,-361.05 12,-361.05 12,-361.05 217.5,-361.05 217.5,-361.05 223.5,-361.05 229.5,-367.05 229.5,-373.05 229.5,-373.05 229.5,-417.65 229.5,-417.65 229.5,-423.65 223.5,-429.65 217.5,-429.65"/>
+<text xml:space="preserve" text-anchor="start" x="76.88" y="-409.4" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#efeadf">Applications</text>
+<text xml:space="preserve" text-anchor="start" x="50.25" y="-400.3" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">amplifier&#45;app&#45;cli • amplifierd</text>
+<text xml:space="preserve" text-anchor="start" x="45.38" y="-391.3" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">amplifier&#45;chat • amplifier&#45;voice</text>
+<text xml:space="preserve" text-anchor="start" x="18" y="-382.3" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">amplifier&#45;app&#45;log&#45;viewer • amplifier&#45;app&#45;tui</text>
+<text xml:space="preserve" text-anchor="start" x="38.62" y="-373.3" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">amplifier&#45;unified • amplifier&#45;distro</text>
 </g>
 <!-- bundles -->
 <g id="node2" class="node">
 <title>bundles</title>
-<path fill="#e2dcfc" stroke="#7059c8" stroke-width="1.5" d="M403.62,-284.55C403.62,-284.55 171.88,-284.55 171.88,-284.55 165.88,-284.55 159.88,-278.55 159.88,-272.55 159.88,-272.55 159.88,-236.95 159.88,-236.95 159.88,-230.95 165.88,-224.95 171.88,-224.95 171.88,-224.95 403.62,-224.95 403.62,-224.95 409.62,-224.95 415.62,-230.95 415.62,-236.95 415.62,-236.95 415.62,-272.55 415.62,-272.55 415.62,-278.55 409.62,-284.55 403.62,-284.55"/>
-<text xml:space="preserve" text-anchor="start" x="263.38" y="-264.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Bundles</text>
-<text xml:space="preserve" text-anchor="start" x="177.88" y="-255.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">amplifier&#45;bundle&#45;* (50+ Microsoft + community)</text>
-<text xml:space="preserve" text-anchor="start" x="205.62" y="-246.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">recipes • superpowers • python&#45;dev</text>
-<text xml:space="preserve" text-anchor="start" x="201.5" y="-237.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">browser&#45;tester • design&#45;intelligence …</text>
+<path fill="#2a2535" stroke="#b9a2dc" stroke-width="1.5" d="M403.62,-284.55C403.62,-284.55 171.88,-284.55 171.88,-284.55 165.88,-284.55 159.88,-278.55 159.88,-272.55 159.88,-272.55 159.88,-236.95 159.88,-236.95 159.88,-230.95 165.88,-224.95 171.88,-224.95 171.88,-224.95 403.62,-224.95 403.62,-224.95 409.62,-224.95 415.62,-230.95 415.62,-236.95 415.62,-236.95 415.62,-272.55 415.62,-272.55 415.62,-278.55 409.62,-284.55 403.62,-284.55"/>
+<text xml:space="preserve" text-anchor="start" x="263.38" y="-264.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#efeadf">Bundles</text>
+<text xml:space="preserve" text-anchor="start" x="177.88" y="-255.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">amplifier&#45;bundle&#45;* (50+ Microsoft + community)</text>
+<text xml:space="preserve" text-anchor="start" x="205.62" y="-246.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">recipes • superpowers • python&#45;dev</text>
+<text xml:space="preserve" text-anchor="start" x="201.5" y="-237.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">browser&#45;tester • design&#45;intelligence …</text>
 </g>
 <!-- apps&#45;&gt;bundles -->
 <g id="edge1" class="edge">
 <title>apps&#45;&gt;bundles</title>
-<path fill="none" stroke="#7a7a7a" stroke-width="1.2" d="M157.07,-360.44C182.84,-339.8 215.76,-313.42 242.12,-292.31"/>
-<polygon fill="#7a7a7a" stroke="#7a7a7a" stroke-width="1.2" points="244.11,-295.2 249.72,-286.22 239.73,-289.74 244.11,-295.2"/>
-<text xml:space="preserve" text-anchor="middle" x="241.48" y="-305.25" font-family="Helvetica,sans-Serif" font-size="9.00"> loads </text>
+<path fill="none" stroke="#75716a" stroke-width="1.2" d="M157.07,-360.44C182.84,-339.8 215.76,-313.42 242.12,-292.31"/>
+<polygon fill="#75716a" stroke="#75716a" stroke-width="1.2" points="244.11,-295.2 249.72,-286.22 239.73,-289.74 244.11,-295.2"/>
+<text xml:space="preserve" text-anchor="middle" x="241.48" y="-305.25" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b"> loads </text>
 </g>
 <!-- foundation -->
 <g id="node3" class="node">
 <title>foundation</title>
-<path fill="#fce8d2" stroke="#c87a3a" stroke-width="1.5" d="M653.75,-284.55C653.75,-284.55 509.75,-284.55 509.75,-284.55 503.75,-284.55 497.75,-278.55 497.75,-272.55 497.75,-272.55 497.75,-236.95 497.75,-236.95 497.75,-230.95 503.75,-224.95 509.75,-224.95 509.75,-224.95 653.75,-224.95 653.75,-224.95 659.75,-224.95 665.75,-230.95 665.75,-236.95 665.75,-236.95 665.75,-272.55 665.75,-272.55 665.75,-278.55 659.75,-284.55 653.75,-284.55"/>
-<text xml:space="preserve" text-anchor="start" x="524" y="-264.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Foundation Library</text>
-<text xml:space="preserve" text-anchor="start" x="536.38" y="-255.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">amplifier&#45;foundation</text>
-<text xml:space="preserve" text-anchor="start" x="515.75" y="-246.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">bundle parsing, composition,</text>
-<text xml:space="preserve" text-anchor="start" x="548.38" y="-237.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">session factory</text>
+<path fill="#33271d" stroke="#ea9a62" stroke-width="1.5" d="M653.75,-284.55C653.75,-284.55 509.75,-284.55 509.75,-284.55 503.75,-284.55 497.75,-278.55 497.75,-272.55 497.75,-272.55 497.75,-236.95 497.75,-236.95 497.75,-230.95 503.75,-224.95 509.75,-224.95 509.75,-224.95 653.75,-224.95 653.75,-224.95 659.75,-224.95 665.75,-230.95 665.75,-236.95 665.75,-236.95 665.75,-272.55 665.75,-272.55 665.75,-278.55 659.75,-284.55 653.75,-284.55"/>
+<text xml:space="preserve" text-anchor="start" x="524" y="-264.3" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#efeadf">Foundation Library</text>
+<text xml:space="preserve" text-anchor="start" x="536.38" y="-255.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">amplifier&#45;foundation</text>
+<text xml:space="preserve" text-anchor="start" x="515.75" y="-246.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">bundle parsing, composition,</text>
+<text xml:space="preserve" text-anchor="start" x="548.38" y="-237.2" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">session factory</text>
 </g>
 <!-- apps&#45;&gt;foundation -->
 <g id="edge2" class="edge">
 <title>apps&#45;&gt;foundation</title>
-<path fill="none" stroke="#7a7a7a" stroke-width="1.2" d="M166.26,-360.37C189.18,-346.6 216.98,-331.65 243.75,-321.8 249.53,-319.67 387.82,-292.94 485.69,-274.14"/>
-<polygon fill="#7a7a7a" stroke="#7a7a7a" stroke-width="1.2" points="486.18,-277.61 495.34,-272.29 484.86,-270.74 486.18,-277.61"/>
-<text xml:space="preserve" text-anchor="middle" x="363.89" y="-305.25" font-family="Helvetica,sans-Serif" font-size="9.00"> composes </text>
+<path fill="none" stroke="#75716a" stroke-width="1.2" d="M166.26,-360.37C189.18,-346.6 216.98,-331.65 243.75,-321.8 249.53,-319.67 387.82,-292.94 485.69,-274.14"/>
+<polygon fill="#75716a" stroke="#75716a" stroke-width="1.2" points="486.18,-277.61 495.34,-272.29 484.86,-270.74 486.18,-277.61"/>
+<text xml:space="preserve" text-anchor="middle" x="363.89" y="-305.25" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b"> composes </text>
 </g>
 <!-- modules -->
 <g id="node4" class="node">
 <title>modules</title>
-<path fill="#dcf2dc" stroke="#3a8c3a" stroke-width="1.5" d="M298.5,-177.7C298.5,-177.7 141,-177.7 141,-177.7 135,-177.7 129,-171.7 129,-165.7 129,-165.7 129,-130.1 129,-130.1 129,-124.1 135,-118.1 141,-118.1 141,-118.1 298.5,-118.1 298.5,-118.1 304.5,-118.1 310.5,-124.1 310.5,-130.1 310.5,-130.1 310.5,-165.7 310.5,-165.7 310.5,-171.7 304.5,-177.7 298.5,-177.7"/>
-<text xml:space="preserve" text-anchor="start" x="166.5" y="-157.45" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Runtime Modules</text>
-<text xml:space="preserve" text-anchor="start" x="147" y="-148.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">providers • tools • orchestrators</text>
-<text xml:space="preserve" text-anchor="start" x="159.75" y="-139.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">context managers • hooks</text>
-<text xml:space="preserve" text-anchor="start" x="174.38" y="-130.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">(amplifier&#45;module&#45;*)</text>
+<path fill="#1f2d25" stroke="#86c49a" stroke-width="1.5" d="M298.5,-177.7C298.5,-177.7 141,-177.7 141,-177.7 135,-177.7 129,-171.7 129,-165.7 129,-165.7 129,-130.1 129,-130.1 129,-124.1 135,-118.1 141,-118.1 141,-118.1 298.5,-118.1 298.5,-118.1 304.5,-118.1 310.5,-124.1 310.5,-130.1 310.5,-130.1 310.5,-165.7 310.5,-165.7 310.5,-171.7 304.5,-177.7 298.5,-177.7"/>
+<text xml:space="preserve" text-anchor="start" x="166.5" y="-157.45" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#efeadf">Runtime Modules</text>
+<text xml:space="preserve" text-anchor="start" x="147" y="-148.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">providers • tools • orchestrators</text>
+<text xml:space="preserve" text-anchor="start" x="159.75" y="-139.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">context managers • hooks</text>
+<text xml:space="preserve" text-anchor="start" x="174.38" y="-130.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">(amplifier&#45;module&#45;*)</text>
 </g>
 <!-- apps&#45;&gt;modules -->
 <g id="edge3" class="edge">
 <title>apps&#45;&gt;modules</title>
-<path fill="none" stroke="#7a7a7a" stroke-width="1.2" stroke-dasharray="5,2" d="M103.01,-360.61C92.68,-324.72 82.49,-267.39 105.25,-224.95 113.94,-208.75 127.76,-195.42 142.84,-184.69"/>
-<polygon fill="#7a7a7a" stroke="#7a7a7a" stroke-width="1.2" points="144.47,-187.81 150.85,-179.35 140.59,-181.99 144.47,-187.81"/>
-<text xml:space="preserve" text-anchor="middle" x="125.5" y="-251.82" font-family="Helvetica,sans-Serif" font-size="9.00"> mounts </text>
+<path fill="none" stroke="#75716a" stroke-width="1.2" stroke-dasharray="5,2" d="M103.01,-360.61C92.68,-324.72 82.49,-267.39 105.25,-224.95 113.94,-208.75 127.76,-195.42 142.84,-184.69"/>
+<polygon fill="#75716a" stroke="#75716a" stroke-width="1.2" points="144.47,-187.81 150.85,-179.35 140.59,-181.99 144.47,-187.81"/>
+<text xml:space="preserve" text-anchor="middle" x="125.5" y="-251.82" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b"> mounts </text>
 </g>
 <!-- kernel -->
 <g id="node5" class="node">
 <title>kernel</title>
-<path fill="#3a3a3a" stroke="#000000" stroke-width="1.5" d="M301.88,-59.6C301.88,-59.6 137.62,-59.6 137.62,-59.6 131.62,-59.6 125.62,-53.6 125.62,-47.6 125.62,-47.6 125.62,-12 125.62,-12 125.62,-6 131.62,0 137.62,0 137.62,0 301.88,0 301.88,0 307.88,0 313.88,-6 313.88,-12 313.88,-12 313.88,-47.6 313.88,-47.6 313.88,-53.6 307.88,-59.6 301.88,-59.6"/>
-<text xml:space="preserve" text-anchor="start" x="199.88" y="-39.35" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="white">Kernel</text>
-<text xml:space="preserve" text-anchor="start" x="189" y="-30.25" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#dddddd">amplifier&#45;core</text>
-<text xml:space="preserve" text-anchor="start" x="154.5" y="-21.25" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#dddddd">Rust kernel, Python bindings</text>
-<text xml:space="preserve" text-anchor="start" x="143.62" y="-12.25" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#dddddd">session lifecycle, hooks, contracts</text>
+<path fill="#f2a93b" stroke="#f2a93b" stroke-width="1.5" d="M301.88,-59.6C301.88,-59.6 137.62,-59.6 137.62,-59.6 131.62,-59.6 125.62,-53.6 125.62,-47.6 125.62,-47.6 125.62,-12 125.62,-12 125.62,-6 131.62,0 137.62,0 137.62,0 301.88,0 301.88,0 307.88,0 313.88,-6 313.88,-12 313.88,-12 313.88,-47.6 313.88,-47.6 313.88,-53.6 307.88,-59.6 301.88,-59.6"/>
+<text xml:space="preserve" text-anchor="start" x="199.88" y="-39.35" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#1a1b1d">Kernel</text>
+<text xml:space="preserve" text-anchor="start" x="189" y="-30.25" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#3a2a0c">amplifier&#45;core</text>
+<text xml:space="preserve" text-anchor="start" x="154.5" y="-21.25" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#3a2a0c">Rust kernel, Python bindings</text>
+<text xml:space="preserve" text-anchor="start" x="143.62" y="-12.25" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#3a2a0c">session lifecycle, hooks, contracts</text>
 </g>
 <!-- apps&#45;&gt;kernel -->
 <g id="edge4" class="edge">
 <title>apps&#45;&gt;kernel</title>
-<path fill="none" stroke="#7a7a7a" stroke-width="1.2" d="M99.13,-360.62C93.39,-346.48 87.61,-329.66 84.75,-313.8 75.44,-262.14 75.33,-247.24 85.25,-195.7 92.23,-159.47 93.3,-148.12 114.75,-118.1 128.42,-98.96 147.26,-81.55 165.22,-67.39"/>
-<polygon fill="#7a7a7a" stroke="#7a7a7a" stroke-width="1.2" points="167.24,-70.26 173.05,-61.4 162.98,-64.7 167.24,-70.26"/>
-<text xml:space="preserve" text-anchor="middle" x="98" y="-198.4" font-family="Helvetica,sans-Serif" font-size="9.00"> calls </text>
+<path fill="none" stroke="#75716a" stroke-width="1.2" d="M99.13,-360.62C93.39,-346.48 87.61,-329.66 84.75,-313.8 75.44,-262.14 75.33,-247.24 85.25,-195.7 92.23,-159.47 93.3,-148.12 114.75,-118.1 128.42,-98.96 147.26,-81.55 165.22,-67.39"/>
+<polygon fill="#75716a" stroke="#75716a" stroke-width="1.2" points="167.24,-70.26 173.05,-61.4 162.98,-64.7 167.24,-70.26"/>
+<text xml:space="preserve" text-anchor="middle" x="98" y="-198.4" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b"> calls </text>
 </g>
 <!-- bundles&#45;&gt;foundation -->
 <g id="edge5" class="edge">
 <title>bundles&#45;&gt;foundation</title>
-<path fill="none" stroke="#7a7a7a" stroke-width="1.2" d="M416.27,-254.75C439.46,-254.75 463.26,-254.75 485.34,-254.75"/>
-<polygon fill="#7a7a7a" stroke="#7a7a7a" stroke-width="1.2" points="485.24,-258.25 495.24,-254.75 485.24,-251.25 485.24,-258.25"/>
-<text xml:space="preserve" text-anchor="middle" x="456.69" y="-260.45" font-family="Helvetica,sans-Serif" font-size="9.00"> defines for </text>
+<path fill="none" stroke="#75716a" stroke-width="1.2" d="M416.27,-254.75C439.46,-254.75 463.26,-254.75 485.34,-254.75"/>
+<polygon fill="#75716a" stroke="#75716a" stroke-width="1.2" points="485.24,-258.25 495.24,-254.75 485.24,-251.25 485.24,-258.25"/>
+<text xml:space="preserve" text-anchor="middle" x="456.69" y="-260.45" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b"> defines for </text>
 </g>
 <!-- bundles&#45;&gt;modules -->
 <g id="edge6" class="edge">
 <title>bundles&#45;&gt;modules</title>
-<path fill="none" stroke="#7a7a7a" stroke-width="1.2" stroke-dasharray="5,2" d="M268.63,-224.26C261.32,-213 252.88,-199.98 245.08,-187.96"/>
-<polygon fill="#7a7a7a" stroke="#7a7a7a" stroke-width="1.2" points="248.1,-186.17 239.72,-179.69 242.22,-189.98 248.1,-186.17"/>
-<text xml:space="preserve" text-anchor="middle" x="282.41" y="-198.4" font-family="Helvetica,sans-Serif" font-size="9.00"> references </text>
+<path fill="none" stroke="#75716a" stroke-width="1.2" stroke-dasharray="5,2" d="M268.63,-224.26C261.32,-213 252.88,-199.98 245.08,-187.96"/>
+<polygon fill="#75716a" stroke="#75716a" stroke-width="1.2" points="248.1,-186.17 239.72,-179.69 242.22,-189.98 248.1,-186.17"/>
+<text xml:space="preserve" text-anchor="middle" x="282.41" y="-198.4" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b"> references </text>
 </g>
 <!-- foundation&#45;&gt;kernel -->
 <g id="edge7" class="edge">
 <title>foundation&#45;&gt;kernel</title>
-<path fill="none" stroke="#7a7a7a" stroke-width="1.2" d="M534.05,-224.37C467.86,-183.61 348.29,-109.96 277.24,-66.21"/>
-<polygon fill="#7a7a7a" stroke="#7a7a7a" stroke-width="1.2" points="279.45,-63.46 269.1,-61.19 275.78,-69.42 279.45,-63.46"/>
-<text xml:space="preserve" text-anchor="middle" x="467.45" y="-144.97" font-family="Helvetica,sans-Serif" font-size="9.00"> uses </text>
+<path fill="none" stroke="#75716a" stroke-width="1.2" d="M534.05,-224.37C467.86,-183.61 348.29,-109.96 277.24,-66.21"/>
+<polygon fill="#75716a" stroke="#75716a" stroke-width="1.2" points="279.45,-63.46 269.1,-61.19 275.78,-69.42 279.45,-63.46"/>
+<text xml:space="preserve" text-anchor="middle" x="467.45" y="-144.97" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b"> uses </text>
 </g>
 <!-- modules&#45;&gt;kernel -->
 <g id="edge8" class="edge">
 <title>modules&#45;&gt;kernel</title>
-<path fill="none" stroke="#7a7a7a" stroke-width="1.2" d="M219.75,-117.6C219.75,-103.72 219.75,-86.89 219.75,-71.77"/>
-<polygon fill="#7a7a7a" stroke="#7a7a7a" stroke-width="1.2" points="223.25,-71.9 219.75,-61.9 216.25,-71.9 223.25,-71.9"/>
-<text xml:space="preserve" text-anchor="middle" x="247.88" y="-91.55" font-family="Helvetica,sans-Serif" font-size="9.00"> implements</text>
-<text xml:space="preserve" text-anchor="middle" x="247.88" y="-80.3" font-family="Helvetica,sans-Serif" font-size="9.00">protocols </text>
+<path fill="none" stroke="#75716a" stroke-width="1.2" d="M219.75,-117.6C219.75,-103.72 219.75,-86.89 219.75,-71.77"/>
+<polygon fill="#75716a" stroke="#75716a" stroke-width="1.2" points="223.25,-71.9 219.75,-61.9 216.25,-71.9 223.25,-71.9"/>
+<text xml:space="preserve" text-anchor="middle" x="247.88" y="-91.55" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b"> implements</text>
+<text xml:space="preserve" text-anchor="middle" x="247.88" y="-80.3" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">protocols </text>
 </g>
 <!-- devtools -->
 <g id="node6" class="node">
 <title>devtools</title>
-<path fill="#f4f4f4" stroke="#8a8a8a" stroke-width="1.5" stroke-dasharray="5,2" d="M765.12,-177.7C765.12,-177.7 542.38,-177.7 542.38,-177.7 536.38,-177.7 530.38,-171.7 530.38,-165.7 530.38,-165.7 530.38,-130.1 530.38,-130.1 530.38,-124.1 536.38,-118.1 542.38,-118.1 542.38,-118.1 765.12,-118.1 765.12,-118.1 771.12,-118.1 777.12,-124.1 777.12,-130.1 777.12,-130.1 777.12,-165.7 777.12,-165.7 777.12,-171.7 771.12,-177.7 765.12,-177.7"/>
-<text xml:space="preserve" text-anchor="start" x="569.75" y="-157.45" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00">Development Tools &amp; Skills</text>
-<text xml:space="preserve" text-anchor="start" x="575" y="-148.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">Smart Tools (amplifier&#45;smart&#45;tool&#45;*)</text>
-<text xml:space="preserve" text-anchor="start" x="615.5" y="-139.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">Skills (SKILL.md)</text>
-<text xml:space="preserve" text-anchor="start" x="548.38" y="-130.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#444444">host&#45;independent: usable from any agent host</text>
+<path fill="#232527" stroke="#75716a" stroke-width="1.5" stroke-dasharray="5,2" d="M765.12,-177.7C765.12,-177.7 542.38,-177.7 542.38,-177.7 536.38,-177.7 530.38,-171.7 530.38,-165.7 530.38,-165.7 530.38,-130.1 530.38,-130.1 530.38,-124.1 536.38,-118.1 542.38,-118.1 542.38,-118.1 765.12,-118.1 765.12,-118.1 771.12,-118.1 777.12,-124.1 777.12,-130.1 777.12,-130.1 777.12,-165.7 777.12,-165.7 777.12,-171.7 771.12,-177.7 765.12,-177.7"/>
+<text xml:space="preserve" text-anchor="start" x="569.75" y="-157.45" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="11.00" fill="#efeadf">Development Tools &amp; Skills</text>
+<text xml:space="preserve" text-anchor="start" x="575" y="-148.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">Smart Tools (amplifier&#45;smart&#45;tool&#45;*)</text>
+<text xml:space="preserve" text-anchor="start" x="615.5" y="-139.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">Skills (SKILL.md)</text>
+<text xml:space="preserve" text-anchor="start" x="548.38" y="-130.35" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#9b968b">host&#45;independent: usable from any agent host</text>
 </g>
 <!-- rule -->
 <g id="node7" class="node">
 <title>rule</title>
-<path fill="lightgrey" stroke="none" stroke-width="1.5" d="M538.5,-441.65C538.5,-441.65 271,-441.65 271,-441.65 265,-441.65 259,-435.65 259,-429.65 259,-429.65 259,-361.05 259,-361.05 259,-355.05 265,-349.05 271,-349.05 271,-349.05 538.5,-349.05 538.5,-349.05 544.5,-349.05 550.5,-355.05 550.5,-361.05 550.5,-361.05 550.5,-429.65 550.5,-429.65 550.5,-435.65 544.5,-441.65 538.5,-441.65"/>
-<text xml:space="preserve" text-anchor="start" x="281" y="-418.3" font-family="Helvetica,sans-Serif" font-size="9.00">Apps may depend on anything below.</text>
-<text xml:space="preserve" text-anchor="start" x="281" y="-401.05" font-family="Helvetica,sans-Serif" font-size="9.00">Modules depend ONLY on kernel.</text>
-<text xml:space="preserve" text-anchor="start" x="281" y="-383.8" font-family="Helvetica,sans-Serif" font-size="9.00">Modules NEVER depend on peers, foundation, or apps.</text>
-<text xml:space="preserve" text-anchor="start" x="281" y="-366.55" font-family="Helvetica,sans-Serif" font-size="9.00">Kernel depends on nothing.</text>
+<text xml:space="preserve" text-anchor="start" x="281" y="-418.3" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#efeadf">Apps may depend on anything below.</text>
+<text xml:space="preserve" text-anchor="start" x="281" y="-401.05" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#efeadf">Modules depend ONLY on kernel.</text>
+<text xml:space="preserve" text-anchor="start" x="281" y="-383.8" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#efeadf">Modules NEVER depend on peers, foundation, or apps.</text>
+<text xml:space="preserve" text-anchor="start" x="281" y="-366.55" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#efeadf">Kernel depends on nothing.</text>
 </g>
 </g>
 </svg>

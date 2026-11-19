@@ -8,170 +8,169 @@
  viewBox="0.00 0.00 743.00 586.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 564.13)">
 <title>DependencyRules</title>
-<polygon fill="white" stroke="none" points="-21.6,21.6 -21.6,-564.13 721.06,-564.13 721.06,21.6 -21.6,21.6"/>
+<polygon fill="#151618" stroke="none" points="-21.6,21.6 -21.6,-564.13 721.06,-564.13 721.06,21.6 -21.6,21.6"/>
 <!-- kernel -->
 <g id="node1" class="node">
 <title>kernel</title>
-<path fill="#3a3a3a" stroke="black" stroke-width="1.3" d="M338.71,-336.78C338.71,-336.78 252.91,-336.78 252.91,-336.78 246.91,-336.78 240.91,-330.78 240.91,-324.78 240.91,-324.78 240.91,-312.78 240.91,-312.78 240.91,-306.78 246.91,-300.78 252.91,-300.78 252.91,-300.78 338.71,-300.78 338.71,-300.78 344.71,-300.78 350.71,-306.78 350.71,-312.78 350.71,-312.78 350.71,-324.78 350.71,-324.78 350.71,-330.78 344.71,-336.78 338.71,-336.78"/>
-<text xml:space="preserve" text-anchor="start" x="255.31" y="-319.28" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00" fill="white">amplifier&#45;core</text>
-<text xml:space="preserve" text-anchor="start" x="283.06" y="-311.18" font-family="Helvetica,sans-Serif" font-size="8.00" fill="white">Kernel</text>
+<path fill="#f2a93b" stroke="#f2a93b" stroke-width="1.3" d="M338.71,-336.78C338.71,-336.78 252.91,-336.78 252.91,-336.78 246.91,-336.78 240.91,-330.78 240.91,-324.78 240.91,-324.78 240.91,-312.78 240.91,-312.78 240.91,-306.78 246.91,-300.78 252.91,-300.78 252.91,-300.78 338.71,-300.78 338.71,-300.78 344.71,-300.78 350.71,-306.78 350.71,-312.78 350.71,-312.78 350.71,-324.78 350.71,-324.78 350.71,-330.78 344.71,-336.78 338.71,-336.78"/>
+<text xml:space="preserve" text-anchor="start" x="255.31" y="-319.28" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00" fill="#1a1b1d">amplifier&#45;core</text>
+<text xml:space="preserve" text-anchor="start" x="283.06" y="-311.18" font-family="Helvetica,sans-Serif" font-size="8.00" fill="#1a1b1d">Kernel</text>
 </g>
 <!-- foundation -->
 <g id="node3" class="node">
 <title>foundation</title>
-<path fill="#fce8d2" stroke="black" stroke-width="1.3" d="M356.71,-445.28C356.71,-445.28 234.91,-445.28 234.91,-445.28 228.91,-445.28 222.91,-439.28 222.91,-433.28 222.91,-433.28 222.91,-421.28 222.91,-421.28 222.91,-415.28 228.91,-409.28 234.91,-409.28 234.91,-409.28 356.71,-409.28 356.71,-409.28 362.71,-409.28 368.71,-415.28 368.71,-421.28 368.71,-421.28 368.71,-433.28 368.71,-433.28 368.71,-439.28 362.71,-445.28 356.71,-445.28"/>
-<text xml:space="preserve" text-anchor="start" x="237.31" y="-427.78" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00">amplifier&#45;foundation</text>
-<text xml:space="preserve" text-anchor="start" x="281.94" y="-419.68" font-family="Helvetica,sans-Serif" font-size="8.00">Library</text>
+<path fill="#33271d" stroke="#ea9a62" stroke-width="1.3" d="M356.71,-445.28C356.71,-445.28 234.91,-445.28 234.91,-445.28 228.91,-445.28 222.91,-439.28 222.91,-433.28 222.91,-433.28 222.91,-421.28 222.91,-421.28 222.91,-415.28 228.91,-409.28 234.91,-409.28 234.91,-409.28 356.71,-409.28 356.71,-409.28 362.71,-409.28 368.71,-415.28 368.71,-421.28 368.71,-421.28 368.71,-433.28 368.71,-433.28 368.71,-439.28 362.71,-445.28 356.71,-445.28"/>
+<text xml:space="preserve" text-anchor="start" x="237.31" y="-427.78" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00" fill="#efeadf">amplifier&#45;foundation</text>
+<text xml:space="preserve" text-anchor="start" x="281.94" y="-419.68" font-family="Helvetica,sans-Serif" font-size="8.00" fill="#efeadf">Library</text>
 </g>
 <!-- kernel&#45;&gt;foundation -->
 <g id="edge14" class="edge">
 <title>kernel&#45;&gt;foundation</title>
-<path fill="none" stroke="#c8323a" stroke-width="1.5" stroke-dasharray="5,2" d="M293.77,-337.33C292.99,-344.85 292.19,-353.73 291.81,-361.78 291.34,-371.77 291.34,-374.29 291.81,-384.28 292,-388.3 292.3,-392.54 292.64,-396.7"/>
-<polygon fill="#c8323a" stroke="#c8323a" stroke-width="1.5" points="289.14,-396.84 293.55,-406.47 296.11,-396.19 289.14,-396.84"/>
-<text xml:space="preserve" text-anchor="middle" x="347.31" y="-375.73" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#c8323a"> ✗ kernel knows nothing</text>
-<text xml:space="preserve" text-anchor="middle" x="347.31" y="-364.48" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#c8323a">below entry point </text>
+<path fill="none" stroke="#e2776b" stroke-width="1.5" stroke-dasharray="5,2" d="M293.77,-337.33C292.99,-344.85 292.19,-353.73 291.81,-361.78 291.34,-371.77 291.34,-374.29 291.81,-384.28 292,-388.3 292.3,-392.54 292.64,-396.7"/>
+<polygon fill="#e2776b" stroke="#e2776b" stroke-width="1.5" points="289.14,-396.84 293.55,-406.47 296.11,-396.19 289.14,-396.84"/>
+<text xml:space="preserve" text-anchor="middle" x="347.31" y="-375.73" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#e2776b"> ✗ kernel knows nothing</text>
+<text xml:space="preserve" text-anchor="middle" x="347.31" y="-364.48" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#e2776b">below entry point </text>
 </g>
 <!-- entry -->
 <g id="node2" class="node">
 <title>entry</title>
-<path fill="#f0f0f0" stroke="black" stroke-width="1.3" d="M333.84,-542.53C333.84,-542.53 257.79,-542.53 257.79,-542.53 251.79,-542.53 245.79,-536.53 245.79,-530.53 245.79,-530.53 245.79,-518.53 245.79,-518.53 245.79,-512.53 251.79,-506.53 257.79,-506.53 257.79,-506.53 333.84,-506.53 333.84,-506.53 339.84,-506.53 345.84,-512.53 345.84,-518.53 345.84,-518.53 345.84,-530.53 345.84,-530.53 345.84,-536.53 339.84,-542.53 333.84,-542.53"/>
-<text xml:space="preserve" text-anchor="start" x="269.94" y="-525.03" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00">amplifier</text>
-<text xml:space="preserve" text-anchor="start" x="260.19" y="-516.93" font-family="Helvetica,sans-Serif" font-size="8.00">Entry point / docs</text>
+<path fill="#232527" stroke="#75716a" stroke-width="1.3" d="M333.84,-542.53C333.84,-542.53 257.79,-542.53 257.79,-542.53 251.79,-542.53 245.79,-536.53 245.79,-530.53 245.79,-530.53 245.79,-518.53 245.79,-518.53 245.79,-512.53 251.79,-506.53 257.79,-506.53 257.79,-506.53 333.84,-506.53 333.84,-506.53 339.84,-506.53 345.84,-512.53 345.84,-518.53 345.84,-518.53 345.84,-530.53 345.84,-530.53 345.84,-536.53 339.84,-542.53 333.84,-542.53"/>
+<text xml:space="preserve" text-anchor="start" x="269.94" y="-525.03" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00" fill="#efeadf">amplifier</text>
+<text xml:space="preserve" text-anchor="start" x="260.19" y="-516.93" font-family="Helvetica,sans-Serif" font-size="8.00" fill="#efeadf">Entry point / docs</text>
 </g>
 <!-- foundation&#45;&gt;kernel -->
 <g id="edge1" class="edge">
 <title>foundation&#45;&gt;kernel</title>
-<path fill="none" stroke="#2e8b2e" stroke-width="1.5" d="M260.4,-408.83C251.2,-402.45 242.45,-394.29 237.31,-384.28 232.75,-375.38 232.75,-370.68 237.31,-361.78 240.6,-355.37 245.38,-349.71 250.8,-344.8"/>
-<polygon fill="#2e8b2e" stroke="#2e8b2e" stroke-width="1.5" points="252.93,-347.58 258.62,-338.63 248.6,-342.08 252.93,-347.58"/>
-<text xml:space="preserve" text-anchor="middle" x="244.06" y="-370.1" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#2e8b2e"> ✓ </text>
+<path fill="none" stroke="#86c49a" stroke-width="1.5" d="M260.4,-408.83C251.2,-402.45 242.45,-394.29 237.31,-384.28 232.75,-375.38 232.75,-370.68 237.31,-361.78 240.6,-355.37 245.38,-349.71 250.8,-344.8"/>
+<polygon fill="#86c49a" stroke="#86c49a" stroke-width="1.5" points="252.93,-347.58 258.62,-338.63 248.6,-342.08 252.93,-347.58"/>
+<text xml:space="preserve" text-anchor="middle" x="244.06" y="-370.1" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#86c49a"> ✓ </text>
 </g>
 <!-- foundation&#45;&gt;entry -->
 <g id="edge2" class="edge">
 <title>foundation&#45;&gt;entry</title>
-<path fill="none" stroke="#2e8b2e" stroke-width="1.5" d="M295.81,-445.75C295.81,-459.31 295.81,-478.41 295.81,-494.29"/>
-<polygon fill="#2e8b2e" stroke="#2e8b2e" stroke-width="1.5" points="292.31,-493.9 295.81,-503.9 299.31,-493.9 292.31,-493.9"/>
-<text xml:space="preserve" text-anchor="middle" x="302.56" y="-472.98" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#2e8b2e"> ✓ </text>
+<path fill="none" stroke="#86c49a" stroke-width="1.5" d="M295.81,-445.75C295.81,-459.31 295.81,-478.41 295.81,-494.29"/>
+<polygon fill="#86c49a" stroke="#86c49a" stroke-width="1.5" points="292.31,-493.9 295.81,-503.9 299.31,-493.9 292.31,-493.9"/>
+<text xml:space="preserve" text-anchor="middle" x="302.56" y="-472.98" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#86c49a"> ✓ </text>
 </g>
 <!-- module_a -->
 <g id="node4" class="node">
 <title>module_a</title>
-<path fill="#dcf2dc" stroke="black" stroke-width="1.3" d="M430.21,-77.89C430.21,-77.89 269.41,-77.89 269.41,-77.89 263.41,-77.89 257.41,-71.89 257.41,-65.89 257.41,-65.89 257.41,-53.89 257.41,-53.89 257.41,-47.89 263.41,-41.89 269.41,-41.89 269.41,-41.89 430.21,-41.89 430.21,-41.89 436.21,-41.89 442.21,-47.89 442.21,-53.89 442.21,-53.89 442.21,-65.89 442.21,-65.89 442.21,-71.89 436.21,-77.89 430.21,-77.89"/>
-<text xml:space="preserve" text-anchor="start" x="271.81" y="-60.39" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00">amplifier&#45;module&#45;tool&#45;bash</text>
-<text xml:space="preserve" text-anchor="start" x="334.81" y="-52.29" font-family="Helvetica,sans-Serif" font-size="8.00">Module</text>
+<path fill="#1f2d25" stroke="#86c49a" stroke-width="1.3" d="M430.21,-77.89C430.21,-77.89 269.41,-77.89 269.41,-77.89 263.41,-77.89 257.41,-71.89 257.41,-65.89 257.41,-65.89 257.41,-53.89 257.41,-53.89 257.41,-47.89 263.41,-41.89 269.41,-41.89 269.41,-41.89 430.21,-41.89 430.21,-41.89 436.21,-41.89 442.21,-47.89 442.21,-53.89 442.21,-53.89 442.21,-65.89 442.21,-65.89 442.21,-71.89 436.21,-77.89 430.21,-77.89"/>
+<text xml:space="preserve" text-anchor="start" x="271.81" y="-60.39" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00" fill="#efeadf">amplifier&#45;module&#45;tool&#45;bash</text>
+<text xml:space="preserve" text-anchor="start" x="334.81" y="-52.29" font-family="Helvetica,sans-Serif" font-size="8.00" fill="#efeadf">Module</text>
 </g>
 <!-- module_a&#45;&gt;kernel -->
 <g id="edge3" class="edge">
 <title>module_a&#45;&gt;kernel</title>
-<path fill="none" stroke="#2e8b2e" stroke-width="1.5" d="M346.19,-78.14C337.1,-121.37 313.29,-234.66 301.96,-288.52"/>
-<polygon fill="#2e8b2e" stroke="#2e8b2e" stroke-width="1.5" points="298.59,-287.53 299.96,-298.04 305.44,-288.97 298.59,-287.53"/>
-<text xml:space="preserve" text-anchor="middle" x="325.97" y="-218.6" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#2e8b2e"> ✓ </text>
+<path fill="none" stroke="#86c49a" stroke-width="1.5" d="M346.19,-78.14C337.1,-121.37 313.29,-234.66 301.96,-288.52"/>
+<polygon fill="#86c49a" stroke="#86c49a" stroke-width="1.5" points="298.59,-287.53 299.96,-298.04 305.44,-288.97 298.59,-287.53"/>
+<text xml:space="preserve" text-anchor="middle" x="325.97" y="-218.6" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#86c49a"> ✓ </text>
 </g>
 <!-- module_a&#45;&gt;foundation -->
 <g id="edge12" class="edge">
 <title>module_a&#45;&gt;foundation</title>
-<path fill="none" stroke="#c8323a" stroke-width="1.5" stroke-dasharray="5,2" d="M256.78,-72.24C177.25,-87.4 67.41,-122.54 13.81,-203.53 -48.85,-298.21 120.09,-370.85 223.01,-404.93"/>
-<polygon fill="#c8323a" stroke="#c8323a" stroke-width="1.5" points="221.85,-408.23 232.44,-408 224.02,-401.58 221.85,-408.23"/>
-<text xml:space="preserve" text-anchor="middle" x="14.66" y="-267.23" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#c8323a"> ✗ </text>
+<path fill="none" stroke="#e2776b" stroke-width="1.5" stroke-dasharray="5,2" d="M256.78,-72.24C177.25,-87.4 67.41,-122.54 13.81,-203.53 -48.85,-298.21 120.09,-370.85 223.01,-404.93"/>
+<polygon fill="#e2776b" stroke="#e2776b" stroke-width="1.5" points="221.85,-408.23 232.44,-408 224.02,-401.58 221.85,-408.23"/>
+<text xml:space="preserve" text-anchor="middle" x="14.66" y="-267.23" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#e2776b"> ✗ </text>
 </g>
 <!-- module_b -->
 <g id="node5" class="node">
 <title>module_b</title>
-<path fill="#dcf2dc" stroke="black" stroke-width="1.3" d="M235.96,-239.53C235.96,-239.53 43.66,-239.53 43.66,-239.53 37.66,-239.53 31.66,-233.53 31.66,-227.53 31.66,-227.53 31.66,-215.53 31.66,-215.53 31.66,-209.53 37.66,-203.53 43.66,-203.53 43.66,-203.53 235.96,-203.53 235.96,-203.53 241.96,-203.53 247.96,-209.53 247.96,-215.53 247.96,-215.53 247.96,-227.53 247.96,-227.53 247.96,-233.53 241.96,-239.53 235.96,-239.53"/>
-<text xml:space="preserve" text-anchor="start" x="46.06" y="-222.03" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00">amplifier&#45;module&#45;tool&#45;filesystem</text>
-<text xml:space="preserve" text-anchor="start" x="124.81" y="-213.93" font-family="Helvetica,sans-Serif" font-size="8.00">Module</text>
+<path fill="#1f2d25" stroke="#86c49a" stroke-width="1.3" d="M235.96,-239.53C235.96,-239.53 43.66,-239.53 43.66,-239.53 37.66,-239.53 31.66,-233.53 31.66,-227.53 31.66,-227.53 31.66,-215.53 31.66,-215.53 31.66,-209.53 37.66,-203.53 43.66,-203.53 43.66,-203.53 235.96,-203.53 235.96,-203.53 241.96,-203.53 247.96,-209.53 247.96,-215.53 247.96,-215.53 247.96,-227.53 247.96,-227.53 247.96,-233.53 241.96,-239.53 235.96,-239.53"/>
+<text xml:space="preserve" text-anchor="start" x="46.06" y="-222.03" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00" fill="#efeadf">amplifier&#45;module&#45;tool&#45;filesystem</text>
+<text xml:space="preserve" text-anchor="start" x="124.81" y="-213.93" font-family="Helvetica,sans-Serif" font-size="8.00" fill="#efeadf">Module</text>
 </g>
 <!-- module_a&#45;&gt;module_b -->
 <g id="edge11" class="edge">
 <title>module_a&#45;&gt;module_b</title>
-<path fill="none" stroke="#c8323a" stroke-width="1.5" stroke-dasharray="5,2" d="M316.68,-78.52C288.37,-94.24 247.17,-118.75 214.56,-144.78 195.91,-159.67 177.04,-178.82 162.93,-194.14"/>
-<polygon fill="#c8323a" stroke="#c8323a" stroke-width="1.5" points="160.45,-191.67 156.33,-201.43 165.64,-196.37 160.45,-191.67"/>
-<text xml:space="preserve" text-anchor="middle" x="253.19" y="-169.98" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#c8323a"> ✗ modules</text>
-<text xml:space="preserve" text-anchor="middle" x="253.19" y="-158.73" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#c8323a">cannot reference</text>
-<text xml:space="preserve" text-anchor="middle" x="253.19" y="-147.48" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#c8323a">peers </text>
+<path fill="none" stroke="#e2776b" stroke-width="1.5" stroke-dasharray="5,2" d="M316.68,-78.52C288.37,-94.24 247.17,-118.75 214.56,-144.78 195.91,-159.67 177.04,-178.82 162.93,-194.14"/>
+<polygon fill="#e2776b" stroke="#e2776b" stroke-width="1.5" points="160.45,-191.67 156.33,-201.43 165.64,-196.37 160.45,-191.67"/>
+<text xml:space="preserve" text-anchor="middle" x="253.19" y="-169.98" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#e2776b"> ✗ modules</text>
+<text xml:space="preserve" text-anchor="middle" x="253.19" y="-158.73" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#e2776b">cannot reference</text>
+<text xml:space="preserve" text-anchor="middle" x="253.19" y="-147.48" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#e2776b">peers </text>
 </g>
 <!-- app -->
 <g id="node7" class="node">
 <title>app</title>
-<path fill="#dceefc" stroke="black" stroke-width="1.3" d="M482.21,-239.53C482.21,-239.53 381.41,-239.53 381.41,-239.53 375.41,-239.53 369.41,-233.53 369.41,-227.53 369.41,-227.53 369.41,-215.53 369.41,-215.53 369.41,-209.53 375.41,-203.53 381.41,-203.53 381.41,-203.53 482.21,-203.53 482.21,-203.53 488.21,-203.53 494.21,-209.53 494.21,-215.53 494.21,-215.53 494.21,-227.53 494.21,-227.53 494.21,-233.53 488.21,-239.53 482.21,-239.53"/>
-<text xml:space="preserve" text-anchor="start" x="383.81" y="-222.03" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00">amplifier&#45;app&#45;cli</text>
-<text xml:space="preserve" text-anchor="start" x="408.94" y="-213.93" font-family="Helvetica,sans-Serif" font-size="8.00">Application</text>
+<path fill="#1f2a35" stroke="#7fb0dd" stroke-width="1.3" d="M482.21,-239.53C482.21,-239.53 381.41,-239.53 381.41,-239.53 375.41,-239.53 369.41,-233.53 369.41,-227.53 369.41,-227.53 369.41,-215.53 369.41,-215.53 369.41,-209.53 375.41,-203.53 381.41,-203.53 381.41,-203.53 482.21,-203.53 482.21,-203.53 488.21,-203.53 494.21,-209.53 494.21,-215.53 494.21,-215.53 494.21,-227.53 494.21,-227.53 494.21,-233.53 488.21,-239.53 482.21,-239.53"/>
+<text xml:space="preserve" text-anchor="start" x="383.81" y="-222.03" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00" fill="#efeadf">amplifier&#45;app&#45;cli</text>
+<text xml:space="preserve" text-anchor="start" x="408.94" y="-213.93" font-family="Helvetica,sans-Serif" font-size="8.00" fill="#efeadf">Application</text>
 </g>
 <!-- module_a&#45;&gt;app -->
 <g id="edge13" class="edge">
 <title>module_a&#45;&gt;app</title>
-<path fill="none" stroke="#c8323a" stroke-width="1.5" stroke-dasharray="5,2" d="M350.07,-78.27C351.2,-102.57 356.13,-147.2 376.31,-178.53 380.39,-184.86 385.78,-190.6 391.59,-195.66"/>
-<polygon fill="#c8323a" stroke="#c8323a" stroke-width="1.5" points="389.14,-198.19 399.16,-201.63 393.48,-192.69 389.14,-198.19"/>
-<text xml:space="preserve" text-anchor="middle" x="383.06" y="-158.73" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#c8323a"> ✗ </text>
+<path fill="none" stroke="#e2776b" stroke-width="1.5" stroke-dasharray="5,2" d="M350.07,-78.27C351.2,-102.57 356.13,-147.2 376.31,-178.53 380.39,-184.86 385.78,-190.6 391.59,-195.66"/>
+<polygon fill="#e2776b" stroke="#e2776b" stroke-width="1.5" points="389.14,-198.19 399.16,-201.63 393.48,-192.69 389.14,-198.19"/>
+<text xml:space="preserve" text-anchor="middle" x="383.06" y="-158.73" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#e2776b"> ✗ </text>
 </g>
 <!-- module_b&#45;&gt;kernel -->
 <g id="edge4" class="edge">
 <title>module_b&#45;&gt;kernel</title>
-<path fill="none" stroke="#2e8b2e" stroke-width="1.5" d="M168.43,-240C193.2,-255.13 229.26,-277.14 256.69,-293.89"/>
-<polygon fill="#2e8b2e" stroke="#2e8b2e" stroke-width="1.5" points="254.82,-296.85 265.18,-299.08 258.47,-290.88 254.82,-296.85"/>
-<text xml:space="preserve" text-anchor="middle" x="229.24" y="-267.23" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#2e8b2e"> ✓ </text>
+<path fill="none" stroke="#86c49a" stroke-width="1.5" d="M168.43,-240C193.2,-255.13 229.26,-277.14 256.69,-293.89"/>
+<polygon fill="#86c49a" stroke="#86c49a" stroke-width="1.5" points="254.82,-296.85 265.18,-299.08 258.47,-290.88 254.82,-296.85"/>
+<text xml:space="preserve" text-anchor="middle" x="229.24" y="-267.23" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#86c49a"> ✓ </text>
 </g>
 <!-- bundle -->
 <g id="node6" class="node">
 <title>bundle</title>
-<path fill="#e2dcfc" stroke="black" stroke-width="1.3" d="M639.09,-336.78C639.09,-336.78 492.54,-336.78 492.54,-336.78 486.54,-336.78 480.54,-330.78 480.54,-324.78 480.54,-324.78 480.54,-312.78 480.54,-312.78 480.54,-306.78 486.54,-300.78 492.54,-300.78 492.54,-300.78 639.09,-300.78 639.09,-300.78 645.09,-300.78 651.09,-306.78 651.09,-312.78 651.09,-312.78 651.09,-324.78 651.09,-324.78 651.09,-330.78 645.09,-336.78 639.09,-336.78"/>
-<text xml:space="preserve" text-anchor="start" x="494.94" y="-319.28" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00">amplifier&#45;bundle&#45;recipes</text>
-<text xml:space="preserve" text-anchor="start" x="551.56" y="-311.18" font-family="Helvetica,sans-Serif" font-size="8.00">Bundle</text>
+<path fill="#2a2535" stroke="#b9a2dc" stroke-width="1.3" d="M639.09,-336.78C639.09,-336.78 492.54,-336.78 492.54,-336.78 486.54,-336.78 480.54,-330.78 480.54,-324.78 480.54,-324.78 480.54,-312.78 480.54,-312.78 480.54,-306.78 486.54,-300.78 492.54,-300.78 492.54,-300.78 639.09,-300.78 639.09,-300.78 645.09,-300.78 651.09,-306.78 651.09,-312.78 651.09,-312.78 651.09,-324.78 651.09,-324.78 651.09,-330.78 645.09,-336.78 639.09,-336.78"/>
+<text xml:space="preserve" text-anchor="start" x="494.94" y="-319.28" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00" fill="#efeadf">amplifier&#45;bundle&#45;recipes</text>
+<text xml:space="preserve" text-anchor="start" x="551.56" y="-311.18" font-family="Helvetica,sans-Serif" font-size="8.00" fill="#efeadf">Bundle</text>
 </g>
 <!-- bundle&#45;&gt;foundation -->
 <g id="edge5" class="edge">
 <title>bundle&#45;&gt;foundation</title>
-<path fill="none" stroke="#2e8b2e" stroke-width="1.5" d="M541.4,-337.32C520.39,-351.71 488.81,-371.69 458.81,-384.28 434.16,-394.63 406.31,-402.94 380.7,-409.36"/>
-<polygon fill="#2e8b2e" stroke="#2e8b2e" stroke-width="1.5" points="380.2,-405.87 371.31,-411.63 381.85,-412.68 380.2,-405.87"/>
-<text xml:space="preserve" text-anchor="middle" x="508.33" y="-370.1" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#2e8b2e"> ✓ </text>
+<path fill="none" stroke="#86c49a" stroke-width="1.5" d="M541.4,-337.32C520.39,-351.71 488.81,-371.69 458.81,-384.28 434.16,-394.63 406.31,-402.94 380.7,-409.36"/>
+<polygon fill="#86c49a" stroke="#86c49a" stroke-width="1.5" points="380.2,-405.87 371.31,-411.63 381.85,-412.68 380.2,-405.87"/>
+<text xml:space="preserve" text-anchor="middle" x="508.33" y="-370.1" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#86c49a"> ✓ </text>
 </g>
 <!-- bundle&#45;&gt;module_a -->
 <g id="edge6" class="edge">
 <title>bundle&#45;&gt;module_a</title>
-<path fill="none" stroke="#2e8b2e" stroke-width="1.5" d="M560.09,-300.32C551.85,-276.81 535.03,-234.38 511.81,-203.53 475.56,-155.36 420.9,-111.4 385.28,-85.39"/>
-<polygon fill="#2e8b2e" stroke="#2e8b2e" stroke-width="1.5" points="387.77,-82.87 377.61,-79.86 383.68,-88.55 387.77,-82.87"/>
-<text xml:space="preserve" text-anchor="middle" x="565.93" y="-218.6" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#2e8b2e"> ✓ references </text>
+<path fill="none" stroke="#86c49a" stroke-width="1.5" d="M560.09,-300.32C551.85,-276.81 535.03,-234.38 511.81,-203.53 475.56,-155.36 420.9,-111.4 385.28,-85.39"/>
+<polygon fill="#86c49a" stroke="#86c49a" stroke-width="1.5" points="387.77,-82.87 377.61,-79.86 383.68,-88.55 387.77,-82.87"/>
+<text xml:space="preserve" text-anchor="middle" x="565.93" y="-218.6" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#86c49a"> ✓ references </text>
 </g>
 <!-- app&#45;&gt;kernel -->
 <g id="edge10" class="edge">
 <title>app&#45;&gt;kernel</title>
-<path fill="none" stroke="#2e8b2e" stroke-width="1.5" d="M406.87,-240C385.49,-254.97 354.47,-276.7 330.65,-293.38"/>
-<polygon fill="#2e8b2e" stroke="#2e8b2e" stroke-width="1.5" points="328.64,-290.51 322.46,-299.12 332.66,-296.25 328.64,-290.51"/>
-<text xml:space="preserve" text-anchor="middle" x="374.64" y="-267.23" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#2e8b2e"> ✓ </text>
+<path fill="none" stroke="#86c49a" stroke-width="1.5" d="M406.87,-240C385.49,-254.97 354.47,-276.7 330.65,-293.38"/>
+<polygon fill="#86c49a" stroke="#86c49a" stroke-width="1.5" points="328.64,-290.51 322.46,-299.12 332.66,-296.25 328.64,-290.51"/>
+<text xml:space="preserve" text-anchor="middle" x="374.64" y="-267.23" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#86c49a"> ✓ </text>
 </g>
 <!-- app&#45;&gt;foundation -->
 <g id="edge7" class="edge">
 <title>app&#45;&gt;foundation</title>
-<path fill="none" stroke="#2e8b2e" stroke-width="1.5" d="M434.52,-240.11C438.46,-272.46 441.98,-342 407.81,-384.28 400.37,-393.49 390.69,-400.68 380.14,-406.29"/>
-<polygon fill="#2e8b2e" stroke="#2e8b2e" stroke-width="1.5" points="378.94,-402.98 371.4,-410.42 381.94,-409.31 378.94,-402.98"/>
-<text xml:space="preserve" text-anchor="middle" x="442.74" y="-315.85" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#2e8b2e"> ✓ </text>
+<path fill="none" stroke="#86c49a" stroke-width="1.5" d="M434.52,-240.11C438.46,-272.46 441.98,-342 407.81,-384.28 400.37,-393.49 390.69,-400.68 380.14,-406.29"/>
+<polygon fill="#86c49a" stroke="#86c49a" stroke-width="1.5" points="378.94,-402.98 371.4,-410.42 381.94,-409.31 378.94,-402.98"/>
+<text xml:space="preserve" text-anchor="middle" x="442.74" y="-315.85" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#86c49a"> ✓ </text>
 </g>
 <!-- app&#45;&gt;module_a -->
 <g id="edge9" class="edge">
 <title>app&#45;&gt;module_a</title>
-<path fill="none" stroke="#2e8b2e" stroke-width="1.5" d="M423.48,-202.99C416.1,-187.57 404.95,-164.58 394.81,-144.78 385.2,-126.02 374,-105.12 365.17,-88.88"/>
-<polygon fill="#2e8b2e" stroke="#2e8b2e" stroke-width="1.5" points="368.44,-87.56 360.58,-80.46 362.29,-90.91 368.44,-87.56"/>
-<text xml:space="preserve" text-anchor="middle" x="418.09" y="-158.73" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#2e8b2e"> ✓ </text>
+<path fill="none" stroke="#86c49a" stroke-width="1.5" d="M423.48,-202.99C416.1,-187.57 404.95,-164.58 394.81,-144.78 385.2,-126.02 374,-105.12 365.17,-88.88"/>
+<polygon fill="#86c49a" stroke="#86c49a" stroke-width="1.5" points="368.44,-87.56 360.58,-80.46 362.29,-90.91 368.44,-87.56"/>
+<text xml:space="preserve" text-anchor="middle" x="418.09" y="-158.73" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#86c49a"> ✓ </text>
 </g>
 <!-- app&#45;&gt;bundle -->
 <g id="edge8" class="edge">
 <title>app&#45;&gt;bundle</title>
-<path fill="none" stroke="#2e8b2e" stroke-width="1.5" d="M456.39,-240C477.45,-254.97 508.01,-276.7 531.49,-293.38"/>
-<polygon fill="#2e8b2e" stroke="#2e8b2e" stroke-width="1.5" points="529.36,-296.16 539.54,-299.11 533.42,-290.46 529.36,-296.16"/>
-<text xml:space="preserve" text-anchor="middle" x="509.58" y="-267.23" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#2e8b2e"> ✓ </text>
+<path fill="none" stroke="#86c49a" stroke-width="1.5" d="M456.39,-240C477.45,-254.97 508.01,-276.7 531.49,-293.38"/>
+<polygon fill="#86c49a" stroke="#86c49a" stroke-width="1.5" points="529.36,-296.16 539.54,-299.11 533.42,-290.46 529.36,-296.16"/>
+<text xml:space="preserve" text-anchor="middle" x="509.58" y="-267.23" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#86c49a"> ✓ </text>
 </g>
 <!-- note -->
 <g id="node8" class="node">
 <title>note</title>
-<path fill="lightgrey" stroke="none" stroke-width="1.3" d="M687.46,-119.78C687.46,-119.78 490.16,-119.78 490.16,-119.78 484.16,-119.78 478.16,-113.78 478.16,-107.78 478.16,-107.78 478.16,-12 478.16,-12 478.16,-6 484.16,0 490.16,0 490.16,0 687.46,0 687.46,0 693.46,0 699.46,-6 699.46,-12 699.46,-12 699.46,-107.78 699.46,-107.78 699.46,-113.78 693.46,-119.78 687.46,-119.78"/>
-<polygon fill="#fffaf0" stroke="none" points="492.56,-8.64 492.56,-111.14 685.06,-111.14 685.06,-8.64 492.56,-8.64"/>
-<polygon fill="none" stroke="black" points="492.56,-84.39 492.56,-111.14 685.06,-111.14 685.06,-84.39 492.56,-84.39"/>
-<text xml:space="preserve" text-anchor="start" x="499.56" y="-95.64" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00">The Import Rule</text>
-<polygon fill="none" stroke="black" points="492.56,-59.14 492.56,-84.39 685.06,-84.39 685.06,-59.14 492.56,-59.14"/>
-<text xml:space="preserve" text-anchor="start" x="499.56" y="-68.84" font-family="Helvetica,sans-Serif" font-size="9.00">When a module needs something from</text>
-<polygon fill="none" stroke="black" points="492.56,-33.89 492.56,-59.14 685.06,-59.14 685.06,-33.89 492.56,-33.89"/>
-<text xml:space="preserve" text-anchor="start" x="499.56" y="-43.59" font-family="Helvetica,sans-Serif" font-size="9.00">an app or library, it uses the kernel&#39;s</text>
-<polygon fill="none" stroke="black" points="492.56,-8.64 492.56,-33.89 685.06,-33.89 685.06,-8.64 492.56,-8.64"/>
-<text xml:space="preserve" text-anchor="start" x="499.56" y="-18.34" font-family="Helvetica,sans-Serif" font-size="9.00">capability registry instead of importing.</text>
+<polygon fill="#1a1b1d" stroke="none" points="492.56,-8.64 492.56,-111.14 685.06,-111.14 685.06,-8.64 492.56,-8.64"/>
+<polygon fill="none" stroke="#4a4d51" points="492.56,-84.39 492.56,-111.14 685.06,-111.14 685.06,-84.39 492.56,-84.39"/>
+<text xml:space="preserve" text-anchor="start" x="499.56" y="-95.64" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="10.00" fill="#efeadf">The Import Rule</text>
+<polygon fill="none" stroke="#4a4d51" points="492.56,-59.14 492.56,-84.39 685.06,-84.39 685.06,-59.14 492.56,-59.14"/>
+<text xml:space="preserve" text-anchor="start" x="499.56" y="-68.84" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#efeadf">When a module needs something from</text>
+<polygon fill="none" stroke="#4a4d51" points="492.56,-33.89 492.56,-59.14 685.06,-59.14 685.06,-33.89 492.56,-33.89"/>
+<text xml:space="preserve" text-anchor="start" x="499.56" y="-43.59" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#efeadf">an app or library, it uses the kernel&#39;s</text>
+<polygon fill="none" stroke="#4a4d51" points="492.56,-8.64 492.56,-33.89 685.06,-33.89 685.06,-8.64 492.56,-8.64"/>
+<text xml:space="preserve" text-anchor="start" x="499.56" y="-18.34" font-family="Helvetica,sans-Serif" font-size="9.00" fill="#efeadf">capability registry instead of importing.</text>
 </g>
 </g>
 </svg>

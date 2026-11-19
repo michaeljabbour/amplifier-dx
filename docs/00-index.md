@@ -62,7 +62,7 @@ A progressive guide from "what is this?" to "I could build this."
     Practical comparison of vibe coding and structured AI-assisted development.
 
 14. **[Built With Amplifier: A Case Study](./14-built-with-amplifier.md)**
-    The recursive loop of `amplifier-app-learn` (a private repository) — a curriculum that teaches Amplifier, audited and maintained by Amplifier expert agents, with diagrams from validated DOT sources and an update plan structured as a staged recipe.
+    The recursive loop of a curriculum project (kept in a private repository) — a curriculum that teaches Amplifier, audited and maintained by Amplifier expert agents, with diagrams from validated DOT sources and an update plan structured as a staged recipe.
 
 15. **[A Working Setup](./15-a-working-setup.md)**
     What one real install composes: the root, the behaviors layered on it, community capabilities, and the names that mislead.

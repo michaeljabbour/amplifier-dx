@@ -8,13 +8,18 @@
  */
 digraph DependencyRules {
     rankdir=BT;
-    bgcolor="white";
+    bgcolor="#151618";
+    fontname="Helvetica";
+    fontcolor="#cdc8bc";
     pad=0.3;
     nodesep=0.5;
     ranksep=0.7;
 
     node [
         shape=box,
+        fontcolor="#efeadf",
+        color="#4a4d51",
+        fillcolor="#232527",
         style="filled,rounded",
         fontname="Helvetica",
         fontsize=10,
@@ -23,47 +28,50 @@ digraph DependencyRules {
     ];
 
     edge [
+        color="#75716a",
         fontname="Helvetica",
+        fontcolor="#9b968b",
         fontsize=9,
         penwidth=1.5
     ];
 
     // === REPO TYPES ===
-    kernel [label=<<B>amplifier-core</B><BR/><FONT POINT-SIZE="8">Kernel</FONT>>, fillcolor="#3a3a3a", fontcolor="white"];
-    entry  [label=<<B>amplifier</B><BR/><FONT POINT-SIZE="8">Entry point / docs</FONT>>, fillcolor="#f0f0f0"];
-    foundation [label=<<B>amplifier-foundation</B><BR/><FONT POINT-SIZE="8">Library</FONT>>, fillcolor="#fce8d2"];
+    kernel [label=<<B>amplifier-core</B><BR/><FONT POINT-SIZE="8">Kernel</FONT>>, fillcolor="#f2a93b", color="#f2a93b", fontcolor="#1a1b1d"];
+    entry  [label=<<B>amplifier</B><BR/><FONT POINT-SIZE="8">Entry point / docs</FONT>>, fillcolor="#232527", color="#75716a"];
+    foundation [label=<<B>amplifier-foundation</B><BR/><FONT POINT-SIZE="8">Library</FONT>>, fillcolor="#33271d", color="#ea9a62"];
 
-    module_a [label=<<B>amplifier-module-tool-bash</B><BR/><FONT POINT-SIZE="8">Module</FONT>>, fillcolor="#dcf2dc"];
-    module_b [label=<<B>amplifier-module-tool-filesystem</B><BR/><FONT POINT-SIZE="8">Module</FONT>>, fillcolor="#dcf2dc"];
+    module_a [label=<<B>amplifier-module-tool-bash</B><BR/><FONT POINT-SIZE="8">Module</FONT>>, fillcolor="#1f2d25", color="#86c49a"];
+    module_b [label=<<B>amplifier-module-tool-filesystem</B><BR/><FONT POINT-SIZE="8">Module</FONT>>, fillcolor="#1f2d25", color="#86c49a"];
 
-    bundle [label=<<B>amplifier-bundle-recipes</B><BR/><FONT POINT-SIZE="8">Bundle</FONT>>, fillcolor="#e2dcfc"];
-    app    [label=<<B>amplifier-app-cli</B><BR/><FONT POINT-SIZE="8">Application</FONT>>, fillcolor="#dceefc"];
+    bundle [label=<<B>amplifier-bundle-recipes</B><BR/><FONT POINT-SIZE="8">Bundle</FONT>>, fillcolor="#2a2535", color="#b9a2dc"];
+    app    [label=<<B>amplifier-app-cli</B><BR/><FONT POINT-SIZE="8">Application</FONT>>, fillcolor="#1f2a35", color="#7fb0dd"];
 
     // === ALLOWED EDGES (green) ===
-    foundation -> kernel [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
-    foundation -> entry  [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
+    foundation -> kernel [color="#86c49a", label=" ✓ ", fontcolor="#86c49a"];
+    foundation -> entry  [color="#86c49a", label=" ✓ ", fontcolor="#86c49a"];
 
-    module_a -> kernel [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
-    module_b -> kernel [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
+    module_a -> kernel [color="#86c49a", label=" ✓ ", fontcolor="#86c49a"];
+    module_b -> kernel [color="#86c49a", label=" ✓ ", fontcolor="#86c49a"];
 
-    bundle -> foundation [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
-    bundle -> module_a   [color="#2e8b2e", label=" ✓ references ", fontcolor="#2e8b2e"];
+    bundle -> foundation [color="#86c49a", label=" ✓ ", fontcolor="#86c49a"];
+    bundle -> module_a   [color="#86c49a", label=" ✓ references ", fontcolor="#86c49a"];
 
-    app -> foundation [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
-    app -> bundle     [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
-    app -> module_a   [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
-    app -> kernel     [color="#2e8b2e", label=" ✓ ", fontcolor="#2e8b2e"];
+    app -> foundation [color="#86c49a", label=" ✓ ", fontcolor="#86c49a"];
+    app -> bundle     [color="#86c49a", label=" ✓ ", fontcolor="#86c49a"];
+    app -> module_a   [color="#86c49a", label=" ✓ ", fontcolor="#86c49a"];
+    app -> kernel     [color="#86c49a", label=" ✓ ", fontcolor="#86c49a"];
 
     // === FORBIDDEN EDGES (red, dashed) ===
-    module_a -> module_b   [color="#c8323a", style=dashed, label=" ✗ modules\ncannot reference\npeers ", fontcolor="#c8323a"];
-    module_a -> foundation [color="#c8323a", style=dashed, label=" ✗ ", fontcolor="#c8323a"];
-    module_a -> app        [color="#c8323a", style=dashed, label=" ✗ ", fontcolor="#c8323a"];
-    kernel   -> foundation [color="#c8323a", style=dashed, label=" ✗ kernel knows nothing\nbelow entry point ", fontcolor="#c8323a"];
+    module_a -> module_b   [color="#e2776b", style=dashed, label=" ✗ modules\ncannot reference\npeers ", fontcolor="#e2776b"];
+    module_a -> foundation [color="#e2776b", style=dashed, label=" ✗ ", fontcolor="#e2776b"];
+    module_a -> app        [color="#e2776b", style=dashed, label=" ✗ ", fontcolor="#e2776b"];
+    kernel   -> foundation [color="#e2776b", style=dashed, label=" ✗ kernel knows nothing\nbelow entry point ", fontcolor="#e2776b"];
 
     // === CALLOUT ===
     note [
         shape=plaintext,
-        label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#fffaf0">
+        style="",
+        label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#1a1b1d" COLOR="#4a4d51">
             <TR><TD ALIGN="LEFT"><B>The Import Rule</B></TD></TR>
             <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">When a module needs something from</FONT></TD></TR>
             <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">an app or library, it uses the kernel's</FONT></TD></TR>

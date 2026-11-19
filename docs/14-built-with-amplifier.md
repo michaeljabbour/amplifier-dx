@@ -1,21 +1,22 @@
 # Built With Amplifier: A Case Study
 
-The most credible demonstration of Amplifier we have isn't a feature list. It's the
-`amplifier-app-learn`
-learning platform — a curriculum that teaches Amplifier, audited and extended **by
+The most credible demonstration of Amplifier we have isn't a feature list. It's a
+curriculum project
+(a learning platform) — a curriculum that teaches Amplifier, audited and extended **by
 Amplifier agents**, with diagrams generated from validated DOT sources, and an update
 plan structured as a staged recipe.
 
 This is Amplifier teaching Amplifier, then teaching itself how to teach better.
 
-> **About this doc.** It's a case study, not a marketing piece. The `amplifier-app-learn`
+> **About this doc.** It's a case study, not a marketing piece. The curriculum
 > repository is private, so the files named below are given as plain names rather than
-> links and you cannot open them yourself. The site we're describing exists; the work
-> dates from May 2026.
+> links and you cannot open them yourself. Details of the curriculum and its May 2026
+> work are first-party historical reports; they are not independently verified, and
+> this doc does not claim a live service is currently available.
 
 ---
 
-## What `amplifier-app-learn` is
+## What the curriculum project is
 
 A free, static React + Vite SPA hosted on GitHub Pages. It teaches Amplifier across
 six progressive levels:
@@ -45,7 +46,7 @@ maintains the curriculum.**
                                ▼
 ┌────────────────────────────────────────────────────────────────────┐
 │                                                                    │
-│    amplifier-app-learn  (curriculum site)                          │
+│    curriculum project  (private repository)                        │
 │                                                                    │
 └──────────────────────────────┬─────────────────────────────────────┘
                                │ audited and maintained by
@@ -111,12 +112,15 @@ This is the part that makes the loop *executable*, not just illustrative.
 additions); Batch C creates new lessons; Batch D handles repo hygiene. Between each
 batch is an approval gate, by design.
 
-That structure maps directly onto an [Amplifier staged recipe](../assets/diagrams/bundle-composition.png) —
+That structure maps directly onto an [Amplifier staged recipe](https://github.com/microsoft/amplifier-bundle-recipes/blob/main/docs/RECIPE_SCHEMA.md) —
 the kind that ships in [`amplifier-bundle-recipes`](https://github.com/microsoft/amplifier-bundle-recipes).
 The maintainer wrote the plan in a form designed to be *executed* by a recipe, not
 just read by a human.
 
-Translation, conceptually:
+Translation, conceptually. This is a sketch of the shape, not a valid recipe: in a real
+staged recipe each stage holds a `steps:` list (each step has an `id`, `agent` and
+`prompt`), and an approval gate is written as `approval: {required: true, ...}` on the
+stage it guards. See `examples/dependency-upgrade-staged-recipe.yaml` in the recipes bundle.
 
 ```yaml
 name: lms-curriculum-update-2026-05
@@ -229,13 +233,13 @@ the same prompt. One source, two surfaces.
 - ✅ Curriculum updates committed (Batches B and C)
 - ✅ README rewritten with the BYOK section explicit
 - ✅ BYOK disclosure shipped: permanent callout in chat settings, one-time confirmation
-  modal on first key save, key prefix versioned (`amplifier-learn-api-key-disclosure-acknowledged-v1`)
+  modal on first key save, key prefix versioned
   so future copy changes can re-prompt
 - ✅ Chat system prompt refactored to load from the canonical artifact via `?raw`
 - ✅ `How This Site Was Built` lesson live in the curriculum
 - ✅ The seventh pillar ("Don't Break the Edges") added to both the LMS curriculum
   and ecosystem documentation
-- 🚧 [`microsoft/amplifier#279`](https://github.com/microsoft/amplifier/pull/279) — upstream PR for `MODULES.md` corrections, awaiting reviewer
+- ✅ [`microsoft/amplifier#279`](https://github.com/microsoft/amplifier/pull/279) — upstream `MODULES.md` PR, merged 2026-06-09 (it added a Documentation & Learning category). The current catalog, reviewed 2026-11-13, no longer lists the learning app and notes it was unavailable.
 - 🚧 The Netlify proxy for the chat companion remains in `ROADMAP-CHAT.md`. README
   and the disclosure modal both gate "public companion-as-a-service" framing on the
   proxy shipping first.

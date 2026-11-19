@@ -6,7 +6,8 @@
   <title>Amplifier Documentation</title>
   <link rel="icon" type="image/png" href="amplifierlogo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
   <!-- Mermaid.js for diagram rendering -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
@@ -2617,6 +2618,8 @@
 
   </style>
   <link rel="stylesheet" href="css/chat-widget.css">
+  <!-- Theme: overrides the inline stylesheet above. Edit css/theme.css, not the inline tokens. -->
+  <link rel="stylesheet" href="css/theme.css">
 </head>
 <body class="layout-sidebar">
 
@@ -2624,6 +2627,9 @@
   <nav class="nav">
     <div class="nav-inner">
       <div class="nav-left">
+        <button class="nav-menu-btn" id="nav-menu-btn" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>
+        </button>
         <a class="nav-logo" onclick="showSection('home')">
           <img src="amplifierlogo.png" alt="Amplifier">
           Amplifier
@@ -2751,6 +2757,7 @@
   </nav>
 
   <!-- Sidebar (for sidebar layout mode) -->
+  <div class="nav-scrim" id="nav-scrim"></div>
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-toggle-all" onclick="toggleAllSidebar()">
       <span id="toggle-all-text">Collapse All</span>
@@ -2945,36 +2952,74 @@
     <!-- HOME SECTION -->
     <section id="section-home" class="section active">
       <div class="hero">
-        <div class="hero-eyebrow">Open Source · Microsoft · MIT License</div>
-        <h1 class="hero-title">Amplifier</h1>
-        <p class="hero-subtitle">The ultra-thin kernel for modular AI agents</p>
-        <p class="hero-description">
-          Build AI agent systems with Linux-kernel philosophy: a small, stable Rust kernel with Python bindings
-          that provides mechanisms, while policies live as swappable modules at the edges.
-        </p>
-        <div class="hero-actions">
-          <button class="btn-primary" onclick="showSection('quickstart')">Get started</button>
-          <a href="https://microsoft.github.io/amplifier-docs" class="btn-secondary" target="_blank">Official Docs</a>
-          <a href="https://github.com/microsoft/amplifier" class="btn-secondary" target="_blank">GitHub</a>
+        <div class="hero-copy">
+          <h1 class="hero-title">Amplifier</h1>
+          <p class="hero-subtitle">A small kernel. Everything else is a module.</p>
+          <p class="hero-description">
+            The kernel handles sessions, mount points and events, and nothing more. Providers, tools,
+            the agent loop, memory and safety checks all plug into it, and a bundle decides which ones.
+          </p>
+          <div class="hero-actions">
+            <button class="btn-primary" onclick="showSection('quickstart')">Get started</button>
+            <button class="btn-secondary" onclick="showSection('ecosystem')">Browse the ecosystem</button>
+          </div>
         </div>
-      </div>
 
-      <div class="feature-cards">
-        <div class="feature-card">
-          <div class="feature-gradient blue"></div>
-          <span class="feature-label">Use it</span>
-          <p>Run AI agents with pre-built providers and tools. Configure via bundles and behaviors.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-gradient purple"></div>
-          <span class="feature-label">Extend it</span>
-          <p>Write custom tools in 2 minutes. Duck typing, no inheritance.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-gradient green"></div>
-          <span class="feature-label">Embed it</span>
-          <p>Load a bundle from your own app with amplifier-foundation. Full programmatic control.</p>
-        </div>
+        <figure class="kernel-figure">
+          <svg viewBox="20 0 528 322" role="img" aria-labelledby="kf-title kf-desc">
+            <title id="kf-title">How a prompt moves through Amplifier</title>
+            <desc id="kf-desc">A prompt enters the orchestrator, which runs the agent loop and returns a response. The orchestrator calls a provider, tools and a context manager. Hooks observe every event and can block a tool call. All five module types are mounted on the kernel, amplifier-core.</desc>
+
+            <!-- mounting pins: every module plugs into the kernel -->
+            <path class="kf-pin" d="M79 208V262 M213 208V262 M347 208V262 M481 208V262 M280 94V262"/>
+
+            <!-- orchestrator to provider, tools, context -->
+            <path class="kf-wire" d="M180 94V122H79V150 M213 94V150 M347 94V150"/>
+
+            <!-- hooks tap the calls -->
+            <path class="kf-tap" d="M213 122H481V150"/>
+            <circle class="kf-tap-dot" cx="213" cy="122" r="3"/>
+            <circle class="kf-tap-dot" cx="347" cy="122" r="3"/>
+
+            <!-- signal: prompt in, response out -->
+            <path class="kf-signal" pathLength="1" d="M76 65H146 M406 65H470"/>
+            <path class="kf-arrow" d="M146 60L154 65L146 70Z M470 60L478 65L470 70Z"/>
+            <text class="kf-io" x="20" y="69">prompt</text>
+            <text class="kf-io" x="484" y="69">response</text>
+
+            <rect class="kf-slot" x="154" y="36" width="252" height="58" rx="3"/>
+            <text class="kf-role" x="170" y="61">Orchestrator</text>
+            <text class="kf-module" x="170" y="80">loop-streaming</text>
+            <text class="kf-note" x="390" y="61" text-anchor="end">runs the agent loop</text>
+
+            <rect class="kf-slot" x="20" y="150" width="118" height="58" rx="3"/>
+            <text class="kf-role" x="32" y="175">Provider</text>
+            <text class="kf-module" x="32" y="194">provider-openai</text>
+
+            <rect class="kf-slot" x="154" y="150" width="118" height="58" rx="3"/>
+            <text class="kf-role" x="166" y="175">Tools</text>
+            <text class="kf-module" x="166" y="194">tool-bash</text>
+
+            <rect class="kf-slot" x="288" y="150" width="118" height="58" rx="3"/>
+            <text class="kf-role" x="300" y="175">Context</text>
+            <text class="kf-module" x="300" y="194">context-simple</text>
+
+            <rect class="kf-slot" x="422" y="150" width="118" height="58" rx="3"/>
+            <text class="kf-role" x="434" y="175">Hooks</text>
+            <text class="kf-module" x="434" y="194">hooks-approval</text>
+
+            <!-- the kernel -->
+            <rect class="kf-bus" x="20" y="262" width="520" height="5" rx="1"/>
+            <circle class="kf-jack" cx="79" cy="264.5" r="5"/>
+            <circle class="kf-jack" cx="213" cy="264.5" r="5"/>
+            <circle class="kf-jack" cx="280" cy="264.5" r="5"/>
+            <circle class="kf-jack" cx="347" cy="264.5" r="5"/>
+            <circle class="kf-jack" cx="481" cy="264.5" r="5"/>
+            <text class="kf-core" x="20" y="296">amplifier-core</text>
+            <text class="kf-note" x="20" y="316">sessions, mount points, hook registry, events</text>
+          </svg>
+          <figcaption>Five kinds of module mount on the kernel. Swap any of them without touching the others. Hooks listen to events and can stop a tool call before it runs.</figcaption>
+        </figure>
       </div>
 
       <div class="quickstart-preview">
@@ -3037,7 +3082,7 @@ amplifier run "List all Python files in this directory"</code></pre>
       <p class="section-desc">Choose your path. Each guide gets you productive in minutes.</p>
 
       <div class="info-box" style="border-left: 4px solid var(--accent); margin-bottom: 24px;">
-        <strong>📚 Getting Started Guide</strong>
+        <strong>Getting Started Guide</strong>
         <p style="margin: 8px 0 0 0; color: var(--text-1);">For the complete getting started experience including provider setup, see the <a href="https://microsoft.github.io/amplifier-docs/" target="_blank">official installation guide</a>.</p>
       </div>
 
@@ -3392,7 +3437,7 @@ print(backend["output"], backend["session_id"])</code></pre>
       <p class="section-desc">Design philosophy: kernel, not framework. Mechanism over policy.</p>
 
       <div class="info-box" style="border-left: 4px solid var(--blue); margin-bottom: 24px;">
-        <strong>📚 Complete Architecture Documentation</strong>
+        <strong>Complete Architecture Documentation</strong>
         <p style="margin: 8px 0 0 0; color: var(--text-1);">For in-depth architectural guides, see the <a href="https://microsoft.github.io/amplifier-docs/architecture/overview/" target="_blank">official architecture documentation</a>.</p>
       </div>
 
@@ -3404,7 +3449,7 @@ print(backend["output"], backend["session_id"])</code></pre>
         </div>
         <div class="concept">
           <h3>2. Small, Stable, Boring</h3>
-          <p>A deliberately small Rust kernel (about 6,600 lines by upstream's count) with Python bindings. Fewer changes = fewer breaking changes. Prioritizes auditability and predictability over clever implementations.</p>
+          <p>A deliberately small Rust kernel with Python bindings. Fewer changes = fewer breaking changes. Prioritizes auditability and predictability over clever implementations.</p>
         </div>
         <div class="concept">
           <h3>3. Don't Break Modules</h3>
@@ -3476,7 +3521,7 @@ print(backend["output"], backend["session_id"])</code></pre>
             <div class="events-container">
               <div class="events-flow">
                 <div class="event-step">
-                  <div class="event-step-icon start">📥</div>
+                  <div class="event-step-icon start"></div>
                   <div class="event-step-content">
                     <strong>Prompt Submitted</strong>
                     <span>User sends a prompt to the session (<code>session:start</code> fires once, on a session's first execute)</span>
@@ -3485,7 +3530,7 @@ print(backend["output"], backend["session_id"])</code></pre>
                 </div>
                 <div class="event-connector">↓</div>
                 <div class="event-step">
-                  <div class="event-step-icon provider">🤖</div>
+                  <div class="event-step-icon provider"></div>
                   <div class="event-step-content">
                     <strong>Provider Request</strong>
                     <span>LLM generates response with tool calls</span>
@@ -3494,7 +3539,7 @@ print(backend["output"], backend["session_id"])</code></pre>
                 </div>
                 <div class="event-connector">↓</div>
                 <div class="event-step">
-                  <div class="event-step-icon tool">🔧</div>
+                  <div class="event-step-icon tool"></div>
                   <div class="event-step-content">
                     <strong>Tool Execution</strong>
                     <span>Tools run with hook observation</span>
@@ -3658,11 +3703,11 @@ cache/
       <h2 id="diagrams">Architecture Diagrams</h2>
       <p>Each diagram below is generated from a DOT source file committed alongside the rendered output. Sources live in <code>assets/diagrams/</code>; every claim is verified against the upstream source listed in the diagram's caption.</p>
 
-      <div class="diagram-gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 24px; margin: 24px 0;">
+      <div class="diagram-gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 24px; margin: 24px 0;">
 
         <figure class="card" style="margin: 0; padding: 16px;">
-          <a href="assets/diagrams/architecture-stack.svg" target="_blank" rel="noopener">
-            <img src="assets/diagrams/architecture-stack.png" alt="Amplifier architecture stack: kernel, runtime modules, foundation, bundles, applications" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          <a href="assets/diagrams/architecture-stack.svg?v=2" target="_blank" rel="noopener">
+            <img src="assets/diagrams/architecture-stack.png?v=2" alt="Amplifier architecture stack: kernel, runtime modules, foundation, bundles, applications" style="max-width: 100%; height: auto; border-radius: 8px;" />
           </a>
           <figcaption style="margin-top: 12px;">
             <strong>Architecture stack</strong>
@@ -3672,8 +3717,8 @@ cache/
         </figure>
 
         <figure class="card" style="margin: 0; padding: 16px;">
-          <a href="assets/diagrams/module-types.svg" target="_blank" rel="noopener">
-            <img src="assets/diagrams/module-types.png" alt="The five primary kernel module types: Provider, Tool, Orchestrator, Context Manager, Hook" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          <a href="assets/diagrams/module-types.svg?v=2" target="_blank" rel="noopener">
+            <img src="assets/diagrams/module-types.png?v=2" alt="The five primary kernel module types: Provider, Tool, Orchestrator, Context Manager, Hook" style="max-width: 100%; height: auto; border-radius: 8px;" />
           </a>
           <figcaption style="margin-top: 12px;">
             <strong>Module types</strong>
@@ -3683,8 +3728,8 @@ cache/
         </figure>
 
         <figure class="card" style="margin: 0; padding: 16px;">
-          <a href="assets/diagrams/dependency-rules.svg" target="_blank" rel="noopener">
-            <img src="assets/diagrams/dependency-rules.png" alt="Allowed and forbidden import directions across Amplifier repository types" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          <a href="assets/diagrams/dependency-rules.svg?v=2" target="_blank" rel="noopener">
+            <img src="assets/diagrams/dependency-rules.png?v=2" alt="Allowed and forbidden import directions across Amplifier repository types" style="max-width: 100%; height: auto; border-radius: 8px;" />
           </a>
           <figcaption style="margin-top: 12px;">
             <strong>Dependency rules</strong>
@@ -3694,8 +3739,8 @@ cache/
         </figure>
 
         <figure class="card" style="margin: 0; padding: 16px;">
-          <a href="assets/diagrams/session-lifecycle.svg" target="_blank" rel="noopener">
-            <img src="assets/diagrams/session-lifecycle.png" alt="Session lifecycle: startup, execution, teardown" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          <a href="assets/diagrams/session-lifecycle.svg?v=2" target="_blank" rel="noopener">
+            <img src="assets/diagrams/session-lifecycle.png?v=2" alt="Session lifecycle: startup, execution, teardown" style="max-width: 100%; height: auto; border-radius: 8px;" />
           </a>
           <figcaption style="margin-top: 12px;">
             <strong>Session lifecycle</strong>
@@ -3705,8 +3750,8 @@ cache/
         </figure>
 
         <figure class="card" style="margin: 0; padding: 16px;">
-          <a href="assets/diagrams/bundle-composition.svg" target="_blank" rel="noopener">
-            <img src="assets/diagrams/bundle-composition.png" alt="Bundle composition: foundation base + behavior overlay producing a Mount Plan" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          <a href="assets/diagrams/bundle-composition.svg?v=2" target="_blank" rel="noopener">
+            <img src="assets/diagrams/bundle-composition.png?v=2" alt="Bundle composition: foundation base + behavior overlay producing a Mount Plan" style="max-width: 100%; height: auto; border-radius: 8px;" />
           </a>
           <figcaption style="margin-top: 12px;">
             <strong>Bundle composition</strong>
@@ -3716,8 +3761,8 @@ cache/
         </figure>
 
         <figure class="card" style="margin: 0; padding: 16px;">
-          <a href="assets/diagrams/hook-event-flow.svg" target="_blank" rel="noopener">
-            <img src="assets/diagrams/hook-event-flow.png" alt="Hook event flow: event fan-out to handlers and HookResult action precedence" style="max-width: 100%; height: auto; border-radius: 8px;" />
+          <a href="assets/diagrams/hook-event-flow.svg?v=2" target="_blank" rel="noopener">
+            <img src="assets/diagrams/hook-event-flow.png?v=2" alt="Hook event flow: event fan-out to handlers and HookResult action precedence" style="max-width: 100%; height: auto; border-radius: 8px;" />
           </a>
           <figcaption style="margin-top: 12px;">
             <strong>Hook event flow</strong>
@@ -3740,9 +3785,12 @@ cache/
 
       <h3>Architecture Overview</h3>
       <p>The following diagram shows how external applications integrate with amplifier-core:</p>
-      <div class="card" style="margin-top:20px; text-align:center;">
-  <img src="assets/amparch.png" alt="Amplifier External App Architecture" style="max-width:100%; height:auto; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,.08);" />
-</div>
+      <figure class="card" style="margin: 20px 0 0; padding: 16px;">
+        <a href="assets/diagrams/external-app-architecture.svg?v=2" target="_blank" rel="noopener">
+          <img src="assets/diagrams/external-app-architecture.png?v=2" alt="External app architecture: your application supplies an approval system, a display system and optionally a module loader; AmplifierSession creates the coordinator, loads the runtime modules, and hands each prompt to the orchestrator" style="max-width: 100%; height: auto; border-radius: 8px;" />
+        </a>
+        <figcaption style="margin-top: 12px; color: var(--text-2); font-size: 14px;">Your application supplies policy; <code>amplifier-core</code> supplies mechanism. Click to open the SVG. Source: <code>assets/diagrams/external-app-architecture.dot</code></figcaption>
+      </figure>
 
       <h3>Required Components</h3>
       <p>External applications can provide up to three optional policy components:</p>
@@ -4024,7 +4072,7 @@ amplifier init</code></pre>
       <p class="section-desc">Complete documentation for module developers.</p>
 
       <div class="info-box" style="border-left: 4px solid var(--purple); margin-bottom: 24px;">
-        <strong>📚 Complete API Reference</strong>
+        <strong>Complete API Reference</strong>
         <p style="margin: 8px 0 0 0; color: var(--text-1);">For the full API documentation including all contracts and interfaces, see the <a href="https://microsoft.github.io/amplifier-docs/developer-guide/" target="_blank">official Developer Guide</a>.</p>
       </div>
 
@@ -4128,12 +4176,13 @@ amplifier init</code></pre>
           <thead><tr><th>Event</th><th>When</th><th>Data</th></tr></thead>
           <tbody>
             <tr><td><code>session:start</code></td><td>First execute() of a new session</td><td>session_id, parent_id, metadata (optional)</td></tr>
-            <tr><td><code>session:end</code></td><td>Session cleanup, before module cleanup</td><td>session_id</td></tr>
+            <tr><td><code>session:end</code></td><td>Session cleanup, before module cleanup</td><td>session_id, status</td></tr>
             <tr><td><code>session:fork</code></td><td>Child session initialized</td><td>parent, session_id</td></tr>
             <tr><td><code>session:resume</code></td><td>First execute() of a resumed session</td><td>session_id, parent_id, metadata (optional)</td></tr>
           </tbody>
         </table>
-        <p>The mount plan is only emitted, redacted, as a separate <code>session:config</code> event when <code>session.raw</code> is true.</p>
+        <p>The redacted mount plan appears as a <code>raw</code> field on the <code>session:start</code>, <code>session:resume</code> and <code>session:fork</code> payloads when <code>session.raw</code> is true. <code>session:config</code> is not one of the 43 canonical events: amplifier-core 2.0.2 contains a helper that would emit it, but no emission was verified in that build, so do not subscribe to it expecting delivery.</p>
+        <p>Emitters: the kernel emits the <code>session:*</code> events above, <code>module:load_failed</code> and <code>module:on_session_ready_failed</code> (a failed mount or <code>on_session_ready</code> does not abort the session), and <code>cancel:completed</code>. The orchestrator and provider modules emit the prompt, provider, tool, content-block and <code>llm:*</code> events, so what you see depends on the loop module in use.</p>
 
         <h3>Prompt Lifecycle</h3>
         <table class="ref-table">
@@ -5025,7 +5074,7 @@ updates:
           <tr><th>Change</th><th>What it means</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>Anchors is the default root bundle</strong></td><td>The upstream README now says Anchors is the default and calls <code>foundation</code> "a selectable complete root". Anchors lives inside <code>amplifier-foundation</code> (<code>bundles/anchors</code>), not in its own repo. CLI build <code>2026.09.06</code> reports <code>anchors (default)</code>; upstream <code>main</code> has since moved the default to <code>anchors-amp-dev</code>, a thin root that includes Anchors.</td></tr>
+          <tr><td><strong>Default root bundle (version-sensitive: <code>anchors</code> or <code>anchors-amp-dev</code>)</strong></td><td>The upstream README now says Anchors is the default and calls <code>foundation</code> "a selectable complete root". Anchors lives inside <code>amplifier-foundation</code> (<code>bundles/anchors</code>), not in its own repo. The default depends on the CLI version. CLI build <code>2026.09.06</code> reports <code>anchors (default)</code>; upstream <code>main</code> has since moved the default to <code>anchors-amp-dev</code>, a thin root that includes Anchors. Sources, both verified in <code>microsoft/amplifier-app-cli</code>: <a href="https://github.com/microsoft/amplifier-app-cli/blob/569c9b8/amplifier_app_cli/commands/run.py#L335-L337" target="_blank" rel="noopener"><code>anchors</code> at 569c9b8, <code>amplifier_app_cli/commands/run.py#L335-L337</code></a>; <a href="https://github.com/microsoft/amplifier-app-cli/blob/9a053f5/amplifier_app_cli/lib/bundle_loader/discovery.py#L31" target="_blank" rel="noopener"><code>anchors-amp-dev</code> at 9a053f5, <code>amplifier_app_cli/lib/bundle_loader/discovery.py#L31</code></a>. No switch date is established.</td></tr>
           <tr><td><strong>Behaviors are the unit you add</strong></td><td>The quick start now adds a <em>behavior</em> to the existing host (<code>amplifier bundle add '...#subdirectory=behaviors/recipes.yaml' --app</code>) instead of switching root bundles.</td></tr>
           <tr><td><strong>The kernel has more than Python bindings</strong></td><td><code>amplifier-core</code> is described upstream as a native Rust kernel with Python bindings and Node/C-ABI interfaces in the same repository. Upstream notes that binding source being present does not establish released artifacts.</td></tr>
           <tr><td><strong>Unified</strong></td><td>A local, authenticated web workspace for chat, voice, and work, with terminal and macOS clients.</td></tr>
@@ -5289,7 +5338,7 @@ updates:
           <tr><td><a href="https://github.com/microsoft/amplifier-bundle-memory" target="_blank" rel="noopener"><code>memory</code></a></td><td>Local, Git-backed standing preferences with session integration. Distinct from the community memory capability.</td></tr>
           <tr><td><a href="https://github.com/microsoft/amplifier-bundle-llm-wiki" target="_blank" rel="noopener"><code>llm-wiki</code></a></td><td>The LLM Wiki pattern as workflow modes: init, ingest, lint, publish, query</td></tr>
           <tr><td><a href="https://github.com/microsoft/amplifier-bundle-team-pulse" target="_blank" rel="noopener"><code>team-pulse</code></a></td><td>Read-only lens over a team's shared knowledge via the Team Pulse API, with a mode and expert agent</td></tr>
-          <tr><td><a href="https://github.com/microsoft/amplifier-bundle-redaction" target="_blank" rel="noopener"><code>redaction</code></a></td><td>Redaction library and redaction hook</td></tr>
+          <tr><td><a href="https://github.com/microsoft/amplifier-bundle-redaction" target="_blank" rel="noopener"><code>redaction</code></a></td><td>Redaction library and the <code>hook-redaction</code> module; replaces the retired <code>hooks-redaction</code></td></tr>
         </tbody>
       </table>
 
@@ -5424,7 +5473,7 @@ updates:
         </thead>
         <tbody>
           <tr><td><a href="https://github.com/microsoft/amplifier-module-hooks-logging" target="_blank" rel="noopener"><code>hooks-logging</code></a></td><td>Unified JSONL event logging per session</td></tr>
-          <tr><td><a href="https://github.com/microsoft/amplifier-module-hooks-redaction" target="_blank" rel="noopener"><code>hooks-redaction</code></a></td><td>Privacy redaction for secrets / PII</td></tr>
+          <tr><td><a href="https://github.com/microsoft/amplifier-module-hooks-redaction" target="_blank" rel="noopener"><code>hooks-redaction</code></a></td><td><em>Retired; historical.</em> Listed in the upstream catalog, but Foundation's <code>redaction</code> behavior now flags it as retired (sunset date 2026-10-01) and points to the <code>hook-redaction</code> module in the <a href="https://github.com/microsoft/amplifier-bundle-redaction" target="_blank" rel="noopener"><code>redaction</code></a> bundle. Use that for new work.</td></tr>
           <tr><td><a href="https://github.com/microsoft/amplifier-module-hooks-approval" target="_blank" rel="noopener"><code>hooks-approval</code></a></td><td>Interactive approval gates for sensitive operations</td></tr>
           <tr><td><a href="https://github.com/microsoft/amplifier-module-hooks-backup" target="_blank" rel="noopener"><code>hooks-backup</code></a></td><td>Automatic session transcript backup</td></tr>
           <tr><td><a href="https://github.com/microsoft/amplifier-module-hooks-streaming-ui" target="_blank" rel="noopener"><code>hooks-streaming-ui</code></a></td><td>Real-time console UI for streaming responses</td></tr>
@@ -5551,10 +5600,10 @@ updates:
       <p class="section-desc">Copy-paste patterns for common Amplifier use cases.</p>
 
       <div class="examples-tabs" id="examples-tabs">
-        <button class="examples-tab active" data-tab="hooks">⚡ Hooks</button>
-        <button class="examples-tab" data-tab="tools">🔧 Tools</button>
-        <button class="examples-tab" data-tab="config">⚙️ Configuration</button>
-        <button class="examples-tab" data-tab="patterns">📖 Patterns</button>
+        <button class="examples-tab active" data-tab="hooks">Hooks</button>
+        <button class="examples-tab" data-tab="tools">Tools</button>
+        <button class="examples-tab" data-tab="config">Configuration</button>
+        <button class="examples-tab" data-tab="patterns">Patterns</button>
       </div>
 
       <!-- Hooks Examples -->
@@ -5640,29 +5689,31 @@ async def track_tokens(event, data) -> HookResult:
               <h3>PII Redaction</h3>
               <button class="copy-btn" onclick="copyExampleCode(this)">Copy</button>
             </div>
-            <p class="example-card-desc">Automatically detect and redact sensitive information from streamed responses.</p>
+            <p class="example-card-desc">Flag PII-looking text in streamed output so you can log or alert on it. This observes only; it does not redact or block anything.</p>
             <pre><code class="language-python">import re
 from amplifier_core.models import HookResult
 
 PATTERNS = {
-    "email": r'[\w.-]+@[\w.-]+\.[a-z]{2,}',
-    "ssn": r'\d{3}-\d{2}-\d{4}',
-    "phone": r'\d{3}[-.\s]?\d{3}[-.\s]?\d{4}'
+    "email": re.compile(r"[\w.-]+@[\w.-]+\.[a-z]{2,}"),
+    "ssn": re.compile(r"\b\d{3}-\d{2}-\d{4}\b"),
+    "phone": re.compile(r"\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b"),
 }
+findings: list[str] = []
 
-async def redact_pii(event, data) -> HookResult:
-    """Redact PII from streaming content."""
-    if event == "content_block:delta":
-        content = data.get("delta", "")
-        for name, pattern in PATTERNS.items():
-            content = re.sub(pattern, f"[{name.upper()}_REDACTED]", content)
-        return HookResult(action="modify", data={"delta": content})
-    return HookResult(action="continue")</code></pre>
+async def flag_pii(event: str, data: dict) -> HookResult:
+    text = str(data.get("delta", ""))
+    for kind, pattern in PATTERNS.items():
+        if pattern.search(text):
+            findings.append(kind)       # log or alert here instead
+    return HookResult(action="continue")
+
+# session.coordinator.hooks.register("content_block:delta", flag_pii, name="pii-flag")</code></pre>
             <div class="example-card-output">
               <span class="output-label">Output</span>
-              <pre>Input:  "Contact john@email.com or 555-123-4567"
-Output: "Contact [EMAIL_REDACTED] or [PHONE_REDACTED]"</pre>
+              <pre>Delta: "Contact john@email.com or 555-123-4567"
+findings == ["email", "phone"]</pre>
             </div>
+            <p class="example-card-desc">Limits: patterns are illustrative and miss many formats, and a phrase can be split across deltas. A <code>modify</code> result on <code>content_block:delta</code> only changes the data later handlers see (it replaces the whole dict, so copy it first). Whether the display or transcript uses it depends on the emitting module, so do not rely on it as a redaction or security boundary. Use the <code>redaction</code> bundle and its <code>hook-redaction</code> module (<code>hooks-redaction</code> is retired) and verify it on your build.</p>
           </div>
         </div>
       </div>
@@ -6020,7 +6071,7 @@ Help me understand:
       <p class="section-desc">The design principles and mindset that separate deliberate AI-augmented engineering from unconstrained generation.</p>
 
       <div class="info-box" style="border-left: 4px solid var(--purple); margin-bottom: 24px;">
-        <strong>🧭 Why Philosophy Matters</strong>
+        <strong>Why Philosophy Matters</strong>
         <p style="margin: 8px 0 0 0; color: var(--text-1);">Amplifier is not just a tool — it is a way of thinking about software construction. Understanding <em>why</em> the system is designed this way turns every interaction from guesswork into intent.</p>
       </div>
 
@@ -6041,7 +6092,7 @@ Help me understand:
       <div class="concepts" style="margin-bottom: 40px;">
         <div class="concept">
           <h3>1. Mechanism, Not Policy</h3>
-          <p>The kernel provides <em>capability</em>; modules decide <em>behavior</em>. If two teams might want something to work differently, it belongs in a module — not in the core. This is the single most important principle: it is why <code>amplifier-core</code> is ~2,600 lines and the ecosystem is unbounded.</p>
+          <p>The kernel provides <em>capability</em>; modules decide <em>behavior</em>. If two teams might want something to work differently, it belongs in a module — not in the core. This is the single most important principle: it is why <code>amplifier-core</code> stays small (about 6,600 lines of Rust by upstream's count, not recounted here) and the ecosystem is unbounded.</p>
           <p style="color: var(--text-2); font-size: 0.9em;">Ask yourself: "Could a different team legitimately want the opposite?" If yes → module.</p>
         </div>
         <div class="concept">
@@ -6155,27 +6206,27 @@ Help me understand:
       <div class="arch-viz" style="margin-bottom: 32px;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 24px; background: var(--bg-2); border-radius: 12px;">
           <div style="text-align: center; padding: 16px; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border);">
-            <div style="font-size: 1.5em; margin-bottom: 8px;">🎯</div>
+            <div style="font-size: 1.5em; margin-bottom: 8px;"></div>
             <strong>1. Declare Intent</strong>
             <p style="font-size: 0.85em; color: var(--text-2); margin: 8px 0 0 0;">State what you want — in plain language. Use IDD decompose if the goal is complex.</p>
           </div>
           <div style="text-align: center; padding: 16px; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border);">
-            <div style="font-size: 1.5em; margin-bottom: 8px;">🏗️</div>
+            <div style="font-size: 1.5em; margin-bottom: 8px;"></div>
             <strong>2. Spec the Boundary</strong>
             <p style="font-size: 0.85em; color: var(--text-2); margin: 8px 0 0 0;">Define the module contract before generating code. What goes in, what comes out, what errors are possible.</p>
           </div>
           <div style="text-align: center; padding: 16px; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border);">
-            <div style="font-size: 1.5em; margin-bottom: 8px;">🔨</div>
+            <div style="font-size: 1.5em; margin-bottom: 8px;"></div>
             <strong>3. Build in the Medium</strong>
             <p style="font-size: 0.85em; color: var(--text-2); margin: 8px 0 0 0;">Generate the real artifact — not a sketch of it. Test-first. Code last.</p>
           </div>
           <div style="text-align: center; padding: 16px; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border);">
-            <div style="font-size: 1.5em; margin-bottom: 8px;">🔍</div>
+            <div style="font-size: 1.5em; margin-bottom: 8px;"></div>
             <strong>4. Verify Against Intent</strong>
             <p style="font-size: 0.85em; color: var(--text-2); margin: 8px 0 0 0;">Does the artifact match what you declared in step 1? Not just "does it run" — does it do the right thing.</p>
           </div>
           <div style="text-align: center; padding: 16px; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border);">
-            <div style="font-size: 1.5em; margin-bottom: 8px;">📦</div>
+            <div style="font-size: 1.5em; margin-bottom: 8px;"></div>
             <strong>5. Seal and Compose</strong>
             <p style="font-size: 0.85em; color: var(--text-2); margin: 8px 0 0 0;">Mark the module complete. It becomes a stable brick — referenced by others, never reached into.</p>
           </div>
@@ -6188,7 +6239,7 @@ Help me understand:
       <p>Vibe coding produces code. Amplifier coding produces <strong>a system that produces code</strong>.</p>
 
       <div class="info-box" style="border-left: 4px solid var(--blue); margin-bottom: 24px;">
-        <strong>📖 Zero-Vector Design Connection</strong>
+        <strong>Zero-Vector Design Connection</strong>
         <p style="margin: 8px 0 0 0; color: var(--text-1);">This philosophy lines up with the <a href="https://zerovector.design/" target="_blank">Zero-Vector Design</a> thesis: eliminate translation loss between vision and product by using AI agents as a crew — not an author. The comparison is this site's own; it is not a statement from the Amplifier documentation. For further reading, see <a href="https://github.com/michaeljabbour/amplifier-bundle-zerovector" target="_blank"><code>amplifier-bundle-zerovector</code></a>, a community bundle built on this approach with slash-command crew modes and recipes.</p>
       </div>
 
@@ -6844,7 +6895,7 @@ flowchart TD
       <p class="section-desc">Help us build a world-class developer experience for Amplifier.</p>
 
       <div class="info-box" style="border-left: 4px solid var(--orange); margin-bottom: 24px;">
-        <strong>📚 Community & Contributing</strong>
+        <strong>Community & Contributing</strong>
         <p style="margin: 8px 0 0 0; color: var(--text-1);">Join the community and see the roadmap at the <a href="https://microsoft.github.io/amplifier-docs/" target="_blank">official Amplifier documentation site</a>.</p>
       </div>
 

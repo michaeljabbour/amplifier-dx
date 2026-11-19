@@ -312,7 +312,7 @@ The three repos above are the dependency stack. The wider ecosystem builds on to
 | Layer | What lives there |
 |-------|------------------|
 | **Applications** | `amplifier-app-cli` (reference CLI), `amplifierd` (HTTP daemon), `amplifier-chat`, `amplifier-voice`, `amplifier-app-log-viewer`, `amplifier-app-benchmarks` |
-| **Bundles** | `amplifier-bundle-*` (50+ Microsoft-maintained: recipes, superpowers, python-dev, browser-tester, design-intelligence, stories, dot-graph, gitea, digital-twin-universe, ...) |
+| **Bundles** | `amplifier-bundle-*` (examples include recipes, superpowers, python-dev, browser-tester, design-intelligence, stories, dot-graph, gitea, digital-twin-universe, ...) |
 | **Runtime modules** | `amplifier-module-*` (providers: anthropic, openai, gemini, azure-openai, ollama, vllm, github-copilot, ...; tools: filesystem, bash, web, search, todo, mcp, skills, slash-command, plus `delegate` for sub-agents (it lives in the foundation repo; `tool-task` is the legacy delegation tool); orchestrators: loop-basic, loop-streaming, loop-events; context managers: simple, persistent; hooks: logging, redaction, approval, streaming-ui, ...) |
 
 For the full current list of components with GitHub links, see

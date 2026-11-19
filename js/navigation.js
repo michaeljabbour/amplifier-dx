@@ -71,9 +71,9 @@ export function showSection(id, clickedElement = null) {
       // If we know what was clicked, only activate that exact element
       item.classList.toggle('active', item === clickedElement);
     } else {
-      // Fallback: activate items matching section WITHOUT a data-scroll
+      // Fallback: activate items matching section WITHOUT a data-scroll or data-tab
       // (top-level section items only)
-      const isTopLevel = !item.dataset.scroll;
+      const isTopLevel = !item.dataset.scroll && !item.dataset.tab;
       const matchesSection = item.dataset.section === id;
       item.classList.toggle('active', isTopLevel && matchesSection);
     }
@@ -108,9 +108,9 @@ export function showSection(id, clickedElement = null) {
  */
 function handleHash() {
   const hash = window.location.hash.slice(1) || 'home';
-  // Find the top-level nav item for this section (one without data-scroll)
-  const matchingItem = document.querySelector(`[data-section="${hash}"]:not([data-scroll])`);
-  showSection(hash, matchingItem);
+  // No clicked element: showSection marks every top-level nav variant
+  // (top bar, sub-nav and sidebar) for this section as active.
+  showSection(hash);
 }
 
 /**
@@ -337,4 +337,47 @@ window.toggleSidebarItem = toggleSidebarItem;
 window.toggleAllSidebar = toggleAllSidebar;
 window.showSection = showSection;
 window.showSectionWithTab = showSectionWithTab;
+
+// --------------------------------------------------------------------------
+// Narrow screens: the sidebar is a drawer opened from the top bar
+// --------------------------------------------------------------------------
+function setNavOpen(open) {
+  document.body.classList.toggle('nav-open', open);
+  const btn = document.getElementById('nav-menu-btn');
+  if (btn) {
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+  }
+}
+
+function initNavDrawer() {
+  const btn = document.getElementById('nav-menu-btn');
+  const scrim = document.getElementById('nav-scrim');
+  const sidebar = document.getElementById('sidebar');
+  if (!btn || !sidebar) return;
+
+  btn.addEventListener('click', () => setNavOpen(!document.body.classList.contains('nav-open')));
+  if (scrim) scrim.addEventListener('click', () => setNavOpen(false));
+
+  // Choosing a destination closes the drawer; expanding a group does not
+  sidebar.addEventListener('click', (e) => {
+    const item = e.target.closest('.sidebar-subitem, .sidebar-item:not(.has-children)');
+    if (item) setNavOpen(false);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setNavOpen(false);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900) setNavOpen(false);
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initNavDrawer);
+} else {
+  initNavDrawer();
+}
+
 window.setLayout = setLayout; // used by the layout toggle buttons in the top nav

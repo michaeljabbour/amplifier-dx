@@ -11,9 +11,9 @@ Amplifier is not just a tool. It is a way of thinking about software constructio
 
 > **"The kernel provides mechanisms. Modules provide policy. The human provides intent."**
 
-Every architectural decision in Amplifier traces back to this. The kernel is minimal and stable (~2,600 lines). All interesting behavior lives at the edges — in modules, bundles, and agent configurations that can evolve without destabilizing the foundation.
+Every architectural decision in Amplifier traces back to this. The kernel is deliberately small and stable. All interesting behavior lives at the edges — in modules, bundles, and agent configurations that can evolve without destabilizing the foundation.
 
-The practical consequence: an Amplifier session is a composition of explicit, inspectable, swappable pieces. Nothing is hidden. Nothing is magic. If something behaves unexpectedly, you can read exactly why — in the YAML profile, the module code, or the hook chain.
+The practical consequence: an Amplifier session is a composition of explicit, inspectable, swappable pieces. Nothing is hidden. Nothing is magic. If something behaves unexpectedly, you can read exactly why — in the bundle, the module code, or the hook chain.
 
 ---
 
@@ -25,7 +25,7 @@ These are the first-principles from which all Amplifier design decisions follow.
 
 The kernel provides *capability*; modules decide *behavior*. If two teams might want something to work differently, it belongs in a module — not in the core.
 
-This is the single most important principle. It is why `amplifier-core` is ~2,600 lines and the ecosystem is unbounded.
+This is the single most important principle. It is why the kernel stays small while the ecosystem is unbounded.
 
 **Litmus test:** "Could a different team legitimately want the opposite behavior?" If yes → module, not kernel.
 

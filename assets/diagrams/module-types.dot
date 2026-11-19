@@ -12,18 +12,23 @@
  *   amplifier-core/docs/DESIGN_PHILOSOPHY.md line 204 (six gRPC bridges)
  *
  * Verified 2026-05-02 by core:core-expert (cross-checked against
- * amplifier-app-learn/docs/state-of-amplifier-2026-05/dot/03-module-types.dot).
+ * a DOT source in a private curriculum repository).
  * Re-verified 2026-11-18 against amplifier-core 2.0.2.
  */
 digraph ModuleTypes {
     rankdir=LR;
-    bgcolor="white";
+    bgcolor="#151618";
+    fontname="Helvetica";
+    fontcolor="#cdc8bc";
     pad=0.3;
     nodesep=0.4;
     ranksep=0.6;
 
     node [
         shape=box,
+        fontcolor="#efeadf",
+        color="#4a4d51",
+        fillcolor="#232527",
         style="filled,rounded",
         fontname="Helvetica",
         fontsize=10,
@@ -33,74 +38,75 @@ digraph ModuleTypes {
 
     edge [
         fontname="Helvetica",
+        fontcolor="#9b968b",
         fontsize=9,
-        color="#999999",
+        color="#75716a",
         arrowhead=none
     ];
 
     // === KERNEL ===
     kernel [
         label=<<B>amplifier-core</B><BR/><FONT POINT-SIZE="9">Defines protocols.<BR/>Loads modules.<BR/>Dispatches events.</FONT>>,
-        fillcolor="#3a3a3a",
-        fontcolor="white",
-        shape=box3d,
+        fillcolor="#f2a93b", color="#f2a93b",
+        fontcolor="#1a1b1d",
         width=2.2
     ];
 
     // === FIVE CONTRACT-DOCUMENTED TYPES ===
     provider [
-        label=<<B>Provider</B><BR/><FONT POINT-SIZE="9" COLOR="#444">LLM backend<BR/>complete(req)&rarr;resp<BR/><I>anthropic, openai, gemini,<BR/>azure, ollama, vllm, &#8230;</I></FONT>>,
-        fillcolor="#dceefc",
-        color="#3a86c8"
+        label=<<B>Provider</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">LLM backend<BR/>complete(req)&rarr;resp<BR/><I>anthropic, openai, gemini,<BR/>azure, ollama, vllm, &#8230;</I></FONT>>,
+        fillcolor="#1f2a35",
+        color="#7fb0dd"
     ];
 
     tool [
-        label=<<B>Tool</B><BR/><FONT POINT-SIZE="9" COLOR="#444">LLM-decided capability<BR/>execute(input)&rarr;result<BR/><I>filesystem, bash, web,<BR/>search, task, todo, &#8230;</I></FONT>>,
-        fillcolor="#dcf2dc",
-        color="#3a8c3a"
+        label=<<B>Tool</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">LLM-decided capability<BR/>execute(input)&rarr;result<BR/><I>filesystem, bash, web,<BR/>search, task, todo, &#8230;</I></FONT>>,
+        fillcolor="#1f2d25",
+        color="#86c49a"
     ];
 
     orchestrator [
-        label=<<B>Orchestrator</B><BR/><FONT POINT-SIZE="9" COLOR="#444">Execution loop strategy<BR/>execute(prompt)&rarr;str<BR/><I>loop-basic<BR/>loop-streaming<BR/>loop-events</I></FONT>>,
-        fillcolor="#fce8d2",
-        color="#c87a3a"
+        label=<<B>Orchestrator</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">Execution loop strategy<BR/>execute(prompt)&rarr;str<BR/><I>loop-basic<BR/>loop-streaming<BR/>loop-events</I></FONT>>,
+        fillcolor="#33271d",
+        color="#ea9a62"
     ];
 
     context [
-        label=<<B>Context Manager</B><BR/><FONT POINT-SIZE="9" COLOR="#444">Conversation memory<BR/>add/get/set messages<BR/><I>context-simple<BR/>context-persistent</I></FONT>>,
-        fillcolor="#fcdedc",
-        color="#c8503a"
+        label=<<B>Context Manager</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">Conversation memory<BR/>add/get/set messages<BR/><I>context-simple<BR/>context-persistent</I></FONT>>,
+        fillcolor="#33211f",
+        color="#e2776b"
     ];
 
     hook [
-        label=<<B>Hook</B><BR/><FONT POINT-SIZE="9" COLOR="#444">Code-decided observer<BR/>__call__(event,data)<BR/><I>logging, redaction,<BR/>approval, streaming-ui, &#8230;</I></FONT>>,
-        fillcolor="#e2dcfc",
-        color="#7059c8"
+        label=<<B>Hook</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">Code-decided observer<BR/>__call__(event,data)<BR/><I>logging, redaction,<BR/>approval, streaming-ui, &#8230;</I></FONT>>,
+        fillcolor="#2a2535",
+        color="#b9a2dc"
     ];
 
     // === SIXTH TYPE — RECOGNIZED BUT UNDOCUMENTED ===
     resolver [
-        label=<<B>Resolver</B>  <FONT POINT-SIZE="8">⚠ advanced / internal</FONT><BR/><FONT POINT-SIZE="9" COLOR="#444">Declared in <I>ModuleType</I> literal.<BR/>Public contract doc not yet<BR/>published. Treat as internal<BR/>extension surface.</FONT>>,
-        fillcolor="#f3f4f6",
-        color="#6b7280",
+        label=<<B>Resolver</B>  <FONT POINT-SIZE="8">⚠ advanced / internal</FONT><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">Declared in <I>ModuleType</I> literal.<BR/>Public contract doc not yet<BR/>published. Treat as internal<BR/>extension surface.</FONT>>,
+        fillcolor="#232527",
+        color="#75716a",
         style="rounded,filled,dashed",
-        fontcolor="#374151"
+        fontcolor="#cdc8bc"
     ];
 
     // === EDGES ===
-    kernel -> provider     [label=" implements "];
-    kernel -> tool         [label=" implements "];
-    kernel -> orchestrator [label=" implements "];
-    kernel -> context      [label=" implements "];
-    kernel -> hook         [label=" implements "];
-    kernel -> resolver     [label=" recognizes ", style=dashed, color="#9ca3af", fontcolor="#6b7280"];
+    kernel -> provider     [label=" defines protocol "];
+    kernel -> tool         [label=" defines protocol "];
+    kernel -> orchestrator [label=" defines protocol "];
+    kernel -> context      [label=" defines protocol "];
+    kernel -> hook         [label=" defines protocol "];
+    kernel -> resolver     [label=" recognizes ", style=dashed, color="#75716a", fontcolor="#9b968b"];
 
     // === DISTINCTION CALLOUT ===
     distinction [
         shape=plaintext,
-        label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6">
+        style="",
+        label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#1a1b1d" COLOR="#4a4d51">
             <TR>
-                <TD BGCOLOR="#f8f8f8" COLSPAN="2" ALIGN="LEFT"><B>Tool vs Hook: triggering difference</B></TD>
+                <TD BGCOLOR="#2e3033" COLSPAN="2" ALIGN="LEFT"><B>Tool vs Hook: triggering difference</B></TD>
             </TR>
             <TR>
                 <TD ALIGN="LEFT"><B>Tool</B></TD>

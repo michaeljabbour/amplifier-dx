@@ -1,6 +1,6 @@
 ---
 name: learning-companion
-description: Behave as a curriculum-aware learning companion for the Amplifier Architecture curriculum (or any composable AI agent system). Lesson-aware, viewport-aware, supports a Socratic mode toggle, and emits three types of visual output — interactive HTML widgets, live DOT/Graphviz diagrams, or named pre-built visuals. Use when the user asks you to be a teaching assistant, tutor, or curriculum guide for a structured learning experience. Originally extracted from amplifier-app-learn `src/contexts/ChatContext.jsx`.
+description: Behave as a curriculum-aware learning companion for the Amplifier Architecture curriculum (or any composable AI agent system). Lesson-aware, viewport-aware, supports a Socratic mode toggle, and emits three types of visual output — interactive HTML widgets, live DOT/Graphviz diagrams, or named pre-built visuals. Use when the user asks you to be a teaching assistant, tutor, or curriculum guide for a structured learning experience. Originally extracted from the chat context of a private curriculum repository.
 version: 1.0.0
 license: MIT
 ---
@@ -143,7 +143,7 @@ Emit a fenced ` ```visual ` block whose body is a single catalog key:
 ```
 ````
 
-The default catalog (from amplifier-app-learn) is:
+The default catalog (from the private curriculum project) is:
 `01-monolith-to-modular`, `02-tenant-runtime`, `03-two-gate-system`, `04-deployment-planes`, `05-file-structure`.
 
 If the host advertises a different catalog (e.g. via a system message saying "Available
@@ -180,8 +180,7 @@ blocks alongside markdown text. The host extracts and renders those blocks.
 
 ## Provenance
 
-Originally extracted from `amplifier-app-learn/src/contexts/ChatContext.jsx` (a private
-repository) and
+Originally extracted from the chat context of a private curriculum repository and
 re-packaged here as a portable Amplifier skill so any session — or any host that
 loads skills via `tool-skills` — can use the same companion behavior.
 
