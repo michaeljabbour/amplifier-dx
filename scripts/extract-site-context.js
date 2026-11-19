@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 const INDEX_FILE = 'index.html';
-const OUTPUT_DIR = 'context';
+const OUTPUT_DIR = process.env.CONTEXT_OUTPUT_DIR || 'context';
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'site-context.txt');
 
 /**
@@ -53,19 +53,62 @@ function stripHtml(html) {
     // Clean up whitespace
     .replace(/\n\s*\n\s*\n/g, '\n\n')
     .replace(/[ \t]+/g, ' ')
+    // Strip trailing spaces/tabs on each line (leading indentation untouched)
+    .replace(/[ \t]+$/gm, '')
     .trim();
+}
+
+/**
+ * Find the full HTML of a <section id="..."> element, balancing nested
+ * <section> tags. Returns the inner HTML, or '' if not found.
+ */
+function findSectionInner(html, sectionId) {
+  const open = new RegExp(`<section[^>]*id="${sectionId}"[^>]*>`, 'i').exec(html);
+  if (!open) return '';
+  const start = open.index + open[0].length;
+  const tag = /<(\/?)section\b[^>]*>/gi;
+  tag.lastIndex = start;
+  let depth = 1;
+  let m;
+  while ((m = tag.exec(html))) {
+    depth += m[1] ? -1 : 1;
+    if (depth === 0) return html.slice(start, m.index);
+  }
+  return '';
+}
+
+/**
+ * Historical Proposals tab (contribute > Specifications). It holds proposed
+ * future designs and a generated external spec corpus, not installed facts.
+ * The block runs from its tab div to the start of the next tab (Roadmap).
+ * It stays on the website; it is only left out of the chat context.
+ */
+const HISTORICAL_TAB_START = '<div id="contrib-specs"';
+const HISTORICAL_TAB_END = '<div id="contrib-roadmap"';
+const HISTORICAL_POINTER =
+  '<p>The Specifications tab (Contribute section) holds historical proposals ' +
+  'and generated specs for possible future designs. It is not part of this ' +
+  'context and does not describe the installed system. Point users to ' +
+  'Contribute > Specifications on the site to read it.</p>';
+
+function excludeHistoricalTab(sectionHtml) {
+  const start = sectionHtml.indexOf(HISTORICAL_TAB_START);
+  const end = sectionHtml.indexOf(HISTORICAL_TAB_END);
+  if (start === -1 || end === -1 || end < start) {
+    console.error('Error: could not locate Historical Proposals tab boundaries');
+    process.exit(1);
+  }
+  return sectionHtml.slice(0, start) + HISTORICAL_POINTER + sectionHtml.slice(end);
 }
 
 /**
  * Extract content from a specific section
  */
 function extractSection(html, sectionId) {
-  const regex = new RegExp(
-    `<section[^>]*id="${sectionId}"[^>]*>([\\s\\S]*?)<\\/section>`,
-    'i'
-  );
-  const match = html.match(regex);
-  return match ? stripHtml(match[1]) : '';
+  let inner = findSectionInner(html, sectionId);
+  if (!inner) return '';
+  if (sectionId === 'section-contribute') inner = excludeHistoricalTab(inner);
+  return stripHtml(inner);
 }
 
 /**
@@ -89,6 +132,8 @@ function main() {
     { id: 'section-ecosystem', title: 'Ecosystem' },
     { id: 'section-showcase', title: 'Showcase' },
     { id: 'section-examples', title: 'Code Examples' },
+    { id: 'section-philosophy', title: 'Philosophy' },
+    { id: 'section-guides', title: 'Guides' },
     { id: 'section-contribute', title: 'Contribute' },
   ];
 
