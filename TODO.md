@@ -22,4 +22,4 @@ Working plan for the Amplifier DX site. `- [x]` done, `- [~]` partly done, `- [ 
 ## Publish
 
 - [x] Pull request for the redesign into `main` *AC:* checks green, including the diagram render check
-- [ ] Merge and confirm the live GitHub Pages site shows the new design
+- [x] Merge and confirm the live GitHub Pages site shows the new design
