@@ -2,10 +2,12 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 // Configuration
 const SPECS_SOURCE = 'specs';
 const OUTPUT_FILE = 'generated-specs.html';
+const SPECS_REPO = 'https://github.com/samueljklee/amplifier-next-specs';
 
 const SPEC_DIRECTORIES = [
   'design',
@@ -28,6 +30,44 @@ const LANG_MAP = {
   'yml': 'yaml',
   '': 'text'
 };
+
+/**
+ * Resolve the exact specs revision these pages are generated from: SPECS_REV
+ * override, else the checked-out submodule HEAD (the content actually read),
+ * else the gitlink recorded in this repo. Returns null if none is available.
+ */
+function resolveSpecsRevision() {
+  const attempts = [
+    () => process.env.SPECS_REV,
+    () => execFileSync('git', ['-C', SPECS_SOURCE, 'rev-parse', 'HEAD'], { stdio: ['ignore', 'pipe', 'ignore'] }).toString(),
+    () => execFileSync('git', ['ls-tree', 'HEAD', SPECS_SOURCE], { stdio: ['ignore', 'pipe', 'ignore'] }).toString().split(/\s+/)[2]
+  ];
+  for (const attempt of attempts) {
+    try {
+      const rev = (attempt() || '').trim();
+      if (/^[0-9a-f]{40}$/.test(rev)) return rev;
+    } catch (e) { /* try next source */ }
+  }
+  return null;
+}
+
+const SPECS_REV = resolveSpecsRevision();
+
+/**
+ * Turn a link found in a spec into an href. Relative links are relative to the
+ * source markdown file, not the site root, so resolve them against that file and
+ * point at the pinned revision on GitHub. Returns null when the target does not
+ * exist in the specs tree (or no revision is known): render text, not a dead link.
+ */
+function resolveSpecLink(href, sourceFile) {
+  if (/^(https?:|mailto:)/i.test(href)) return href;
+  if (!sourceFile || !SPECS_REV || href.startsWith('#') || href.startsWith('/')) return null;
+  const [target, ...frag] = href.split('#');
+  const rel = path.posix.normalize(path.posix.join(path.posix.dirname(sourceFile), target));
+  if (rel.startsWith('..') || !fs.existsSync(path.join(SPECS_SOURCE, rel))) return null;
+  const kind = fs.statSync(path.join(SPECS_SOURCE, rel)).isDirectory() ? 'tree' : 'blob';
+  return `${SPECS_REPO}/${kind}/${SPECS_REV}/${rel}${frag.length ? '#' + frag.join('#') : ''}`;
+}
 
 /**
  * Escape HTML special characters
@@ -61,18 +101,18 @@ function transformCodeBlock(code, language) {
 /**
  * Convert markdown tables to HTML ref-table style
  */
-function transformTable(tableMarkdown) {
+function transformTable(tableMarkdown, sourceFile) {
   const lines = tableMarkdown.trim().split('\n');
   if (lines.length < 2) return '';
 
   // Parse header row
-  const headers = lines[0].split('|').filter(h => h.trim()).map(h => h.trim());
+  // Drop only the outer pipes so empty interior/trailing cells keep their column
+  const splitRow = line => line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+  const headers = splitRow(lines[0]);
 
   // Skip separator row (index 1)
   // Parse data rows
-  const rows = lines.slice(2).map(line =>
-    line.split('|').filter(c => c.trim()).map(c => c.trim())
-  );
+  const rows = lines.slice(2).map(splitRow);
 
   let html = `
         <table class="ref-table">
@@ -83,7 +123,7 @@ function transformTable(tableMarkdown) {
 
   rows.forEach(row => {
     html += `
-            <tr>${row.map(cell => `<td>${transformInlineMarkdown(cell)}</td>`).join('')}</tr>`;
+            <tr>${row.map(cell => `<td>${transformInlineMarkdown(cell, sourceFile)}</td>`).join('')}</tr>`;
   });
 
   html += `
@@ -96,20 +136,23 @@ function transformTable(tableMarkdown) {
 /**
  * Transform inline markdown (bold, code, links)
  */
-function transformInlineMarkdown(text) {
+function transformInlineMarkdown(text, sourceFile) {
   return text
     // Bold
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     // Inline code
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     // Links
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, label, href) => {
+      const url = resolveSpecLink(href.trim(), sourceFile);
+      return url ? `<a href="${url}" target="_blank" rel="noopener">${label}</a>` : label;
+    });
 }
 
 /**
  * Transform a complete markdown document to HTML
  */
-function transformMarkdown(markdown, docTitle) {
+function transformMarkdown(markdown, docTitle, sourceFile) {
   let html = '';
   let inCodeBlock = false;
   let codeBlockContent = '';
@@ -123,10 +166,10 @@ function transformMarkdown(markdown, docTitle) {
     const line = lines[i];
 
     // Code block handling
-    if (line.startsWith('```')) {
+    if (line.trimStart().startsWith('```')) {
       if (!inCodeBlock) {
         inCodeBlock = true;
-        codeBlockLang = line.slice(3).trim();
+        codeBlockLang = line.trimStart().slice(3).trim();
         codeBlockContent = '';
       } else {
         html += transformCodeBlock(codeBlockContent, codeBlockLang);
@@ -150,7 +193,7 @@ function transformMarkdown(markdown, docTitle) {
       }
       continue;
     } else if (inTable) {
-      html += transformTable(tableContent);
+      html += transformTable(tableContent, sourceFile);
       inTable = false;
       tableContent = '';
     }
@@ -168,28 +211,31 @@ function transformMarkdown(markdown, docTitle) {
     else if (line.startsWith('> ')) {
       html += `
         <div class="info-box" style="border-left: 4px solid var(--accent);">
-          <p style="margin: 0; color: var(--text-1);">${transformInlineMarkdown(line.slice(2))}</p>
+          <p style="margin: 0; color: var(--text-1);">${transformInlineMarkdown(line.slice(2), sourceFile)}</p>
         </div>`;
     }
     // Unordered lists
     else if (line.match(/^[-*]\s/)) {
       const content = line.replace(/^[-*]\s/, '');
-      html += `\n        <li>${transformInlineMarkdown(content)}</li>`;
+      html += `\n        <li>${transformInlineMarkdown(content, sourceFile)}</li>`;
     }
     // Ordered lists
     else if (line.match(/^\d+\.\s/)) {
       const content = line.replace(/^\d+\.\s/, '');
-      html += `\n        <li>${transformInlineMarkdown(content)}</li>`;
+      html += `\n        <li>${transformInlineMarkdown(content, sourceFile)}</li>`;
     }
     // Paragraphs
     else if (line.trim()) {
-      html += `\n        <p>${transformInlineMarkdown(line)}</p>`;
+      html += `\n        <p>${transformInlineMarkdown(line, sourceFile)}</p>`;
     }
   }
 
-  // Close any remaining table
+  // Close anything still open at EOF so trailing content is not dropped
+  if (inCodeBlock) {
+    html += transformCodeBlock(codeBlockContent, codeBlockLang);
+  }
   if (inTable) {
-    html += transformTable(tableContent);
+    html += transformTable(tableContent, sourceFile);
   }
 
   return html;
@@ -225,7 +271,7 @@ function main() {
   const indexPath = path.join(SPECS_SOURCE, 'INDEX.md');
   if (fs.existsSync(indexPath)) {
     const indexContent = fs.readFileSync(indexPath, 'utf-8');
-    const indexHtml = transformMarkdown(indexContent, 'Specifications Index');
+    const indexHtml = transformMarkdown(indexContent, 'Specifications Index', 'INDEX.md');
     allSpecs.push({
       title: 'Enterprise Productivity Extensions Index',
       category: 'overview',
@@ -238,7 +284,7 @@ function main() {
   const coldStartPath = path.join(SPECS_SOURCE, 'COLD_START_ANALYSIS.md');
   if (fs.existsSync(coldStartPath)) {
     const coldStartContent = fs.readFileSync(coldStartPath, 'utf-8');
-    const coldStartHtml = transformMarkdown(coldStartContent, 'Cold Start Analysis');
+    const coldStartHtml = transformMarkdown(coldStartContent, 'Cold Start Analysis', 'COLD_START_ANALYSIS.md');
     allSpecs.push({
       title: 'Cold Start Analysis',
       category: 'analysis',
@@ -257,7 +303,7 @@ function main() {
         const filePath = path.join(dirPath, file);
         const content = fs.readFileSync(filePath, 'utf-8');
         const title = file.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        const html = transformMarkdown(content, title);
+        const html = transformMarkdown(content, title, `${dir}/${file}`);
 
         allSpecs.push({
           title: title,
@@ -275,7 +321,7 @@ function main() {
   // Generate final HTML
   let finalHtml = `
         <!-- AUTO-GENERATED: External Specifications from amplifier-next-specs -->
-        <!-- Last synced: ${new Date().toISOString()} -->
+        <!-- Source: ${SPECS_REPO} @ ${SPECS_REV || 'unknown'} -->
 
         <hr style="border: none; border-top: 1px solid var(--border); margin: 32px 0;">
 
@@ -285,6 +331,8 @@ function main() {
             These specifications are automatically synced from
             <a href="https://github.com/samueljklee/amplifier-next-specs" target="_blank">amplifier-next-specs</a>.
             They define enterprise productivity extensions for the Amplifier framework.
+            Source revision: ${SPECS_REV ? `<a href="${SPECS_REPO}/tree/${SPECS_REV}" target="_blank" rel="noopener"><code>${SPECS_REV.slice(0, 7)}</code></a>` : '<code>unknown</code>'}.
+            Links inside these specs point to that pinned revision on GitHub; files that do not exist there are shown as plain text.
           </p>
         </div>
 
@@ -312,6 +360,10 @@ function main() {
   finalHtml += `
         </div>
         <!-- END AUTO-GENERATED -->`;
+
+  if (!SPECS_REV) {
+    console.warn('Warning: could not determine specs revision; spec links will render as plain text');
+  }
 
   // Write output
   fs.writeFileSync(OUTPUT_FILE, finalHtml);
