@@ -1,26 +1,28 @@
 name: Render Diagrams
 
-# Verifies that the committed PNG and SVG renders in assets/diagrams/ match what
-# `dot` would produce from the .dot source files. Fails CI if they're out of sync,
-# so contributors must regenerate locally before pushing.
+# Checks the committed renders in assets/diagrams/ against the .dot sources.
+# SVGs are re-rendered in CI and compared byte-wise with the committed files.
+# PNGs are only checked for presence (one per .dot); their bytes are not compared.
+# Fails CI if an SVG is stale or a PNG is missing.
 #
-# IMPORTANT — Graphviz version sensitivity:
-# Graphviz SVG output is NOT byte-stable across major versions. CI runs ubuntu's
-# apt-get graphviz (currently 2.43.x). If you render locally with a different
-# version (e.g. macOS Homebrew is on 14.x as of mid-2026) your committed SVG
-# will not match CI's render and verify-renders will fail.
+# IMPORTANT — environment sensitivity:
+# Both jobs run on the floating `ubuntu-latest` runner label and install
+# whatever `graphviz` apt package that image provides, so the exact distro,
+# Graphviz version and available fonts can change when GitHub updates the
+# label. SVG output is not guaranteed to be byte-stable across Graphviz
+# versions or font environments, so a local `dot` can produce different SVG
+# bytes and make verify-renders fail. The current committed renders were
+# reproduced with Graphviz 14.1.2; this workflow does not pin or guarantee
+# that version.
 #
-# RECOVERY — easiest first:
-#   1. Push your DOT changes with whatever SVG your local `dot` produced.
-#      verify-renders will fail. Then trigger this workflow's workflow_dispatch
-#      from the Actions UI — refresh-renders re-renders all DOTs on
-#      ubuntu-latest's Graphviz and auto-commits the canonical SVGs back to
-#      main. Subsequent verify-renders runs pass.
-#   2. Or render locally with a matching Graphviz version (`apt install graphviz`
-#      on Debian/Ubuntu, or use a devcontainer / Docker image with 2.43).
-#
-# Sibling repo amplifier-app-learn uses the same workflow with the same recovery
-# pattern.
+# RECOVERY:
+#   1. Re-render locally (see assets/diagrams/README.md) and commit, or
+#   2. Manually dispatch this workflow (workflow_dispatch) from the Actions UI
+#      on the intended branch, which must be writable by the workflow token.
+#      The refresh-renders job re-renders all DOTs on the runner and, if
+#      anything changed, commits and pushes the refreshed PNG/SVG files to
+#      that branch. It is not an automatic merge to main. Re-run
+#      verify-renders (e.g. via a push or pull request) afterwards.
 
 on:
   pull_request:
@@ -92,8 +94,8 @@ jobs:
           echo "All committed SVG renders are up to date with their .dot sources."
 
       - name: Soft-check PNGs exist
-        # PNGs are not byte-stable across Graphviz versions, so we only check
-        # that a render exists for every .dot source rather than comparing bytes.
+        # PNG bytes depend on the Graphviz/Cairo/font build, so CI only checks
+        # that a PNG exists for every .dot source rather than comparing bytes.
         run: |
           set -euo pipefail
           missing=()

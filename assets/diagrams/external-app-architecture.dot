@@ -1,0 +1,164 @@
+/*
+ * Amplifier External App Architecture
+ *
+ * How a host application embeds amplifier-core: the app supplies policy
+ * (approval UI, display, optionally a module loader), the kernel supplies
+ * mechanism (session, coordinator, loading, event dispatch).
+ *
+ * Sources (verified 2026-11-18 against amplifier-core 2.0.2):
+ *   python/amplifier_core/interfaces.py   (Orchestrator.execute signature)
+ *   python/amplifier_core/approval.py     (ApprovalSystem.request_approval)
+ *   python/amplifier_core/display.py      (DisplaySystem.show_message)
+ *   python/amplifier_core/loader.py       (ModuleLoader, resolution order)
+ *   python/amplifier_core/_session_init.py (initialize reads coordinator.loader)
+ */
+digraph ExternalAppArchitecture {
+    rankdir=TB;
+    bgcolor="#151618";
+    fontname="Helvetica";
+    fontcolor="#cdc8bc";
+    pad=0.3;
+    nodesep=0.35;
+    ranksep=0.55;
+    compound=true;
+    newrank=true;
+
+    node [
+        shape=box,
+        fontcolor="#efeadf",
+        color="#4a4d51",
+        fillcolor="#232527",
+        style="filled,rounded",
+        fontname="Helvetica",
+        fontsize=10,
+        margin="0.2,0.12",
+        penwidth=1.3
+    ];
+
+    edge [
+        fontname="Helvetica",
+        fontcolor="#9b968b",
+        fontsize=9,
+        color="#75716a",
+        penwidth=1.2
+    ];
+
+    // === YOUR APPLICATION (policy) ===
+    subgraph cluster_app {
+        label=<<B>Your application</B>  <FONT POINT-SIZE="9">provides policy</FONT>>;
+        labeljust=l;
+        fontsize=11;
+        color="#7fb0dd";
+        style="rounded,filled";
+        fillcolor="#1a1b1d";
+
+        app [
+            label=<<B>App UI</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">CLI, web, desktop, service</FONT>>,
+            fillcolor="#1f2a35", color="#7fb0dd"
+        ];
+        approval [
+            label=<<B>ApprovalSystem</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">async request_approval(prompt,<BR/>options, timeout, default)</FONT>>,
+            fillcolor="#1f2a35", color="#7fb0dd"
+        ];
+        display [
+            label=<<B>DisplaySystem</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">show_message(message,<BR/>level, source)</FONT>>,
+            fillcolor="#1f2a35", color="#7fb0dd"
+        ];
+        loader_custom [
+            label=<<B>Custom ModuleLoader</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">optional; set on<BR/>session.coordinator.loader</FONT>>,
+            fillcolor="#1f2a35", color="#7fb0dd", style="filled,rounded,dashed"
+        ];
+    }
+
+    // === KERNEL (mechanism) ===
+    subgraph cluster_kernel {
+        label=<<B>amplifier-core</B>  <FONT POINT-SIZE="9">provides mechanism</FONT>>;
+        labeljust=l;
+        fontsize=11;
+        color="#f2a93b";
+        style="rounded,filled";
+        fillcolor="#1a1b1d";
+
+        session [
+            label=<<B>AmplifierSession</B><BR/><FONT POINT-SIZE="9" COLOR="#3a2a0c">initialize() &#8226; execute(prompt) &#8226; cleanup()<BR/>config = the mount plan</FONT>>,
+            fillcolor="#f2a93b", fontcolor="#1a1b1d", color="#f2a93b",
+            width=3.4
+        ];
+        coordinator [
+            label=<<B>ModuleCoordinator</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">mount points &#8226; hook registry<BR/>approval_system &#8226; display_system</FONT>>
+        ];
+        loader [
+            label=<<B>ModuleLoader</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">resolves each module ID,<BR/>returns its mount(coordinator)</FONT>>
+        ];
+    }
+
+    // === RUNTIME MODULES ===
+    subgraph cluster_modules {
+        label=<<B>Runtime modules</B>  <FONT POINT-SIZE="9">named in the mount plan</FONT>>;
+        labeljust=l;
+        fontsize=11;
+        color="#323437";
+        style="rounded,filled";
+        fillcolor="#1a1b1d";
+
+        orchestrator [
+            label=<<B>Orchestrator</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">drives the agent loop<BR/><I>loop-*</I></FONT>>,
+            fillcolor="#33271d", color="#ea9a62"
+        ];
+        context [
+            label=<<B>Context</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">conversation memory<BR/><I>context-*</I></FONT>>,
+            fillcolor="#33211f", color="#e2776b"
+        ];
+        providers [
+            label=<<B>Providers</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">complete(request)<BR/><I>provider-*</I></FONT>>,
+            fillcolor="#1f2a35", color="#7fb0dd"
+        ];
+        tools [
+            label=<<B>Tools</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">execute(input)<BR/><I>tool-*</I></FONT>>,
+            fillcolor="#1f2d25", color="#86c49a"
+        ];
+        hooks [
+            label=<<B>Hooks</B><BR/><FONT POINT-SIZE="9" COLOR="#9b968b">handler(event, data)<BR/><I>hooks-*</I></FONT>>,
+            fillcolor="#2a2535", color="#b9a2dc"
+        ];
+    }
+
+    // === RANKING ===
+    { rank=same; app; approval; display; loader_custom; }
+    { rank=same; coordinator; loader; }
+    { rank=same; context; providers; tools; hooks; }
+    { rank=same; orchestrator; note; }
+
+    // === APP <-> SESSION ===
+    app -> session [label=" session.execute(prompt) "];
+    session -> app [label=" returns the final string ", color="#86c49a", fontcolor="#86c49a"];
+    approval -> session [style=dashed, label=" approval_system= "];
+    display  -> session [style=dashed, label=" display_system= "];
+    loader_custom -> loader [style=dashed, label=" replaces the default "];
+
+    // === INSIDE THE KERNEL ===
+    session -> coordinator [label=" creates "];
+    session -> loader [label=" initialize() "];
+
+    // === LOADING (initialize) ===
+    loader -> orchestrator [style=dashed, lhead=cluster_modules, label=" loads and mounts\neach module "];
+
+    // === EXECUTION ===
+    session -> orchestrator [label=" orchestrator.execute(prompt, context,\nproviders, tools, hooks) "];
+    orchestrator -> context   [color="#ea9a62", label=" reads, writes "];
+    orchestrator -> providers [color="#ea9a62", label=" calls "];
+    orchestrator -> tools     [color="#ea9a62", label=" calls "];
+    orchestrator -> hooks     [color="#ea9a62", label=" emits events "];
+
+    // === NOTE ===
+    note [
+        shape=plaintext,
+        style="",
+        label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#1a1b1d" COLOR="#4a4d51">
+            <TR><TD BGCOLOR="#2e3033" ALIGN="LEFT"><B>The orchestrator owns the turn</B></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">It calls the context, providers and tools,</FONT></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">emits events to hooks, and decides when</FONT></TD></TR>
+            <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">the loop ends.</FONT></TD></TR>
+        </TABLE>>
+    ];
+}

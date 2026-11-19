@@ -9,7 +9,9 @@
  */
 digraph BundleComposition {
     rankdir=LR;
-    bgcolor="white";
+    bgcolor="#151618";
+    fontname="Helvetica";
+    fontcolor="#cdc8bc";
     pad=0.3;
     nodesep=0.4;
     ranksep=0.6;
@@ -17,6 +19,9 @@ digraph BundleComposition {
 
     node [
         shape=box,
+        fontcolor="#efeadf",
+        color="#4a4d51",
+        fillcolor="#232527",
         style="filled,rounded",
         fontname="Helvetica",
         fontsize=10,
@@ -26,8 +31,9 @@ digraph BundleComposition {
 
     edge [
         fontname="Helvetica",
+        fontcolor="#9b968b",
         fontsize=9,
-        color="#666666",
+        color="#75716a",
         penwidth=1.2
     ];
 
@@ -36,14 +42,15 @@ digraph BundleComposition {
         label=<<B>Complete root: Anchors</B><BR/><FONT POINT-SIZE="9">amplifier-foundation: bundles/anchors/bundle.md<BR/>(foundation is the selectable legacy root)</FONT>>;
         labeljust=l;
         fontsize=11;
-        color="#c87a3a";
+        color="#ea9a62";
         style="rounded,filled";
-        fillcolor="#fff5e8";
+        fillcolor="#1a1b1d";
 
-        base_orch [label=<<B>session</B><BR/><FONT POINT-SIZE="9">orchestrator +<BR/>context manager</FONT>>, fillcolor="#fce8d2"];
-        base_tool [label=<<B>tools</B><BR/><FONT POINT-SIZE="9">tool-recipes, tool-mode, &#8230;</FONT>>, fillcolor="#dcf2dc"];
-        base_hook [label=<<B>hooks</B><BR/><FONT POINT-SIZE="9">hooks-mode, hooks-approval,<BR/>hooks-routing, &#8230;</FONT>>, fillcolor="#e2dcfc"];
-        base_agents [label=<<B>agents</B><BR/><FONT POINT-SIZE="9">anchors:explorer, architect,<BR/>builder, debugger,<BR/>git-ops, researcher</FONT>>, fillcolor="#fcdedc"];
+        base_orch [label=<<B>session</B><BR/><FONT POINT-SIZE="9">orchestrator +<BR/>context manager</FONT>>, fillcolor="#33271d", color="#ea9a62"];
+        base_tool [label=<<B>tools</B><BR/><FONT POINT-SIZE="9">tool-recipes, tool-mode, &#8230;</FONT>>, fillcolor="#1f2d25", color="#86c49a"];
+        base_hook [label=<<B>hooks</B><BR/><FONT POINT-SIZE="9">hooks-todo-reminder, hooks-mode,<BR/>hooks-approval, &#8230;</FONT>>, fillcolor="#2a2535", color="#b9a2dc"];
+        base_inc [label=<<B>included behaviors</B><BR/><FONT POINT-SIZE="9">streaming-ui, status-context, redaction,<BR/>context-intelligence, routing<BR/>(routing is a host choice,<BR/>via amplifier-bundle-routing-matrix)</FONT>>, fillcolor="#2a2535", color="#b9a2dc"];
+        base_agents [label=<<B>agents</B><BR/><FONT POINT-SIZE="9">anchors:explorer, architect,<BR/>builder, debugger,<BR/>git-ops, researcher</FONT>>, fillcolor="#33211f", color="#e2776b"];
     }
 
     // === BEHAVIOR ===
@@ -51,13 +58,13 @@ digraph BundleComposition {
         label=<<B>Behavior</B><BR/><FONT POINT-SIZE="9">amplifier-bundle-browser-tester<BR/>behaviors/browser-tester.yaml</FONT>>;
         labeljust=l;
         fontsize=11;
-        color="#7059c8";
+        color="#b9a2dc";
         style="rounded,filled";
-        fillcolor="#f7f3ff";
+        fillcolor="#1a1b1d";
 
-        beh_tool [label=<<B>tools / hooks</B><BR/><FONT POINT-SIZE="9">optional</FONT>>, fillcolor="#dcf2dc"];
-        beh_agent [label=<<B>agents</B><BR/><FONT POINT-SIZE="9">agents.include</FONT>>, fillcolor="#fcdedc"];
-        beh_ctx  [label=<<B>context</B><BR/><FONT POINT-SIZE="9">context.include</FONT>>, fillcolor="#f0e8ff"];
+        beh_tool [label=<<B>tools / hooks</B><BR/><FONT POINT-SIZE="9">optional</FONT>>, fillcolor="#1f2d25", color="#86c49a"];
+        beh_agent [label=<<B>agents</B><BR/><FONT POINT-SIZE="9">agents.include</FONT>>, fillcolor="#33211f", color="#e2776b"];
+        beh_ctx  [label=<<B>context</B><BR/><FONT POINT-SIZE="9">context.include</FONT>>, fillcolor="#2a2535", color="#b9a2dc"];
     }
 
     // === COMPOSED BY THE APP, AFTER THE SELECTED BUNDLE ===
@@ -65,27 +72,26 @@ digraph BundleComposition {
         label=<<B>Added by the app</B><BR/><FONT POINT-SIZE="9">composed after the selected bundle</FONT>>;
         labeljust=l;
         fontsize=11;
-        color="#3a86c8";
+        color="#7fb0dd";
         style="rounded,filled";
-        fillcolor="#f2f8fe";
+        fillcolor="#1a1b1d";
 
-        app_beh  [label=<<B>app bundles</B><BR/><FONT POINT-SIZE="9">settings: bundle.app<BR/>amplifier bundle add &#8230; --app</FONT>>, fillcolor="#f0e8ff"];
-        app_prov [label=<<B>providers</B><BR/><FONT POINT-SIZE="9">settings: config.providers,<BR/>or a provider bundle<BR/>(foundation:providers/anthropic-sonnet)</FONT>>, fillcolor="#dceefc"];
+        app_beh  [label=<<B>app bundles</B><BR/><FONT POINT-SIZE="9">settings: bundle.app<BR/>amplifier bundle add &#8230; --app</FONT>>, fillcolor="#2a2535", color="#b9a2dc"];
+        app_prov [label=<<B>providers</B><BR/><FONT POINT-SIZE="9">settings: config.providers,<BR/>or a provider bundle<BR/>(foundation:providers/anthropic-sonnet)</FONT>>, fillcolor="#1f2a35", color="#7fb0dd"];
     }
 
     // === MOUNT PLAN ===
     plan [
         label=<<B>Mount Plan</B><BR/><FONT POINT-SIZE="9">merged config<BR/>passed to AmplifierSession</FONT>>,
-        fillcolor="#3a3a3a",
-        fontcolor="white",
-        shape=box3d,
+        fillcolor="#f2a93b", color="#f2a93b",
+        fontcolor="#1a1b1d",
         width=2.0
     ];
 
     // === SESSION ===
     session [
         label=<<B>AmplifierSession</B><BR/><FONT POINT-SIZE="9">running instance</FONT>>,
-        fillcolor="#dceefc",
+        fillcolor="#1f2a35", color="#7fb0dd",
         shape=cds,
         width=2.0
     ];
@@ -93,7 +99,7 @@ digraph BundleComposition {
     // === ROOT BUNDLE ===
     root [
         label=<<B>Your bundle</B><BR/><FONT POINT-SIZE="9">(optional supporting root)<BR ALIGN="LEFT"/>includes:<BR ALIGN="LEFT"/>&nbsp;&nbsp;- bundle: git+https://github.com/microsoft/amplifier-foundation@main<BR ALIGN="LEFT"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#subdirectory=bundles/anchors/bundle.md<BR ALIGN="LEFT"/>&nbsp;&nbsp;- bundle: git+https://github.com/microsoft/amplifier-bundle-browser-tester@main<BR ALIGN="LEFT"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#subdirectory=behaviors/browser-tester.yaml<BR ALIGN="LEFT"/></FONT>>,
-        fillcolor="#fffae0",
+        fillcolor="#232527", color="#75716a",
         shape=note
     ];
 
@@ -105,6 +111,7 @@ digraph BundleComposition {
     base_tool -> plan;
     base_hook -> plan;
     base_agents -> plan;
+    base_inc -> plan;
     beh_tool -> plan;
     beh_agent -> plan;
     beh_ctx -> plan;
@@ -116,8 +123,9 @@ digraph BundleComposition {
     // === MERGE RULES NOTE ===
     rules [
         shape=plaintext,
-        label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#fffaf0">
-            <TR><TD COLSPAN="2" BGCOLOR="#f0e8d8" ALIGN="LEFT"><B>Merge rules</B></TD></TR>
+        style="",
+        label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#1a1b1d" COLOR="#4a4d51">
+            <TR><TD COLSPAN="2" BGCOLOR="#2e3033" ALIGN="LEFT"><B>Merge rules</B></TD></TR>
             <TR><TD ALIGN="LEFT">providers, tools, hooks</TD><TD ALIGN="LEFT">merged by module ID</TD></TR>
             <TR><TD ALIGN="LEFT">session (orchestrator, context)</TD><TD ALIGN="LEFT">deep merge, later wins</TD></TR>
             <TR><TD ALIGN="LEFT">spawn</TD><TD ALIGN="LEFT">deep merge</TD></TR>

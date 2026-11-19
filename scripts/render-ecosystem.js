@@ -17,6 +17,8 @@ const INDEX_FILE = 'index.html';
 const SOURCE_FILE = 'docs/12-current-ecosystem.md';
 const BEGIN = '<!-- BEGIN GENERATED ECOSYSTEM (source: docs/12-current-ecosystem.md; run scripts/render-ecosystem.js) -->';
 const END = '<!-- END GENERATED ECOSYSTEM -->';
+// Bump when diagram renders change, so browsers drop their cached copies.
+const IMAGE_VERSION = '?v=2';
 
 // "## " headings rendered into the Ecosystem section, in source order.
 const ECOSYSTEM_HEADINGS = [
@@ -55,7 +57,7 @@ function inline(md) {
   });
   s = escapeHtml(s);
   s = s.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, url) =>
-    `<img src="${href(url)}" alt="${alt}" style="max-width: 100%; height: auto;">`);
+    `<img src="${href(url)}${IMAGE_VERSION}" alt="${alt}" style="max-width: 100%; height: auto;">`);
   s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => {
     const external = /^https?:/.test(url);
     return `<a href="${href(url)}"${external ? ' target="_blank" rel="noopener"' : ''}>${text}</a>`;

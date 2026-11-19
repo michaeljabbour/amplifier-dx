@@ -1,25 +1,25 @@
 # Diagram Sources & Cross-Repo Provenance
 
 This file is the authoritative cross-reference between this DX site's diagrams and the
-sister curriculum site,
-`amplifier-app-learn` (a private repository, so its files are named here but not linked). Both
+sister curriculum site
+(a private repository, referred to here as the "learn site"; its files are named by in-repo path but not linked). Both
 projects rely on the same upstream source-of-truth files; this index keeps them honest.
 
 ## The Two Diagram Sets
 
 | Set | Location | Audience | Style |
 |-----|----------|----------|-------|
-| **DX site** (this repo) | `assets/diagrams/*.dot` | Developers reading the docs site | Six topics, focused fan-out views |
-| **Learn site** | `amplifier-app-learn/docs/state-of-amplifier-2026-05/dot/*.dot` | Learners going through the curriculum | Five topics, broader system views |
+| **DX site** (this repo) | `assets/diagrams/*.dot` | Developers reading the docs site | Seven diagrams, focused fan-out views |
+| **Learn site** | `<learn-site>/docs/state-of-amplifier-2026-05/dot/*.dot` | Learners going through the curriculum | Five topics, broader system views |
 
-Both sets carry citation headers pointing at the same upstream files
+Six of the seven DX diagrams (all but `external-app-architecture.dot`) and the learn set carry citation headers pointing at the same upstream files
 (`amplifier-core/CONTRACTS.md`, `amplifier-core/events.rs`,
 `amplifier-foundation/docs/BUNDLE_GUIDE.md`, `amplifier/docs/REPOSITORY_RULES.md`,
 `amplifier/docs/MODULES.md`). When upstream changes, both sets must update.
 
 ## Topic Cross-Reference
 
-| Topic | This DX site | amplifier-app-learn | Notes |
+| Topic | This DX site | Learn site | Notes |
 |-------|--------------|---------------------|-------|
 | **Repo dependency hierarchy** | `architecture-stack.dot` | `01-ecosystem-map.dot` + `09-architecture-stack.dot` (DX-imported) | DX is more compact (5 tiers). Learn keeps both: the broader ecosystem map and the imported DX-style 5-tier stack used in the *How This Site Was Built* lesson. |
 | **Layered architecture (kernel boundary)** | covered inside `architecture-stack.dot` | `02-layered-architecture.dot` | Learn has a dedicated diagram. |
@@ -29,6 +29,7 @@ Both sets carry citation headers pointing at the same upstream files
 | **Dependency rules (allowed vs forbidden)** | `dependency-rules.dot` | imported as `06-*.dot` (May 2026) | Originated in DX; LMS imported it during the May audit. |
 | **Bundle composition (thin bundle pattern)** | `bundle-composition.dot` | imported as `07-*.dot` (May 2026) | Originated in DX; imported into LMS. |
 | **Hook event flow with action precedence** | `hook-event-flow.dot` | imported as `08-*.dot` (May 2026) | Originated in DX; imported into LMS. |
+| **Host app embedding the kernel (policy vs mechanism)** | `external-app-architecture.dot` | none | DX-only; sourced from `amplifier-core` `python/amplifier_core/` (`interfaces.py`, `approval.py`, `display.py`, `loader.py`), not from the shared upstream doc set. |
 
 ## Counts and Names — Agreed State (May 2026)
 
@@ -60,7 +61,8 @@ CI verifies that committed SVGs match what `dot` would produce — see
 
 ## Long-Term Direction
 
-The two diagram sets have ~40% topic overlap and 100% upstream-source overlap. A
+The two diagram sets overlap in topics and share upstream sources (except
+`external-app-architecture.dot`, which is DX-only). A
 single canonical diagram set living in a third location (a sibling repo, or a git
 submodule shared by both) would eliminate the reconciliation burden. Until that
 exists, this file is the contract between the two sites — when one updates, the
