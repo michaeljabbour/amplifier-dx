@@ -3,6 +3,9 @@
 
 # Local development
 CLAUDE.md
+AGENTS.md
+.scratch/
+__pycache__/
 BUG_REPORT.md
 .claude/
 
