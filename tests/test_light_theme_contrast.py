@@ -242,3 +242,68 @@ def test_light_block_overrides_only_known_variables():
     css = _strip_comments(THEME.read_text(encoding="utf-8"))
     light_only = set(re.findall(r"(--[\w-]+)\s*:", _block(css, ':root[data-theme="light"]')))
     assert set(light_only) <= set(themes["dark"]), "light theme sets a variable the dark theme lacks"
+
+
+# --------------------------------------------------------------------------
+# 3. The dark theme looks exactly as before the audit
+#
+# css/theme.css is linked after the inline <style> block, so a theme.css
+# rule with the same selector wins. Inline declarations it overrides were
+# never visible; these checks pin that the override is still there and
+# that each new variable's dark value equals the colour that rendered.
+# --------------------------------------------------------------------------
+
+
+def _rule(css: str, selector: str) -> str:
+    match = re.search(r"(?:^|\n)" + re.escape(selector) + r"\s*\{([^}]*)\}", css)
+    assert match, f"css/theme.css has no {selector} rule"
+    return match.group(1)
+
+
+def test_theme_css_is_linked_after_the_inline_stylesheet():
+    html = INDEX.read_text(encoding="utf-8")
+    assert html.index("</style>") < html.index('href="css/theme.css"')
+
+
+# (selector, declaration theme.css must make, what the inline rule used to say)
+THEME_OVERRIDES = [
+    (".nav", "background: var(--nav-bg)", "rgba(0, 0, 0, 0.8)"),
+    (".sidebar-item.active", "background: var(--accent-dim)", "rgba(59, 130, 246, 0.1)"),
+    (".examples-tab.active", "background: none", "blue-to-purple gradient"),
+    (".examples-tab.active", "color: var(--text-0)", "white"),
+    (".callout", "background: var(--bg-1)", "blue-to-green tint gradient"),
+]
+
+
+@pytest.mark.parametrize("selector,declaration,old", THEME_OVERRIDES)
+def test_theme_css_overrides_the_old_inline_value(selector, declaration, old):
+    css = _strip_comments(THEME.read_text(encoding="utf-8"))
+    assert declaration in _rule(css, selector), f"{selector} no longer overrides the old inline {old}"
+
+
+# Dark values that rendered before the audit (theme.css literals, or inline
+# literals theme.css did not override). Each new or moved variable must keep them.
+DARK_BEFORE = {
+    "--bg-0": "#1a1b1d", "--bg-1": "#151618", "--bg-2": "#232527", "--bg-3": "#2e3033",
+    "--bg-hover": "#26282b", "--text-0": "#efeadf", "--text-1": "#cdc8bc",
+    "--text-2": "#9b968b", "--text-3": "#75716a", "--border": "#323437",
+    "--border-subtle": "#27292c", "--accent": "#f2a93b",
+    "--accent-dim": "rgba(242, 169, 59, 0.14)", "--blue": "#7fb0dd", "--green": "#86c49a",
+    "--purple": "#b9a2dc", "--orange": "#ea9a62", "--red": "#e2776b",
+    "--nav-bg": "rgba(26, 27, 29, 0.92)", "--on-accent": "#1a1b1d", "--on-fill": "#ffffff",
+    "--accent-hover": "#ffbd55",
+    "--code-comment": "#7d786e", "--code-keyword": "#d7a4d0", "--code-string": "#a9c98b",
+    "--code-function": "#8fbbe4", "--code-type": "#e6c583", "--code-number": "#e8a878",
+    "--code-operator": "#9bbfc0", "--code-punctuation": "#a8a399",
+    "--tint-blue": "rgba(59, 130, 246, 0.1)", "--tint-blue-strong": "rgba(59, 130, 246, 0.2)",
+    "--tint-green": "rgba(16, 185, 129, 0.1)", "--tint-green-mid": "rgba(16, 185, 129, 0.15)",
+    "--tint-green-strong": "rgba(16, 185, 129, 0.2)", "--tint-purple": "rgba(168, 85, 247, 0.1)",
+    "--tint-purple-strong": "rgba(168, 85, 247, 0.2)", "--tint-orange": "rgba(249, 115, 22, 0.1)",
+    "--tint-orange-strong": "rgba(249, 115, 22, 0.2)", "--tint-teal": "rgba(16, 163, 127, 0.15)",
+    "--tint-red": "rgba(226, 119, 107, 0.1)",
+}
+
+
+@pytest.mark.parametrize("name,before", sorted(DARK_BEFORE.items()))
+def test_dark_value_is_unchanged(name, before):
+    assert theme_variables()["dark"][name].strip() == before
