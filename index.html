@@ -13,27 +13,10 @@
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     /* =================================================================
-       DESIGN TOKENS - OpenAI-inspired Dark Palette
+       DESIGN TOKENS
+       Every colour lives in css/theme.css, with a value for each theme.
        ================================================================= */
     :root {
-      --bg-0: #000000;         /* Main background (Pitch black) */
-      --bg-1: #0a0a0a;         /* Sidebar background */
-      --bg-2: #171717;         /* Card/input background */
-      --bg-3: #212121;         /* Elevated surfaces */
-      --bg-hover: #1a1a1a;
-      --text-0: #ffffff;       /* Primary text */
-      --text-1: #e5e5e5;       /* Secondary text */
-      --text-2: #a3a3a3;       /* Tertiary text */
-      --text-3: #737373;       /* Muted text */
-      --border: #262626;
-      --border-subtle: #1f1f1f;
-      --accent: #10a37f;       /* OpenAI Green */
-      --accent-dim: rgba(16, 163, 127, 0.15);
-      --blue: #3b82f6;
-      --green: #10b981;
-      --purple: #a855f7;
-      --orange: #f97316;
-      --red: #ef4444;
       --sidebar-width: 220px;
       --header-height: 56px;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -80,7 +63,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(0, 0, 0, 0.8);
+      background: var(--nav-bg);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
@@ -247,7 +230,7 @@
     }
 
     .sidebar-item:hover { color: var(--text-0); background: var(--bg-2); }
-    .sidebar-item.active { color: var(--blue); border-left-color: var(--blue); background: rgba(59, 130, 246, 0.1); }
+    .sidebar-item.active { color: var(--blue); border-left-color: var(--blue); background: var(--accent-dim); }
 
     /* Sidebar item with sub-items */
     .sidebar-item.has-children {
@@ -693,7 +676,7 @@
     }
 
     .copy-btn:hover { color: var(--text-0); }
-    .copy-btn.copied { background: var(--green); color: white; }
+    .copy-btn.copied { background: var(--green); color: var(--on-fill); }
 
     .code-block pre {
       padding: 16px;
@@ -712,17 +695,17 @@
     }
 
     /* Prism token colors */
-    .token.comment { color: #6a737d !important; font-style: italic; }
-    .token.keyword { color: #c678dd !important; }
-    .token.string { color: #98c379 !important; }
-    .token.function { color: #61afef !important; }
-    .token.class-name { color: #e5c07b !important; }
-    .token.number { color: #d19a66 !important; }
-    .token.operator { color: #56b6c2 !important; }
-    .token.punctuation { color: #abb2bf !important; }
-    .token.builtin { color: #e5c07b !important; }
-    .token.boolean { color: #d19a66 !important; }
-    .token.decorator { color: #c678dd !important; }
+    .token.comment { color: var(--code-comment) !important; font-style: italic; }
+    .token.keyword { color: var(--code-keyword) !important; }
+    .token.string { color: var(--code-string) !important; }
+    .token.function { color: var(--code-function) !important; }
+    .token.class-name { color: var(--code-type) !important; }
+    .token.number { color: var(--code-number) !important; }
+    .token.operator { color: var(--code-operator) !important; }
+    .token.punctuation { color: var(--code-punctuation) !important; }
+    .token.builtin { color: var(--code-type) !important; }
+    .token.boolean { color: var(--code-number) !important; }
+    .token.decorator { color: var(--code-keyword) !important; }
 
     /* =================================================================
        INFO BOX
@@ -889,10 +872,10 @@
       flex-shrink: 0;
     }
 
-    .event-step-icon.start { background: rgba(59, 130, 246, 0.2); color: var(--blue); }
-    .event-step-icon.provider { background: rgba(168, 85, 247, 0.2); color: var(--purple); }
-    .event-step-icon.tool { background: rgba(249, 115, 22, 0.2); color: var(--orange); }
-    .event-step-icon.end { background: rgba(16, 185, 129, 0.2); color: var(--green); }
+    .event-step-icon.start { background: var(--tint-blue-strong); color: var(--blue); }
+    .event-step-icon.provider { background: var(--tint-purple-strong); color: var(--purple); }
+    .event-step-icon.tool { background: var(--tint-orange-strong); color: var(--orange); }
+    .event-step-icon.end { background: var(--tint-green-strong); color: var(--green); }
 
     .event-step-content { flex: 1; }
     .event-step-content strong { color: var(--text-0); font-size: 14px; }
@@ -902,7 +885,7 @@
       font-family: var(--font-mono);
       font-size: 11px;
       color: var(--green);
-      background: rgba(16, 185, 129, 0.1);
+      background: var(--tint-green);
       padding: 4px 8px;
       border-radius: 4px;
     }
@@ -1180,9 +1163,9 @@
     }
 
     .examples-tab.active {
-      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      background: none;
       border-color: transparent;
-      color: white;
+      color: var(--text-0);
     }
 
     .examples-content { display: none; }
@@ -1260,7 +1243,7 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--green);
-      background: rgba(16, 185, 129, 0.1);
+      background: var(--tint-green);
       padding: 3px 8px;
       border-radius: 4px;
       margin-bottom: 10px;
@@ -1312,7 +1295,7 @@
        CONTRIBUTE
        ================================================================= */
     .callout {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.05));
+      background: var(--bg-1);
       border: 1px solid var(--blue);
       border-radius: 10px;
       padding: 20px;
@@ -1324,12 +1307,12 @@
     .callout em { color: var(--blue); font-style: normal; }
 
     .callout-danger {
-      background: #dc2626 !important;
-      border: 1px solid #991b1b !important;
-      border-left: 4px solid #7f1d1d !important;
+      background: var(--tint-red) !important;
+      border: 0 !important;
+      border-left: 2px solid var(--red) !important;
     }
-    .callout-danger p { color: #ffffff !important; }
-    .callout-danger strong { color: #ffffff !important; }
+    .callout-danger p { color: var(--text-1) !important; }
+    .callout-danger strong { color: var(--red) !important; }
 
     .contrib-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
 
@@ -1420,9 +1403,9 @@
       border-radius: 6px;
       font-size: 13px;
     }
-    .context-preserved { background: rgba(16, 185, 129, 0.1); border-left: 3px solid var(--green); }
-    .context-reloaded { background: rgba(59, 130, 246, 0.1); border-left: 3px solid var(--blue); }
-    .context-not { background: rgba(249, 115, 22, 0.1); border-left: 3px solid var(--orange); }
+    .context-preserved { background: var(--tint-green); border-left: 3px solid var(--green); }
+    .context-reloaded { background: var(--tint-blue); border-left: 3px solid var(--blue); }
+    .context-not { background: var(--tint-orange); border-left: 3px solid var(--orange); }
 
     /* Agent flow */
     .agent-flow {
@@ -1763,17 +1746,17 @@
     }
 
     .layer-box.app-layer {
-      background: rgba(59, 130, 246, 0.1);
+      background: var(--tint-blue);
       border-left: 4px solid var(--blue);
     }
 
     .layer-box.kernel-layer {
-      background: rgba(16, 185, 129, 0.1);
+      background: var(--tint-green);
       border-left: 4px solid var(--green);
     }
 
     .layer-box.module-layer {
-      background: rgba(168, 85, 247, 0.1);
+      background: var(--tint-purple);
       border-left: 4px solid var(--purple);
     }
 
@@ -1904,7 +1887,7 @@
       top: 4px;
       right: 6px;
       background: var(--accent);
-      color: white;
+      color: var(--on-accent);
       font-size: 10px;
       font-weight: 600;
       min-width: 16px;
@@ -2019,7 +2002,7 @@
     .notification-tab.active {
       background: var(--accent);
       border-color: var(--accent);
-      color: white;
+      color: var(--on-fill);
     }
 
     .notification-list {
@@ -2056,7 +2039,7 @@
       font-size: 10px;
       font-weight: 600;
       color: var(--accent);
-      background: rgba(16, 163, 127, 0.15);
+      background: var(--tint-teal);
       padding: 2px 6px;
       border-radius: 4px;
       text-transform: uppercase;
@@ -2149,7 +2132,7 @@
       top: 4px;
       right: 6px;
       background: var(--accent);
-      color: white;
+      color: var(--on-accent);
       font-size: 10px;
       font-weight: 600;
       min-width: 16px;
@@ -2241,7 +2224,7 @@
     }
 
     .notification-tab:hover { background: var(--bg-2); color: var(--text-1); }
-    .notification-tab.active { background: var(--accent); border-color: var(--accent); color: white; }
+    .notification-tab.active { background: var(--accent); border-color: var(--accent); color: var(--on-fill); }
 
     .notification-list { max-height: 380px; overflow-y: auto; }
 
@@ -2268,7 +2251,7 @@
       font-size: 10px;
       font-weight: 600;
       color: var(--accent);
-      background: rgba(16, 163, 127, 0.15);
+      background: var(--tint-teal);
       padding: 2px 6px;
       border-radius: 4px;
     }
@@ -2565,7 +2548,7 @@
       font-size: 11px;
       font-weight: 600;
       color: var(--green);
-      background: rgba(16, 185, 129, 0.15);
+      background: var(--tint-green-mid);
       padding: 2px 8px;
       border-radius: 4px;
     }

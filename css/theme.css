@@ -39,6 +39,36 @@
   --orange: #ea9a62;
   --red: #e2776b;
 
+  /* Lettering on a filled control */
+  --on-accent: #1a1b1d;     /* on amber fills: primary button, badge, selection */
+  --on-fill: #ffffff;       /* on the copied button and the active notification tab */
+  --accent-hover: #ffbd55;
+
+  --nav-bg: rgba(26, 27, 29, 0.92);
+
+  /* Tints behind tags, step icons and layer rows (kept from the first palette) */
+  --tint-blue: rgba(59, 130, 246, 0.1);
+  --tint-blue-strong: rgba(59, 130, 246, 0.2);
+  --tint-green: rgba(16, 185, 129, 0.1);
+  --tint-green-mid: rgba(16, 185, 129, 0.15);
+  --tint-green-strong: rgba(16, 185, 129, 0.2);
+  --tint-purple: rgba(168, 85, 247, 0.1);
+  --tint-purple-strong: rgba(168, 85, 247, 0.2);
+  --tint-orange: rgba(249, 115, 22, 0.1);
+  --tint-orange-strong: rgba(249, 115, 22, 0.2);
+  --tint-teal: rgba(16, 163, 127, 0.15);
+  --tint-red: rgba(226, 119, 107, 0.1);
+
+  /* Code syntax */
+  --code-comment: #7d786e;
+  --code-keyword: #d7a4d0;
+  --code-string: #a9c98b;
+  --code-function: #8fbbe4;
+  --code-type: #e6c583;
+  --code-number: #e8a878;
+  --code-operator: #9bbfc0;
+  --code-punctuation: #a8a399;
+
   --sidebar-width: 248px;
   --measure: 74ch;
 
@@ -69,7 +99,7 @@ a:hover { color: var(--accent); }
   border-radius: var(--radius-control);
 }
 
-::selection { background: var(--accent); color: #1a1b1d; }
+::selection { background: var(--accent); color: var(--on-accent); }
 
 /* --------------------------------------------------------------------------
    Headings: the wide cut of the same family, like faceplate lettering
@@ -147,7 +177,7 @@ code {
    Top bar
    -------------------------------------------------------------------------- */
 .nav {
-  background: rgba(26, 27, 29, 0.92);
+  background: var(--nav-bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -177,7 +207,7 @@ code {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
-.notification-badge { background: var(--accent) !important; color: #1a1b1d !important; }
+.notification-badge { background: var(--accent) !important; color: var(--on-accent) !important; }
 
 /* Menu button: phones only */
 .nav-menu-btn {
@@ -311,11 +341,11 @@ body.layout-top .section { max-width: 1040px; }
 
 .btn-primary {
   background: var(--accent);
-  color: #1a1b1d;
+  color: var(--on-accent);
   border: 1px solid var(--accent);
 }
 
-.btn-primary:hover { opacity: 1; background: #ffbd55; border-color: #ffbd55; }
+.btn-primary:hover { opacity: 1; background: var(--accent-hover); border-color: var(--accent-hover); }
 
 .btn-secondary {
   background: transparent;
@@ -526,17 +556,17 @@ code[class*="language-"] {
   color: var(--text-0);
 }
 
-.token.comment { color: #7d786e !important; }
-.token.keyword { color: #d7a4d0 !important; }
-.token.string { color: #a9c98b !important; }
-.token.function { color: #8fbbe4 !important; }
-.token.class-name { color: #e6c583 !important; }
-.token.number { color: #e8a878 !important; }
-.token.operator { color: #9bbfc0 !important; }
-.token.punctuation { color: #a8a399 !important; }
-.token.builtin { color: #e6c583 !important; }
-.token.boolean { color: #e8a878 !important; }
-.token.decorator { color: #d7a4d0 !important; }
+.token.comment { color: var(--code-comment) !important; }
+.token.keyword { color: var(--code-keyword) !important; }
+.token.string { color: var(--code-string) !important; }
+.token.function { color: var(--code-function) !important; }
+.token.class-name { color: var(--code-type) !important; }
+.token.number { color: var(--code-number) !important; }
+.token.operator { color: var(--code-operator) !important; }
+.token.punctuation { color: var(--code-punctuation) !important; }
+.token.builtin { color: var(--code-type) !important; }
+.token.boolean { color: var(--code-number) !important; }
+.token.decorator { color: var(--code-keyword) !important; }
 
 :not(pre) > code {
   background: var(--bg-2);
@@ -606,7 +636,7 @@ code[class*="language-"] {
 .callout em { color: var(--blue); }
 
 .callout-danger {
-  background: rgba(226, 119, 107, 0.1) !important;
+  background: var(--tint-red) !important;
   border: 0 !important;
   border-left: 2px solid var(--red) !important;
 }
