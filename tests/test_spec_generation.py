@@ -6,8 +6,24 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parent.parent
 REV = "737dd6dff2f27194f35a44c29bfc100a978e4d53"
+SPECS_MISSING = (
+    "specs submodule not checked out; run git submodule update --init to enable"
+)
+
+
+@pytest.fixture(autouse=True)
+def require_specs():
+    """Skip when the specs submodule is absent; fail instead when CI is set."""
+    specs = ROOT / "specs"
+    if specs.is_dir() and any(p.name != ".git" for p in specs.iterdir()):
+        return
+    if os.environ.get("CI"):
+        pytest.fail(SPECS_MISSING, pytrace=False)
+    pytest.skip(SPECS_MISSING)
 
 
 def _generate(tmp: Path) -> str:
