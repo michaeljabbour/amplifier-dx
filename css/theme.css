@@ -79,6 +79,57 @@
 }
 
 /* --------------------------------------------------------------------------
+   Light theme: the same faceplate printed the other way round. Bone panel,
+   graphite lettering, the amber indicator deepened so it reads on bone.
+   Switched on by data-theme="light" on <html>; nothing sets it yet.
+   Variables not listed here (the tints) keep one value for both themes.
+   tests/test_light_theme_contrast.py checks every text pair below.
+   -------------------------------------------------------------------------- */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-0: #f3efe6;
+  --bg-1: #ebe6dc;
+  --bg-2: #faf8f3;
+  --bg-3: #e1dbcf;
+  --bg-hover: #ece7dd;
+
+  --text-0: #1a1b1d;
+  --text-1: #3a3935;
+  --text-2: #5c5850;
+  --text-3: #67635b;
+
+  --border: #d5cfc3;
+  --border-subtle: #e3ded4;
+  --border-strong: #a39d91;
+
+  --accent: #885000;        /* set by the hardest pair: amber text on the teal repo tag */
+  --accent-dim: rgba(136, 80, 0, 0.12);
+  --accent-hover: #744400;
+  --link: #7a5713;
+
+  --blue: #275f91;
+  --green: #2b6e43;
+  --purple: #6a4a9c;
+  --orange: #9a4a14;
+  --red: #a83a2e;
+
+  --on-accent: #ffffff;
+  --on-fill: #ffffff;
+
+  --nav-bg: rgba(243, 239, 230, 0.92);
+
+  --code-comment: #6b665c;
+  --code-keyword: #8a3f80;
+  --code-string: #476621;
+  --code-function: #275f91;
+  --code-type: #7a5713;
+  --code-number: #964716;
+  --code-operator: #2e6566;
+  --code-punctuation: #57534b;
+}
+
+/* --------------------------------------------------------------------------
    Base
    -------------------------------------------------------------------------- */
 body {
