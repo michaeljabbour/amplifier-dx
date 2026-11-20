@@ -39,6 +39,36 @@
   --orange: #ea9a62;
   --red: #e2776b;
 
+  /* Lettering on a filled control */
+  --on-accent: #1a1b1d;     /* on amber fills: primary button, badge, selection */
+  --on-fill: #ffffff;       /* on the copied button and the active notification tab */
+  --accent-hover: #ffbd55;
+
+  --nav-bg: rgba(26, 27, 29, 0.92);
+
+  /* Tints behind tags, step icons and layer rows (kept from the first palette) */
+  --tint-blue: rgba(59, 130, 246, 0.1);
+  --tint-blue-strong: rgba(59, 130, 246, 0.2);
+  --tint-green: rgba(16, 185, 129, 0.1);
+  --tint-green-mid: rgba(16, 185, 129, 0.15);
+  --tint-green-strong: rgba(16, 185, 129, 0.2);
+  --tint-purple: rgba(168, 85, 247, 0.1);
+  --tint-purple-strong: rgba(168, 85, 247, 0.2);
+  --tint-orange: rgba(249, 115, 22, 0.1);
+  --tint-orange-strong: rgba(249, 115, 22, 0.2);
+  --tint-teal: rgba(16, 163, 127, 0.15);
+  --tint-red: rgba(226, 119, 107, 0.1);
+
+  /* Code syntax */
+  --code-comment: #7d786e;
+  --code-keyword: #d7a4d0;
+  --code-string: #a9c98b;
+  --code-function: #8fbbe4;
+  --code-type: #e6c583;
+  --code-number: #e8a878;
+  --code-operator: #9bbfc0;
+  --code-punctuation: #a8a399;
+
   --sidebar-width: 248px;
   --measure: 74ch;
 
@@ -46,6 +76,57 @@
   --font-mono: 'IBM Plex Mono', 'SF Mono', 'Consolas', monospace;
   --radius: 6px;
   --radius-control: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Light theme: the same faceplate printed the other way round. Bone panel,
+   graphite lettering, the amber indicator deepened so it reads on bone.
+   Switched on by data-theme="light" on <html>; nothing sets it yet.
+   Variables not listed here (the tints) keep one value for both themes.
+   tests/test_light_theme_contrast.py checks every text pair below.
+   -------------------------------------------------------------------------- */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-0: #f3efe6;
+  --bg-1: #ebe6dc;
+  --bg-2: #faf8f3;
+  --bg-3: #e1dbcf;
+  --bg-hover: #ece7dd;
+
+  --text-0: #1a1b1d;
+  --text-1: #3a3935;
+  --text-2: #5c5850;
+  --text-3: #67635b;
+
+  --border: #d5cfc3;
+  --border-subtle: #e3ded4;
+  --border-strong: #a39d91;
+
+  --accent: #885000;        /* set by the hardest pair: amber text on the teal repo tag */
+  --accent-dim: rgba(136, 80, 0, 0.12);
+  --accent-hover: #744400;
+  --link: #7a5713;
+
+  --blue: #275f91;
+  --green: #2b6e43;
+  --purple: #6a4a9c;
+  --orange: #9a4a14;
+  --red: #a83a2e;
+
+  --on-accent: #ffffff;
+  --on-fill: #ffffff;
+
+  --nav-bg: rgba(243, 239, 230, 0.92);
+
+  --code-comment: #6b665c;
+  --code-keyword: #8a3f80;
+  --code-string: #476621;
+  --code-function: #275f91;
+  --code-type: #7a5713;
+  --code-number: #964716;
+  --code-operator: #2e6566;
+  --code-punctuation: #57534b;
 }
 
 /* --------------------------------------------------------------------------
@@ -69,7 +150,7 @@ a:hover { color: var(--accent); }
   border-radius: var(--radius-control);
 }
 
-::selection { background: var(--accent); color: #1a1b1d; }
+::selection { background: var(--accent); color: var(--on-accent); }
 
 /* --------------------------------------------------------------------------
    Headings: the wide cut of the same family, like faceplate lettering
@@ -147,7 +228,7 @@ code {
    Top bar
    -------------------------------------------------------------------------- */
 .nav {
-  background: rgba(26, 27, 29, 0.92);
+  background: var(--nav-bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -177,7 +258,7 @@ code {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
-.notification-badge { background: var(--accent) !important; color: #1a1b1d !important; }
+.notification-badge { background: var(--accent) !important; color: var(--on-accent) !important; }
 
 /* Menu button: phones only */
 .nav-menu-btn {
@@ -311,11 +392,11 @@ body.layout-top .section { max-width: 1040px; }
 
 .btn-primary {
   background: var(--accent);
-  color: #1a1b1d;
+  color: var(--on-accent);
   border: 1px solid var(--accent);
 }
 
-.btn-primary:hover { opacity: 1; background: #ffbd55; border-color: #ffbd55; }
+.btn-primary:hover { opacity: 1; background: var(--accent-hover); border-color: var(--accent-hover); }
 
 .btn-secondary {
   background: transparent;
@@ -526,17 +607,17 @@ code[class*="language-"] {
   color: var(--text-0);
 }
 
-.token.comment { color: #7d786e !important; }
-.token.keyword { color: #d7a4d0 !important; }
-.token.string { color: #a9c98b !important; }
-.token.function { color: #8fbbe4 !important; }
-.token.class-name { color: #e6c583 !important; }
-.token.number { color: #e8a878 !important; }
-.token.operator { color: #9bbfc0 !important; }
-.token.punctuation { color: #a8a399 !important; }
-.token.builtin { color: #e6c583 !important; }
-.token.boolean { color: #e8a878 !important; }
-.token.decorator { color: #d7a4d0 !important; }
+.token.comment { color: var(--code-comment) !important; }
+.token.keyword { color: var(--code-keyword) !important; }
+.token.string { color: var(--code-string) !important; }
+.token.function { color: var(--code-function) !important; }
+.token.class-name { color: var(--code-type) !important; }
+.token.number { color: var(--code-number) !important; }
+.token.operator { color: var(--code-operator) !important; }
+.token.punctuation { color: var(--code-punctuation) !important; }
+.token.builtin { color: var(--code-type) !important; }
+.token.boolean { color: var(--code-number) !important; }
+.token.decorator { color: var(--code-keyword) !important; }
 
 :not(pre) > code {
   background: var(--bg-2);
@@ -606,7 +687,7 @@ code[class*="language-"] {
 .callout em { color: var(--blue); }
 
 .callout-danger {
-  background: rgba(226, 119, 107, 0.1) !important;
+  background: var(--tint-red) !important;
   border: 0 !important;
   border-left: 2px solid var(--red) !important;
 }
